@@ -13,6 +13,12 @@ import (
 var app *App = nil
 var args []string = nil
 var defaultRouter *Router
+var routerCmdApp map[string]interface{}
+
+const (
+	AppMethodInit = "Init"
+	AppMethodRun = "Run"
+)
 
 /**
 初始化
@@ -31,6 +37,22 @@ func getArgs() []string {
 	return args
 }
 
+/**
+	项目注册(单个)
+ */
+func Register(name string, cmd interface{})  {
+	routerCmdApp[name] = cmd
+}
+
+/**
+	注册多个项目
+ */
+func RegisterApps(data map[string]interface{})  {
+	for n, c := range data{
+		Register(n, c)
+	}
+}
+
 // 加载路由器为适配器
 func Adapter(router *Router) {
 	app.Router = router
@@ -44,6 +66,7 @@ func Run() App {
 
 // 引用初始化
 func init() {
+	routerCmdApp = map[string]interface{}{}
 	app = &App{}
 
 	// 默认路由，用于设置路由为空时
@@ -60,4 +83,5 @@ func init() {
 	if cwd, err := os.Getwd(); err == nil{
 		app.cwd = cwd
 	}
+
 }

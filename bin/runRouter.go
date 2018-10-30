@@ -1,7 +1,6 @@
 package bin
 
 import (
-	"github.com/conero/uymas/util/str"
 	"reflect"
 )
 
@@ -30,14 +29,22 @@ func runAppRouter()  {
 
 	// 路由匹配
 	if app.Command == ""{
-		if router != nil && router.EmptyAction != nil{
+		if app.Router != nil && app.Router.EmptyAction != nil{
 			app.Router.EmptyAction()
 		}else{
 			defaultRouter.EmptyAction()
 		}
 	}else{
-		command := str.Ucfirst(app.Command)
-		v := reflect.ValueOf(command).Elem()
-		v.MethodByName("Init").Call(nil)
+		if cmd, has := routerCmdApp[app.Command]; has{
+			v := reflect.ValueOf(cmd)
+			v.MethodByName(AppMethodInit).Call(nil)
+			v.MethodByName(AppMethodRun).Call(nil)
+		}else {
+			if app.Router != nil && app.Router.UnfindAction != nil{
+				app.Router.UnfindAction(app.Command)
+			}else{
+				defaultRouter.UnfindAction(app.Command)
+			}
+		}
 	}
 }
