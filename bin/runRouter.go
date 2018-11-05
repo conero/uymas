@@ -30,6 +30,7 @@ func runAppRouter() {
 		// 命令解析
 		if app.Command == "" {
 			app.Command = arg
+			app.queueAppend(arg)
 			continue
 		}
 		// 参数处理
@@ -48,7 +49,9 @@ func runAppRouter() {
 				app.Data[arg] = true
 				app.Setting = append(app.Setting, arg)
 			}
+			app.queueAppend(arg)
 		} else {
+			app.queueAppend(arg)
 			// 二级命令
 			if app.SubCommand == "" {
 				app.SubCommand = arg

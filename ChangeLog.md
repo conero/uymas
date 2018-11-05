@@ -17,6 +17,7 @@
   - (+) *`getCommandByAlias(command string) string` 实现对别名命令解析的支持*
   - (+) *`SubCommand(able bool)` 实现对是否禁止二级命令，默认开启*
   - *App*
+    - (+) *`QueueNext(key string) string ` 获取队列右邻值*
     - (优化) *App* 结构体属性优化，删除 Option(更名为 Setting)，添加二级命令以及其他属性
     - (优化) *HasOptions -> HasSetting 配置存在性检测*
 

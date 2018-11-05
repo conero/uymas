@@ -44,7 +44,7 @@ func getArgs() []string {
 命令别名集(单个)
 */
 func Alias(cmd string, alias ...string) {
-	routerAliasApp[cmd] = args
+	routerAliasApp[cmd] = alias
 }
 
 /**
@@ -88,6 +88,11 @@ func Run() App {
 	return *app
 }
 
+// 获取命令行 App
+func GetApp() App  {
+	return *app
+}
+
 // 引用初始化
 func init() {
 	routerCmdApp = map[string]interface{}{}
@@ -95,6 +100,7 @@ func init() {
 	app = &App{
 		Data:    map[string]interface{}{},
 		Setting: []string{},
+		Queue:   []string{},
 	}
 
 	// 默认路由，用于设置路由为空时
