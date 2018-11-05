@@ -14,11 +14,13 @@ var app *App = nil
 var args []string = nil
 var defaultRouter *Router
 var routerCmdApp map[string]interface{} = nil
-var routerAliasApp map[string][]string = nil //	项目别名匹配
+var routerAliasApp map[string][]string = nil // 项目别名匹配
+var subCommandAble bool = true               // 二级命令有效
 
 const (
-	AppMethodInit = "Init"
-	AppMethodRun  = "Run"
+	AppMethodInit   = "Init"
+	AppMethodRun    = "Run"
+	AppMethodNoSubC = "SubCommandUnfind"
 )
 
 /**
@@ -75,6 +77,11 @@ func Adapter(router *Router) {
 	app.Router = router
 }
 
+// 二级命令配置
+func SubCommand(able bool) {
+	subCommandAble = able
+}
+
 // 系统运行
 func Run() App {
 	runAppRouter()
@@ -85,7 +92,10 @@ func Run() App {
 func init() {
 	routerCmdApp = map[string]interface{}{}
 	routerAliasApp = map[string][]string{}
-	app = &App{}
+	app = &App{
+		Data:    map[string]interface{}{},
+		Setting: []string{},
+	}
 
 	// 默认路由，用于设置路由为空时
 	defaultRouter = &Router{

@@ -9,12 +9,16 @@
 
 > 项目优化
 >
-> (+) *uymas/bin* 支持别名命令行
+> (+) *uymas/bin* 支持别名命令行；支持二级属性参数(默认打开)
 
 - *uymas/bin*
   - (+) *`Alias(cmd string, alias ...string)` 方法用于支持别名命令行*
   - (+) *`AliasMany(alias map[string][]string)` 别名批量设置法*
   - (+) *`getCommandByAlias(command string) string` 实现对别名命令解析的支持*
+  - (+) *`SubCommand(able bool)` 实现对是否禁止二级命令，默认开启*
+  - *App*
+    - (优化) *App* 结构体属性优化，删除 Option(更名为 Setting)，添加二级命令以及其他属性
+    - (优化) *HasOptions -> HasSetting 配置存在性检测*
 
 
 

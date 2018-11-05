@@ -20,6 +20,11 @@ func (command *Command) Init() {
 }
 
 // 运行应用
-func (command *Command) Run()  {
+func (command *Command) Run() {
 	fmt.Println("	命令以及初始化成功，请实现项目.")
+}
+
+// 二级命令应用
+func (command *Command) SubCommandUnfind(subCmd string) {
+	fmt.Println(" 二级命令不存在：" + subCmd)
 }

@@ -7,27 +7,28 @@ import "github.com/conero/uymas/util"
 // @Name:    应用管理
 
 type App struct {
-	Data    map[string]string
-	Options []string
-	Router  *Router
-	cwd	string			// 项目当前所在目录
-	Command string		// 当前的命令
+	Data       map[string]interface{}
+	Router     *Router
+	cwd        string   // 项目当前所在目录
+	Command    string   // 当前的命令
+	SubCommand string   // 二级命令
+	Setting    []string // 项目设置
 }
 
 /**
 检测属性是否存在
 */
-func (app App) HasOptions(opt string) bool {
+func (app App) HasSetting(set string) bool {
 	has := false
-	if idx := util.InStrQue(opt, app.Options); idx > -1 {
+	if idx := util.InStrQue(set, app.Setting); idx > -1 {
 		has = true
 	}
 	return has
 }
 
 /**
-	获取当的工作目录
- */
-func (app App) Cwd () string{
+获取当的工作目录
+*/
+func (app App) Cwd() string {
 	return app.cwd
 }

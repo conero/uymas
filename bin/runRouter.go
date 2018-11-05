@@ -2,7 +2,9 @@ package bin
 
 import (
 	"github.com/conero/uymas/util"
+	"github.com/conero/uymas/util/str"
 	"reflect"
+	"strings"
 )
 
 // @Date：   2018/10/30 0030 15:11
@@ -21,8 +23,37 @@ func runAppRouter() {
 		if i == 0 {
 			continue
 		}
+		argLen := len(arg)
+		if 0 == argLen {
+			continue
+		}
+		// 命令解析
 		if app.Command == "" {
 			app.Command = arg
+			continue
+		}
+		// 参数处理
+		if "-" == arg[0:1] {
+			if argLen > 2 && "--" == arg[0:2] {
+				arg = arg[0:2]
+			} else {
+				arg = arg[0:1]
+			}
+			equalIdx := strings.Index(arg, "=")
+			if equalIdx > -1 {
+				k := arg[0:equalIdx]
+				v := arg[equalIdx:]
+				app.Data[k] = v
+			} else {
+				app.Data[arg] = true
+				app.Setting = append(app.Setting, arg)
+			}
+		} else {
+			// 二级命令
+			if app.SubCommand == "" {
+				app.SubCommand = arg
+				continue
+			}
 		}
 	}
 
@@ -38,7 +69,16 @@ func runAppRouter() {
 		if cmd, has := routerCmdApp[command]; has {
 			v := reflect.ValueOf(cmd)
 			v.MethodByName(AppMethodInit).Call(nil)
-			v.MethodByName(AppMethodRun).Call(nil)
+			if subCommandAble && app.SubCommand != "" {
+				if v.MethodByName(str.Ucfirst(app.SubCommand)).IsValid() {
+					v.MethodByName(str.Ucfirst(app.SubCommand)).Call(nil)
+				} else {
+					v.MethodByName(AppMethodNoSubC).
+						Call([]reflect.Value{reflect.ValueOf(app.SubCommand)})
+				}
+			} else {
+				v.MethodByName(AppMethodRun).Call(nil)
+			}
 		} else {
 			if app.Router != nil && app.Router.UnfindAction != nil {
 				app.Router.UnfindAction(command)

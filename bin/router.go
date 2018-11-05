@@ -6,9 +6,9 @@ package bin
 
 type Router struct {
 	// 别名映射组
-	Alias map[string]string
-	UnfindAction func(action string)				// 路由失败
-	EmptyAction func()								// 路由失败
+	Alias        map[string]string
+	UnfindAction func(action string) // 路由失败
+	EmptyAction  func()              // 路由失败
 }
 
 // 获取 action参数

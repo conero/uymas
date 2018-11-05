@@ -20,11 +20,22 @@ $ go get -u  github.com/conero/uymas
 ### bin
 
 > 命令行行语法
+>
+> `$ [command] [<options>]`
 
 ```ini
-$ [command] 
+$ [command] [<options>]
+# [<options>] 格式如下
 
+# 1. 配置参数；全称以及简写
+--set[=true]
+-short[=true]
+
+# 2. 二级命令
+$ [command] [<sub-command>] [<options>]
 ```
+
+
 
 
 
