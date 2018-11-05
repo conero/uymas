@@ -5,7 +5,21 @@
 
 ## 0.1.x
 
+### v0.1.1/20181105
+
+> 项目优化
+>
+> (+) *uymas/bin* 支持别名命令行
+
+- *uymas/bin*
+  - (+) *`Alias(cmd string, alias ...string)` 方法用于支持别名命令行*
+  - (+) *`AliasMany(alias map[string][]string)` 别名批量设置法*
+  - (+) *`getCommandByAlias(command string) string` 实现对别名命令解析的支持*
+
+
+
 ### v0.1.0/20181030
+
 > 项目初始化
 
 - *uymas/bin*

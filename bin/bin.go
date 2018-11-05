@@ -13,11 +13,12 @@ import (
 var app *App = nil
 var args []string = nil
 var defaultRouter *Router
-var routerCmdApp map[string]interface{}
+var routerCmdApp map[string]interface{} = nil
+var routerAliasApp map[string][]string = nil //	项目别名匹配
 
 const (
 	AppMethodInit = "Init"
-	AppMethodRun = "Run"
+	AppMethodRun  = "Run"
 )
 
 /**
@@ -38,17 +39,33 @@ func getArgs() []string {
 }
 
 /**
-	项目注册(单个)
- */
-func Register(name string, cmd interface{})  {
+命令别名集(单个)
+*/
+func Alias(cmd string, alias ...string) {
+	routerAliasApp[cmd] = args
+}
+
+/**
+命令别名集(多个)
+*/
+func AliasMany(alias map[string][]string) {
+	for cmd, als := range alias {
+		Alias(cmd, als...)
+	}
+}
+
+/**
+项目注册(单个)
+*/
+func Register(name string, cmd interface{}) {
 	routerCmdApp[name] = cmd
 }
 
 /**
-	注册多个项目
- */
-func RegisterApps(data map[string]interface{})  {
-	for n, c := range data{
+注册多个项目
+*/
+func RegisterApps(data map[string]interface{}) {
+	for n, c := range data {
 		Register(n, c)
 	}
 }
@@ -67,6 +84,7 @@ func Run() App {
 // 引用初始化
 func init() {
 	routerCmdApp = map[string]interface{}{}
+	routerAliasApp = map[string][]string{}
 	app = &App{}
 
 	// 默认路由，用于设置路由为空时
@@ -80,7 +98,7 @@ func init() {
 		},
 	}
 	// 生成当前的工作目录
-	if cwd, err := os.Getwd(); err == nil{
+	if cwd, err := os.Getwd(); err == nil {
 		app.cwd = cwd
 	}
 
