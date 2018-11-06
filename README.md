@@ -31,7 +31,7 @@ $ [command] [<options>]
 --set[=true]
 -short[=true]
 
-# 2. 二级命令
+# 2. 二级命令(紧接着 [command])
 $ [command] [<sub-command>] [<options>]
 ```
 

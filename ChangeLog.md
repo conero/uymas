@@ -2,8 +2,33 @@
 > 2018年10月30日 星期二
 > 项目
 
+## 0.2.x
+
+### v0.2.0/20181106
+
+> (优化) *uymas/bin*
+
+- *uymas/bin*
+
+  - (修复) *`runAppRouter` 中解析 Setting 属性无效*
+  - (+) *添加结构体 `SubCmdAlias`*
+  - *Command 结构体*
+    - (+) *添加SubCmdAlias属性*
+    - (优化) *Init 方法内部支持二级命令别名路由；函数命令有由(comand \*Command) -> (c \*Comand)*
+
+- *uymas/util*
+
+  - (+) *添加方法 `InstruQuei` 实现大小写不敏感的检测*
+
+- *uymas/fs*
+
+  - (+) *新增程序包，用于实现文件处理*
+  - (+) *添加基于 `io` 读写接口的实现*
+
 
 ## 0.1.x
+
+
 
 ### v0.1.1/20181105
 

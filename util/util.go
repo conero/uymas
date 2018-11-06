@@ -1,5 +1,9 @@
 package util
 
+import (
+	"strings"
+)
+
 // @Date：   2018/10/30 0030 13:26
 // @Author:  Joshua Conero
 // @Name:    工具栏
@@ -29,6 +33,19 @@ func InStrQue(s string, que []string) int {
 	idx := -1
 	for i, v := range que {
 		if s == v {
+			idx = i
+			break
+		}
+	}
+	return idx
+}
+
+// 不区分大小写
+func InStrQuei(s string, que []string) int {
+	idx := -1
+	s = strings.ToLower(s)
+	for i, v := range que {
+		if s == strings.ToLower(v) {
 			idx = i
 			break
 		}

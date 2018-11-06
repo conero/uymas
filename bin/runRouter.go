@@ -19,6 +19,7 @@ func runAppRouter() {
 		router = defaultRouter
 	}
 	app.Command = ""
+	cmdIdx := -1
 	for i, arg := range getArgs() {
 		if i == 0 {
 			continue
@@ -31,14 +32,15 @@ func runAppRouter() {
 		if app.Command == "" {
 			app.Command = arg
 			app.queueAppend(arg)
+			cmdIdx = i + 1
 			continue
 		}
 		// 参数处理
 		if "-" == arg[0:1] {
 			if argLen > 2 && "--" == arg[0:2] {
-				arg = arg[0:2]
+				arg = arg[2:]
 			} else {
-				arg = arg[0:1]
+				arg = arg[1:]
 			}
 			equalIdx := strings.Index(arg, "=")
 			if equalIdx > -1 {
@@ -53,7 +55,7 @@ func runAppRouter() {
 		} else {
 			app.queueAppend(arg)
 			// 二级命令
-			if app.SubCommand == "" {
+			if app.SubCommand == "" && i == cmdIdx{
 				app.SubCommand = arg
 				continue
 			}
