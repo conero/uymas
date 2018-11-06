@@ -27,6 +27,10 @@ type Command struct {
 // 引用初始化接口
 func (c *Command) Init() {
 	c.App = *app
+}
+
+// 入口/内部分发(Entrance)
+func (c *Command) InnerDistribute()  {
 	if c.SCA != nil{
 		sca := c.SCA
 		for sub, alias := range sca.Alias{

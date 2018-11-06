@@ -44,13 +44,28 @@ func (f *FsReaderWriter) Error() string {
 	return f.errorMsg
 }
 
-// 文件复制
-func Copy(dstFile, srcFile string) (bool, error) {
+func copyBaseDiy(dstFile, srcFile string) (bool, error) {
 	frw := &FsReaderWriter{
 		dstFile: dstFile,
 		srcFile: srcFile,
 	}
 	if _, err := io.Copy(frw, frw); err != nil {
+		return false, err
+	}
+	return true, nil
+}
+
+// 文件复制
+// 基于读写
+func Copy(dstFile, srcFile string) (bool, error) {
+	// 获取源文件
+	content, err := ioutil.ReadFile(srcFile)
+	if err != nil{
+		return false, err
+	}
+	// 覆盖新的文件
+	err = ioutil.WriteFile(dstFile, content, 0755)
+	if err != nil{
 		return false, err
 	}
 	return true, nil

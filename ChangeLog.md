@@ -6,7 +6,9 @@
 
 ### v0.2.0/20181106
 
-> (优化) *uymas/bin*
+> (优化) *uymas/bin* 实现二级命令分发
+>
+> (+) 添加 *uymas/fs* 包 
 
 - *uymas/bin*
 
@@ -14,11 +16,13 @@
   - (+) *添加结构体 `SubCmdAlias`*
   - *Command 结构体*
     - (+) *添加SubCmdAlias属性*
+    - (+) *`InnerDistribute` 方法实现入口分发(二级命令分发)*
     - (优化) *Init 方法内部支持二级命令别名路由；函数命令有由(comand \*Command) -> (c \*Comand)*
 
 - *uymas/util*
 
   - (+) *添加方法 `InstruQuei` 实现大小写不敏感的检测*
+  - (优化) *从其他就的代码中迁移运行时间花费*
 
 - *uymas/fs*
 
