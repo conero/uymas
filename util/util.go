@@ -55,7 +55,6 @@ func InStrQuei(s string, que []string) int {
 	return idx
 }
 
-
 //返回秒用于计算程序用时,参数为0时返回当前的毫秒，否则返回计算后的秒差
 func Sec(start float64) float64 {
 	t := time.Now()

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"github.com/conero/uymas"
 	"os"
+	"reflect"
+	"strings"
 )
 
 // @Date：   2018/10/30 0030 13:20
@@ -21,6 +23,7 @@ const (
 	AppMethodInit   = "Init"
 	AppMethodRun    = "Run"
 	AppMethodNoSubC = "SubCommandUnfind"
+	AppMethodHelp   = "Help"
 )
 
 /**
@@ -72,6 +75,29 @@ func RegisterApps(data map[string]interface{}) {
 	}
 }
 
+// 请求命令行帮助
+func CallCmdHelp(key string) bool {
+	a, has := routerCmdApp[key]
+	key = strings.ToLower(key)
+	if !has {
+		for k, a1 := range routerCmdApp {
+			if key == strings.ToLower(k) {
+				a = a1
+				has = true
+				break
+			}
+		}
+	}
+	if has {
+		ins := reflect.ValueOf(a).MethodByName(AppMethodHelp)
+		if ins.IsValid() {
+			ins.Call(nil)
+			return true
+		}
+	}
+	return false
+}
+
 // 加载路由器为适配器
 func Adapter(router *Router) {
 	app.Router = router
@@ -89,7 +115,7 @@ func Run() App {
 }
 
 // 获取命令行 App
-func GetApp() App  {
+func GetApp() App {
 	return *app
 }
 

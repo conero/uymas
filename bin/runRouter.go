@@ -55,7 +55,7 @@ func runAppRouter() {
 		} else {
 			app.queueAppend(arg)
 			// 二级命令
-			if app.SubCommand == "" && i == cmdIdx{
+			if app.SubCommand == "" && i == cmdIdx {
 				app.SubCommand = arg
 				continue
 			}

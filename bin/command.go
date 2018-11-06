@@ -14,9 +14,9 @@ import (
 type ActionInterface interface {
 }
 type SubCmdAlias struct {
-	Alias map[string][]string
+	Alias   map[string][]string
 	Matched bool
-	Self interface{}
+	Self    interface{}
 }
 
 type Command struct {
@@ -30,19 +30,19 @@ func (c *Command) Init() {
 }
 
 // 入口/内部分发(Entrance)
-func (c *Command) InnerDistribute()  {
-	if c.SCA != nil{
+func (c *Command) InnerDistribute() {
+	if c.SCA != nil {
 		sca := c.SCA
-		for sub, alias := range sca.Alias{
-			for _, a := range alias{
-				if c.App.HasSetting(a){
+		for sub, alias := range sca.Alias {
+			for _, a := range alias {
+				if c.App.HasSetting(a) {
 					method := reflect.ValueOf(sca.Self).MethodByName(str.Ucfirst(sub))
 					method.Call(nil)
 					sca.Matched = true
 					break
 				}
 			}
-			if sca.Matched{
+			if sca.Matched {
 				break
 			}
 		}

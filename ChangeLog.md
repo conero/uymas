@@ -4,6 +4,21 @@
 
 ## 0.2.x
 
+### v0.2.1/20181106
+
+> (优化) *uymas/util/str* 实现首字母小写，`Ucfirst 与 Lcfirst 相对应`
+>
+> (实现) *uymas/bin 实现跨 cmd 请求帮助方法*
+
+- *uymas/bin*
+  - (+) *添加方法`CallCmdHelp(key string) bool` 实现框cmd方法帮助方法*
+- *uymas/util/str*
+  - (+) *添加方法 `Lcfirst` 实现首字母小写*
+- *uymas/fs*
+  - (+) *添加方法 `CheckDir` 实现自动检测目录存在性不存在则尝试创建*
+
+
+
 ### v0.2.0/20181106
 
 > (优化) *uymas/bin* 实现二级命令分发
