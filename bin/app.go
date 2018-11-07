@@ -1,7 +1,7 @@
 package bin
 
 import (
-	"github.com/conero/uymas/util/str"
+	"github.com/conero/uymas/str"
 	"path"
 )
 

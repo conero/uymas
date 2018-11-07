@@ -8,7 +8,7 @@
 
 > 非兼容调整： *uymas/util* 包中的字符串集合处理转移到 *uymas/util/str 中；以及名字调整。更新由此引起的代码更变*
 
-- *uymas/util/str*
+- *uymas/util/str*  -> (更名为) -> *uymas/str*
   - (调整) *将 uymas/util中的代码转移至 uymas/str 中*
   - (+) *添加方法 `DelQue` 实现删除字符串中值*
 
