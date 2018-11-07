@@ -79,3 +79,12 @@ func CheckDir(dir string) {
 		os.MkdirAll(dir, 0666)
 	}
 }
+
+// 检测目录是否存在
+func IsDir(dir string) bool {
+	_, err := os.Open(dir)
+	if err != nil {
+		return false
+	}
+	return true
+}

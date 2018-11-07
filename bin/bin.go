@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/conero/uymas"
 	"os"
+	"path"
 	"reflect"
 	"strings"
 )
@@ -18,6 +19,7 @@ var defaultRouter *Router
 var routerCmdApp map[string]interface{} = nil
 var routerAliasApp map[string][]string = nil // 项目别名匹配
 var subCommandAble bool = true               // 二级命令有效
+var appRuningWorkDir string                  // 应用运行目录
 
 const (
 	AppMethodInit   = "Init"
@@ -144,4 +146,15 @@ func init() {
 		app.cwd = cwd
 	}
 
+}
+
+// 获取命令正在运行的代码
+func Rwd() string {
+	if appRuningWorkDir == "" {
+		rwd := os.Args[0]
+		rwd = strings.Replace(rwd, "\\", "/", -1)
+		rwd = path.Dir(rwd)
+		appRuningWorkDir = rwd
+	}
+	return appRuningWorkDir
 }

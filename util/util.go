@@ -2,7 +2,6 @@ package util
 
 import (
 	"math"
-	"strings"
 	"time"
 )
 
@@ -22,34 +21,6 @@ func InQue(val interface{}, que []interface{}) int {
 				idx = i
 				break
 			}
-		}
-	}
-	return idx
-}
-
-/**
-字符串对是否存在
-不存在返回 -1
-*/
-func InStrQue(s string, que []string) int {
-	idx := -1
-	for i, v := range que {
-		if s == v {
-			idx = i
-			break
-		}
-	}
-	return idx
-}
-
-// 不区分大小写
-func InStrQuei(s string, que []string) int {
-	idx := -1
-	s = strings.ToLower(s)
-	for i, v := range que {
-		if s == strings.ToLower(v) {
-			idx = i
-			break
 		}
 	}
 	return idx

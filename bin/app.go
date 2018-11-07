@@ -1,7 +1,7 @@
 package bin
 
 import (
-	"github.com/conero/uymas/util"
+	"github.com/conero/uymas/util/str"
 	"path"
 )
 
@@ -25,7 +25,7 @@ type App struct {
 */
 func (app App) HasSetting(set string) bool {
 	has := false
-	if idx := util.InStrQue(set, app.Setting); idx > -1 {
+	if idx := str.InQue(set, app.Setting); idx > -1 {
 		has = true
 	}
 	return has

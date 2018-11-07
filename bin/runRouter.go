@@ -1,7 +1,6 @@
 package bin
 
 import (
-	"github.com/conero/uymas/util"
 	"github.com/conero/uymas/util/str"
 	"reflect"
 	"strings"
@@ -99,7 +98,7 @@ func runAppRouter() {
 */
 func getCommandByAlias(command string) string {
 	for nCmd, queStr := range routerAliasApp {
-		if idx := util.InStrQue(command, queStr); idx > -1 {
+		if idx := str.InQue(command, queStr); idx > -1 {
 			command = nCmd
 			break
 		}
