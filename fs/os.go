@@ -1,8 +1,8 @@
 package fs
 
 import (
-	"github.com/conero/uymas/util"
 	"github.com/conero/uymas/str"
+	"github.com/conero/uymas/util"
 	"os"
 	"strings"
 )

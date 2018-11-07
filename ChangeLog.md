@@ -4,13 +4,20 @@
 
 ## 0.3.x
 
-### 0.3.0/20181107-alpha
+### 0.3.0/20181107
 
 > 非兼容调整： *uymas/util* 包中的字符串集合处理转移到 *uymas/util/str 中；以及名字调整。更新由此引起的代码更变*
+>
+> (+) *uymas/bin 实现参数监听*
 
 - *uymas/util/str*  -> (更名为) -> *uymas/str*
   - (调整) *将 uymas/util中的代码转移至 uymas/str 中*
   - (+) *添加方法 `DelQue` 实现删除字符串中值*
+- *uyams/bin*
+  - (+) *添加方法 `isVaildCmd(c string) bool` 用于判断是否非法*
+  - (优化) *方法`runAppRouter() ` 支持参数监听*
+  - **Router**
+    - (+) *属性添加`OptionListener` 实现属性监听*
 
 
 

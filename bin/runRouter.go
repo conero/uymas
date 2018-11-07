@@ -10,6 +10,14 @@ import (
 // @Author:  Joshua Conero
 // @Name:    启动路由
 
+// 是否为有效的命令
+func isVaildCmd(c string) bool {
+	if len(c) == 0 || c[0:1] == "-" {
+		return false
+	}
+	return true
+}
+
 // 启动 app 路由器
 func runAppRouter() {
 	// 路由配置
@@ -28,7 +36,7 @@ func runAppRouter() {
 			continue
 		}
 		// 命令解析
-		if app.Command == "" {
+		if app.Command == "" && isVaildCmd(arg) {
 			app.Command = arg
 			app.queueAppend(arg)
 			cmdIdx = i + 1
@@ -60,13 +68,25 @@ func runAppRouter() {
 			}
 		}
 	}
-
+	// 选项监听
+	runOptLsnFn := func() bool {
+		if app.Router != nil && app.Router.OptionListener != nil {
+			for _, set := range app.Setting {
+				if app.Router.OptionListener(set, app) {
+					return true
+				}
+			}
+		}
+		return false
+	}
 	// 路由匹配
 	if app.Command == "" {
-		if app.Router != nil && app.Router.EmptyAction != nil {
-			app.Router.EmptyAction()
-		} else {
-			defaultRouter.EmptyAction()
+		if !runOptLsnFn() {
+			if app.Router != nil && app.Router.EmptyAction != nil {
+				app.Router.EmptyAction()
+			} else {
+				defaultRouter.EmptyAction()
+			}
 		}
 	} else {
 		command := getCommandByAlias(app.Command)
@@ -84,10 +104,12 @@ func runAppRouter() {
 				v.MethodByName(AppMethodRun).Call(nil)
 			}
 		} else {
-			if app.Router != nil && app.Router.UnfindAction != nil {
-				app.Router.UnfindAction(command)
-			} else {
-				defaultRouter.UnfindAction(command)
+			if !runOptLsnFn() {
+				if app.Router != nil && app.Router.UnfindAction != nil {
+					app.Router.UnfindAction(command)
+				} else {
+					defaultRouter.UnfindAction(command)
+				}
 			}
 		}
 	}
