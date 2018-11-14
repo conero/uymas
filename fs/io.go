@@ -4,6 +4,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"strings"
 )
 
 // @Date：   2018/11/6 0006 14:33
@@ -73,11 +74,14 @@ func Copy(dstFile, srcFile string) (bool, error) {
 }
 
 // 检测目录，并删除
-func CheckDir(dir string) {
+// 获取并返回标准目录
+func CheckDir(dir string) string {
+	dir = strings.Replace(dir, "\\", "/", -1)
 	_, err := os.Open(dir)
 	if err != nil {
 		os.MkdirAll(dir, 0666)
 	}
+	return dir
 }
 
 // 检测目录是否存在

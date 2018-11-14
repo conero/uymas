@@ -37,6 +37,8 @@ func AddEnvPath(paths ...string) error {
 	}
 	if addMk {
 		err := os.Setenv(V_EnvPath, strings.Join(refPath, ";"))
+		// [TIP] 仅仅在当前进程中/实例中有效
+		// fmt.Println(os.Getenv(V_EnvPath))
 		return err
 	}
 	return &util.BaseError{"输入为空或者环境变量已经存在"}
