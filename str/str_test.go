@@ -9,6 +9,31 @@ import (
 // @Author:  Joshua Conero
 // @Name:    名称描述
 
+func TestUcfirst(t *testing.T) {
+	fn := func(s, sT string) {
+		if ClearSpace(s) != sT{
+			fmt.Println(s+" VS " + sT)
+			t.Fail()
+		}
+	}
+	fn(Ucfirst(" i am joshua conero"), "IAmJoshuaConero")
+	fn(Ucfirst(" joshuaConero"), "JoshuaConero")
+	fn(Ucfirst(" test "), "Test")
+	fn(Ucfirst(" tEST "), "TEST")
+}
+
+func TestLcfirst(t *testing.T) {
+	fn := func(s, sT string) {
+		if ClearSpace(s) != sT{
+			fmt.Println(s+" VS " + sT)
+			t.Fail()
+		}
+	}
+	fn(Lcfirst("Joshua Conero"), "joshuaconero")
+	fn(Lcfirst("JOSHUA"), "jOSHUA")
+	fn(Lcfirst("AA BB C D E"), "aAbBcde")
+}
+
 // 项目测试
 func TestClearSpace(t *testing.T) {
 	s := " s p a c e"
