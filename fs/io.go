@@ -46,6 +46,7 @@ func (f *FsReaderWriter) Error() string {
 	return f.errorMsg
 }
 
+// 基于DIY 实现 Copy
 func copyBaseDiy(dstFile, srcFile string) (bool, error) {
 	frw := &FsReaderWriter{
 		dstFile: dstFile,
@@ -73,7 +74,27 @@ func Copy(dstFile, srcFile string) (bool, error) {
 	return true, nil
 }
 
-// 检测目录，并删除
+// 目录复制
+func CopyDir(dst, src string) {
+	dst = StdDir(dst)
+	src = StdDir(src)
+	if files, err := ioutil.ReadDir(src); err == nil {
+		CheckDir(dst)
+		for _, fl := range files {
+			d1 := dst + fl.Name()
+			s1 := src + fl.Name()
+			if fl.IsDir() {
+				d1 += "/"
+				s1 += "/"
+				CopyDir(d1, s1)
+			}else {
+				Copy(d1, s1)
+			}
+		}
+	}
+}
+
+// 检测目录，并创建
 // 获取并返回标准目录
 func CheckDir(dir string) string {
 	dir = strings.Replace(dir, "\\", "/", -1)
@@ -91,4 +112,13 @@ func IsDir(dir string) bool {
 		return false
 	}
 	return true
+}
+
+// 获取标准目录
+func StdDir(d string) string {
+	d = strings.Replace(d, "\\", "/", -1)
+	if d != "" && "/" != d[len(d)-1:] {
+		d += "/"
+	}
+	return d
 }
