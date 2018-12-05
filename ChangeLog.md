@@ -11,7 +11,13 @@
 - *uymas/str*
   - (+) *`SplitSafe` 方法用于安全分割字符串为切片*
   - (+) *`ClearSpace` 方法用于清洗字符串中的空格* 
-  - (+) *添加 str 测试文件，并实现对 SplitSafe/ ClearSpace 的测试*
+  - (+) `str_test`
+    - *添加 str 测试文件，并实现对 SplitSafe/ ClearSpace 的测试*
+    - *添加`TestRender` 单元测试*
+  - (+) `WriterToContent`
+    - *添加类型 `WriterToContent` 用于实现`io.Write` 接口已返回字符串数据*
+    - *添加方法 `Content`获取字符串内容*
+  - (+) *新增方法`Render` 用于编译 tpl 模板，并返回内容*
 - *uymas/bin*
   - *App*
     - (+) *添加方法 `Next` 方法用于下个输入的队列*

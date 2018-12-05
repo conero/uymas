@@ -73,9 +73,9 @@ func (app *App) QueueNext(key string) string {
 // 多简直获取键值
 func (app *App) Next(keys ...string) string {
 	var value string
-	for _, k := range keys{
+	for _, k := range keys {
 		value = app.QueueNext(k)
-		if value != ""{
+		if value != "" {
 			break
 		}
 	}
