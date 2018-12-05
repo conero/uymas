@@ -1,6 +1,9 @@
 package str
 
-import "strings"
+import (
+	"regexp"
+	"strings"
+)
 
 // @Date：   2018/10/30 0030 15:14
 // @Author:  Joshua Conero
@@ -38,4 +41,22 @@ func Lcfirst(str string) string {
 		}
 	}
 	return str
+}
+
+// 安全字符串分割
+func SplitSafe(s, sep string) []string  {
+	var dd []string
+	s = ClearSpace(s)
+	dd = strings.Split(s, sep)
+	return dd
+}
+
+// 清除空格
+func ClearSpace(s string) string {
+	s = strings.TrimSpace(s)
+	if strings.Index(s, " ") > -1{
+		spaceReg := regexp.MustCompile("\\s")
+		s = spaceReg.ReplaceAllString(s, "")
+	}
+	return s
 }

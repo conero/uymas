@@ -69,3 +69,15 @@ func (app *App) QueueNext(key string) string {
 	}
 	return vaule
 }
+
+// 多简直获取键值
+func (app *App) Next(keys ...string) string {
+	var value string
+	for _, k := range keys{
+		value = app.QueueNext(k)
+		if value != ""{
+			break
+		}
+	}
+	return value
+}

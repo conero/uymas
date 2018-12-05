@@ -4,10 +4,17 @@
 
 ## 0.3.x
 
-### 0.3.1/20181114 - alpha
+### 0.3.1/20181114
 
 - *uymas/fs*
   - (优化) *`CheckDir` 方法添加返回标准的目录格式*
+- *uymas/str*
+  - (+) *`SplitSafe` 方法用于安全分割字符串为切片*
+  - (+) *`ClearSpace` 方法用于清洗字符串中的空格* 
+  - (+) *添加 str 测试文件，并实现对 SplitSafe/ ClearSpace 的测试*
+- *uymas/bin*
+  - *App*
+    - (+) *添加方法 `Next` 方法用于下个输入的队列*
 
 
 
