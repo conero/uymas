@@ -20,7 +20,6 @@ func compareStr(expect, real string) bool {
 // 字符串比较
 func compareStrFunc(expect func() string, real string) bool {
 	s := expect()
-	fmt.Println(s, "<-")
 	return compareStr(s, real)
 }
 
@@ -73,7 +72,7 @@ func TestSplitSafe(t *testing.T) {
 	fn := func(src, tar []string) {
 		oS := fmt.Sprintf("%v", src)
 		oT := fmt.Sprintf("%v", tar)
-		fmt.Println(" 输出格式：", oS)
+		//fmt.Println(" 输出格式：", oS)
 		if oS != oT {
 			t.Fail()
 		}

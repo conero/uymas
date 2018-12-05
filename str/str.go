@@ -1,6 +1,7 @@
 package str
 
 import (
+	"bytes"
 	"fmt"
 	"html/template"
 	"regexp"
@@ -86,14 +87,12 @@ func Render(tpl string, data interface{}) (string, error) {
 	var value string
 	temp, err := template.New("Render").Parse(tpl)
 	if err != nil {
-		fmt.Println(err.Error(), "ff")
 		return "", err
 	}
-	fmt.Println(tpl)
-	wr := &WriterToContent{}
-	err2 := temp.Execute(wr, data)
+	var bf bytes.Buffer
+	err2 := temp.Execute(&bf, data)
 	if err2 == nil {
-		return wr.Content(), nil
+		return bf.String(), nil
 	}
 	return value, err2
 }
