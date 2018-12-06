@@ -10,6 +10,7 @@ var _testPath string = "D:/server/zmapp/mci600a/"
 // @Date：   2018/12/6 0006 13:38
 // @Author:  Joshua Conero
 // @Name:    名称描述
+// @link:    https://golang.google.cn/pkg/encoding/xml/#example_Unmarshal
 
 func TestBridge_Info(t *testing.T) {
 	brd := &Bridge{Path: _testPath}
