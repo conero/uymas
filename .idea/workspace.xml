@@ -3,16 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="3a45b027-decf-43bc-9789-c65efb5292cc" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ChangeLog.md" beforeDir="false" afterPath="$PROJECT_DIR$/ChangeLog.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Info.go" beforeDir="false" afterPath="$PROJECT_DIR$/Info.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/app.go" beforeDir="false" afterPath="$PROJECT_DIR$/bin/app.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/command.go" beforeDir="false" afterPath="$PROJECT_DIR$/bin/command.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fs/io.go" beforeDir="false" afterPath="$PROJECT_DIR$/fs/io.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/fs/os.go" beforeDir="false" afterPath="$PROJECT_DIR$/fs/os.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/str/str.go" beforeDir="false" afterPath="$PROJECT_DIR$/str/str.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/str/str_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/str/str_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/svn/bridge.go" beforeDir="false" afterPath="$PROJECT_DIR$/svn/bridge.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/svn/svn.go" beforeDir="false" afterPath="$PROJECT_DIR$/svn/svn.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/svn/bridge_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/svn/bridge_test.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -55,11 +46,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/svn/bridge.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="152">
-              <caret line="155" column="4" selection-start-line="155" selection-start-column="4" selection-end-line="155" selection-end-column="4" />
+            <state relative-caret-position="323">
+              <caret line="184" column="18" lean-forward="true" selection-start-line="184" selection-start-column="18" selection-end-line="184" selection-end-column="18" />
               <folding>
                 <element signature="e#13#60#0" expanded="true" />
               </folding>
@@ -67,11 +58,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/svn/bridge_test.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="247">
-              <caret line="39" column="22" selection-start-line="39" selection-start-column="22" selection-end-line="39" selection-end-column="22" />
+            <state relative-caret-position="304">
+              <caret line="39" column="24" lean-forward="true" selection-start-line="39" selection-start-column="24" selection-end-line="39" selection-end-column="24" />
               <folding>
                 <element signature="e#13#41#0" expanded="true" />
               </folding>
@@ -291,21 +282,6 @@
     </recent_temporary>
   </component>
   <component name="TestHistory">
-    <history-entry file="TestBridge_Log_in_github_com_conero_uymas_svn - 2018.12.06 at 15h 33m 10s.xml">
-      <configuration name="TestBridge_Log in github.com/conero/uymas/svn" configurationId="GoTestRunConfiguration" />
-    </history-entry>
-    <history-entry file="TestBridge_Log_in_github_com_conero_uymas_svn - 2018.12.06 at 15h 34m 49s.xml">
-      <configuration name="TestBridge_Log in github.com/conero/uymas/svn" configurationId="GoTestRunConfiguration" />
-    </history-entry>
-    <history-entry file="TestBridge_Log_in_github_com_conero_uymas_svn - 2018.12.06 at 15h 35m 18s.xml">
-      <configuration name="TestBridge_Log in github.com/conero/uymas/svn" configurationId="GoTestRunConfiguration" />
-    </history-entry>
-    <history-entry file="TestBridge_Log_in_github_com_conero_uymas_svn - 2018.12.06 at 15h 35m 34s.xml">
-      <configuration name="TestBridge_Log in github.com/conero/uymas/svn" configurationId="GoTestRunConfiguration" />
-    </history-entry>
-    <history-entry file="TestBridge_Log_in_github_com_conero_uymas_svn - 2018.12.06 at 15h 36m 13s.xml">
-      <configuration name="TestBridge_Log in github.com/conero/uymas/svn" configurationId="GoTestRunConfiguration" />
-    </history-entry>
     <history-entry file="TestBridge_Log_in_github_com_conero_uymas_svn - 2018.12.06 at 15h 36m 35s.xml">
       <configuration name="TestBridge_Log in github.com/conero/uymas/svn" configurationId="GoTestRunConfiguration" />
     </history-entry>
@@ -319,6 +295,21 @@
       <configuration name="TestBridge_Log in github.com/conero/uymas/svn" configurationId="GoTestRunConfiguration" />
     </history-entry>
     <history-entry file="TestBridge_Log_in_github_com_conero_uymas_svn - 2018.12.06 at 15h 45m 26s.xml">
+      <configuration name="TestBridge_Log in github.com/conero/uymas/svn" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestBridge_Log_in_github_com_conero_uymas_svn - 2018.12.06 at 15h 45m 41s.xml">
+      <configuration name="TestBridge_Log in github.com/conero/uymas/svn" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestBridge_Log_in_github_com_conero_uymas_svn - 2018.12.06 at 15h 47m 08s.xml">
+      <configuration name="TestBridge_Log in github.com/conero/uymas/svn" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestBridge_Log_in_github_com_conero_uymas_svn - 2018.12.06 at 16h 01m 06s.xml">
+      <configuration name="TestBridge_Log in github.com/conero/uymas/svn" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestBridge_Log_in_github_com_conero_uymas_svn - 2018.12.06 at 16h 01m 25s.xml">
+      <configuration name="TestBridge_Log in github.com/conero/uymas/svn" configurationId="GoTestRunConfiguration" />
+    </history-entry>
+    <history-entry file="TestBridge_Log_in_github_com_conero_uymas_svn - 2018.12.06 at 16h 04m 49s.xml">
       <configuration name="TestBridge_Log in github.com/conero/uymas/svn" configurationId="GoTestRunConfiguration" />
     </history-entry>
   </component>
@@ -557,22 +548,22 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/svn/bridge_test.go">
+    <entry file="file://$PROJECT_DIR$/svn/bridge.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="247">
-          <caret line="39" column="22" selection-start-line="39" selection-start-column="22" selection-end-line="39" selection-end-column="22" />
+        <state relative-caret-position="323">
+          <caret line="184" column="18" lean-forward="true" selection-start-line="184" selection-start-column="18" selection-end-line="184" selection-end-column="18" />
           <folding>
-            <element signature="e#13#41#0" expanded="true" />
+            <element signature="e#13#60#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/svn/bridge.go">
+    <entry file="file://$PROJECT_DIR$/svn/bridge_test.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="155" column="4" selection-start-line="155" selection-start-column="4" selection-end-line="155" selection-end-column="4" />
+        <state relative-caret-position="304">
+          <caret line="39" column="24" lean-forward="true" selection-start-line="39" selection-start-column="24" selection-end-line="39" selection-end-column="24" />
           <folding>
-            <element signature="e#13#60#0" expanded="true" />
+            <element signature="e#13#41#0" expanded="true" />
           </folding>
         </state>
       </provider>
