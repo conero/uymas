@@ -56,5 +56,10 @@ func (c *Command) Run() {
 
 // 二级命令应用
 func (c *Command) SubCommandUnfind(subCmd string) {
-	fmt.Println(" 二级命令不存在：" + subCmd)
+	fmt.Println("  二级命令不存在：" + subCmd)
+}
+
+// 帮助说明
+func (c *Command) Help() {
+	fmt.Println("  项目帮助说明，外部通过： $ help [访问] 来查看对应的命令帮助")
 }

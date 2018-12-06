@@ -87,7 +87,7 @@ func CopyDir(dst, src string) {
 				d1 += "/"
 				s1 += "/"
 				CopyDir(d1, s1)
-			}else {
+			} else {
 				Copy(d1, s1)
 			}
 		}
