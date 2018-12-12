@@ -95,3 +95,20 @@ func TestRender(t *testing.T) {
 		"name": "Joshua Conero",
 	})
 }
+
+// 反转测试
+func TestReverse(t *testing.T) {
+	tc := [][]string{
+		[]string{"Joshua Conero.", ".orenoC auhsoJ"},
+		[]string{"JoJ", "JoJ"},
+		[]string{"", ""},
+	}
+	for _, ts := range tc {
+		ref := ts[0]
+		xs := ts[1]
+		ys := Reverse(xs)
+		if ref != ys {
+			t.Fatal(fmt.Sprintf("%s != [Reverse(%s)] => %s", ref, xs, ys))
+		}
+	}
+}

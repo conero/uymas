@@ -6,7 +6,8 @@
 
 _<font color="blue">此版本开始，必须在发布大版本时，总结该大版本的具体更变.</font>_
 
-> - 添加 **uymas/svn** 包
+> - 添加 **uymas/svn** 包：svn 命令解析程序
+> - 添加**uymas/unit**包：test 单元测试扩展包
 
 
 
@@ -14,6 +15,17 @@ _<font color="blue">此版本开始，必须在发布大版本时，总结该大
 
 - *uymas/svn*
   - (修复) *`XmlLog` 的xml结构标注无效，即`Bridge.Log` 正常*
+- (+) **uymas/unit**
+  - *`testing`单元测试相关的协助程序包*
+  - *实现`StrSingLine` 字符串单通道测试控制，支持自定义测试*
+- *uymas/util* 
+  - (+) *Decimal*
+    - *添加`十进制`整数型处理*
+    - 实现`十进制转N进制`，以及提供2,8,16,32,36,62等进制的快捷转换
+  - 添加快捷方法`DecT36/62`实现对应的机制转换
+  - (+) *添加 util_test 单元测试脚本*
+- **uymas/str**
+  - (+) *添加 `Reverse` 用于翻转字符串，以及添加对其的测试*
 
 
 

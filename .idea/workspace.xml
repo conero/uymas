@@ -4,9 +4,9 @@
     <list default="true" id="3a45b027-decf-43bc-9789-c65efb5292cc" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ChangeLog.md" beforeDir="false" afterPath="$PROJECT_DIR$/ChangeLog.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/svn/bridge.go" beforeDir="false" afterPath="$PROJECT_DIR$/svn/bridge.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/svn/bridgeIssues29117_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/svn/bridgeIssues29117_test.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/svn/bridge_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/svn/bridge_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/str/str.go" beforeDir="false" afterPath="$PROJECT_DIR$/str/str.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/str/str_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/str/str_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/util.go" beforeDir="false" afterPath="$PROJECT_DIR$/util/util.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -22,101 +22,98 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://C:/Go/src/builtin/builtin.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4826">
-              <caret line="254" column="5" selection-start-line="254" selection-start-column="5" selection-end-line="254" selection-end-column="5" />
+            <state relative-caret-position="141">
+              <caret line="74" column="5" selection-start-line="74" selection-start-column="5" selection-end-line="74" selection-end-column="5" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/svn/svn.go">
+        <entry file="file://$PROJECT_DIR$/util/util.go">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="171">
-              <caret line="12" column="35" selection-start-line="12" selection-start-column="35" selection-end-line="12" selection-end-column="35" />
+              <caret line="58" column="28" lean-forward="true" selection-start-line="58" selection-start-column="28" selection-end-line="58" selection-end-column="28" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/util/util_test.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="191">
+              <caret line="43" column="41" lean-forward="true" selection-start-line="43" selection-start-column="41" selection-end-line="43" selection-end-column="41" />
               <folding>
-                <element signature="e#13#43#0" expanded="true" />
+                <element signature="e#14#67#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://C:/Go/src/testing/testing.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="141">
+              <caret line="791" selection-start-line="791" selection-end-line="791" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://C:/Go/src/runtime/panic.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="141">
+              <caret line="512" selection-start-line="512" selection-end-line="512" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/str/str.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="209">
+              <caret line="104" column="28" selection-start-line="104" selection-start-column="28" selection-end-line="104" selection-end-column="28" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/str/str_test.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="57">
+              <caret line="97" selection-start-line="97" selection-end-line="114" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/unit/str.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="171">
+              <caret line="14" column="16" selection-start-line="14" selection-start-column="5" selection-end-line="14" selection-end-column="16" />
+              <folding>
+                <element signature="e#14#42#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/svn/bridge.go">
+        <entry file="file://$PROJECT_DIR$/util/decimal.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1064">
-              <caret line="70" column="19" selection-start-line="70" selection-start-column="12" selection-end-line="70" selection-end-column="19" />
+            <state relative-caret-position="19">
+              <caret line="22" column="12" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="12" />
               <folding>
-                <element signature="e#13#76#0" expanded="true" />
+                <element signature="e#14#66#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/svn/bridge_test.go">
+        <entry file="file://C:/Go/src/strings/strings.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="36" column="6" selection-start-line="36" selection-start-column="6" selection-end-line="36" selection-end-column="6" />
-              <folding>
-                <element signature="e#13#41#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/svn/bridgeIssues29117_test.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="46" column="37" selection-start-line="46" selection-start-column="37" selection-end-line="46" selection-end-column="37" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/svn/svn_test.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="247">
-              <caret line="16" column="14" selection-start-line="16" selection-start-column="14" selection-end-line="16" selection-end-column="14" />
-              <folding>
-                <element signature="e#13#41#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bin/command.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="969">
-              <caret line="55" selection-start-line="55" selection-end-line="55" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/util/error.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="266">
-              <caret line="14" selection-start-line="14" selection-end-line="14" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bin/runRouter.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1862">
-              <caret line="102" column="20" selection-start-line="102" selection-start-column="20" selection-end-line="102" selection-end-column="20" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bin/router.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret line="12" column="1" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
+            <state relative-caret-position="124">
+              <caret line="58" column="45" selection-start-line="58" selection-start-column="38" selection-end-line="58" selection-end-column="45" />
             </state>
           </provider>
         </entry>
@@ -136,6 +133,7 @@
       <find>fmt.Println</find>
       <find>fmt</find>
       <find>TestSplitSafe</find>
+      <find>Reverse</find>
     </findStrings>
   </component>
   <component name="GOROOT" path="C:\Go" />
@@ -149,7 +147,6 @@
         <option value="$PROJECT_DIR$/bin/action.go" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/util/error.go" />
-        <option value="$PROJECT_DIR$/util/util.go" />
         <option value="$PROJECT_DIR$/util/str/str.go" />
         <option value="$PROJECT_DIR$/util/str/queue.go" />
         <option value="$PROJECT_DIR$/bin/app.go" />
@@ -158,8 +155,6 @@
         <option value="$PROJECT_DIR$/bin/runRouter.go" />
         <option value="$PROJECT_DIR$/ChangeLog.md" />
         <option value="$PROJECT_DIR$/fs/os.go" />
-        <option value="$PROJECT_DIR$/str/str.go" />
-        <option value="$PROJECT_DIR$/str/str_test.go" />
         <option value="$PROJECT_DIR$/fs/io.go" />
         <option value="$PROJECT_DIR$/bin/command.go" />
         <option value="$PROJECT_DIR$/svn/svn_test.go" />
@@ -169,6 +164,12 @@
         <option value="$PROJECT_DIR$/svn/bridgeIssues29117_test.go" />
         <option value="$PROJECT_DIR$/svn/bridge_test.go" />
         <option value="$PROJECT_DIR$/svn/bridge.go" />
+        <option value="$PROJECT_DIR$/str/str.go" />
+        <option value="$PROJECT_DIR$/str/str_test.go" />
+        <option value="$PROJECT_DIR$/util/util.go" />
+        <option value="$PROJECT_DIR$/unit/str.go" />
+        <option value="$PROJECT_DIR$/util/decimal.go" />
+        <option value="$PROJECT_DIR$/util/util_test.go" />
       </list>
     </option>
   </component>
@@ -185,7 +186,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -193,10 +193,21 @@
               <item name="uymas" type="b2602c69:ProjectViewProjectNode" />
               <item name="uymas" type="462c0819:PsiDirectoryNode" />
             </path>
+            <path>
+              <item name="uymas" type="b2602c69:ProjectViewProjectNode" />
+              <item name="uymas" type="462c0819:PsiDirectoryNode" />
+              <item name="unit" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="uymas" type="b2602c69:ProjectViewProjectNode" />
+              <item name="uymas" type="462c0819:PsiDirectoryNode" />
+              <item name="util" type="462c0819:PsiDirectoryNode" />
+            </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -226,7 +237,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Go Test.TestBridge_Log in github.com/conero/uymas/svn">
+  <component name="RunManager" selected="Go Test.TestDecT62 in github.com/conero/uymas/util">
     <configuration name="TestBridge_Info in github.com/conero/uymas/svn" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="uymas" />
       <working_directory value="$PROJECT_DIR$/svn" />
@@ -249,79 +260,79 @@
       <pattern value="^TestBridge_Log$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestBridge_Log2 in github.com/conero/uymas/svn" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestDecT36 in github.com/conero/uymas/util" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="uymas" />
-      <working_directory value="$PROJECT_DIR$/svn" />
+      <working_directory value="$PROJECT_DIR$/util" />
       <framework value="gotest" />
       <kind value="PACKAGE" />
-      <package value="github.com/conero/uymas/svn" />
+      <package value="github.com/conero/uymas/util" />
       <directory value="$PROJECT_DIR$/" />
       <filePath value="$PROJECT_DIR$/" />
-      <pattern value="^TestBridge_Log2$" />
+      <pattern value="^TestDecT36$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestCall in github.com/conero/uymas/svn" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestDecT62 in github.com/conero/uymas/util" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="uymas" />
-      <working_directory value="$PROJECT_DIR$/svn" />
+      <working_directory value="$PROJECT_DIR$/util" />
       <framework value="gotest" />
       <kind value="PACKAGE" />
-      <package value="github.com/conero/uymas/svn" />
+      <package value="github.com/conero/uymas/util" />
       <directory value="$PROJECT_DIR$/" />
       <filePath value="$PROJECT_DIR$/" />
-      <pattern value="^TestCall$" />
+      <pattern value="^TestDecT62$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestVersion in github.com/conero/uymas/svn" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestReverse in github.com/conero/uymas/str" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="uymas" />
-      <working_directory value="$PROJECT_DIR$/svn" />
+      <working_directory value="$PROJECT_DIR$/str" />
       <framework value="gotest" />
       <kind value="PACKAGE" />
-      <package value="github.com/conero/uymas/svn" />
+      <package value="github.com/conero/uymas/str" />
       <directory value="$PROJECT_DIR$/" />
       <filePath value="$PROJECT_DIR$/" />
-      <pattern value="^TestVersion$" />
+      <pattern value="^TestReverse$" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Test.TestDecT62 in github.com/conero/uymas/util" />
+        <item itemvalue="Go Test.TestDecT36 in github.com/conero/uymas/util" />
+        <item itemvalue="Go Test.TestReverse in github.com/conero/uymas/str" />
         <item itemvalue="Go Test.TestBridge_Log in github.com/conero/uymas/svn" />
         <item itemvalue="Go Test.TestBridge_Info in github.com/conero/uymas/svn" />
-        <item itemvalue="Go Test.TestBridge_Log2 in github.com/conero/uymas/svn" />
-        <item itemvalue="Go Test.TestCall in github.com/conero/uymas/svn" />
-        <item itemvalue="Go Test.TestVersion in github.com/conero/uymas/svn" />
       </list>
     </recent_temporary>
   </component>
   <component name="TestHistory">
-    <history-entry file="TestBridge_Log2_in_github_com_conero_uymas_svn - 2018.12.11 at 10h 14m 37s.xml">
-      <configuration name="TestBridge_Log2 in github.com/conero/uymas/svn" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestDecT62_in_github_com_conero_uymas_util - 2018.12.12 at 15h 08m 29s.xml">
+      <configuration name="TestDecT62 in github.com/conero/uymas/util" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestBridge_Log2_in_github_com_conero_uymas_svn - 2018.12.12 at 09h 49m 10s.xml">
-      <configuration name="TestBridge_Log2 in github.com/conero/uymas/svn" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestDecT62_in_github_com_conero_uymas_util - 2018.12.12 at 15h 08m 51s.xml">
+      <configuration name="TestDecT62 in github.com/conero/uymas/util" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestBridge_Log2_in_github_com_conero_uymas_svn - 2018.12.12 at 09h 49m 30s.xml">
-      <configuration name="TestBridge_Log2 in github.com/conero/uymas/svn" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestDecT62_in_github_com_conero_uymas_util - 2018.12.12 at 15h 09m 14s.xml">
+      <configuration name="TestDecT62 in github.com/conero/uymas/util" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestBridge_Log2_in_github_com_conero_uymas_svn - 2018.12.12 at 09h 49m 37s.xml">
-      <configuration name="TestBridge_Log2 in github.com/conero/uymas/svn" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestDecT62_in_github_com_conero_uymas_util - 2018.12.12 at 15h 09m 35s.xml">
+      <configuration name="TestDecT62 in github.com/conero/uymas/util" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestBridge_Info_in_github_com_conero_uymas_svn - 2018.12.12 at 09h 49m 48s.xml">
-      <configuration name="TestBridge_Info in github.com/conero/uymas/svn" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestDecT62_in_github_com_conero_uymas_util - 2018.12.12 at 15h 09m 59s.xml">
+      <configuration name="TestDecT62 in github.com/conero/uymas/util" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestBridge_Log_in_github_com_conero_uymas_svn - 2018.12.12 at 09h 49m 57s.xml">
-      <configuration name="TestBridge_Log in github.com/conero/uymas/svn" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestDecT62_in_github_com_conero_uymas_util - 2018.12.12 at 15h 10m 18s.xml">
+      <configuration name="TestDecT62 in github.com/conero/uymas/util" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestBridge_Log_in_github_com_conero_uymas_svn - 2018.12.12 at 09h 50m 23s.xml">
-      <configuration name="TestBridge_Log in github.com/conero/uymas/svn" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestDecT62_in_github_com_conero_uymas_util - 2018.12.12 at 15h 11m 02s.xml">
+      <configuration name="TestDecT62 in github.com/conero/uymas/util" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestBridge_Log_in_github_com_conero_uymas_svn - 2018.12.12 at 09h 51m 11s.xml">
-      <configuration name="TestBridge_Log in github.com/conero/uymas/svn" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestDecT62_in_github_com_conero_uymas_util - 2018.12.12 at 15h 11m 08s.xml">
+      <configuration name="TestDecT62 in github.com/conero/uymas/util" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestBridge_Log_in_github_com_conero_uymas_svn - 2018.12.12 at 09h 51m 47s.xml">
-      <configuration name="TestBridge_Log in github.com/conero/uymas/svn" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestDecT62_in_github_com_conero_uymas_util - 2018.12.12 at 15h 11m 34s.xml">
+      <configuration name="TestDecT62 in github.com/conero/uymas/util" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestBridge_Log_in_github_com_conero_uymas_svn - 2018.12.12 at 09h 53m 57s.xml">
-      <configuration name="TestBridge_Log in github.com/conero/uymas/svn" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestDecT62_in_github_com_conero_uymas_util - 2018.12.12 at 15h 12m 03s.xml">
+      <configuration name="TestDecT62 in github.com/conero/uymas/util" configurationId="GoTestRunConfiguration" />
     </history-entry>
   </component>
   <component name="TodoView">
@@ -335,9 +346,10 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.48734176" visible="true" weight="0.31300268" />
-      <window_info id="Structure" order="1" sideWeight="0.51265824" side_tool="true" visible="true" weight="0.31300268" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.48523206" visible="true" weight="0.31702414" />
+      <window_info id="Structure" order="1" sideWeight="0.51476794" side_tool="true" visible="true" weight="0.31702414" />
       <window_info id="Favorites" order="2" sideWeight="0.5028329" side_tool="true" weight="0.29289544" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
@@ -347,7 +359,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3286119" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info active="true" anchor="bottom" id="Version Control" order="8" visible="true" weight="0.3286119" />
+      <window_info anchor="bottom" id="Version Control" order="8" visible="true" weight="0.3286119" />
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49932975" weight="0.3286119" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50067025" side_tool="true" weight="0.3286119" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
@@ -363,13 +375,6 @@
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/util/str.go" />
-    <entry file="file://C:/Go/src/strings/strings.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="169">
-          <caret line="939" column="5" selection-start-line="939" selection-start-column="5" selection-end-line="939" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://C:/Go/src/reflect/value.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="104">
@@ -435,30 +440,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/Go/src/testing/testing.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="190">
-          <caret line="10" column="2" selection-start-line="10" selection-start-column="2" selection-end-line="10" selection-end-column="2" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/util/util.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="456">
-          <caret line="27" selection-start-line="27" selection-end-line="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/str/str.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1615">
-          <caret line="91" selection-start-line="91" selection-end-line="91" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/str/str_test.go">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/bin/app.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="532">
@@ -503,13 +484,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/Go/src/builtin/builtin.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4826">
-          <caret line="254" column="5" selection-start-line="254" selection-start-column="5" selection-end-line="254" selection-end-column="5" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/svn/svn.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="171">
@@ -517,6 +491,23 @@
           <folding>
             <element signature="e#13#43#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/svn/bridge_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="627">
+          <caret line="36" column="6" selection-start-line="36" selection-start-column="6" selection-end-line="36" selection-end-column="6" />
+          <folding>
+            <element signature="e#13#41#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/svn/bridgeIssues29117_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="779">
+          <caret line="46" column="37" selection-start-line="46" selection-start-column="37" selection-end-line="46" selection-end-column="37" />
         </state>
       </provider>
     </entry>
@@ -558,29 +549,88 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/svn/bridgeIssues29117_test.go">
+    <entry file="file://$PROJECT_DIR$/svn/bridge.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="171">
-          <caret line="46" column="37" selection-start-line="46" selection-start-column="37" selection-end-line="46" selection-end-column="37" />
+        <state relative-caret-position="153">
+          <caret line="160" column="33" lean-forward="true" selection-start-line="160" selection-start-column="33" selection-end-line="160" selection-end-column="33" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/svn/bridge_test.go">
+    <entry file="file://C:/Go/src/builtin/builtin.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="285">
-          <caret line="36" column="6" selection-start-line="36" selection-start-column="6" selection-end-line="36" selection-end-column="6" />
+        <state relative-caret-position="141">
+          <caret line="74" column="5" selection-start-line="74" selection-start-column="5" selection-end-line="74" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Go/src/strings/strings.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="124">
+          <caret line="58" column="45" selection-start-line="58" selection-start-column="38" selection-end-line="58" selection-end-column="45" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/str/str_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="57">
+          <caret line="97" selection-start-line="97" selection-end-line="114" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Go/src/runtime/panic.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="141">
+          <caret line="512" selection-start-line="512" selection-end-line="512" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Go/src/testing/testing.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="141">
+          <caret line="791" selection-start-line="791" selection-end-line="791" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/str/str.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="209">
+          <caret line="104" column="28" selection-start-line="104" selection-start-column="28" selection-end-line="104" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/util/util_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="191">
+          <caret line="43" column="41" lean-forward="true" selection-start-line="43" selection-start-column="41" selection-end-line="43" selection-end-column="41" />
           <folding>
-            <element signature="e#13#41#0" expanded="true" />
+            <element signature="e#14#67#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/svn/bridge.go">
+    <entry file="file://$PROJECT_DIR$/unit/str.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1064">
-          <caret line="70" column="19" selection-start-line="70" selection-start-column="12" selection-end-line="70" selection-end-column="19" />
+        <state relative-caret-position="171">
+          <caret line="14" column="16" selection-start-line="14" selection-start-column="5" selection-end-line="14" selection-end-column="16" />
           <folding>
-            <element signature="e#13#76#0" expanded="true" />
+            <element signature="e#14#42#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/util/util.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="58" column="28" lean-forward="true" selection-start-line="58" selection-start-column="28" selection-end-line="58" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/util/decimal.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19">
+          <caret line="22" column="12" selection-start-line="22" selection-start-column="5" selection-end-line="22" selection-end-column="12" />
+          <folding>
+            <element signature="e#14#66#0" expanded="true" />
           </folding>
         </state>
       </provider>

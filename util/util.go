@@ -53,3 +53,13 @@ func Round(num float64, b int) float64 {
 	num = float64(int(num)) + float64(n2t)/float64(math.Pow10(b))
 	return num
 }
+
+// 数据进制转换
+func DecT36(num int) string {
+	return (&Decimal{num}).T36()
+}
+
+// 数据进制转换
+func DecT62(num int) string {
+	return (&Decimal{num}).T62()
+}

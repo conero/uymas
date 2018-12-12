@@ -96,3 +96,14 @@ func Render(tpl string, data interface{}) (string, error) {
 	}
 	return value, err2
 }
+
+// 字符串反转
+func Reverse(s string) string {
+	sQue := strings.Split(s, "")
+	sQueLen := len(sQue)
+	sNewQue := []string{}
+	for i := sQueLen - 1; i > -1; i-- {
+		sNewQue = append(sNewQue, sQue[i])
+	}
+	return strings.Join(sNewQue, "")
+}
