@@ -10,6 +10,13 @@ _<font color="blue">此版本开始，必须在发布大版本时，总结该大
 
 
 
+### 0.4.1/20181212 - (alpha)
+
+- *uymas/svn*
+  - (修复) *`XmlLog` 的xml结构标注无效，即`Bridge.Log` 正常*
+
+
+
 ### 0.4.0/20181206
 
 - *uymas/svn*

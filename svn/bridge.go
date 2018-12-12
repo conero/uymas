@@ -2,13 +2,13 @@ package svn
 
 import (
 	"encoding/xml"
-	"fmt"
 	"github.com/conero/uymas/fs"
 )
 
 // @Date：   2018/12/5 0005 22:57
 // @Author:  Joshua Conero
 // @Name:    命令桥
+// [encoding/xml] 解析过程中struct一定要是可到处类型的字段(由于其是不同包之间的库)，以及不可遗忘xml标注
 
 /*
 <?xml version="1.0" encoding="UTF-8"?>
@@ -159,7 +159,7 @@ type XLEnter struct {
 // log --xml 输出格式
 type XmlLog struct {
 	XMLName xml.Name `xml:"log"`
-	Enter   []XLEnter
+	Enter   []XLEnter `xml:"logentry"`
 }
 
 // svn log --xml
@@ -171,7 +171,6 @@ func (b *Bridge) Log(pArgs ...string) (XmlLog, error) {
 	}
 	//fmt.Println(args)
 	out, err := Call(args...)
-	fmt.Println(out, err)
 	var dd XmlLog
 	if err != nil {
 		return dd, err

@@ -33,7 +33,7 @@ var xmlStr string =
     </logentry>
 </log>
 `
-type enter struct {
+type Enter struct {
 	XMLName  xml.Name `xml:"logentry"`
 	Revision string   `xml:"revision,attr"`
 	Author   string   `xml:"author"`
@@ -44,12 +44,12 @@ type enter struct {
 // log --xml 输出格式
 type log struct {
 	XMLName xml.Name `xml:"log"`
-	enter   []enter
+	Enter   []Enter  `xml:"logentry"`
 }
 // test to get the format string
 func (lg log) format()  {
 	sQue := []string{}
-	for _, d := range lg.enter {
+	for _, d := range lg.Enter {
 		s := `{"revision": "` + d.Revision + `", "author": "` + d.Author + `", "date": "` + d.Date + `", "msg": "` + d.Msg + `"}`
 		sQue = append(sQue, s)
 		//fmt.Println(d)
@@ -63,7 +63,7 @@ func (lg log) format()  {
 
 	// more test the data format
 	fmt.Println(lg)
-	fmt.Println(lg.enter)
+	fmt.Println(lg.Enter)
 }
 
 func TestBridge_Log2(t *testing.T) {

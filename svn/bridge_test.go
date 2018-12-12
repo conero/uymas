@@ -33,8 +33,8 @@ func TestBridge_Log(t *testing.T) {
 		fmt.Println(" Error: " + er.Error())
 		return
 	}
-	fmt.Println(dd)
-	fmt.Println(dd.Enter)
+	//fmt.Println(dd)
+	//fmt.Println(dd.Enter)
 	for _, d := range dd.Enter {
 		s := `{"revision": "` + d.Revision + `", "author": "` + d.Author + `", "date": "` + d.Date + `", "msg": "` + d.Msg + `"}`
 		fmt.Println(" " + s)
