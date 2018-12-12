@@ -7,8 +7,7 @@ import (
 	"testing"
 )
 
-var xmlStr string =
-	`
+var xmlStr string = `
 <?xml version="1.0" encoding="UTF-8"?>
 <log>
     <logentry revision="4900">
@@ -33,6 +32,7 @@ var xmlStr string =
     </logentry>
 </log>
 `
+
 type Enter struct {
 	XMLName  xml.Name `xml:"logentry"`
 	Revision string   `xml:"revision,attr"`
@@ -46,8 +46,9 @@ type log struct {
 	XMLName xml.Name `xml:"log"`
 	Enter   []Enter  `xml:"logentry"`
 }
+
 // test to get the format string
-func (lg log) format()  {
+func (lg log) format() {
 	sQue := []string{}
 	for _, d := range lg.Enter {
 		s := `{"revision": "` + d.Revision + `", "author": "` + d.Author + `", "date": "` + d.Date + `", "msg": "` + d.Msg + `"}`

@@ -158,7 +158,7 @@ type XLEnter struct {
 
 // log --xml 输出格式
 type XmlLog struct {
-	XMLName xml.Name `xml:"log"`
+	XMLName xml.Name  `xml:"log"`
 	Enter   []XLEnter `xml:"logentry"`
 }
 
