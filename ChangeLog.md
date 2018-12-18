@@ -17,20 +17,29 @@ _<font color="blue">此版本开始，必须在发布大版本时，总结该大
 
 - **uymas/svn**
   - (修复) *`XmlLog` 的xml结构标注无效，即`Bridge.Log` 正常*
+
 - (+) **uymas/unit**
   - *`testing`单元测试相关的协助程序包*
   - *实现`StrSingLine` 字符串单通道测试控制，支持自定义测试*
+
 - **uymas/util**
   - (+) *Decimal*
     - *添加`十进制`整数型处理*
     - 实现`十进制转N进制`，以及提供2,8,16,32,36,62等进制的快捷转换
   - 添加快捷方法`DecT36/62`实现对应的机制转换
   - (+) *添加 util_test 单元测试脚本*
+
 - **uymas/str**
+
   - (+) *添加 `Reverse` 用于翻转字符串，以及添加对其的测试*
+
 - **uymas/bin**
+
   - (+) *添加方法 `AmendSubC`用于修正二级命令* 
+  - (+) *添加`runRouter_test.go` 的测试脚本*
+  - (+) *添加`FormatStr` 方法实现命令程序字符串格式化*
   - (优化) *`runAppRouter` 添加对二级命令 “all-key => AllKey” 的映射支持*
+
 
 
 
