@@ -94,8 +94,9 @@ func runAppRouter() {
 			v := reflect.ValueOf(cmd)
 			v.MethodByName(AppMethodInit).Call(nil)
 			if subCommandAble && app.SubCommand != "" {
-				if v.MethodByName(str.Ucfirst(app.SubCommand)).IsValid() {
-					v.MethodByName(str.Ucfirst(app.SubCommand)).Call(nil)
+				subC := str.Ucfirst(AmendSubC(app.SubCommand))
+				if v.MethodByName(subC).IsValid() {
+					v.MethodByName(subC).Call(nil)
 				} else {
 					v.MethodByName(AppMethodNoSubC).
 						Call([]reflect.Value{reflect.ValueOf(app.SubCommand)})
@@ -126,4 +127,13 @@ func getCommandByAlias(command string) string {
 		}
 	}
 	return command
+}
+
+// 修正文件命令
+func AmendSubC(subC string) string {
+	if strings.Index(subC, "-") > -1 {
+		subC = strings.Replace(subC, "-", " ", -1)
+		subC = str.Ucfirst(subC)
+	}
+	return subC
 }

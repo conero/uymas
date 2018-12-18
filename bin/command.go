@@ -13,12 +13,15 @@ import (
 //项目引用
 type ActionInterface interface {
 }
+
+// 二级命令别名
 type SubCmdAlias struct {
 	Alias   map[string][]string
 	Matched bool
 	Self    interface{}
 }
 
+// 命令结构体
 type Command struct {
 	App App
 	SCA *SubCmdAlias

@@ -8,17 +8,19 @@ _<font color="blue">此版本开始，必须在发布大版本时，总结该大
 
 > - 添加 **uymas/svn** 包：svn 命令解析程序
 > - 添加**uymas/unit**包：test 单元测试扩展包
+> - **uymas/bin**：
+>   - 添加对二级命令 “all-key => AllKey” 的映射支持
 
 
 
-### 0.4.1/20181212 - (alpha)
+### 0.4.1/20181218
 
-- *uymas/svn*
+- **uymas/svn**
   - (修复) *`XmlLog` 的xml结构标注无效，即`Bridge.Log` 正常*
 - (+) **uymas/unit**
   - *`testing`单元测试相关的协助程序包*
   - *实现`StrSingLine` 字符串单通道测试控制，支持自定义测试*
-- *uymas/util* 
+- **uymas/util**
   - (+) *Decimal*
     - *添加`十进制`整数型处理*
     - 实现`十进制转N进制`，以及提供2,8,16,32,36,62等进制的快捷转换
@@ -26,6 +28,9 @@ _<font color="blue">此版本开始，必须在发布大版本时，总结该大
   - (+) *添加 util_test 单元测试脚本*
 - **uymas/str**
   - (+) *添加 `Reverse` 用于翻转字符串，以及添加对其的测试*
+- **uymas/bin**
+  - (+) *添加方法 `AmendSubC`用于修正二级命令* 
+  - (优化) *`runAppRouter` 添加对二级命令 “all-key => AllKey” 的映射支持*
 
 
 
