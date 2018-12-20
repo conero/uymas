@@ -4,7 +4,23 @@
     <list default="true" id="3a45b027-decf-43bc-9789-c65efb5292cc" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ChangeLog.md" beforeDir="false" afterPath="$PROJECT_DIR$/ChangeLog.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Info.go" beforeDir="false" afterPath="$PROJECT_DIR$/Info.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/bin/bin.go" beforeDir="false" afterPath="$PROJECT_DIR$/bin/bin.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/bin_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/bin/bin_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/command.go" beforeDir="false" afterPath="$PROJECT_DIR$/bin/command.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/runRouter.go" beforeDir="false" afterPath="$PROJECT_DIR$/bin/runRouter.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/runRouter_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/bin/runRouter_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/str/str.go" beforeDir="false" afterPath="$PROJECT_DIR$/str/str.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/str/str_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/str/str_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/svn/bridge.go" beforeDir="false" afterPath="$PROJECT_DIR$/svn/bridge.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/svn/bridgeIssues29117_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/svn/bridgeIssues29117_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/svn/bridge_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/svn/bridge_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/todos.md" beforeDir="false" afterPath="$PROJECT_DIR$/todos.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/unit/str.go" beforeDir="false" afterPath="$PROJECT_DIR$/unit/str.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/decimal.go" beforeDir="false" afterPath="$PROJECT_DIR$/util/decimal.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/util.go" beforeDir="false" afterPath="$PROJECT_DIR$/util/util.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/util/util_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/util/util_test.go" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -20,17 +36,50 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bin/bin.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="152">
-              <caret line="187" column="78" selection-start-line="187" selection-start-column="78" selection-end-line="187" selection-end-column="78" />
+            <state relative-caret-position="171">
+              <caret line="271" column="13" lean-forward="true" selection-start-line="271" selection-start-column="13" selection-end-line="271" selection-end-column="13" />
+              <folding>
+                <element signature="n#!!block;n#FormatStr#0" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/number/number.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="190">
+              <caret line="10" column="13" selection-start-line="10" selection-start-column="5" selection-end-line="10" selection-end-column="13" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/number/number_test.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="152">
+              <caret line="16" column="16" lean-forward="true" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bin/command.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="112">
+              <caret line="32" column="16" selection-start-line="32" selection-start-column="16" selection-end-line="32" selection-end-column="16" />
+              <folding>
+                <element signature="n#!!block;n#InnerDistribute#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bin/bin_test.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="19">
-              <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
+            <state relative-caret-position="219">
+              <caret line="48" column="28" lean-forward="true" selection-start-line="48" selection-start-column="28" selection-end-line="48" selection-end-column="28" />
               <folding>
                 <element signature="e#13#41#0" expanded="true" />
               </folding>
@@ -39,10 +88,19 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bin/router.go">
+        <entry file="file://$PROJECT_DIR$/str/str.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret line="12" column="1" selection-start-line="12" selection-start-column="1" selection-end-line="12" selection-end-column="1" />
+            <state relative-caret-position="323">
+              <caret line="141" column="5" lean-forward="true" selection-start-line="141" selection-start-column="5" selection-end-line="141" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://C:/Go/src/math/floor.go">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="19">
+              <caret line="58" column="2" lean-forward="true" selection-start-line="58" selection-start-column="2" selection-end-line="58" selection-end-column="2" />
             </state>
           </provider>
         </entry>
@@ -50,38 +108,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/bin/runRouter.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="21" column="17" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="17" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/bin/runRouter_test.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="361">
-              <caret line="22" column="14" selection-start-line="22" selection-start-column="14" selection-end-line="22" selection-end-column="14" />
-              <folding>
-                <element signature="e#13#66#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/str/str.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1786">
-              <caret line="100" column="12" selection-start-line="100" selection-start-column="5" selection-end-line="100" selection-end-column="12" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Info.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="152">
-              <caret line="8" column="23" selection-start-line="8" selection-start-column="23" selection-end-line="8" selection-end-column="23" />
+            <state relative-caret-position="386">
+              <caret line="30" column="12" selection-start-line="30" selection-start-column="12" selection-end-line="30" selection-end-column="12" />
             </state>
           </provider>
         </entry>
@@ -89,26 +117,17 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/str/str_test.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1824">
-              <caret line="99" column="16" selection-start-line="99" selection-start-column="5" selection-end-line="99" selection-end-column="16" />
+            <state relative-caret-position="247">
+              <caret line="132" lean-forward="true" selection-start-line="132" selection-end-line="132" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/unit/str.go">
+        <entry file="file://$PROJECT_DIR$/Info.go">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="228">
-              <caret line="14" column="5" selection-start-line="14" selection-start-column="5" selection-end-line="14" selection-end-column="5" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://C:/Go/src/strings/strings.go">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1026">
-              <caret line="58" column="45" selection-start-line="58" selection-start-column="38" selection-end-line="58" selection-end-column="45" />
+            <state relative-caret-position="247">
+              <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
             </state>
           </provider>
         </entry>
@@ -156,16 +175,18 @@
         <option value="$PROJECT_DIR$/svn/bridgeIssues29117_test.go" />
         <option value="$PROJECT_DIR$/svn/bridge_test.go" />
         <option value="$PROJECT_DIR$/svn/bridge.go" />
-        <option value="$PROJECT_DIR$/str/str.go" />
-        <option value="$PROJECT_DIR$/str/str_test.go" />
         <option value="$PROJECT_DIR$/unit/str.go" />
         <option value="$PROJECT_DIR$/util/decimal.go" />
         <option value="$PROJECT_DIR$/util/util_test.go" />
-        <option value="$PROJECT_DIR$/bin/command.go" />
         <option value="$PROJECT_DIR$/bin/runRouter_test.go" />
         <option value="$PROJECT_DIR$/bin/runRouter.go" />
-        <option value="$PROJECT_DIR$/Info.go" />
         <option value="$PROJECT_DIR$/util/util.go" />
+        <option value="$PROJECT_DIR$/bin/command.go" />
+        <option value="$PROJECT_DIR$/Info.go" />
+        <option value="$PROJECT_DIR$/number/number.go" />
+        <option value="$PROJECT_DIR$/number/number_test.go" />
+        <option value="$PROJECT_DIR$/str/str.go" />
+        <option value="$PROJECT_DIR$/str/str_test.go" />
         <option value="$PROJECT_DIR$/bin/bin.go" />
         <option value="$PROJECT_DIR$/bin/bin_test.go" />
       </list>
@@ -184,6 +205,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -194,13 +216,17 @@
             <path>
               <item name="uymas" type="b2602c69:ProjectViewProjectNode" />
               <item name="uymas" type="462c0819:PsiDirectoryNode" />
-              <item name="bin" type="462c0819:PsiDirectoryNode" />
+              <item name="number" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="uymas" type="b2602c69:ProjectViewProjectNode" />
+              <item name="uymas" type="462c0819:PsiDirectoryNode" />
+              <item name="str" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -230,41 +256,8 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Go Test.TestFormatStr in github.com/conero/uymas/bin">
-    <configuration name="TestBridge_Log in github.com/conero/uymas/svn" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="uymas" />
-      <working_directory value="$PROJECT_DIR$/svn" />
-      <framework value="gotest" />
-      <kind value="PACKAGE" />
-      <package value="github.com/conero/uymas/svn" />
-      <directory value="$PROJECT_DIR$/" />
-      <filePath value="$PROJECT_DIR$/" />
-      <pattern value="^TestBridge_Log$" />
-      <method v="2" />
-    </configuration>
-    <configuration name="TestDecT36 in github.com/conero/uymas/util" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="uymas" />
-      <working_directory value="$PROJECT_DIR$/util" />
-      <framework value="gotest" />
-      <kind value="PACKAGE" />
-      <package value="github.com/conero/uymas/util" />
-      <directory value="$PROJECT_DIR$/" />
-      <filePath value="$PROJECT_DIR$/" />
-      <pattern value="^TestDecT36$" />
-      <method v="2" />
-    </configuration>
-    <configuration name="TestDecT62 in github.com/conero/uymas/util" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="uymas" />
-      <working_directory value="$PROJECT_DIR$/util" />
-      <framework value="gotest" />
-      <kind value="PACKAGE" />
-      <package value="github.com/conero/uymas/util" />
-      <directory value="$PROJECT_DIR$/" />
-      <filePath value="$PROJECT_DIR$/" />
-      <pattern value="^TestDecT62$" />
-      <method v="2" />
-    </configuration>
-    <configuration name="TestFormatStr in github.com/conero/uymas/bin" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Go Test.TestFormatTable in github.com/conero/uymas/bin">
+    <configuration name="TestFormatQue in github.com/conero/uymas/bin" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="uymas" />
       <working_directory value="$PROJECT_DIR$/bin" />
       <framework value="gotest" />
@@ -272,10 +265,21 @@
       <package value="github.com/conero/uymas/bin" />
       <directory value="$PROJECT_DIR$/" />
       <filePath value="$PROJECT_DIR$/" />
-      <pattern value="^TestFormatStr$" />
+      <pattern value="^TestFormatQue$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestReverse in github.com/conero/uymas/str" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestFormatTable in github.com/conero/uymas/bin" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="uymas" />
+      <working_directory value="$PROJECT_DIR$/bin" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/conero/uymas/bin" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^TestFormatTable$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestPadLeft in github.com/conero/uymas/str" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="uymas" />
       <working_directory value="$PROJECT_DIR$/str" />
       <framework value="gotest" />
@@ -283,49 +287,71 @@
       <package value="github.com/conero/uymas/str" />
       <directory value="$PROJECT_DIR$/" />
       <filePath value="$PROJECT_DIR$/" />
-      <pattern value="^TestReverse$" />
+      <pattern value="^TestPadLeft$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestPadRight in github.com/conero/uymas/str" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="uymas" />
+      <working_directory value="$PROJECT_DIR$/str" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/conero/uymas/str" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^TestPadRight$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestSumQueue in github.com/conero/uymas/number" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="uymas" />
+      <working_directory value="$PROJECT_DIR$/number" />
+      <framework value="gotest" />
+      <kind value="PACKAGE" />
+      <package value="github.com/conero/uymas/number" />
+      <directory value="$PROJECT_DIR$/" />
+      <filePath value="$PROJECT_DIR$/" />
+      <pattern value="^TestSumQueue$" />
       <method v="2" />
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Go Test.TestFormatStr in github.com/conero/uymas/bin" />
-        <item itemvalue="Go Test.TestDecT62 in github.com/conero/uymas/util" />
-        <item itemvalue="Go Test.TestDecT36 in github.com/conero/uymas/util" />
-        <item itemvalue="Go Test.TestReverse in github.com/conero/uymas/str" />
-        <item itemvalue="Go Test.TestBridge_Log in github.com/conero/uymas/svn" />
+        <item itemvalue="Go Test.TestFormatTable in github.com/conero/uymas/bin" />
+        <item itemvalue="Go Test.TestPadRight in github.com/conero/uymas/str" />
+        <item itemvalue="Go Test.TestPadLeft in github.com/conero/uymas/str" />
+        <item itemvalue="Go Test.TestSumQueue in github.com/conero/uymas/number" />
+        <item itemvalue="Go Test.TestFormatQue in github.com/conero/uymas/bin" />
       </list>
     </recent_temporary>
   </component>
   <component name="TestHistory">
-    <history-entry file="TestDecT62_in_github_com_conero_uymas_util - 2018.12.18 at 11h 20m 55s.xml">
-      <configuration name="TestDecT62 in github.com/conero/uymas/util" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestFormatTable_in_github_com_conero_uymas_bin - 2018.12.20 at 23h 43m 49s.xml">
+      <configuration name="TestFormatTable in github.com/conero/uymas/bin" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestDecT62_in_github_com_conero_uymas_util - 2018.12.18 at 11h 23m 10s.xml">
-      <configuration name="TestDecT62 in github.com/conero/uymas/util" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestFormatTable_in_github_com_conero_uymas_bin - 2018.12.20 at 23h 44m 26s.xml">
+      <configuration name="TestFormatTable in github.com/conero/uymas/bin" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestDecT62_in_github_com_conero_uymas_util - 2018.12.18 at 11h 30m 25s.xml">
-      <configuration name="TestDecT62 in github.com/conero/uymas/util" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestFormatTable_in_github_com_conero_uymas_bin - 2018.12.20 at 23h 45m 13s.xml">
+      <configuration name="TestFormatTable in github.com/conero/uymas/bin" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestDecT62_in_github_com_conero_uymas_util - 2018.12.18 at 16h 47m 27s.xml">
-      <configuration name="TestDecT62 in github.com/conero/uymas/util" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestFormatTable_in_github_com_conero_uymas_bin - 2018.12.20 at 23h 45m 55s.xml">
+      <configuration name="TestFormatTable in github.com/conero/uymas/bin" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestFormatStr_in_github_com_conero_uymas_bin - 2018.12.18 at 16h 50m 13s.xml">
-      <configuration name="TestFormatStr in github.com/conero/uymas/bin" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestFormatTable_in_github_com_conero_uymas_bin - 2018.12.20 at 23h 46m 04s.xml">
+      <configuration name="TestFormatTable in github.com/conero/uymas/bin" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestFormatStr_in_github_com_conero_uymas_bin - 2018.12.18 at 16h 50m 29s.xml">
-      <configuration name="TestFormatStr in github.com/conero/uymas/bin" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestFormatTable_in_github_com_conero_uymas_bin - 2018.12.20 at 23h 47m 05s.xml">
+      <configuration name="TestFormatTable in github.com/conero/uymas/bin" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestFormatStr_in_github_com_conero_uymas_bin - 2018.12.18 at 16h 50m 41s.xml">
-      <configuration name="TestFormatStr in github.com/conero/uymas/bin" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestFormatTable_in_github_com_conero_uymas_bin - 2018.12.20 at 23h 47m 18s.xml">
+      <configuration name="TestFormatTable in github.com/conero/uymas/bin" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestFormatStr_in_github_com_conero_uymas_bin - 2018.12.18 at 16h 50m 50s.xml">
-      <configuration name="TestFormatStr in github.com/conero/uymas/bin" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestFormatTable_in_github_com_conero_uymas_bin - 2018.12.20 at 23h 47m 29s.xml">
+      <configuration name="TestFormatTable in github.com/conero/uymas/bin" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestFormatStr_in_github_com_conero_uymas_bin - 2018.12.18 at 16h 50m 56s.xml">
-      <configuration name="TestFormatStr in github.com/conero/uymas/bin" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestFormatTable_in_github_com_conero_uymas_bin - 2018.12.20 at 23h 47m 55s.xml">
+      <configuration name="TestFormatTable in github.com/conero/uymas/bin" configurationId="GoTestRunConfiguration" />
     </history-entry>
-    <history-entry file="TestFormatStr_in_github_com_conero_uymas_bin - 2018.12.18 at 16h 51m 17s.xml">
-      <configuration name="TestFormatStr in github.com/conero/uymas/bin" configurationId="GoTestRunConfiguration" />
+    <history-entry file="TestFormatTable_in_github_com_conero_uymas_bin - 2018.12.20 at 23h 48m 29s.xml">
+      <configuration name="TestFormatTable in github.com/conero/uymas/bin" configurationId="GoTestRunConfiguration" />
     </history-entry>
   </component>
   <component name="TodoView">
@@ -341,8 +367,8 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4815864" visible="true" weight="0.33042896" />
-      <window_info id="Structure" order="1" sideWeight="0.5184136" side_tool="true" visible="true" weight="0.33042896" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.47679326" visible="true" weight="0.34450403" />
+      <window_info id="Structure" order="1" sideWeight="0.5232068" side_tool="true" visible="true" weight="0.34450403" />
       <window_info id="Favorites" order="2" sideWeight="0.5028329" side_tool="true" weight="0.29289544" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
@@ -352,7 +378,7 @@
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3286119" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="8" weight="0.3286119" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="8" visible="true" weight="0.3286119" />
       <window_info anchor="bottom" id="Terminal" order="9" sideWeight="0.49932975" weight="0.3286119" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.50067025" side_tool="true" weight="0.3286119" />
       <window_info anchor="bottom" id="Docker" order="11" show_stripe_button="false" />
@@ -442,16 +468,6 @@
     </entry>
     <entry file="file://C:/Go/src/testing/match.go">
       <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="-114">
-            <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ChangeLog.md">
       <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
@@ -555,13 +571,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bin/command.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="608">
-          <caret line="36" column="12" selection-start-line="36" selection-start-column="9" selection-end-line="36" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/util/util.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="665">
@@ -579,13 +588,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/bin/runRouter.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="21" column="17" selection-start-line="21" selection-start-column="5" selection-end-line="21" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/bin/runRouter_test.go">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="361">
@@ -596,24 +598,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/str/str.go">
+    <entry file="file://C:/Go/src/strings/strings.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1786">
-          <caret line="100" column="12" selection-start-line="100" selection-start-column="5" selection-end-line="100" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Info.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="8" column="23" selection-start-line="8" selection-start-column="23" selection-end-line="8" selection-end-column="23" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/str/str_test.go">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1824">
-          <caret line="99" column="16" selection-start-line="99" selection-start-column="5" selection-end-line="99" selection-end-column="16" />
+        <state relative-caret-position="1026">
+          <caret line="58" column="45" selection-start-line="58" selection-start-column="38" selection-end-line="58" selection-end-column="45" />
         </state>
       </provider>
     </entry>
@@ -624,27 +612,92 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://C:/Go/src/strings/strings.go">
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="-511">
+            <caret line="18" lean-forward="true" selection-start-line="18" selection-end-line="18" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/runRouter.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1026">
-          <caret line="58" column="45" selection-start-line="58" selection-start-column="38" selection-end-line="58" selection-end-column="45" />
+        <state relative-caret-position="386">
+          <caret line="30" column="12" selection-start-line="30" selection-start-column="12" selection-end-line="30" selection-end-column="12" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://C:/Go/src/math/floor.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19">
+          <caret line="58" column="2" lean-forward="true" selection-start-line="58" selection-start-column="2" selection-end-line="58" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/command.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="112">
+          <caret line="32" column="16" selection-start-line="32" selection-start-column="16" selection-end-line="32" selection-end-column="16" />
+          <folding>
+            <element signature="n#!!block;n#InnerDistribute#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/number/number_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="152">
+          <caret line="16" column="16" lean-forward="true" selection-start-line="16" selection-start-column="16" selection-end-line="16" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/str/str.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="323">
+          <caret line="141" column="5" lean-forward="true" selection-start-line="141" selection-start-column="5" selection-end-line="141" selection-end-column="5" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/bin/bin.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="152">
-          <caret line="187" column="78" selection-start-line="187" selection-start-column="78" selection-end-line="187" selection-end-column="78" />
+        <state relative-caret-position="171">
+          <caret line="271" column="13" lean-forward="true" selection-start-line="271" selection-start-column="13" selection-end-line="271" selection-end-column="13" />
+          <folding>
+            <element signature="n#!!block;n#FormatStr#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/str/str_test.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="247">
+          <caret line="132" lean-forward="true" selection-start-line="132" selection-end-line="132" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/bin/bin_test.go">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="19">
-          <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
+        <state relative-caret-position="219">
+          <caret line="48" column="28" lean-forward="true" selection-start-line="48" selection-start-column="28" selection-end-line="48" selection-end-column="28" />
           <folding>
             <element signature="e#13#41#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Info.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="247">
+          <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/number/number.go">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="10" column="13" selection-start-line="10" selection-start-column="5" selection-end-line="10" selection-end-column="13" />
         </state>
       </provider>
     </entry>

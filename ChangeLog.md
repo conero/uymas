@@ -2,6 +2,29 @@
 > 2018年10月30日 星期二
 > 项目
 
+## 0.5.x
+
+> **重新定义命令参数解析规则**
+
+
+
+### 0.5.0/20181220 - (alpha)
+
+- **uymas/bin**
+  - (+) *添加方法`FormatQue` 实现切片格式化字符串生成*
+  - (+) *添加方法`FormatTable`实现Table类型数据字符串生成*
+  - (+) *`bin_test.go` 添加对`FormatQue` 和`FormatTable`的测试*
+  - (+) *CmdUitl*
+    - 添加对象为 `bin.Command` 提供工具方法
+    - *实现统一的方法`BaseSubCAlias`，用于二级命令的别名解析，包含了框架统一的`-h`命令详情*
+
+- **uymas/number**
+  - (新增) *添加包用于数值运算*
+  - (+) *实现`SumQueue`方法用于`interface{}`类型的集合求和*
+  - (+) 实现`SumQInt`对int类型集合的求和
+
+
+
 ## 0.4.x
 
 _<font color="blue">此版本开始，必须在发布大版本时，总结该大版本的具体更变.</font>_

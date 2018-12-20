@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"html/template"
+	"math"
 	"regexp"
 	"strings"
 )
@@ -106,4 +107,38 @@ func Reverse(s string) string {
 		sNewQue = append(sNewQue, sQue[i])
 	}
 	return strings.Join(sNewQue, "")
+}
+
+// 向左填充
+func PadLeft(s string, pad string, le int) string {
+	sLen := len(s)
+	if sLen < le {
+		le -= sLen
+		padLen := len(pad)
+		n := math.Ceil(float64(le) / float64(padLen))
+		pref := strings.Repeat(pad, int(n))
+		prefLen := len(pref)
+		if prefLen > le {
+			pref = pref[prefLen-le:]
+		}
+		s = pref + s
+	}
+	return s
+}
+
+// 向右填充
+func PadRight(s string, pad string, le int) string {
+	sLen := len(s)
+	if sLen < le {
+		le -= sLen
+		padLen := len(pad)
+		n := math.Ceil(float64(le) / float64(padLen))
+		end := strings.Repeat(pad, int(n))
+		prefLen := len(end)
+		if prefLen > le {
+			end = end[:le]
+		}
+		s = s + end
+	}
+	return s
 }

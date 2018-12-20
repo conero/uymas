@@ -112,3 +112,29 @@ func TestReverse(t *testing.T) {
 		}
 	}
 }
+
+func _strTestCompare(data [][]string, t *testing.T) {
+	for _, dd := range data {
+		out := dd[1]
+		compare := dd[0]
+		if compare != out {
+			t.Fatal(fmt.Sprintf("%s != %s(compare vs out)", compare, out))
+		}
+	}
+}
+
+func TestPadLeft(t *testing.T) {
+	_strTestCompare([][]string{
+		[]string{"000001", PadLeft("1", "0", 6)},
+		[]string{"-=-=11", PadLeft("11", "-=", 6)},
+		[]string{"-*-*-*-ivu", PadLeft("ivu", "*-", 10)},
+	}, t)
+}
+
+func TestPadRight(t *testing.T) {
+	_strTestCompare([][]string{
+		[]string{"100000", PadRight("1", "0", 6)},
+		[]string{"11-=-=", PadRight("11", "-=", 6)},
+		[]string{"ivu*-*-*-*", PadRight("ivu", "*-", 10)},
+	}, t)
+}

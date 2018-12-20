@@ -27,9 +27,12 @@ $ go get -u  github.com/conero/uymas
 $ [command] [<options>]
 # [<options>] 格式如下
 
+
 # 1. 配置参数；全称以及简写
 --set[=true]
+# - 表示单字符; -x; -xy => -x -y ; -xzy => x=zy
 -short[=true]
+
 
 # 2. 二级命令(紧接着 [command])
 $ [command] [<sub-command>] [<options>]
@@ -54,10 +57,18 @@ import (
 type Test struct {
 	bin.Command
 }
-
-func (test *Test) Run ()  {
+// 项目初始化
+func (a *Test) Init ()  {
+    // 重写方法时必先系统父结构体方法[!!]
+    a.Command.Init()
+    
+    // todo ....
+}
+// 运行，执行内二级命令分发
+func (a *Test) Run ()  {
 	fmt.Println("ffff.")
 }
+
 // 命令 yang
 type Yang struct {
 	bin.Command
