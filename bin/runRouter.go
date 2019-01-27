@@ -52,7 +52,7 @@ func runAppRouter() {
 			equalIdx := strings.Index(arg, "=")
 			if equalIdx > -1 {
 				k := arg[0:equalIdx]
-				v := arg[equalIdx:]
+				v := arg[equalIdx+1:]
 				app.Data[k] = v
 			} else {
 				app.Data[arg] = true

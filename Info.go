@@ -6,7 +6,7 @@ package uymas
 
 const (
 	Version = "0.5.0-alpha"
-	Release = "20181220"
+	Release = "20190127"
 	Author  = "Joshua Conero"
 	Name    = "uymas"
 	PkgName = "conero/uymas"
