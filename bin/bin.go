@@ -20,10 +20,13 @@ var app *App = nil
 var args []string = nil
 var defaultRouter *Router
 var routerCmdApp map[string]interface{} = nil
-var routerAliasApp map[string][]string = nil // 项目别名匹配
-var subCommandAble bool = true               // 二级命令有效
-var appRuningWorkDir string                  // 应用运行目录
-var appFuncRouterMap map[string]func() = nil // 函数式路由地址字典
+var routerAliasApp map[string][]string = nil  // 项目别名匹配
+var subCommandAble bool = true                // 二级命令有效
+var appRuningWorkDir string                   // 应用运行目录
+var appFuncRouterMap map[string]func() = nil  // 函数式路由地址字典
+var _funcStyleEmptyTodo func() = nil          // 空函数命令使用
+var _funcStyleUnfindTo func(cmd string) = nil // 命令未知
+var _funcStyleMk bool = false                 // 函数式命令标记
 
 const (
 	AppMethodInit   = "Init"
@@ -86,6 +89,23 @@ func RegisterApps(data map[string]interface{}) {
 */
 func RegisterFunc(cmd string, todo func()) {
 	appFuncRouterMap[cmd] = todo
+	_funcStyleMk = true
+}
+
+/**
+空函数命令注册
+*/
+func EmptyFunc(todo func()) {
+	_funcStyleEmptyTodo = todo
+	_funcStyleMk = true
+}
+
+/**
+路由失败时的函数
+*/
+func UnfindFunc(todo func(cmd string)) {
+	_funcStyleUnfindTo = todo
+	_funcStyleMk = true
 }
 
 // 请求命令行帮助

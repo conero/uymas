@@ -82,9 +82,12 @@ func runAppRouter() {
 	}
 	// 路由匹配
 	if app.Command == "" {
+		// 空命令
 		if !runOptLsnFn() {
 			if app.Router != nil && app.Router.EmptyAction != nil {
 				app.Router.EmptyAction()
+			} else if _funcStyleEmptyTodo != nil {
+				_funcStyleEmptyTodo()
 			} else {
 				defaultRouter.EmptyAction()
 			}
@@ -126,8 +129,11 @@ func runAppRouter() {
 
 				// 自定义函数式路由标记
 				if !funcRouterMk {
+					// 未知命令
 					if hasRouter && app.Router.UnfindAction != nil {
 						app.Router.UnfindAction(command)
+					} else if _funcStyleUnfindTo != nil {
+						_funcStyleUnfindTo(command)
 					} else {
 						defaultRouter.UnfindAction(command)
 					}
