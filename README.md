@@ -1,5 +1,12 @@
 # uymas
 
+*查看文档 [conero/uymas godoc 文档](https://www.godoc.org/github.com/conero/uymas)*
+
+
+
+
+
+
 ## 项目介绍
 go 语言工具库
 go-version： *v1.11.1*

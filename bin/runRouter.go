@@ -42,6 +42,7 @@ func runAppRouter() {
 			cmdIdx = i + 1
 			continue
 		}
+
 		// 参数处理
 		if "-" == arg[0:1] {
 			if argLen > 2 && "--" == arg[0:2] {
@@ -52,7 +53,7 @@ func runAppRouter() {
 			equalIdx := strings.Index(arg, "=")
 			if equalIdx > -1 {
 				k := arg[0:equalIdx]
-				v := arg[equalIdx:]
+				v := arg[equalIdx+1:]
 				app.Data[k] = v
 			} else {
 				app.Data[arg] = true
@@ -106,10 +107,30 @@ func runAppRouter() {
 			}
 		} else {
 			if !runOptLsnFn() {
-				if app.Router != nil && app.Router.UnfindAction != nil {
-					app.Router.UnfindAction(command)
-				} else {
-					defaultRouter.UnfindAction(command)
+				// 函数式简单路由
+				hasRouter := app.Router != nil
+				funcRouterMk := false
+				if hasRouter && app.Router.FuncAction != nil {
+					funcRouterMk = app.Router.FuncAction(command, app)
+				}
+
+				// 自定义函数路由
+				if !funcRouterMk {
+					for cs, cfunc := range appFuncRouterMap {
+						if cs == command {
+							cfunc()
+							funcRouterMk = true
+						}
+					}
+				}
+
+				// 自定义函数式路由标记
+				if !funcRouterMk {
+					if hasRouter && app.Router.UnfindAction != nil {
+						app.Router.UnfindAction(command)
+					} else {
+						defaultRouter.UnfindAction(command)
+					}
 				}
 			}
 		}

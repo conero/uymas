@@ -20,6 +20,7 @@ var routerCmdApp map[string]interface{} = nil
 var routerAliasApp map[string][]string = nil // 项目别名匹配
 var subCommandAble bool = true               // 二级命令有效
 var appRuningWorkDir string                  // 应用运行目录
+var appFuncRouterMap map[string]func() = nil // 函数式路由地址字典
 
 const (
 	AppMethodInit   = "Init"
@@ -77,6 +78,13 @@ func RegisterApps(data map[string]interface{}) {
 	}
 }
 
+/**
+自定义函数式注册
+*/
+func RegisterFunc(cmd string, todo func()) {
+	appFuncRouterMap[cmd] = todo
+}
+
 // 请求命令行帮助
 func CallCmdHelp(key string) bool {
 	a, has := routerCmdApp[key]
@@ -125,6 +133,8 @@ func GetApp() App {
 func init() {
 	routerCmdApp = map[string]interface{}{}
 	routerAliasApp = map[string][]string{}
+	appFuncRouterMap = map[string]func(){}
+
 	app = &App{
 		Data:    map[string]interface{}{},
 		Setting: []string{},
@@ -140,6 +150,7 @@ func init() {
 		EmptyAction: func() {
 			fmt.Println("	欢迎使用 uymas包:" + uymas.Version + "/" + uymas.Release)
 		},
+		FuncAction: nil,
 	}
 	// 生成当前的工作目录
 	if cwd, err := os.Getwd(); err == nil {
@@ -185,7 +196,7 @@ func FormatStr(d string, ss ...[][]string) string {
 	var contents string
 	for _, sg := range ss {
 		for _, s := range sg {
-			ss1 := s[0] + strings.Repeat(bit, maxLen - len(s[0])) + s[1] + "\n"
+			ss1 := s[0] + strings.Repeat(bit, maxLen-len(s[0])) + s[1] + "\n"
 			contents += ss1
 		}
 	}

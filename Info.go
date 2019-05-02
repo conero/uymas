@@ -5,8 +5,8 @@ package uymas
 // @Name:    Uymas 包信息
 
 const (
-	Version = "0.4.1"
-	Release = "20181218"
+	Version = "0.4.2"
+	Release = "20190502"
 	Author  = "Joshua Conero"
 	Name    = "uymas"
 )
