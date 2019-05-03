@@ -18,6 +18,23 @@ $ <option>
 
 
 
+> 数据格式
+
+```shell
+# 字符串
+$ 'the data string.'	# the data string.
+$ "the data string."	# the data string.
+
+# 数字类型
+$ 8						# int
+$ 8.88					# float
+
+# 数组
+@todo needtodo
+```
+
+
+
 
 
 ### 教程

@@ -10,7 +10,8 @@ import (
 // @Name:    应用管理
 
 type App struct {
-	Data       map[string]interface{}
+	Data       map[string]interface{} // 格式化数据
+	DataRaw    map[string]string      // 原始数据，命令行的所有数据解析时都为字符串
 	Router     *Router
 	cwd        string   // 项目当前所在目录
 	prjName    string   // 所在目录项目名称
