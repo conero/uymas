@@ -55,6 +55,7 @@ func runAppRouter() {
 				k := arg[0:equalIdx]
 				v := arg[equalIdx+1:]
 				app.Data[k] = v
+				app.DataRaw[k] = v
 			} else {
 				app.Data[arg] = true
 				app.Setting = append(app.Setting, arg)

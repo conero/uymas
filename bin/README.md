@@ -30,7 +30,11 @@ $ 8						# int
 $ 8.88					# float
 
 # 数组
-@todo needtodo
+# 分割符号(separator)  默认","
+$ 'a','b','c','d'		# array [a, b, c, d]
+# "," 分割
+$ --separator-comma 
+$ -spt-c
 ```
 
 

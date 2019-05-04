@@ -160,6 +160,7 @@ func init() {
 
 	app = &App{
 		Data:    map[string]interface{}{},
+		DataRaw: map[string]string{},
 		Setting: []string{},
 		Queue:   []string{},
 	}

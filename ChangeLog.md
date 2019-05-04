@@ -24,6 +24,7 @@
   - **App**
     - (修复) *app.Data 属性解析错误*
     - (+) *新增属性 `DataRaw`， 默认字符串类型*
+    - (+) *新增 args 参数的获取方法，即分别从`Data` 和 `DataRaw`获取值。对应方法: `Args` 和 `ArgsRaw`*
   - **Router**
     - (+) *添加函数式 action 命令行实现方式*
   

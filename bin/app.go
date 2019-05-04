@@ -82,3 +82,21 @@ func (app *App) Next(keys ...string) string {
 	}
 	return value
 }
+
+// 获取，原参数解析值
+func (app *App) ArgsRaw(key string) string {
+	var value string
+	if v, b := app.DataRaw[key]; b {
+		value = v
+	}
+	return value
+}
+
+// 获取数据参数值
+func (app *App) Args(key string) interface{} {
+	var value interface{} = nil
+	if v, b := app.Data[key]; b {
+		value = v
+	}
+	return value
+}
