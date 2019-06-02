@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"math"
 	"time"
 )
@@ -37,6 +38,22 @@ func Sec(start float64) float64 {
 	ds := (ms - start) / math.Pow10(3)
 	ds = Round(ds, 5)
 	return ds
+}
+
+// 返回运算秒的秒数
+func SecCall() func() float64 {
+	start := Sec(0)
+	return func() float64 {
+		return Sec(start)
+	}
+}
+
+// 返回字符串式的运行毫秒
+func SecCallStr() func() string {
+	start := time.Now()
+	return func() string {
+		return fmt.Sprintf("%s", time.Since(start))
+	}
 }
 
 //字符串方法处理float等长数据 规定位数
