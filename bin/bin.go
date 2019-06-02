@@ -35,14 +35,28 @@ const (
 	AppMethodHelp   = "Help"
 )
 
-/**
+/*
 初始化
 */
 func Init(param []string) {
 	args = param
 }
 
-/**
+// 此方法用于非 os.Args 测试
+// 注入参数
+func InjectArgs(params ...string) {
+	args = getArgs()
+	newArgs := []string{""}
+	if len(args) == 0 {
+		newArgs[0] = args[0]
+	}
+
+	// 替换系统测试
+	newArgs = append(newArgs, params...)
+	args = newArgs
+}
+
+/*
 获取输入的参数
 */
 func getArgs() []string {
@@ -52,14 +66,14 @@ func getArgs() []string {
 	return args
 }
 
-/**
+/*
 命令别名集(单个)
 */
 func Alias(cmd string, alias ...string) {
 	routerAliasApp[cmd] = alias
 }
 
-/**
+/*
 命令别名集(多个)
 */
 func AliasMany(alias map[string][]string) {
@@ -68,14 +82,14 @@ func AliasMany(alias map[string][]string) {
 	}
 }
 
-/**
+/*
 项目注册(单个)
 */
 func Register(name string, cmd interface{}) {
 	routerCmdApp[name] = cmd
 }
 
-/**
+/*
 注册多个项目
 */
 func RegisterApps(data map[string]interface{}) {
@@ -84,7 +98,7 @@ func RegisterApps(data map[string]interface{}) {
 	}
 }
 
-/**
+/*
 自定义函数式注册
 */
 func RegisterFunc(cmd string, todo func()) {
@@ -92,7 +106,7 @@ func RegisterFunc(cmd string, todo func()) {
 	_funcStyleMk = true
 }
 
-/**
+/*
 空函数命令注册
 */
 func EmptyFunc(todo func()) {
@@ -100,7 +114,7 @@ func EmptyFunc(todo func()) {
 	_funcStyleMk = true
 }
 
-/**
+/*
 路由失败时的函数
 */
 func UnfindFunc(todo func(cmd string)) {
@@ -142,14 +156,14 @@ func SubCommand(able bool) {
 }
 
 // 系统运行
-func Run() App {
+func Run() *App {
 	runAppRouter()
-	return *app
+	return app
 }
 
 // 获取命令行 App
-func GetApp() App {
-	return *app
+func GetApp() *App {
+	return app
 }
 
 // 引用初始化
@@ -313,4 +327,10 @@ func FormatTable(data [][]interface{}, args ...interface{}) string {
 		s += line + "\n"
 	}
 	return s
+}
+
+// 空命令检测
+func IsEmptyCmd() bool {
+	args = getArgs()
+	return 1 == len(args)
 }

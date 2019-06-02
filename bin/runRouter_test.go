@@ -27,3 +27,17 @@ func TestAmendSubC(t *testing.T) {
 	}
 
 }
+
+// runAppRouter 测试
+func TestCommand_Run(t *testing.T) {
+	// 自定义查询
+	InjectArgs("test", "action")
+	// 运行入口
+	Run()
+	if app.Command != "test" {
+		t.Fatal("runAppRouter 测试错误：test != " + app.Command)
+	}
+	if app.SubCommand != "action" {
+		t.Fatal("runAppRouter 测试错误：action != " + app.SubCommand)
+	}
+}

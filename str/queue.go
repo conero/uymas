@@ -6,7 +6,7 @@ import "strings"
 // @Author:  Joshua Conero
 // @Name:    字符互队列
 
-/**
+/*
 字符串对是否存在
 不存在返回 -1
 */

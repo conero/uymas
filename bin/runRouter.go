@@ -144,7 +144,7 @@ func runAppRouter() {
 	}
 }
 
-/**
+/*
 支持别名
 */
 func getCommandByAlias(command string) string {

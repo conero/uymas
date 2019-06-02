@@ -21,7 +21,7 @@ type App struct {
 	Queue      []string // 命令队列
 }
 
-/**
+/*
 检测属性是否存在
 */
 func (app App) HasSetting(set string) bool {
@@ -32,9 +32,7 @@ func (app App) HasSetting(set string) bool {
 	return has
 }
 
-/**
-获取当的工作目录
-*/
+// 获取当的工作目录
 func (app App) Cwd() string {
 	return app.cwd
 }
