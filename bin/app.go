@@ -9,6 +9,7 @@ import (
 // @Author:  Joshua Conero
 // @Name:    应用管理
 
+// 全局命令行实例，可通过 GetApp 获取
 type App struct {
 	Data       map[string]interface{} // 格式化数据
 	DataRaw    map[string]string      // 原始数据，命令行的所有数据解析时都为字符串
@@ -21,10 +22,8 @@ type App struct {
 	Queue      []string // 命令队列
 }
 
-/*
-检测属性是否存在
-*/
-func (app App) HasSetting(set string) bool {
+// 检测属性是否存在
+func (app *App) HasSetting(set string) bool {
 	has := false
 	if idx := str.InQue(set, app.Setting); idx > -1 {
 		has = true
@@ -33,7 +32,7 @@ func (app App) HasSetting(set string) bool {
 }
 
 // 获取当的工作目录
-func (app App) Cwd() string {
+func (app *App) Cwd() string {
 	return app.cwd
 }
 

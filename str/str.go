@@ -1,3 +1,4 @@
+// 字符串处理工具包
 package str
 
 import (

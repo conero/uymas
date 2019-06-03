@@ -1,3 +1,4 @@
+// 文件系统处理扩展
 package fs
 
 import (

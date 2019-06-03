@@ -1,3 +1,4 @@
+// 轻量级命令行框架
 package bin
 
 import (
