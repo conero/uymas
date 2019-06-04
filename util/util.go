@@ -11,10 +11,8 @@ import (
 // @Author:  Joshua Conero
 // @Name:    工具栏
 
-/*
-数组中是否存在
-不存在返回 -1
-*/
+// 数组中是否存在
+// 不存在返回 -1
 func InQue(val interface{}, que []interface{}) int {
 	idx := -1
 	if que != nil {

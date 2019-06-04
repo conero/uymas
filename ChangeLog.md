@@ -8,7 +8,7 @@
 
 
 
-### 0.5.0/20190603 - (alpha)
+### 0.5.0/20190604 - (alpha)
 
 - **uymas/bin**
   - (+) *添加方法`FormatQue` 实现切片格式化字符串生成*
@@ -29,8 +29,11 @@
     - (+) *新增 args 参数的获取方法，即分别从`Data` 和 `DataRaw`获取值。对应方法: `Args` 和 `ArgsRaw`*
   - **Router**
     - (+) *添加函数式 action 命令行实现方式*
+- **uymas/fs**
+  - (+) *新增方法 `ExistPath` 用于检测文件/目录的存在性*
+  - (+) *`Append` 实现文件尾部附加写入*
 - **uymas/number**
-  - (新增) *添加包用于数值运算*
+  - (+) *添加包用于数值运算*
   - (+) *实现`SumQueue`方法用于`interface{}`类型的集合求和*
   - (+) 实现`SumQInt`对int类型集合的求和
 - **uymas/util**

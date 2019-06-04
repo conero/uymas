@@ -4,6 +4,7 @@ package bin
 // @Author:  Joshua Conero
 // @Name:    bin 路由器
 
+// 路由器基类
 type Router struct {
 	// 别名映射组
 	Alias          map[string]string

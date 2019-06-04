@@ -1,4 +1,4 @@
-// 文件系统处理扩展
+// 文件系统处理扩展，文件/目录操作
 package fs
 
 import (
@@ -12,6 +12,8 @@ import (
 // @Author:  Joshua Conero
 // @Name:    读写
 
+// 不稳定，不建议使用
+// Fs 系统的文件读写接口尝试
 type FsReaderWriter struct {
 	content  []byte
 	dstFile  string
@@ -75,7 +77,7 @@ func Copy(dstFile, srcFile string) (bool, error) {
 	return true, nil
 }
 
-// 目录复制
+// 全目录文件复制
 func CopyDir(dst, src string) {
 	dst = StdDir(dst)
 	src = StdDir(src)
@@ -95,10 +97,10 @@ func CopyDir(dst, src string) {
 	}
 }
 
-// 检测目录，并创建
+// 检测目录，不存在则并创建
 // 获取并返回标准目录
 func CheckDir(dir string) string {
-	dir = strings.Replace(dir, "\\", "/", -1)
+	dir = StdDir(dir)
 	_, err := os.Open(dir)
 	if err != nil {
 		os.MkdirAll(dir, 0666)
@@ -115,6 +117,18 @@ func IsDir(dir string) bool {
 	return true
 }
 
+// 文件/文件等路径是否存在
+func ExistPath(vpath string) bool {
+	_, err := os.Stat(vpath)
+	if err == nil {
+		return true
+	}
+	if os.IsNotExist(err) {
+		return false
+	}
+	return false
+}
+
 // 获取标准目录
 func StdDir(d string) string {
 	d = strings.Replace(d, "\\", "/", -1)
@@ -122,4 +136,15 @@ func StdDir(d string) string {
 		d += "/"
 	}
 	return d
+}
+
+// 文件尾部附加内容
+func Append(filename, text string) error {
+	f, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+	if err != nil {
+		return err
+	}
+	_, err = f.WriteString(text)
+	f.Close()
+	return err
 }

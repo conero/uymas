@@ -36,9 +36,8 @@ const (
 	AppMethodHelp   = "Help"
 )
 
-/*
-初始化
-*/
+// 建议使用 InjectArgs 代替，后期可能进行优化
+// 命令程序初始化入口，用于开发时非直接编译测试
 func Init(param []string) {
 	args = param
 }
@@ -57,9 +56,7 @@ func InjectArgs(params ...string) {
 	args = newArgs
 }
 
-/*
-获取输入的参数
-*/
+// 获取输入的参数
 func getArgs() []string {
 	if args == nil {
 		args = os.Args
@@ -67,57 +64,43 @@ func getArgs() []string {
 	return args
 }
 
-/*
-命令别名集(单个)
-*/
+// 命令别名集(单个)
 func Alias(cmd string, alias ...string) {
 	routerAliasApp[cmd] = alias
 }
 
-/*
-命令别名集(多个)
-*/
+// 命令别名集(多个)
 func AliasMany(alias map[string][]string) {
 	for cmd, als := range alias {
 		Alias(cmd, als...)
 	}
 }
 
-/*
-项目注册(单个)
-*/
+// 项目注册(单个)
 func Register(name string, cmd interface{}) {
 	routerCmdApp[name] = cmd
 }
 
-/*
-注册多个项目
-*/
+// 注册多个项目
 func RegisterApps(data map[string]interface{}) {
 	for n, c := range data {
 		Register(n, c)
 	}
 }
 
-/*
-自定义函数式注册
-*/
+// 自定义函数式注册
 func RegisterFunc(cmd string, todo func()) {
 	appFuncRouterMap[cmd] = todo
 	_funcStyleMk = true
 }
 
-/*
-空函数命令注册
-*/
+// 空函数命令注册
 func EmptyFunc(todo func()) {
 	_funcStyleEmptyTodo = todo
 	_funcStyleMk = true
 }
 
-/*
-路由失败时的函数
-*/
+// 路由失败时的函数
 func UnfindFunc(todo func(cmd string)) {
 	_funcStyleUnfindTo = todo
 	_funcStyleMk = true
