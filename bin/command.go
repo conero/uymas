@@ -56,7 +56,7 @@ func (c *Command) InnerDistribute() {
 
 // 运行应用
 func (c *Command) Run() {
-	fmt.Println("	命令以及初始化成功，请实现项目.")
+	fmt.Println("	命令以及初始化成功，请实现项目(Command.Run).")
 }
 
 // 二级命令应用

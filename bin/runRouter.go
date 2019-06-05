@@ -3,6 +3,8 @@ package bin
 import (
 	"github.com/conero/uymas/str"
 	"reflect"
+	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -16,6 +18,91 @@ func isVaildCmd(c string) bool {
 		return false
 	}
 	return true
+}
+
+// app.Data 数据格式化
+// 正则检查并被处理为对应的数据格式
+// --key='字符串参数    可含空格'/--key="'字符串参数    可含空格'"     去除标点，并且认为是字符串
+// --key=1,2,45,87,96,52,37 整形数组
+// 解析的格式有: bool, int64, float64, string, []int, []string,[]float64, string
+func StrParseData(v string) interface{} {
+	v = strings.TrimSpace(v)
+	var newV interface{} = nil
+	if v != "" {
+		isParseMk := false
+		// bool 布尔类型检测
+		if str.InQue(strings.ToLower(v), []string{"true", "false"}) > -1 {
+			if s, err := strconv.ParseBool(v); err == nil {
+				newV = s
+				isParseMk = true
+			}
+		}
+
+		// 解析处理
+		if isParseMk { // 前期解析空操作
+		} else if matched, err := regexp.MatchString(`^['"]+.*['"]+$`, v); err == nil && matched {
+			// --key='s1 s2 s3'
+			// --key="'s1 s2 s3'"
+			newV = v[1 : len(v)-1]
+		} else {
+			if s, err := strconv.ParseInt(v, 10, 64); err == nil { // int64
+				newV = s
+			} else if s, err := strconv.ParseFloat(v, 64); err == nil { // float64
+				newV = s
+			} else {
+				if strings.Index(v, ",") > -1 {
+					if strings.Index(v, ".") > -1 {
+						if matched, err := regexp.MatchString(`^[1-9.]+[0-9,.]+[0-9.]+$`, v); err == nil && matched {
+							// []float64
+							// --key=1,3.14,45,87,96,52,37		合法
+							// --key=1,2,45,87,96,52,37,ddd		非法
+							// --key=1,2,3,4,5					非法
+							f64s := []float64{}
+							for _, i := range strings.Split(v, ",") {
+								if s, err := strconv.ParseFloat(i, 64); err == nil {
+									f64s = append(f64s, s)
+								}
+							}
+							isParseMk = true
+							newV = f64s
+						}
+					} else if matched, err := regexp.MatchString(`^[1-9]+[0-9,]+[0-9]+$`, v); err == nil && matched {
+						// []int
+						// --key=1,2,45,87,96,52,37			合法
+						// --key=1,2,45,87,96,52,37,ddd		非法
+						ints := []int{}
+						for _, i := range strings.Split(v, ",") {
+							if iv, err := strconv.Atoi(i); err == nil {
+								ints = append(ints, iv)
+							}
+						}
+						isParseMk = true
+						newV = ints
+					} else {
+						// --key=teee,hhhh\,,fgfg
+						tmpS := "-._._.-"
+						vs := strings.Replace(v, "\\,", tmpS, -1)
+						if strings.Index(vs, ",") > -1 {
+							newSs := []string{}
+							for _, st := range strings.Split(vs, ",") {
+								st = strings.Replace(st, tmpS, ",", -1)
+								newSs = append(newSs, st)
+							}
+							newV = newSs
+							isParseMk = true
+						}
+					}
+				}
+
+				if !isParseMk {
+					newV = v
+				}
+			}
+		}
+		//fmt.Printf("%T, %v \r\n", newV, newV)
+	}
+
+	return newV
 }
 
 // 启动 app 路由器
@@ -54,7 +141,7 @@ func runAppRouter() {
 			if equalIdx > -1 {
 				k := arg[0:equalIdx]
 				v := arg[equalIdx+1:]
-				app.Data[k] = v
+				app.Data[k] = StrParseData(v)
 				app.DataRaw[k] = v
 			} else {
 				app.Data[arg] = true
