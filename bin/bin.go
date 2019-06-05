@@ -27,7 +27,6 @@ var appRuningWorkDir string                   // 应用运行目录
 var appFuncRouterMap map[string]func() = nil  // 函数式路由地址字典
 var _funcStyleEmptyTodo func() = nil          // 空函数命令使用
 var _funcStyleUnfindTo func(cmd string) = nil // 命令未知
-var _funcStyleMk bool = false                 // 函数式命令标记
 
 const (
 	AppMethodInit   = "Init"
@@ -91,19 +90,16 @@ func RegisterApps(data map[string]interface{}) {
 // 自定义函数式注册
 func RegisterFunc(cmd string, todo func()) {
 	appFuncRouterMap[cmd] = todo
-	_funcStyleMk = true
 }
 
 // 空函数命令注册
 func EmptyFunc(todo func()) {
 	_funcStyleEmptyTodo = todo
-	_funcStyleMk = true
 }
 
 // 路由失败时的函数
 func UnfindFunc(todo func(cmd string)) {
 	_funcStyleUnfindTo = todo
-	_funcStyleMk = true
 }
 
 // 请求命令行帮助
