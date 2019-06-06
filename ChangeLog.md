@@ -8,6 +8,21 @@
 
 
 
+### 0.5.1-alpha/20190605
+
+- **bin**
+  - **App**
+    - (+) *新增方法 `resetQueue`， 用于重置 app.Queue 队列数据信息*
+  - (优化) *Run 启动命令行时 `runAppRouter` 会重置 app.Queue 队列的数据*
+
+- **fs**
+  - (+) *新增方法 `StdPathName` 获取标准路径信息*
+  - (优化) *`StdDir` 内部使用 StdPathName 来获取标准信息*
+
+
+
+
+
 ### 0.5.0/20190605
 
 - **uymas/bin**

@@ -51,6 +51,11 @@ func (app *App) queueAppend(arg string) *App {
 	return app
 }
 
+// 清空队列
+func (app *App) resetQueue() {
+	app.Queue = []string{}
+}
+
 // 队列右邻值
 func (app *App) QueueNext(key string) string {
 	idx := -1

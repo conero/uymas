@@ -107,6 +107,9 @@ func StrParseData(v string) interface{} {
 
 // 启动 app 路由器
 func runAppRouter() {
+	// 每一只运行路由器时，清空历史队列
+	app.resetQueue()
+
 	// 路由配置
 	router := app.Router
 	if router == nil {

@@ -5,6 +5,7 @@ import (
 	"io"
 	"io/ioutil"
 	"os"
+	"regexp"
 	"strings"
 )
 
@@ -131,11 +132,21 @@ func ExistPath(vpath string) bool {
 
 // 获取标准目录
 func StdDir(d string) string {
-	d = strings.Replace(d, "\\", "/", -1)
+	d = StdPathName(d)
 	if d != "" && "/" != d[len(d)-1:] {
 		d += "/"
 	}
 	return d
+}
+
+// 获取标准的路径名称
+func StdPathName(vpath string) string {
+	if vpath != "" {
+		vpath = strings.Replace(vpath, "\\", "/", -1)
+		reg := regexp.MustCompile("[\\/]{2,}")
+		vpath = reg.ReplaceAllString(vpath, "")
+	}
+	return vpath
 }
 
 // 文件尾部附加内容
