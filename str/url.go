@@ -28,16 +28,6 @@ func (u Url) AbsHref(vpath, vurl string) string {
 	if strings.Index(vurl, "http://") > -1 || strings.Index(vurl, "https://") > -1 {
 		if u, err := url.Parse(vurl); err == nil {
 			uHost := u.Scheme + "://" + u.Host
-			port := u.Port()
-
-			// 端口号处理
-			if port != "" {
-				if u.Scheme == "http" && port != "80" {
-					uHost += ":" + port
-				} else if u.Scheme == "https" && port != "443" {
-					uHost += ":" + port
-				}
-			}
 
 			// 字符连接处检测
 			uFirstChar := ""
