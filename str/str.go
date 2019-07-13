@@ -6,13 +6,21 @@ import (
 	"fmt"
 	"html/template"
 	"math"
+	"math/rand"
 	"regexp"
 	"strings"
+	"time"
 )
 
 // @Date：   2018/10/30 0030 15:14
 // @Author:  Joshua Conero
 // @Name:    字符串
+
+const (
+	NumberStr = "0123456789"
+	LowerStr  = "abcdefghijklmnopqrstuvwxyz"
+	UpperStr  = "ABCDEFGHJIKLMNOPQRSTUVWXYZ"
+)
 
 // 写入器导出为内容
 type WriterToContent struct {
@@ -143,3 +151,60 @@ func PadRight(s string, pad string, le int) string {
 	}
 	return s
 }
+
+// 数据字符串生成基函数
+func RandStrBase(base string, length int) string {
+	var s string
+	vlen := len(base)
+
+	if vlen > 0 {
+		ss := []string{}
+		r := rand.New(rand.NewSource(time.Now().UnixNano()))
+		for i := 0; i < length; i++ {
+			x := r.Intn(vlen)
+			ss = append(ss, base[x:x+1])
+		}
+		s = strings.Join(ss, "")
+	}
+	return s
+}
+
+// 随机字符串生成器
+type RandString struct {
+}
+
+// 随机数字
+func (rs RandString) Number(length int) string {
+	return RandStrBase(NumberStr, length)
+}
+
+// 随机小写字母
+func (rs RandString) Lower(length int) string {
+	return RandStrBase(LowerStr, length)
+}
+
+// 随机大写字母
+func (rs RandString) Upper(length int) string {
+	return RandStrBase(UpperStr, length)
+}
+
+// 随机字母
+func (rs RandString) Letter(length int) string {
+	return RandStrBase(LowerStr+UpperStr, length)
+}
+
+// 随机字符串
+// 包含： +_.空格/
+func (rs RandString) String(length int) string {
+	base := NumberStr + LowerStr + UpperStr + "-_./ $!#%&:;@^|{}[]~`"
+	return RandStrBase(base, length)
+}
+
+// 随机安全字符，没有特殊符号
+func (rs RandString) SafeStr(length int) string {
+	base := NumberStr + LowerStr + UpperStr + "-_"
+	return RandStrBase(base, length)
+}
+
+// 随机字符串
+var RandStr RandString
