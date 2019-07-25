@@ -8,14 +8,15 @@
 
 
 
-### 0.5.1-alpha/20190713
+### 0.5.1-alpha/20190725
 
 - **bin**
   - **App**
     - (+) *新增方法 `resetQueue`， 用于重置 app.Queue 队列数据信息*
   - (优化) *Run 启动命令行时 `runAppRouter` 会重置 app.Queue 队列的数据*
 - **fs**
-  - (+) *新增方法 `StdPathName` 获取标准路径信息*
+  - (+) *新增方法 `StdPathName` 获取标准路径信息* 
+  - (+) *新增方法 `Put` 用于文件写入且覆盖文件原内容*
   - (优化) *`StdDir` 内部使用 StdPathName 来获取标准信息*
 - **str**
   - (修复) *Url.AbsHref 绝对地址生成时端口号出现重复的问题*

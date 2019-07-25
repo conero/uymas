@@ -159,3 +159,14 @@ func Append(filename, text string) error {
 	f.Close()
 	return err
 }
+
+// 文件覆盖
+func Put(filename, text string) error {
+	f, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
+	if err != nil {
+		return err
+	}
+	_, err = f.WriteString(text)
+	f.Close()
+	return err
+}
