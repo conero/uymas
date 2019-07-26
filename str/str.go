@@ -3,6 +3,7 @@ package str
 
 import (
 	"bytes"
+	"encoding/base64"
 	"fmt"
 	"html/template"
 	"math"
@@ -208,3 +209,17 @@ func (rs RandString) SafeStr(length int) string {
 
 // 随机字符串
 var RandStr RandString
+
+// base64 编码
+func Base64_encode(origin string) string {
+	return base64.StdEncoding.EncodeToString([]byte(origin))
+}
+
+// base64 解码
+func Base64_decode(code string) string {
+	decode, err := base64.StdEncoding.DecodeString(code)
+	if err != nil {
+		return ""
+	}
+	return string(decode)
+}
