@@ -8,12 +8,14 @@
 
 
 
-### 0.5.1-alpha/20190726
+### 0.5.1/20190827
 
 - **bin**
   - **App**
     - (+) *新增方法 `resetQueue`， 用于重置 app.Queue 队列数据信息*
   - (优化) *Run 启动命令行时 `runAppRouter` 会重置 app.Queue 队列的数据*
+  - (更名) *`getArgs()` 更名为 `Args()` 便于外部测试*
+  - (优化) *`Init()` 文档添加【deprecated】，表明以后即将删除*
 - **fs**
   - (+) *新增方法 `StdPathName` 获取标准路径信息* 
   - (+) *新增方法 `Put` 用于文件写入且覆盖文件原内容*

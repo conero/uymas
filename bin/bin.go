@@ -32,6 +32,7 @@ const (
 	AppMethodHelp   = "Help"
 )
 
+// @todo 方法遗弃后期将遗弃[deprecated]
 // 建议使用 InjectArgs 代替，后期可能进行优化
 // 命令程序初始化入口，用于开发时非直接编译测试
 func Init(param []string) {
@@ -41,7 +42,7 @@ func Init(param []string) {
 // 此方法用于非 os.Args 测试
 // 注入参数
 func InjectArgs(params ...string) {
-	args = getArgs()
+	args = Args()
 	newArgs := []string{""}
 	if len(args) == 0 {
 		newArgs[0] = args[0]
@@ -53,7 +54,7 @@ func InjectArgs(params ...string) {
 }
 
 // 获取输入的参数
-func getArgs() []string {
+func Args() []string {
 	if args == nil {
 		args = os.Args
 	}
@@ -187,6 +188,6 @@ func Rwd() string {
 
 // 空命令检测
 func IsEmptyCmd() bool {
-	args = getArgs()
+	args = Args()
 	return 1 == len(args)
 }

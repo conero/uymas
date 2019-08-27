@@ -117,7 +117,8 @@ func runAppRouter() {
 	}
 	app.Command = ""
 	cmdIdx := -1
-	for i, arg := range getArgs() {
+	tmpArgs := Args()
+	for i, arg := range tmpArgs {
 		if i == 0 {
 			continue
 		}

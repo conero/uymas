@@ -60,6 +60,6 @@ func TestFormatTable(t *testing.T) {
 // test 环境下与开发环境下不一致
 func TestIsEmptyCmd(t *testing.T) {
 	if !IsEmptyCmd() {
-		t.Fatal(getArgs())
+		t.Fatal(Args())
 	}
 }
