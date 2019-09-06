@@ -23,6 +23,18 @@ func TestFormatStr(t *testing.T) {
 	fmt.Println(s)
 }
 
+func TestFormatKv(t *testing.T) {
+	tdd := map[string]interface{}{
+		"author":                   "Joshua Conero",
+		"email":                    "conero@163",
+		"a":                        "TestFormatKv for beautify string.",
+		"canBeALongStringTestAlso": 2,
+	}
+	t.Log("\n" + FormatKv(tdd))
+	t.Log("\n" + FormatKv(tdd, ". "))
+	t.Log("\n" + FormatKv(tdd, ". ", "*"))
+}
+
 func TestFormatQue(t *testing.T) {
 	// 用于输出格式
 	// 实际测试时将会忽略信息

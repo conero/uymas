@@ -2,9 +2,28 @@
 > 2018年10月30日 星期二
 > 项目
 
+
+
+## 0.6.x
+
+- [ ] 删除历史版本中标注遗弃的方法
+- [ ] godoc 内部文档统一替换为英文
+
+
+
 ## 0.5.x
 
 > **重新定义命令参数解析规则**
+
+### 0.5.2/next
+
+- **bin**
+  - (+) *新增方法 `FormatKv` 方法用于优化原` FormatStr`，后者标注遗弃状态*
+  - **App**
+    - (+) *新增代码默认的 arg 参数获取方法, `app.ArgDefault`、`app.ArgRawDefault`*
+    - (重命名) *原方法保留，下一个版本中删除。 `app.Args -> app.Arg`, `app.ArgsRaw -> app.ArgRaw`*
+- **其他**
+  - *项目中代码优化，如添加 [Deprecated]标签*
 
 
 
