@@ -14,6 +14,11 @@ $ [command] <option>
 
 # 简单选项
 $ <option>
+
+#
+# -- 与 - 的区别，参考Linux常用命令格式
+--fix	# 选项全拼
+-fix    # 选择简写，等同于 -f -i -x
 ```
 
 

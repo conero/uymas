@@ -16,6 +16,7 @@ import (
 
 // 获取字符串格式化
 // [[k,  v]]
+// Deprecated: Use FormatKv instead.
 func FormatStr(d string, ss ...[][]string) string {
 	if d == "" {
 		// 4 个空格
@@ -46,6 +47,47 @@ func FormatStr(d string, ss ...[][]string) string {
 	}
 
 	return contents
+}
+
+// The `k-v` data format to beautiful str.
+//
+// FormatKv(kv map[string]interface{}, pref string)				含前缀的字符输出.
+// FormatKv(kv map[string]interface{}, pref string, md string)	含前缀和中间连接符号的字符输出.
+func FormatKv(kv map[string]interface{}, params ...string) string {
+	var s, pref, d = "", "", ""
+	var pLen = len(params)
+	if pLen > 0 {
+		pref = params[0]
+	}
+	if pLen > 1 {
+		d = params[1]
+	}
+
+	// 计算最大长度
+	// 最大长度
+	maxLen := len(pref)
+	for k, _ := range kv {
+		kLen := len(k)
+		if kLen > maxLen {
+			maxLen = kLen
+		}
+	}
+
+	if d == "" {
+		// 4 个空格
+		d = "   "
+	}
+	bit := d[0:1]
+	maxLen += len(d)
+
+	// 格式化
+	for k, v := range kv {
+		if s != "" {
+			s += "\n"
+		}
+		s += pref + k + strings.Repeat(bit, maxLen-len(k)) + fmt.Sprintf("%v", v)
+	}
+	return s
 }
 
 // 格式化数组字符

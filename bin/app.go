@@ -85,8 +85,15 @@ func (app *App) Next(keys ...string) string {
 	return value
 }
 
+// @todo delete ， 0.6
 // 获取，原参数解析值
+// Deprecated: rename
 func (app *App) ArgsRaw(key string) string {
+	return app.ArgRaw(key)
+}
+
+// get raw arg data
+func (app *App) ArgRaw(key string) string {
 	var value string
 	if v, b := app.DataRaw[key]; b {
 		value = v
@@ -94,9 +101,34 @@ func (app *App) ArgsRaw(key string) string {
 	return value
 }
 
+// get raw arg has default
+func (app *App) ArgRawDefault(key, def string) string {
+	var value = def
+	if v, b := app.DataRaw[key]; b {
+		value = v
+	}
+	return value
+}
+
+// @todo delete ， 0.6
+// Deprecated: rename
 // 获取数据参数值
 func (app *App) Args(key string) interface{} {
+	return app.Arg(key)
+}
+
+// get arg after parsed the raw data
+func (app *App) Arg(key string) interface{} {
 	var value interface{} = nil
+	if v, b := app.Data[key]; b {
+		value = v
+	}
+	return value
+}
+
+// can default value to get the arg
+func (app *App) ArgDefault(key string, def interface{}) interface{} {
+	var value = def
 	if v, b := app.Data[key]; b {
 		value = v
 	}

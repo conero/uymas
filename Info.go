@@ -6,11 +6,12 @@ package uymas
 // @Name:    Uymas 包信息
 
 const (
-	Version = "0.5.1"
-	Release = "20190827"
-	Since   = "20181030"
-	Author  = "Joshua Conero"
-	Email   = "conero@163.com"
-	Name    = "uymas"
-	PkgName = "conero/uymas"
+	Version        = "0.5.2"
+	Release        = "20191008"
+	Since          = "20181030"
+	Author         = "Joshua Conero"
+	Email          = "conero@163.com"
+	Name           = "uymas"
+	PkgName        = "conero/uymas"
+	TimeLayoutDate = "20060102" // 日期格式
 )

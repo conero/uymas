@@ -32,9 +32,10 @@ const (
 	AppMethodHelp   = "Help"
 )
 
-// @todo 方法遗弃后期将遗弃[deprecated]
 // 建议使用 InjectArgs 代替，后期可能进行优化
 // 命令程序初始化入口，用于开发时非直接编译测试
+// @todo 0.6 删除
+// Deprecated: use InjectArgs instead, will delete in 0.6
 func Init(param []string) {
 	args = param
 }
