@@ -31,6 +31,18 @@ func (app *App) HasSetting(set string) bool {
 	return has
 }
 
+// 检测设置是否存在，支持多个
+func (app *App) CheckSetting(sets ...string) bool {
+	has := false
+	for _, set := range sets {
+		if idx := str.InQue(set, app.Setting); idx > -1 {
+			has = true
+			break
+		}
+	}
+	return has
+}
+
 // 获取当的工作目录
 func (app *App) Cwd() string {
 	return app.cwd
