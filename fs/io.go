@@ -144,7 +144,7 @@ func StdPathName(vpath string) string {
 	if vpath != "" {
 		vpath = strings.Replace(vpath, "\\", "/", -1)
 		reg := regexp.MustCompile("[\\/]{2,}")
-		vpath = reg.ReplaceAllString(vpath, "")
+		vpath = reg.ReplaceAllString(vpath, "/")
 	}
 	return vpath
 }
