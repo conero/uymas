@@ -20,6 +20,8 @@
 - **bin**
   - **App**
     - (+) *CheckSetting* 新增 app 选项是否存其中，支持多个参数
+- **io**
+  - (修复) *io.StdPathName 特定下错误修复* 
 
 
 
