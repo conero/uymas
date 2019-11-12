@@ -10,9 +10,10 @@ import (
 // @Name:    选项
 
 type Option struct {
-	Key         string // 键值
-	Description string // 描述
-	Logogram    string // 简写，用于实现端选项
+	Key         string      // 键值
+	Description string      // 描述
+	Logogram    string      // 简写，用于实现端选项
+	Value       interface{} // 参数值
 }
 
 // 获取简写
@@ -28,10 +29,9 @@ func (opt *Option) GetDescrip() string {
 	if opt.Description == "" {
 		key := ""
 		if opt.Key != "" {
-			//key = fmt.Sprintf("--%v", opt.Key)
-			key = "--" + opt.Key
+			key = fmt.Sprintf("--%v", opt.Key)
 		}
-		logogram := opt.GetDescrip()
+		logogram := opt.GetLogogram()
 		if logogram != "" {
 			logogram = fmt.Sprintf("-%v", logogram)
 			if key != "" {
@@ -39,10 +39,16 @@ func (opt *Option) GetDescrip() string {
 			}
 		}
 
-		opt.Description = fmt.Sprintf("-%v, --%v set the system optional", key, logogram)
+		opt.Description = fmt.Sprintf("%v%v set the system optional", key, logogram)
 	}
 	return opt.Description
 }
 
-// option 选项集合
-type OptionSetting []Option
+// option 选项字典
+type OptionDick struct {
+	Data map[string]Option
+	App
+}
+
+func GetOptsDick() {
+}
