@@ -12,4 +12,5 @@ func TestOption_GetDescrip(t *testing.T) {
 		Logogram:    "",
 	}
 	fmt.Println(opt.GetDescrip())
+	fmt.Println(opt.Logogram)
 }

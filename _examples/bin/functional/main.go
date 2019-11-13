@@ -14,8 +14,7 @@ func main() {
 	//bin.InjectArgs("--part=8080")
 
 	// 空命令
-	bin.EmptyFunc(func() {
-		a := bin.GetApp()
+	bin.EmptyFunc(func(a *bin.App) {
 		fmt.Println(a.Data)
 		//fmt.Println(bin.Args())
 	})

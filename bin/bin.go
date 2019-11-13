@@ -18,19 +18,30 @@ var app *App = nil
 var args []string = nil
 var defaultRouter *Router
 var routerCmdApp map[string]interface{} = nil
-var routerAliasApp map[string][]string = nil  // 项目别名匹配
-var subCommandAble bool = true                // 二级命令有效
-var appRuningWorkDir string                   // 应用运行目录
-var appFuncRouterMap map[string]func() = nil  // 函数式路由地址字典
-var _funcStyleEmptyTodo func() = nil          // 空函数命令使用
-var _funcStyleUnfindTo func(cmd string) = nil // 命令未知
+var routerAliasApp map[string][]string = nil          // 项目别名匹配
+var subCommandAble bool = true                        // 二级命令有效
+var appRuningWorkDir string                           // 应用运行目录
+var appFuncRouterMap map[string]func(a *App) = nil    // 函数式路由地址字典
+var _funcStyleEmptyTodo func(a *App) = nil            // 空函数命令使用
+var _funcStyleUnfindTo func(a *App, cmd string) = nil // 命令未知
+var _funNewFRdataDick map[string]FRdata = nil         // 新的函数命名
 
 const (
-	AppMethodInit   = "Init"
-	AppMethodRun    = "Run"
-	AppMethodNoSubC = "SubCommandUnfind"
-	AppMethodHelp   = "Help"
+	AppMethodInit     = "Init"
+	AppMethodRun      = "Run"
+	AppMethodNoSubC   = "SubCommandUnfind"
+	AppMethodHelp     = "Help"
+	FuncRegisterEmpty = "_inner_empty_func"
 )
+
+//函数式注册数据
+type FRdata struct {
+	Cmd     string
+	Alias   []string // 函数别名
+	Todo    func(a *App)
+	OptDick OptionDick
+	Opts    []Option
+}
 
 // 建议使用 InjectArgs 代替，后期可能进行优化
 // 命令程序初始化入口，用于开发时非直接编译测试
@@ -87,18 +98,36 @@ func RegisterApps(data map[string]interface{}) {
 }
 
 // 自定义函数式注册
-func RegisterFunc(cmd string, todo func()) {
+func RegisterFunc(cmd string, todo func(a *App)) {
 	appFuncRouterMap[cmd] = todo
 }
 
 // 空函数命令注册
-func EmptyFunc(todo func()) {
+func EmptyFunc(todo func(a *App)) {
 	_funcStyleEmptyTodo = todo
 }
 
 // 路由失败时的函数
-func UnfindFunc(todo func(cmd string)) {
+func UnfindFunc(todo func(a *App, cmd string)) {
 	_funcStyleUnfindTo = todo
+}
+
+//新的函数式注册
+func NewFRdata(dd []FRdata) {
+	if dd != nil {
+		if _funNewFRdataDick == nil {
+			_funNewFRdataDick = map[string]FRdata{}
+		}
+		for _, fr := range dd {
+			if fr.Cmd == FuncRegisterEmpty {
+				EmptyFunc(fr.Todo)
+			} else {
+				// 函数注册
+				RegisterFunc(fr.Cmd, fr.Todo)
+			}
+			_funNewFRdataDick[fr.Cmd] = fr
+		}
+	}
 }
 
 // 请求命令行帮助
@@ -149,7 +178,7 @@ func GetApp() *App {
 func init() {
 	routerCmdApp = map[string]interface{}{}
 	routerAliasApp = map[string][]string{}
-	appFuncRouterMap = map[string]func(){}
+	appFuncRouterMap = map[string]func(a *App){}
 
 	app = &App{
 		Data:    map[string]interface{}{},

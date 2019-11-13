@@ -179,7 +179,7 @@ func runAppRouter() {
 			if app.Router != nil && app.Router.EmptyAction != nil {
 				app.Router.EmptyAction()
 			} else if _funcStyleEmptyTodo != nil {
-				_funcStyleEmptyTodo()
+				_funcStyleEmptyTodo(GetApp())
 			} else {
 				defaultRouter.EmptyAction()
 			}
@@ -213,7 +213,7 @@ func runAppRouter() {
 				if !funcRouterMk {
 					for cs, cfunc := range appFuncRouterMap {
 						if cs == command {
-							cfunc()
+							cfunc(GetApp())
 							funcRouterMk = true
 						}
 					}
@@ -225,7 +225,7 @@ func runAppRouter() {
 					if hasRouter && app.Router.UnfindAction != nil {
 						app.Router.UnfindAction(command)
 					} else if _funcStyleUnfindTo != nil {
-						_funcStyleUnfindTo(command)
+						_funcStyleUnfindTo(GetApp(), command)
 					} else {
 						defaultRouter.UnfindAction(command)
 					}

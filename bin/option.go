@@ -14,6 +14,7 @@ type Option struct {
 	Description string      // 描述
 	Logogram    string      // 简写，用于实现端选项
 	Value       interface{} // 参数值
+	RawValue    string      // 原始数据
 }
 
 // 获取简写
@@ -47,8 +48,38 @@ func (opt *Option) GetDescrip() string {
 // option 选项字典
 type OptionDick struct {
 	Data map[string]Option
-	App
+	App  *App
 }
 
-func GetOptsDick() {
+//数据新增
+// key, descrip, logogram string
+func (od *OptionDick) Add(datas ...string) *OptionDick {
+	if vlen := len(datas); vlen > 0 {
+		key := datas[0]
+		var descrip, logogram string
+		if vlen > 1 {
+			descrip = datas[1]
+		}
+		if vlen > 2 {
+			logogram = datas[2]
+		}
+
+		od.Data[key] = Option{
+			Key:         key,
+			Description: descrip,
+			Logogram:    logogram,
+			Value:       nil,
+			RawValue:    "",
+		}
+	}
+	return od
+}
+
+// 新的 option 字典初始化
+func NewOptsDick(a *App) *OptionDick {
+	od := &OptionDick{
+		Data: map[string]Option{},
+		App:  a,
+	}
+	return od
 }
