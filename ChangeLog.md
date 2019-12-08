@@ -27,6 +27,8 @@
   - (try) 新增 Option 对象，严格控制option的输入是否正确
 - **io**
   - (修复) *io.StdPathName 特定下错误修复* 
+- **netutil** 网络请求助手(新增)
+  - **Httpu** *http util 方法集合*
 
 
 
