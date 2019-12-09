@@ -142,3 +142,34 @@ func main() {
 FRdata
 ```
 
+
+
+#### 数据加载
+
+*支持多次数据加载*
+
+```shell
+# 大量数据加载实现
+./uymas-bin.exe --load-json '{"json":"json 字符串"}' --load-json='{"json2": "方法二"}'
+./uymas-bin.exe --load-url-style 'key=value&k2=v2&k3=v3'
+./uymas-bin.exe --load-session-style 'key:value; k2:v2; k3:v3;'
+
+# 不同数据加载
+# 长选项
+--key 'value'
+--key='value'
+--command-style
+
+# 单选项
+-P 'value'
+-C
+```
+
+
+
+##### json
+
+##### url-style
+
+##### session-style
+
