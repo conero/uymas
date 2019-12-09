@@ -43,6 +43,18 @@ func (app *App) CheckSetting(sets ...string) bool {
 	return has
 }
 
+//检测必须要的参数值
+func (app *App) CheckMustKey(keys ...string) bool {
+	check := true
+	for _, k := range keys {
+		if v, has := app.DataRaw[k]; !has || v == "" {
+			check = false
+			break
+		}
+	}
+	return check
+}
+
 // 获取当的工作目录
 func (app *App) Cwd() string {
 	return app.cwd
