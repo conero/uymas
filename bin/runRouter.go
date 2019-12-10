@@ -190,14 +190,6 @@ func runAppRouter() {
 			v := reflect.ValueOf(cmd)
 			v.MethodByName(AppMethodInit).Call(nil)
 
-			//@todo 错误：调用时报错 panic: reflect: call of reflect.Value.FieldByName on ptr Value
-			if v.FieldByName("App").IsValid() {
-				// 设置 c.Command 中的 App 类
-				//v.FieldByName("App").Set(reflect.ValueOf(GetApp()))
-				appRefVal := reflect.ValueOf(GetApp())
-				v.FieldByName("App").Set(reflect.ValueOf(appRefVal))
-			}
-
 			if subCommandAble && app.SubCommand != "" {
 				subC := str.Ucfirst(AmendSubC(app.SubCommand))
 				if v.MethodByName(subC).IsValid() {

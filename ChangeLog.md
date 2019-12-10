@@ -35,7 +35,7 @@
 
 #### todos
 
-- [ ] `bin.Command` 中 `App` 属性无时效性，需要在继承的命令中调用 `bin.GetApp()` 实现，需要优化 `runAppRouter()`
+- [x] `bin.Command` 中 `App` 属性无时效性，需要在继承的命令中调用 `bin.GetApp()` 实现，需要优化 `runAppRouter()`
 
 
 

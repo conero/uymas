@@ -23,14 +23,14 @@ type SubCmdAlias struct {
 
 // 命令结构体
 type Command struct {
-	App  App
+	App  *App
 	SCA  *SubCmdAlias
 	Util *CmdUitl
 }
 
 // 引用初始化接口
 func (c *Command) Init() {
-	c.App = *app
+	c.App = GetApp()
 	c.Util = &CmdUitl{c}
 }
 
