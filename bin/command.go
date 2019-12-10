@@ -30,7 +30,7 @@ type Command struct {
 
 // 引用初始化接口
 func (c *Command) Init() {
-	c.App = *app
+	c.App = *GetApp()
 	c.Util = &CmdUitl{c}
 }
 
