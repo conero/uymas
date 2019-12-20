@@ -19,7 +19,25 @@ $ <option>
 # -- 与 - 的区别，参考Linux常用命令格式
 --fix	# 选项全拼
 -fix    # 选择简写，等同于 -f -i -x
+
+#
+# 命令行数据格式
+--name='Joshua Conero'
+--name 'Joshua Conero'
+
+# only-option 作为无值选项
+--only-option --last-name Conero
+# 短标签映射关系（需要建立映射关系）
+# -N,--name
+# -O,--only-option
+# 数组型参数
+--persons Conero Jahn Lile Any --prex
+
+# 实现属性严格检查开关(此时需要注册所有选择)
+
 ```
+
+
 
 
 
@@ -40,6 +58,22 @@ $ 'a','b','c','d'		# array [a, b, c, d]
 # "," 分割
 $ --separator-comma 
 $ -spt-c
+```
+
+
+
+
+
+#### 解析算法实现
+
+##### python
+
+```python
+def option_parse(args, strict_option_list=None):
+    '''
+    见: _example/design/option-parse/option-parse.py
+    '''
+    pass
 ```
 
 
