@@ -116,6 +116,22 @@ class App:
                 break
         return check
 
+    def getOpts(self, *options, def_value=None):
+        """
+        获取值
+        :param options:
+        :param def_value:
+        :return:
+        """
+        for opt in options:
+            if opt in self._odata:
+                def_value = self._odata[opt]
+                break
+        return def_value
+
+    def data(self):
+        return self._odata
+
 
 class Command:
     """
@@ -144,16 +160,26 @@ class Command:
     def empty_fn_register(self, callfn):
         if callable(callfn):
             self._callfn_empty_index = callfn
-            return self
+        else:
+            raise Exception(f'empty_fn_register: the callfn is not valid callback')
+        return self
 
     def cmd_fn_register(self, cmd, callfn):
         if callable(callfn):
             self._cmd_fun_callbacks[cmd] = callfn
+        else:
+            raise Exception(f'cmd_fn_register: the callfn is not valid callback. cmd: {cmd}')
         return self
 
     def opt_fn_register(self, cmd, callfn):
         if callable(callfn):
-            self._opt_fun_callback[cmd] = callfn
+            if isinstance(cmd, list):
+                for c in cmd:
+                    self._opt_fun_callback[c] = callfn
+            else:
+                self._opt_fun_callback[cmd] = callfn
+        else:
+            raise Exception(f'opt_fn_register: the callfn is not valid callback. cmd: {cmd}')
         return self
 
     def args(self, *v_args):
@@ -173,23 +199,24 @@ class Command:
         :return:
         """
         self._router_mark = False
-        not_empty = False
+        not_empty = len(self._options)
+        not_empty = True if not_empty == 0 and not_empty == len(self._odata) else False
 
         for cmd in self._cmd_fun_callbacks:
-            not_empty = True
             if cmd in self._cmds:
                 self._cmd_fun_callbacks[cmd]()
                 self._router_mark = True
+                break
 
         if not self._router_mark:
-            not_empty = True
             for opt in self._opt_fun_callback:
                 if opt in self._options:
                     self._opt_fun_callback[opt]()
                     self._router_mark = True
+                    break
 
         if not self._router_mark:
-            if not not_empty and callable(self._callfn_empty_index):
+            if not_empty and callable(self._callfn_empty_index):
                 self._callfn_empty_index()
 
             elif not_empty:
