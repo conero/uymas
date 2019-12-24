@@ -13,3 +13,7 @@
 
 # IDE
 .idea
+
+# 其他语言
+# python
+*__pycache__*
