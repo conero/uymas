@@ -4,8 +4,8 @@ package bin
 import (
 	"fmt"
 	"github.com/conero/uymas"
+	"github.com/conero/uymas/bin/butil"
 	"os"
-	"path"
 	"reflect"
 	"strings"
 )
@@ -200,10 +200,7 @@ func init() {
 // 获取命令正在运行的代码
 func Rwd() string {
 	if appRuningWorkDir == "" {
-		rwd := os.Args[0]
-		rwd = strings.Replace(rwd, "\\", "/", -1)
-		rwd = path.Dir(rwd)
-		appRuningWorkDir = rwd
+		appRuningWorkDir = butil.GetBasedir()
 	}
 	return appRuningWorkDir
 }

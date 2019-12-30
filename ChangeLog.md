@@ -26,6 +26,9 @@
     - (+) *`CheckMustKey` 检测必须的键值是否存在*
   - (调整) 函数式注册方法，统一新增参数 `a *bin.App` 。 [非兼容性调整]
   - (try) 新增 Option 对象，严格控制option的输入是否正确
+- **bin/buitl**
+  - (+) *新增 `bin util` 包，使其区分 bin 中 `init()`， 后者无该函数*
+  - (+) 新增 `GetBasedir()` 函数，用于获取应用运行的基础目录地址
 - **io**
   - (修复) *io.StdPathName 特定下错误修复* 
 - **netutil** 网络请求助手(新增)
