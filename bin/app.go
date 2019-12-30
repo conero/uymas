@@ -31,6 +31,30 @@ func (app *App) HasSetting(set string) bool {
 	return has
 }
 
+// 检测设置是否存在，支持多个
+func (app *App) CheckSetting(sets ...string) bool {
+	has := false
+	for _, set := range sets {
+		if idx := str.InQue(set, app.Setting); idx > -1 {
+			has = true
+			break
+		}
+	}
+	return has
+}
+
+//检测必须要的参数值
+func (app *App) CheckMustKey(keys ...string) bool {
+	check := true
+	for _, k := range keys {
+		if v, has := app.DataRaw[k]; !has || v == "" {
+			check = false
+			break
+		}
+	}
+	return check
+}
+
 // 获取当的工作目录
 func (app *App) Cwd() string {
 	return app.cwd
@@ -85,13 +109,6 @@ func (app *App) Next(keys ...string) string {
 	return value
 }
 
-// @todo delete ， 0.6
-// 获取，原参数解析值
-// Deprecated: rename
-func (app *App) ArgsRaw(key string) string {
-	return app.ArgRaw(key)
-}
-
 // get raw arg data
 func (app *App) ArgRaw(key string) string {
 	var value string
@@ -108,13 +125,6 @@ func (app *App) ArgRawDefault(key, def string) string {
 		value = v
 	}
 	return value
-}
-
-// @todo delete ， 0.6
-// Deprecated: rename
-// 获取数据参数值
-func (app *App) Args(key string) interface{} {
-	return app.Arg(key)
 }
 
 // get arg after parsed the raw data

@@ -10,3 +10,10 @@
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
+
+# IDE
+.idea
+
+# 其他语言
+# python
+*__pycache__*
