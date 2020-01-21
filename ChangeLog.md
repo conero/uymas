@@ -29,6 +29,7 @@
 - **bin/buitl**
   - (+) *新增 `bin util` 包，使其区分 bin 中 `init()`， 后者无该函数*
   - (+) 新增 `GetBasedir()` 函数，用于获取应用运行的基础目录地址
+  - (+) *新增函数 `StringToArgs()`, 用于将字符串安装args模式切割为数组*
 - **io**
   - (修复) *io.StdPathName 特定下错误修复* 
 - **netutil** 网络请求助手(新增)
