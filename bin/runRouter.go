@@ -12,14 +12,6 @@ import (
 // @Author:  Joshua Conero
 // @Name:    启动路由
 
-// 是否为有效的命令
-func isVaildCmd(c string) bool {
-	if len(c) == 0 || c[0:1] == "-" {
-		return false
-	}
-	return true
-}
-
 // app.Data 数据格式化
 // 正则检查并被处理为对应的数据格式
 // --key='字符串参数    可含空格'/--key="'字符串参数    可含空格'"     去除标点，并且认为是字符串

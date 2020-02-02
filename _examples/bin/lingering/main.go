@@ -10,6 +10,17 @@ import (
 )
 
 func main() {
+	//oldBin()
+	newBin()
+}
+
+func newBin()  {
+	cli := bin.NewCLI()
+	cli.Run()
+}
+
+//the old bin construct
+func oldBin()  {
 	bin.UnfindFunc(func(a *bin.App, cmd string) {
 		fmt.Printf("    command: %v\r\n", cmd)
 		if a.SubCommand != ""{

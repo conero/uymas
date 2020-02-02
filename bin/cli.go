@@ -30,9 +30,18 @@ func NewCLI() *CLI {
 }
 
 // the construct of `CliCmd`
-func NewCliCmd() *CliCmd {
-	c := &CliCmd{}
+func NewCliCmd(args ...string) *CliCmd {
+	c := &CliCmd{
+		Raw: args,
+	}
+	// parse the args
+	c.parseArgs()
 	return c
+}
+
+// construction of `CliCmd` by string
+func NewCliCmdByString(ss string) *CliCmd {
+	return NewCliCmd(butil.StringToArgs(ss)...)
 }
 
 //get the list cmd of application
@@ -80,6 +89,17 @@ func (cli *CLI) Run(args ...string) {
 		if len(osArgs) > 1 {
 			args = osArgs[1:]
 		}
+	}
+	// construct of `CliCmd`
+	cmd := NewCliCmd(args...)
+	// start router by register.
+	cli.router(cmd)
+}
+
+// @todo need to make it.
+// to star `router`
+func (cli *CLI) router(cc *CliCmd) {
+	if cc.Command != "" {
 	}
 }
 
@@ -185,4 +205,25 @@ func (app *CliCmd) ArgDefault(key string, def interface{}) interface{} {
 		value = v
 	}
 	return value
+}
+
+// the application parse raw args inner.
+func (app *CliCmd) parseArgs() {
+	if app.Raw != nil {
+		for i, arg := range app.Raw {
+			if i == 0 && isVaildCmd(arg) {
+				app.Command = arg
+			} else if i == 1 && isVaildCmd(arg) {
+				app.SubCommand = arg
+			}
+		}
+	}
+}
+
+// check the cmd of validation
+func isVaildCmd(c string) bool {
+	if len(c) == 0 || c[0:1] == "-" {
+		return false
+	}
+	return true
 }
