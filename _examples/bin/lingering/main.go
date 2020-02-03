@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"github.com/conero/uymas"
 	"github.com/conero/uymas/bin"
 	"github.com/conero/uymas/bin/butil"
 	"os"
@@ -16,7 +17,49 @@ func main() {
 
 func newBin()  {
 	cli := bin.NewCLI()
+
+	cli.RegisterFunc(func(cmd *bin.CliCmd) {
+		fmt.Println("this is help command.")
+	}, "help", "?")
+
+	cli.RegisterFunc(func(cmd *bin.CliCmd) {
+		fmt.Println(uymas.Version + "/" + uymas.Release)
+	}, "version")
+
+	//the empty data
+	cli.RegisterEmpty(func(cmd *bin.CliCmd) {
+		fmt.Println("welcome the new BIN.")
+		newLingering(cmd, cli)
+		//fmt.Println(cmd.Raw)
+		//fmt.Println(cmd.Setting)
+		//fmt.Println(cmd.DataRaw)
+		//fmt.Println(cli.GetCmdList())
+	})
+
 	cli.Run()
+	//cli.Run("-xyz", "--name", "'Joshua Conero'", "--first=emma", "--list", "A", "B", "c", "table.name")
+}
+
+func newLingering(cc *bin.CliCmd, cli *bin.CLI)  {
+	var input = bufio.NewScanner(os.Stdin)
+	fmt.Println("驻留式命令行程序")
+	fmt.Print("$ uymas>")
+
+	for input.Scan() {
+		text := input.Text()
+		text = strings.TrimSpace(text)
+
+		switch text {
+		default:
+			tmpArgs := butil.StringToArgs(text)
+			//fmt.Println(tmpArgs)
+			cli.Run(tmpArgs...)
+		}
+
+		fmt.Println()
+		fmt.Println()
+		fmt.Print("$ uymas>")
+	}
 }
 
 //the old bin construct
