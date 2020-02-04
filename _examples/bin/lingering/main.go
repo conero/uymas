@@ -26,6 +26,10 @@ func newBin()  {
 		fmt.Println(uymas.Version + "/" + uymas.Release)
 	}, "version")
 
+	//empty data.
+	cli.RegisterFunc(func(cc *bin.CliCmd) {
+	})
+
 	//the empty data
 	cli.RegisterEmpty(func(cmd *bin.CliCmd) {
 		fmt.Println("welcome the new BIN.")
@@ -36,7 +40,12 @@ func newBin()  {
 		//fmt.Println(cli.GetCmdList())
 	})
 
-	cli.Run()
+	//empty data.
+	//cli.RegisterFunc(func(cc *bin.CliCmd) {
+	//})
+
+	cli.RegisterApp(&TestCmd{}, "test")
+	cli.Run("test")
 	//cli.Run("-xyz", "--name", "'Joshua Conero'", "--first=emma", "--list", "A", "B", "c", "table.name")
 }
 
@@ -99,3 +108,15 @@ func lingering()  {
 		fmt.Print("$ uymas>")
 	}
 }
+
+
+// the command of `test`.
+type TestCmd struct {
+	bin.CliApp
+}
+
+// need the construct
+func (tc *TestCmd) Construct()  {
+	tc.DoRouter()
+}
+

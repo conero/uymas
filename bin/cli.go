@@ -6,7 +6,12 @@ import (
 	"github.com/conero/uymas/bin/butil"
 	"github.com/conero/uymas/str"
 	"os"
+	"reflect"
 	"strings"
+)
+
+const (
+	actionRunConstruct = "Construct"
 )
 
 // the cli application
@@ -26,6 +31,22 @@ type CliCmd struct {
 	SubCommand string   // the sub command
 	Setting    []string // the setting of command
 	Raw        []string // the raw args
+}
+
+// the cli app.
+type CliApp struct {
+	Cc *CliCmd
+}
+
+// the construct of CliApp
+func (ca *CliApp) DoRouter() {
+	fmt.Printf("the command run success. from the package %v, version %v/%v.\r\n",
+		uymas.PkgName, uymas.Version, uymas.Release)
+}
+
+// the interface of CliApp
+type CliAppInterface interface {
+	Construct()
 }
 
 // the construct of `CLI`
@@ -70,13 +91,22 @@ func (cli *CLI) GetCmdList() []string {
 //register functional command, the format like
 //  `RegisterFunc(todo func(cc *CliCmd), cmd string)` or `RegisterFunc(todo func(), cmd, alias string)`
 func (cli *CLI) RegisterFunc(todo func(cc *CliCmd), cmds ...string) *CLI {
-	if cmds != nil && len(cmds) > 0 {
+	if len(cmds) > 0 {
 		cmd := cmds[0]
 		cli.cmds[cmd] = todo
 		if len(cmds) > 1 {
 			cli.cmdMap[cmd] = cmds[1]
 		}
+	} else {
+		// if `cmds` is empty, then set `CLI.RegisterEmpty`
+		if cli.actionEmptyRegister == nil {
+			cli.actionEmptyRegister = todo
+		} else {
+			panic("CLI.RegisterFunc param `cmds` is empty will call `RegisterEmpty` that never be call before if" +
+				" else fail register. ")
+		}
 	}
+
 	return cli
 }
 
@@ -88,6 +118,14 @@ func (cli *CLI) RegisterApp(ap interface{}, cmds ...string) *CLI {
 		if len(cmds) > 1 {
 			cli.cmdMap[cmd] = cmds[1]
 		}
+	}
+	return cli
+}
+
+//Register many apps once.
+func (cli *CLI) RegisterApps(aps map[string]interface{}) *CLI {
+	for c, ap := range aps {
+		cli.RegisterApp(ap, c)
 	}
 	return cli
 }
@@ -132,6 +170,26 @@ func (cli *CLI) router(cc *CliCmd) {
 			// call the functional
 			case func(c *CliCmd):
 				value.(func(c *CliCmd))(cc)
+				routerValidMk = true
+			default:
+				//@todo need to do.
+				//v := reflect.ValueOf(value).Elem()
+				v := reflect.ValueOf(value).Elem()
+				ccStr := "Cc"
+				// set `Cc` that is struct of field.
+				if v.FieldByName(ccStr).IsValid() {
+					v.FieldByName(ccStr).Set(reflect.ValueOf(cc))
+				} else {
+					panic(fmt.Sprintf("%v:the command field of `Cc` is not valid filed.", cc.Command))
+				}
+				fmt.Println(&v, value)
+
+				// to call the construct action.
+				if v.MethodByName(actionRunConstruct).IsValid() {
+					v.MethodByName(actionRunConstruct).Call(nil)
+				} else {
+					panic(fmt.Sprintf("%v: the command is not vaild.", cc.Command))
+				}
 				routerValidMk = true
 			}
 		}
@@ -411,7 +469,7 @@ func isVaildCmd(c string) bool {
 	return true
 }
 
-// cleanout the raw input string like:
+// cl  eanout the raw input string like:
 //		`"string"`		=> `string`
 //		`"'string'"`	=> `'string'`
 //		`'string'`		=> `string`
