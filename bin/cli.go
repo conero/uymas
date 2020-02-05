@@ -38,12 +38,6 @@ type CliApp struct {
 	Cc *CliCmd
 }
 
-// the construct of CliApp
-func (ca *CliApp) DoRouter() {
-	fmt.Printf("the command run success. from the package %v, version %v/%v.\r\n",
-		uymas.PkgName, uymas.Version, uymas.Release)
-}
-
 // the interface of CliApp
 type CliAppInterface interface {
 	Construct()
@@ -172,8 +166,6 @@ func (cli *CLI) router(cc *CliCmd) {
 				value.(func(c *CliCmd))(cc)
 				routerValidMk = true
 			default:
-				//@todo need to do.
-				//v := reflect.ValueOf(value).Elem()
 				v := reflect.ValueOf(value).Elem()
 				ccStr := "Cc"
 				// set `Cc` that is struct of field.
@@ -182,14 +174,27 @@ func (cli *CLI) router(cc *CliCmd) {
 				} else {
 					panic(fmt.Sprintf("%v:the command field of `Cc` is not valid filed.", cc.Command))
 				}
-				fmt.Println(&v, value)
 
+				// any construct to call method need this before.
+				v = reflect.ValueOf(value)
 				// to call the construct action.
 				if v.MethodByName(actionRunConstruct).IsValid() {
 					v.MethodByName(actionRunConstruct).Call(nil)
 				} else {
 					panic(fmt.Sprintf("%v: the command is not vaild.", cc.Command))
 				}
+
+				//the subCommand string
+				subCmdStr := cc.SubCommand
+				if subCmdStr != "" {
+					subCmdStr = str.Ucfirst(subCmdStr)
+					if v.MethodByName(subCmdStr).IsValid() {
+						v.MethodByName(subCmdStr).Call(nil)
+					} else {
+						panic(fmt.Sprintf("the method `%s` do not have a handler as `%v`.", cc.SubCommand, subCmdStr))
+					}
+				}
+
 				routerValidMk = true
 			}
 		}

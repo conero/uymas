@@ -45,7 +45,7 @@ func newBin()  {
 	//})
 
 	cli.RegisterApp(&TestCmd{}, "test")
-	cli.Run("test")
+	cli.Run("test", "verify")
 	//cli.Run("-xyz", "--name", "'Joshua Conero'", "--first=emma", "--list", "A", "B", "c", "table.name")
 }
 
@@ -117,6 +117,12 @@ type TestCmd struct {
 
 // need the construct
 func (tc *TestCmd) Construct()  {
-	tc.DoRouter()
+	//tc.DoRouter()
 }
 
+//cmd `test verify`.
+func (tc *TestCmd) Verify()  {
+	cc := tc.Cc
+	fmt.Println(cc.Command)
+	fmt.Println(cc.SubCommand)
+}
