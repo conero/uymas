@@ -44,9 +44,19 @@ func newBin()  {
 	//cli.RegisterFunc(func(cc *bin.CliCmd) {
 	//})
 
+	cli.RegisterUnfind(func(cmd string, cc *bin.CliCmd){
+		fmt.Printf("    command: %v\r\n", cmd)
+		if cc.SubCommand != ""{
+			fmt.Printf("    sub_command: %v\r\n",cc.SubCommand)
+		}
+		fmt.Printf("    data_raw: %v\r\n", cc.DataRaw)
+		fmt.Printf("    data: %v\r\n", cc.Data)
+		fmt.Printf("    setting: %v\r\n", cc.Setting)
+	})
+
 	cli.RegisterApp(&TestCmd{}, "test")
-	cli.Run("test", "verify")
-	//cli.Run("-xyz", "--name", "'Joshua Conero'", "--first=emma", "--list", "A", "B", "c", "table.name")
+	//cli.Run("test", "verify")
+	cli.Run("-xyz", "--name", "'Joshua Conero'", "--first=emma", "--list", "A", "B", "c", "table.name")
 }
 
 func newLingering(cc *bin.CliCmd, cli *bin.CLI)  {
