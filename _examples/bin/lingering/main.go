@@ -12,6 +12,7 @@ import (
 
 func main() {
 	//oldBin()
+	//新版本，命令行程序实现
 	newBin()
 }
 
@@ -39,6 +40,14 @@ func newBin()  {
 		//fmt.Println(cmd.DataRaw)
 		//fmt.Println(cli.GetCmdList())
 	})
+
+	//clear the system
+	cli.RegisterFunc(func(cmd *bin.CliCmd) {
+		er := butil.Clear()
+		if er != nil{
+			fmt.Printf(" ERROR: %v", er)
+		}
+	}, "clear")
 
 	//empty data.
 	//cli.RegisterFunc(func(cc *bin.CliCmd) {
