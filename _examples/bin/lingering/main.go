@@ -6,6 +6,7 @@ import (
 	"github.com/conero/uymas"
 	"github.com/conero/uymas/bin"
 	"github.com/conero/uymas/bin/butil"
+	"github.com/conero/uymas/bin/parser"
 	"os"
 	"strings"
 )
@@ -54,6 +55,7 @@ func newBin()  {
 	//})
 
 	cli.RegisterUnfind(func(cmd string, cc *bin.CliCmd){
+		fmt.Println("  通用命令解析: ")
 		fmt.Printf("    command: %v\r\n", cmd)
 		if cc.SubCommand != ""{
 			fmt.Printf("    sub_command: %v\r\n",cc.SubCommand)
@@ -61,6 +63,25 @@ func newBin()  {
 		fmt.Printf("    data_raw: %v\r\n", cc.DataRaw)
 		fmt.Printf("    data: %v\r\n", cc.Data)
 		fmt.Printf("    setting: %v\r\n", cc.Setting)
+	})
+
+	cli.RegisterFunc(func(cc *bin.CliCmd) {
+		cList := cli.GetCmdList()
+		for _, c := range cList{
+			//打印数据列表
+			fmt.Printf("%v       %v\r\n", c, cli.GetDescribe(c))
+		}
+	}, "list", "ls")
+
+
+	cli.RegisterCommand(bin.Cmd{
+		Command:  "author",
+		Alias:    nil,
+		Describe: "print the person who build the project.",
+		Handler: func(cc *bin.CliCmd) {
+			fmt.Println("I am Joshua Conero.")
+		},
+		Options:  nil,
 	})
 
 	cli.RegisterApp(&TestCmd{}, "test")
@@ -79,9 +100,10 @@ func newLingering(cc *bin.CliCmd, cli *bin.CLI)  {
 
 		switch text {
 		default:
-			tmpArgs := butil.StringToArgs(text)
-			//fmt.Println(tmpArgs)
-			cli.Run(tmpArgs...)
+			var cmdsList = parser.NewParser(text)
+			for _, cmdArgs := range cmdsList{
+				cli.Run(cmdArgs...)
+			}
 		}
 
 		fmt.Println()

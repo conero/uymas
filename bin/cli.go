@@ -16,10 +16,15 @@ const (
 
 // the cli application
 type CLI struct {
-	cmds                 map[string]interface{} // the register of commands.
-	cmdMap               map[string]interface{} // the map the cmd, support many alias cmd about the cmd
-	actionEmptyRegister  interface{}            // the register callback by empty action.
-	actionUnfindRegister interface{}            // the register callback by command not handler
+	cmds map[string]interface{} // the register of commands.
+
+	// the map the cmd, support many alias cmd about the cmd
+	// the data struct like: {cmd => alias} or {cmd => [alias1, alias2, alias3...]}
+	cmdMap               map[string]interface{}
+	actionEmptyRegister  interface{} // the register callback by empty action.
+	actionUnfindRegister interface{} // the register callback by command not handler
+	commands             map[string]Cmd
+	tempLastCommand      string // command Cache
 }
 
 // the command of the cli application.
@@ -43,11 +48,27 @@ type CliAppInterface interface {
 	Construct()
 }
 
+type CmdOptions struct {
+	Option   string
+	Alias    interface{}
+	Describe string
+}
+
+//define the struct command
+type Cmd struct {
+	Command  string
+	Alias    interface{}           //string, []string. the alias of the command
+	Describe string                //describe the command
+	Handler  func(cc *CliCmd)      //when command call then handler the request
+	Options  map[string]CmdOptions // the command option
+}
+
 // the construct of `CLI`
 func NewCLI() *CLI {
 	cli := &CLI{
-		cmds:   map[string]interface{}{},
-		cmdMap: map[string]interface{}{},
+		cmds:     map[string]interface{}{},
+		cmdMap:   map[string]interface{}{},
+		commands: map[string]Cmd{},
 	}
 	return cli
 }
@@ -76,6 +97,17 @@ func (cli *CLI) GetCmdList() []string {
 	if cli.cmds != nil {
 		list = []string{}
 		for cmd, _ := range cli.cmds {
+			if alias, hasMk := cli.cmdMap[cmd]; hasMk {
+				var cmdList = []string{cmd}
+				if v, isStr := alias.(string); isStr {
+					cmdList = append(cmdList, v)
+					cmd = strings.Join(cmdList, ", ")
+				} else if v, isStrQue := alias.([]string); isStrQue {
+					cmdList = append(cmdList, v...)
+					cmd = strings.Join(cmdList, ", ")
+				}
+			}
+
 			list = append(list, cmd)
 		}
 	}
@@ -87,6 +119,24 @@ func (cli *CLI) GetCmdList() []string {
 func (cli *CLI) RegisterFunc(todo func(cc *CliCmd), cmds ...string) *CLI {
 	if len(cmds) > 0 {
 		cmd := cmds[0]
+		if len(cmds) > 1 {
+			cli.cmdMap[cmd] = cmds[1]
+		}
+		// make the function map th struct
+		cli.commands[cmd] = Cmd{
+			Command: cmd,
+			Alias:   cli.cmdMap[cmd],
+		}
+	}
+	cli.registerFunc(todo, cmds...)
+	return cli
+}
+
+func (cli *CLI) registerFunc(todo func(cc *CliCmd), cmds ...string) {
+	cli.tempLastCommand = ""
+	if len(cmds) > 0 {
+		cmd := cmds[0]
+		cli.tempLastCommand = cmd
 		cli.cmds[cmd] = todo
 		if len(cmds) > 1 {
 			cli.cmdMap[cmd] = cmds[1]
@@ -100,7 +150,50 @@ func (cli *CLI) RegisterFunc(todo func(cc *CliCmd), cmds ...string) *CLI {
 				" else fail register. ")
 		}
 	}
+}
 
+func (cli *CLI) Describe(desc string) bool {
+	if cli.tempLastCommand != "" {
+		if c, has := cli.commands[cli.tempLastCommand]; has {
+			c.Describe = desc
+			cli.commands[cli.tempLastCommand] = c
+			return true
+		}
+	}
+	return false
+}
+
+// support the `cmd, alias` param.
+func (cli *CLI) GetDescribe(cmd string) string {
+	if strings.Index(cmd, ",") > -1 {
+		que := strings.Split(cmd, ",")
+		cmd = strings.TrimSpace(que[0])
+	}
+
+	if v, has := cli.commands[cmd]; has {
+		return v.Describe
+	}
+
+	return fmt.Sprintf("the command %v", cmd)
+}
+
+//register by command struct data
+func (cli *CLI) RegisterCommand(c Cmd) *CLI {
+	if c.Command != "" {
+		cli.commands[c.Command] = c
+		if c.Handler != nil {
+			cmds := []string{c.Command}
+			alias := c.Alias
+			if alias != nil {
+				if v, isStr := alias.(string); isStr {
+					cmds = append(cmds, v)
+				} else if v, isStrQue := alias.([]string); isStrQue {
+					cmds = append(cmds, v...)
+				}
+			}
+			cli.registerFunc(c.Handler, cmds...)
+		}
+	}
 	return cli
 }
 
