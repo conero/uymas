@@ -2,6 +2,7 @@ package storage
 
 import (
 	"errors"
+	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
@@ -87,18 +88,64 @@ func (lite *Lite) IsNumber() bool {
 	return lite.vType == LiteralInt || lite.vType == LiteralFloat
 }
 
-//@todo need to do.
 // support mathematical expression
 func LiteralExpression(expression string) (float64, error) {
-	reg := regexp.MustCompile(`^[(+\-*/)\d]+$`)
+	reg := regexp.MustCompile(`^[(+\-*/)\d\s.]+$`)
 	if reg.MatchString(expression) {
-		regBrackets := regexp.MustCompile(`\(^[()]+\)`)
+		regBrackets := regexp.MustCompile(`\([^()]+\)`)
+		bracketRegRpl := regexp.MustCompile(`\(|\)`)
 		for {
 			if !regBrackets.MatchString(expression) {
 				break
 			}
-			regBrackets.FindAllString(expression, -1)
+			brackets := regBrackets.FindAllString(expression, -1)
+			for _, exp := range brackets {
+				exp2 := bracketRegRpl.ReplaceAllString(exp, "")
+				value := ExpNoBracket(exp2)
+				fmt.Println(exp2, value)
+				expression = strings.ReplaceAll(expression, exp, value)
+			}
 		}
 	}
 	return 0, errors.New("expression not a valid mathematical expression")
+}
+
+//the expression without bracket
+func ExpNoBracket(expression string) string {
+	var result string = "0"
+	reg := regexp.MustCompile(`^[+\-*/\d\s.]+$`)
+	if reg.MatchString(expression) {
+		mulDivReg := regexp.MustCompile(`[\d.]+[*/]+[\d.]`)
+		mulDivSignReg := regexp.MustCompile(`\*|\/`)
+		checkReg := regexp.MustCompile(`^[\d.]+$`)
+
+		for {
+			if !mulDivReg.MatchString(expression) {
+				break
+			}
+
+			if checkReg.MatchString(expression) {
+				break
+			}
+
+			for _, frag := range mulDivReg.FindAllString(expression, -1) {
+				fragQue := mulDivSignReg.Split(frag, -1)
+				frag1, frag2 := fragQue[0], fragQue[1]
+				fragV1, _ := strconv.ParseFloat(frag1, 64)
+				fragV2, _ := strconv.ParseFloat(frag2, 64)
+
+				rpl := ""
+				if strings.Index(frag, "/") > -1 {
+					rpl = fmt.Sprintf("%v", fragV1/fragV2)
+				} else if strings.Index(frag, "*") > -1 {
+					rpl = fmt.Sprintf("%v", fragV1*fragV2)
+				}
+
+				expression = strings.ReplaceAll(expression, frag, rpl)
+			}
+		}
+
+	}
+
+	return result
 }
