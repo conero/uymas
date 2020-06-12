@@ -7,7 +7,7 @@ package uymas
 
 const (
 	Version        = "1.0.0-a3" //dev 为非发行版本
-	Release        = "dev"
+	Release        = "2020-06-12"
 	Since          = "20181030"
 	Author         = "Joshua Conero"
 	Email          = "conero@163.com"
