@@ -6,6 +6,6 @@ import (
 )
 
 func TestRootDir(t *testing.T) {
-	t.Log(RootDir())
+	t.Log(GetBasedir())
 	t.Log(os.Args)
 }

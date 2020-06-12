@@ -29,16 +29,43 @@
 - **bin/buitl**
   - (+) *新增 `bin util` 包，使其区分 bin 中 `init()`， 后者无该函数*
   - (+) 新增 `GetBasedir()` 函数，用于获取应用运行的基础目录地址
+  - (+) *新增函数 `StringToArgs()`, 用于将字符串安装args模式切割为数组*
+- **bin/parser**
+  - (+) 添加`bin/parser`子包专门用于实现命令行语法解析
 - **io**
   - (修复) *io.StdPathName 特定下错误修复* 
 - **netutil** 网络请求助手(新增)
   - **Httpu** *http util 方法集合*
+- **storage**
+	- (+) 实验性引入内存数据存储器
+
 
 
 
 #### todos
 
 - [x] `bin.Command` 中 `App` 属性无时效性，需要在继承的命令中调用 `bin.GetApp()` 实现，需要优化 `runAppRouter()`
+
+
+
+#### alpha3/200612
+
+> **bin**
+
+- (+) 添加新的的`bin.CLI`构建方式，函数式设计与原的命令行设计区分。前者更加适合与驻留式命令行程序，引入语言式风格。后期将删除旧的命令行形式
+- **bin/parser**
+  - (+) 添加`bin/parser`子包专门用于实现命令行语法解析
+- **bin/buitl**
+  - (+) *新增 `bin util` 包，使其区分 bin 中 `init()`， 后者无该函数*
+  - (+) 新增 `GetBasedir()` 函数，用于获取应用运行的基础目录地址
+  - (+) *新增函数 `StringToArgs()`, 用于将字符串安装args模式切割为数组*
+  - (+) `Clear()`  采用命令行调用清屏幕失败(实验性)
+
+> **storage**
+
+- (+) 实验性引入内存数据存储器
+
+
 
 
 
