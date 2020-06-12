@@ -118,3 +118,35 @@ func ReadIniLines(lines []string) map[string]map[string]string {
 func IsChineseCharacters(word string) bool {
 	return CcReg.MatchString(word)
 }
+
+//the line from file
+func GetLinesFromFile(filename string) []string {
+	fh, err := os.Open(filename)
+	if err == nil {
+		buf := bufio.NewReader(fh)
+		lines := []string{}
+		linesCase := []string{}
+		for {
+			line, err2 := buf.ReadString('\n')
+			line = strings.TrimSpace(line)
+			// "#/;" 开头含忽略
+			w := ""
+			if line != "" {
+				w = line[:1]
+			}
+			if w == "#" || w == ";" {
+				line = ""
+			}
+			if line != "" {
+				lines = append(lines, line)
+				linesCase = append(linesCase, line)
+			}
+			// 错误
+			if err2 != nil {
+				break
+			}
+		}
+		return lines
+	}
+	return nil
+}

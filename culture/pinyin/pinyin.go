@@ -49,105 +49,15 @@ var (
 	}
 )
 
-type Pinyin struct {
-	Filename        string                       // 文件
-	Dicks           map[string]map[string]string // 地址
-	pinyinWordsDick map[string]string            // 拼音字典； [pinyin => 文字字典]
-}
-
-// 文件读取
-func (py *Pinyin) ReadIni(filename string) *Pinyin {
-	py.Filename = filename
-	py.Dicks = ReadDickFromIni(filename)
-	py.simpleWordsDick()
-	return py
-}
-
-func (py *Pinyin) ReadIniLines(lines []string) *Pinyin {
-	py.Dicks = ReadIniLines(lines)
-	py.simpleWordsDick()
-	return py
-}
-
-// 内部文件读取
-func (py *Pinyin) readInnerIni() *Pinyin {
-	py.Dicks = ReadDickFromIni(py.Filename)
-	return py
-}
-
-// 字典简单化
-func (py *Pinyin) simpleWordsDick() {
-	if py.Dicks != nil {
-		py.pinyinWordsDick = map[string]string{}
-		for _, vv := range py.Dicks {
-			for k, v := range vv {
-				py.pinyinWordsDick[k] = v
-			}
-		}
-	}
-}
-
-// 文件读取
-func NewPinyin() *Pinyin {
-	py := new(Pinyin)
-	return py
-}
-
-// 获取汉字的拼音
-func (py *Pinyin) GetWord(word string) string {
-	var pinyin string
-	if py.pinyinWordsDick != nil {
-		for py, words := range py.pinyinWordsDick {
-			if strings.Index(words, word) > -1 {
-				pinyin = py
-				break
-			}
-		}
-	}
-	return pinyin
-}
-
-// 字符分割
-func (py *Pinyin) GetWordsSplit(words string) []string {
-	var pinyin = []string{}
-	wordsSplit := ([]rune)(words)
-	for i := 0; i < len(wordsSplit); i++ {
-		wd := string(wordsSplit[i : i+1])
-		if IsChineseCharacters(wd) {
-			pinyin = append(pinyin, py.GetWord(wd))
-		} else {
-			pinyin = append(pinyin, wd)
-		}
-
-	}
-	return pinyin
-}
-
-//获取句子拼音
-func (py *Pinyin) GetWords(words string) string {
-	var pinyin string
-	wordsSplit := ([]rune)(words)
-	for i := 0; i < len(wordsSplit); i++ {
-		wd := string(wordsSplit[i : i+1])
-		if IsChineseCharacters(wd) {
-			pinyin += py.GetWord(wd)
-		} else {
-			pinyin += wd
-		}
-
-	}
-	return pinyin
-}
-
 //含声调的拼音
-type PinyinTone struct {
+type Pinyin struct {
 	filename string
 	Dicks    map[string]map[string]string
 }
 
 //初始化
-func NewPinyinTone(filename string) *PinyinTone {
-	pyt := &PinyinTone{
+func NewPinyin(filename string) *Pinyin {
+	pyt := &Pinyin{
 		filename: filename,
 	}
 	pyt.loadData()
@@ -156,8 +66,8 @@ func NewPinyinTone(filename string) *PinyinTone {
 
 //支持：https://github.com/mozillazg/pinyin-data/blob/master/pinyin.txt 文本格式
 //数据加载
-func (pyt *PinyinTone) loadData() {
-	lines := com.ReadIniLines(pyt.filename)
+func (pyt *Pinyin) loadData() {
+	lines := GetLinesFromFile(pyt.filename)
 	innerDick := map[string]map[string]string{}
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
@@ -186,13 +96,13 @@ func (pyt *PinyinTone) loadData() {
 }
 
 //获取拼音声调
-func (pyt *PinyinTone) GetPyTone(chinese string) string {
+func (pyt *Pinyin) GetPyTone(chinese string) string {
 	chinese = pyt.GetPyToneFunc(chinese, nil)
 	return chinese
 }
 
 //拼音数字标注法
-func (pyt *PinyinTone) GetPyToneNumber(chinese string) string {
+func (pyt *Pinyin) GetPyToneNumber(chinese string) string {
 	chinese = pyt.GetPyToneFunc(chinese, func(word string) string {
 		for k, m := range ChineseToneMap {
 			isBreak := false
@@ -214,7 +124,7 @@ func (pyt *PinyinTone) GetPyToneNumber(chinese string) string {
 }
 
 //拼音数字标注法
-func (pyt *PinyinTone) GetPyToneAlpha(chinese string) string {
+func (pyt *Pinyin) GetPyToneAlpha(chinese string) string {
 	chinese = pyt.GetPyToneFunc(chinese, func(word string) string {
 		for k, m := range ChineseToneMap {
 			isBreak := false
@@ -236,7 +146,7 @@ func (pyt *PinyinTone) GetPyToneAlpha(chinese string) string {
 
 //获取pinyin tone 字符，待回调
 // call 为 `nil` 是为默认
-func (pyt *PinyinTone) GetPyToneFunc(chinese string, call func(word string) string) string {
+func (pyt *Pinyin) GetPyToneFunc(chinese string, call func(word string) string) string {
 	queue := strings.Split(chinese, "")
 	words := []string{}
 
@@ -270,7 +180,7 @@ func (pyt *PinyinTone) GetPyToneFunc(chinese string, call func(word string) stri
 }
 
 //多音字中获取其一
-func (pyt *PinyinTone) checkOneMultipleWords(word string) string {
+func (pyt *Pinyin) checkOneMultipleWords(word string) string {
 	if word != "" {
 		queue := strings.Split(word, ",")
 		if len(queue) > 0 {
