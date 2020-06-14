@@ -7,6 +7,7 @@ import (
 	"github.com/conero/uymas/bin"
 	"github.com/conero/uymas/bin/parser"
 	"github.com/conero/uymas/culture/pinyin"
+	"github.com/conero/uymas/storage"
 	"os"
 	"strings"
 )
@@ -42,6 +43,22 @@ func application() {
 	cli.RegisterFunc(func(cc *bin.CliCmd) {
 		fmt.Println("  " + strings.Join(cli.GetCmdList(), "\r\n  "))
 	}, "uls", "uymas-ls")
+
+	//cache namespace@key.key setValue
+	cli.RegisterFunc(func(cc *bin.CliCmd) {
+		key := cc.SubCommand
+		value := cc.Next(key)
+		hasCache, ccValue := getCache(key, value)
+		if value != "" {
+			if hasCache {
+				fmt.Printf("%v\r\n", ccValue)
+			} else {
+				fmt.Printf("%v 没有设置值\r\n", key)
+			}
+		} else {
+			fmt.Printf("%v, %v 键值对已保存!\r\n", key, value)
+		}
+	}, "cache", "cc")
 
 	//REPL
 	cli.RegisterFunc(func(cc *bin.CliCmd) {
@@ -82,4 +99,28 @@ func getPinyin() *pinyin.Pinyin {
 //the uymas cmd message
 func main() {
 	application()
+}
+
+//
+func getCache(key, value string) (bool, storage.Any) {
+	var namespace string
+	var nsSplit = "@"
+	if strings.Index(key, nsSplit) > -1 {
+		tapQueue := strings.Split(key, nsSplit)
+		namespace = strings.TrimSpace(tapQueue[0])
+		key = strings.TrimSpace(tapQueue[1])
+	}
+
+	store := storage.GetStorage(namespace)
+	if value == "" {
+		if store != nil {
+			return true, store.GetValue(key)
+		}
+		return false, ""
+	} else {
+		if store == nil {
+			store = storage.NewStorage(namespace)
+		}
+		return true, store.SetValue(key, storage.NewLite(value).GetAny())
+	}
 }

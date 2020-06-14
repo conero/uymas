@@ -4,6 +4,11 @@
 
 package storage
 
+import (
+	"fmt"
+	"github.com/conero/uymas"
+)
+
 //the any type of the data
 type Any interface{}
 
@@ -22,5 +27,70 @@ const (
 	LiteralNull   = "null"
 )
 
+var (
+	memoryStorageCache *Storage
+)
+
 //the Literal variable. this is value from string
 type Literal string
+
+//the storage of cache
+type Storage struct {
+	namespace string
+	data      Kv
+}
+
+func (store *Storage) GetValue(key Any) Any {
+	value, has := store.data[key]
+	if has {
+		return value
+	}
+	return nil
+}
+
+func (store *Storage) SetValue(key, value Any) *Storage {
+	store.data[key] = value
+	return store
+}
+
+func (store *Storage) hasKey(key Any) bool {
+	_, has := store.data[key]
+	return has
+}
+
+func (store *Storage) DelKey(key Any) bool {
+	if store.hasKey(key) {
+		delete(store.data, key)
+		return true
+	}
+	return false
+}
+
+func NewStorage(namespace string) *Storage {
+	store := &Storage{
+		namespace: namespace,
+		data:      Kv{},
+	}
+	memoryStorageCache.SetValue(namespace, store)
+	return store
+}
+
+func GetStorage(namespace string) *Storage {
+	value := memoryStorageCache.GetValue(namespace)
+	if value != nil {
+		if store, isStore := value.(*Storage); isStore {
+			return store
+		}
+	}
+	return nil
+}
+
+func init() {
+	namespace := fmt.Sprintf("%v_internal_sys_memory_", uymas.Name)
+
+	store := &Storage{
+		namespace: namespace,
+		data:      Kv{},
+	}
+	memoryStorageCache = store
+}
