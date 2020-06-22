@@ -148,7 +148,7 @@ func (c *Builder) createInsertSql() {
 
 	c.binds = binds
 	c.vSql = fmt.Sprintf("%v INTO %v (%v) VALUES (%v)",
-		builderSelect, c.table, strings.Join(columns, ", "), strings.Join(valueRepls, ", "))
+		builderInsert, c.table, strings.Join(columns, ", "), strings.Join(valueRepls, ", "))
 }
 
 func (c *Builder) createDeleteSql() {
