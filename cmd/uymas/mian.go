@@ -60,6 +60,17 @@ func application() {
 		}
 	}, "cache", "cc")
 
+	//scan, sc
+	cli.RegisterFunc(func(cc *bin.CliCmd) {
+		dd := ScanDir(cc.SubCommand)
+		children := dd.ChildrenDick
+
+		for k, v := range children {
+			fmt.Printf(" %v    %v   %.4f.\r\n", k, v, (float64(v)/float64(dd.AllSize))*100)
+		}
+		fmt.Printf(" %v the all size.\r\n", dd.AllSize)
+	}, "scan", "sc")
+
 	//REPL
 	cli.RegisterFunc(func(cc *bin.CliCmd) {
 		var input = bufio.NewScanner(os.Stdin)
@@ -101,7 +112,7 @@ func main() {
 	application()
 }
 
-//
+//获取的缓存
 func getCache(key, value string) (bool, storage.Any) {
 	var namespace string
 	var nsSplit = "@"
