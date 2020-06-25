@@ -7,6 +7,7 @@ import (
 	"github.com/conero/uymas/bin"
 	"github.com/conero/uymas/bin/parser"
 	"github.com/conero/uymas/culture/pinyin"
+	"github.com/conero/uymas/fs"
 	"github.com/conero/uymas/storage"
 	"os"
 	"strings"
@@ -62,13 +63,21 @@ func application() {
 
 	//scan, sc
 	cli.RegisterFunc(func(cc *bin.CliCmd) {
-		dd := ScanDir(cc.SubCommand)
-		children := dd.ChildrenDick
-
-		for k, v := range children {
-			fmt.Printf(" %v    %v   %.4f.\r\n", k, v, (float64(v)/float64(dd.AllSize))*100)
+		baseDir := cc.SubCommand
+		if baseDir == "" {
+			baseDir = "./"
 		}
-		fmt.Printf(" %v the all size.\r\n", dd.AllSize)
+		dd := fs.NewDirScanner(baseDir)
+		if er := dd.Scan(); er == nil {
+			for key, tcd := range dd.TopChildDick {
+				fmt.Printf(" %v, %v.\r\n", key, fs.ByteSize(tcd.Size))
+			}
+
+			fmt.Printf(" 文件扫描数： %v, 目录: %v, 文件： %v.\r\n", dd.AllItem, dd.AllDirItem, dd.AllFileItem)
+			fmt.Printf(" 目录大小: %v.\r\n", fs.ByteSize(dd.AllSize))
+			fmt.Printf(" 使用时间： %v.\r\n", dd.Runtime)
+		}
+
 	}, "scan", "sc")
 
 	//REPL
