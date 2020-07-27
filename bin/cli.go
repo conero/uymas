@@ -32,11 +32,10 @@ type CLI struct {
 type CliCmd struct {
 	Data       map[string]interface{} // the data from the `DataRaw` by parse for type
 	DataRaw    map[string]string      // the cli application apply the data
-	Router     *Router
-	Command    string   // the current command
-	SubCommand string   // the sub command
-	Setting    []string // the setting of command
-	Raw        []string // the raw args
+	Command    string                 // the current command
+	SubCommand string                 // the sub command
+	Setting    []string               // the setting of command
+	Raw        []string               // the raw args
 }
 
 // the cli app.

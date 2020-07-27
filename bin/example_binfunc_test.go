@@ -11,20 +11,21 @@ import (
  **/
 
 func main() {
+	cli := NewCLI()
+
 	// 项目注册
-	RegisterFunc("name", func(a *App) {
+	cli.RegisterFunc(func(cc *CliCmd) {
 		fmt.Println(" conero/uymas/bin example with Base.")
-	})
+	}, "name")
 
 	// 未知命令
-	UnfindFunc(func(a *App, cmd string) {
+	cli.RegisterUnfind(func(cmd string, cc *CliCmd) {
 		fmt.Println(cmd + "unfind（functional）")
 	})
 
-	// 空函数
-	EmptyFunc(func(a *App) {
+	cli.RegisterEmpty(func(cc *CliCmd) {
 		fmt.Println("empty（functional）")
 	})
 
-	Run()
+	cli.Run()
 }
