@@ -48,26 +48,37 @@
 
 
 
-#### alpha4/dev
+#### alpha5/next
+
+##### todo
+
+- [ ] 所有的方法添加对应的测试脚本，尽可能，以提高代码的可用性。
+
+
+
+#### alpha4/200727
 
 **culture/pinyin**
 
 - (+) *将个人其他模块中的`pinyin`生成移动到此包中*
-
-
 
 **fs**
 
 - (+) 添加通用的目录扫描工具
 - (+) 文件尺寸大小单位转换工具
 
-
-
 **number**
 
 - (+) 数字通用大小单位转换工具
 
+**bin**
 
+- (-) 删除旧版本中已经的方法
+- (fixed) 命令基本类型或是失败
+
+**parse/xini**
+
+- (+) 新增ini解析库，从个人库[`github.com/conero/inigo`](https://github.com/conero/inigo)迁移过来
 
 **cmd/uymas**
 
