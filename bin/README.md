@@ -43,14 +43,30 @@ $ <option>
 
 > 数据格式
 
+支持的基本类型如下：
+
+- 数字         number
+  - 整形              int64
+  - 浮点型          float64
+- 布尔类型             bool
+- 字符串      string
+
+
+
 ```shell
 # 字符串
+# string
 $ 'the data string.'	# the data string.
 $ "the data string."	# the data string.
 
-# 数字类型
-$ 8						# int
-$ 8.88					# float
+# 数字类型，默认最长的数字类型
+# int64, float64
+$ 8						# int64
+$ 8.88					# float64
+
+# bool 类型(不区分大小写)
+$ True
+$ true
 
 # 数组
 # 分割符号(separator)  默认","

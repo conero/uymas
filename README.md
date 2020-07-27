@@ -19,6 +19,25 @@ go-version： *v1.11.1*
 
 
 
+**分支介绍**
+
+- master 项目主分支
+- develop 开发分支
+- nestling  雏形分支，包含实验性的代码
+
+
+
+```powershell
+# 分支合并顺序
+nestling --> develop -->master
+```
+
+
+
+
+
+
+
 ## 安装
 
 ```ini
