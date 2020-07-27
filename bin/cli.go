@@ -7,6 +7,7 @@ import (
 	"github.com/conero/uymas/str"
 	"os"
 	"reflect"
+	"strconv"
 	"strings"
 )
 
@@ -86,6 +87,7 @@ func NewCliCmd(args ...string) *CliCmd {
 	return c
 }
 
+//@todo notice: `--test-string="Joshua 存在空格的字符串 Conero"` 解析失败
 // construction of `CliCmd` by string
 func NewCliCmdByString(ss string) *CliCmd {
 	return NewCliCmd(butil.StringToArgs(ss)...)
@@ -477,6 +479,7 @@ func (app *CliCmd) ArgDefault(key string, def interface{}) interface{} {
 //		`[command] --version --name 'Joshua Conero'`
 //		`[command] --list A B C D -L A B C D`
 //		`[command] --name='Joshua Conero'`
+//@todo app.Data --> 类型解析太简陋；支持类型与 Readme.md 不统一
 func (app *CliCmd) parseArgs() {
 	if app.Raw != nil {
 		optKeyList := []string{}
@@ -556,6 +559,14 @@ func (app *CliCmd) parseArgs() {
 				}
 			}
 		}
+
+		//parse the raw cmd data to data.
+		//`app.DataRaw` => `app.Data`
+		for rawKey, rawVal := range app.DataRaw {
+			if _, hasRawKey := app.Data[rawKey]; !hasRawKey {
+				app.Data[rawKey] = ParseValueByStr(rawVal)
+			}
+		}
 	}
 }
 
@@ -579,6 +590,33 @@ func CleanoutString(ss string) string {
 		if first == "'" || last == `"` {
 			ss = ss[1 : ssLen-1]
 		}
+	}
+
+	return ss
+}
+
+//将字符串解析为任一值
+func ParseValueByStr(ss string) interface{} {
+	ss = strings.TrimSpace(ss)
+	ssLow := strings.ToLower(ss)
+
+	//bool
+	if ssLow == "true" || ssLow == "false" {
+		if ssLow == "true" {
+			return true
+		} else {
+			return false
+		}
+	}
+
+	//int64
+	if i64, er := strconv.ParseInt(ss, 10, 64); er == nil {
+		return i64
+	}
+
+	//float64
+	if f64, er := strconv.ParseFloat(ss, 64); er == nil {
+		return f64
 	}
 
 	return ss
