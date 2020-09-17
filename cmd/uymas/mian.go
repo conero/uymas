@@ -68,11 +68,18 @@ func application() {
 			baseDir = "./"
 		}
 		dd := fs.NewDirScanner(baseDir)
+
+		//过滤
+		dd.Exclude(cc.ArgRaw("exclude"))
+		dd.Include(cc.ArgRaw("include"))
+
 		if er := dd.Scan(); er == nil {
+			var table [][]interface{}
 			for key, tcd := range dd.TopChildDick {
-				fmt.Printf(" %v, %v.\r\n", key, fs.ByteSize(tcd.Size))
+				table = append(table, []interface{}{key, fs.ByteSize(tcd.Size)})
 			}
 
+			fmt.Println(bin.FormatTable(table, " "))
 			fmt.Printf(" 文件扫描数： %v, 目录: %v, 文件： %v.\r\n", dd.AllItem, dd.AllDirItem, dd.AllFileItem)
 			fmt.Printf(" 目录大小: %v.\r\n", fs.ByteSize(dd.AllSize))
 			fmt.Printf(" 使用时间： %v.\r\n", dd.Runtime)
@@ -105,6 +112,16 @@ func application() {
 			fmt.Print("$ uymas>")
 		}
 	}, "repl")
+
+	//help
+	cli.RegisterFunc(func(cc *bin.CliCmd) {
+		fmt.Println("主要命令如下: ")
+		fmt.Println("   pinyin           汉字转拼音查询")
+		fmt.Println("   cache, cc        字段文件缓存器")
+		fmt.Println("   scan, sc         文件扫码, --include 包含, --exclude 排除")
+		fmt.Println("   uymas-ls, uls    系统全部的命令行列表")
+		fmt.Println("   repl             交互式对话命令")
+	}, "help", "?")
 
 	cli.Run()
 }

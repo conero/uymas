@@ -4,6 +4,8 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"regexp"
+	"strings"
 	"time"
 )
 
@@ -22,6 +24,24 @@ type DirScanner struct {
 	AllSize      int64
 	TopChildDick map[string]ChildDirData
 	Runtime      time.Duration
+
+	//内部变量
+	//排除名称，以"*"匹配（不包含）
+	excludeExp []string
+	//过滤表达式（包含）
+	includeExp []string
+}
+
+//exclude exp for dir scan
+func (ds *DirScanner) Exclude(excludes ...string) *DirScanner {
+	ds.excludeExp = append(ds.excludeExp, excludes...)
+	return ds
+}
+
+//exclude exp for dir scan
+func (ds *DirScanner) Include(includes ...string) *DirScanner {
+	ds.includeExp = append(ds.includeExp, includes...)
+	return ds
 }
 
 //to star scan the dir.
@@ -54,6 +74,9 @@ func (ds *DirScanner) scanRecursion(vDir string) int64 {
 	var currentSize int64 = 0
 	for _, fl := range files {
 		name := fl.Name()
+		if ds.ignoreScan(name) {
+			continue
+		}
 		var size int64
 		if fl.IsDir() {
 			ds.AllDirItem += 1
@@ -74,6 +97,46 @@ func (ds *DirScanner) scanRecursion(vDir string) int64 {
 		}
 	}
 	return currentSize
+}
+
+//忽略扫描
+func (ds *DirScanner) ignoreScan(name string) bool {
+	ignore := false
+	allExp := "*"
+	if len(ds.includeExp) > 0 {
+		isFilter := false
+		for _, filter := range ds.includeExp {
+			if idx := strings.Index(name, allExp); idx > -1 {
+				filter = strings.ReplaceAll(filter, allExp, ".*")
+				if isMatch, er := regexp.MatchString(filter, name); er == nil && isMatch {
+					isFilter = true
+					break
+				}
+			} else if name == filter {
+				isFilter = true
+				break
+			}
+		}
+		return !isFilter
+	}
+	if len(ds.excludeExp) > 0 {
+		isExclude := false
+		for _, filter := range ds.includeExp {
+			if idx := strings.Index(name, allExp); idx > -1 {
+				filter = strings.ReplaceAll(filter, allExp, ".*")
+				if isMatch, er := regexp.MatchString(filter, name); er == nil && isMatch {
+					isExclude = true
+					break
+				}
+			} else if name == filter {
+				isExclude = true
+				break
+			}
+		}
+
+		ignore = isExclude
+	}
+	return ignore
 }
 
 func NewDirScanner(vDir string) *DirScanner {

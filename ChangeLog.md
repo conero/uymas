@@ -40,6 +40,10 @@
 	- (+) 实验性引入内存数据存储器
 - **util**
   - Del)  删除 `util.BaseError` 结构体，使用系统的 `errors.New()` 代替
+- **fs**
+  - New) `fs.ChildDirData` 添加排序和过滤表达式
+- **cmd/uymas**
+  - New) 新增 help 命令，以及`scan`添加排除和过滤
 
 
 
