@@ -38,6 +38,8 @@
   - **Httpu** *http util 方法集合*
 - **storage**
 	- (+) 实验性引入内存数据存储器
+- **util**
+  - Del)  删除 `util.BaseError` 结构体，使用系统的 `errors.New()` 代替
 
 
 
