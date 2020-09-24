@@ -26,6 +26,10 @@
     - (+) *`CheckMustKey` 检测必须的键值是否存在*
   - **CLI**
     - Optimize) `RegisterEmpty` 和 `RegisterUnfind` 支持简化版的注册函数，即 `cc *CliCmd` 非回调函数必须。
+  - **CliCmd**
+    - optimize) `ArgRaw` 添加支持多参数获取单一值得能力
+  - **Option**
+    - +) 新增选项解析类，用于对 `args` 值得映射
   - (调整) 函数式注册方法，统一新增参数 `a *bin.App` 。 [非兼容性调整]
   - (try) 新增 Option 对象，严格控制option的输入是否正确
 - **bin/buitl**

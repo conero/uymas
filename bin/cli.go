@@ -437,12 +437,16 @@ func (app *CliCmd) Next(keys ...string) string {
 	return value
 }
 
-// get raw arg data
-func (app *CliCmd) ArgRaw(key string) string {
+// get raw args data, because some args has alias list.
+func (app *CliCmd) ArgRaw(keys ...string) string {
 	var value string
-	if v, b := app.DataRaw[key]; b {
-		value = v
+	for _, key := range keys {
+		if v, b := app.DataRaw[key]; b {
+			value = v
+			break
+		}
 	}
+
 	return value
 }
 
