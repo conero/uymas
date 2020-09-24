@@ -24,6 +24,8 @@
   - **App**
     - (+) *`CheckSetting`* 新增 app 选项是否存其中，支持多个参数
     - (+) *`CheckMustKey` 检测必须的键值是否存在*
+  - **CLI**
+    - Optimize) `RegisterEmpty` 和 `RegisterUnfind` 支持简化版的注册函数，即 `cc *CliCmd` 非回调函数必须。
   - (调整) 函数式注册方法，统一新增参数 `a *bin.App` 。 [非兼容性调整]
   - (try) 新增 Option 对象，严格控制option的输入是否正确
 - **bin/buitl**

@@ -219,14 +219,14 @@ func (cli *CLI) RegisterApps(aps map[string]interface{}) *CLI {
 }
 
 // when the cmd is empty then callback the function, action only be
-//   1. function `func(cc *CliCmd)` or struct.
+//   1. function `func(cc *CliCmd)`/`func()` or struct.
 func (cli *CLI) RegisterEmpty(action interface{}) *CLI {
 	cli.actionEmptyRegister = action
 	return cli
 }
 
 // when command input not handler will callback the register, the format like:
-//   1. function `func(cmd string, cc *CliCmd)`
+//   1. function `func(cmd string, cc *CliCmd)`/func(cmd string)`
 func (cli *CLI) RegisterUnfind(action interface{}) *CLI {
 	cli.actionUnfindRegister = action
 	return cli
@@ -301,6 +301,9 @@ func (cli *CLI) router(cc *CliCmd) {
 				case func(cmd string, cc *CliCmd):
 					aur.(func(cmd string, cc *CliCmd))(cc.Command, cc)
 					routerValidMk = true
+				case func(cmd string):
+					aur.(func(cmd string))(cc.Command)
+					routerValidMk = true
 				}
 			}
 
@@ -321,7 +324,11 @@ func (cli *CLI) router(cc *CliCmd) {
 			case func(cc *CliCmd):
 				aer.(func(cc *CliCmd))(cc)
 				routerValidMk = true
+			case func():
+				aer.(func())()
+				routerValidMk = true
 			}
+
 		}
 	}
 }
