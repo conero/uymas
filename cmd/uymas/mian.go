@@ -80,6 +80,7 @@ func application() {
 			}
 
 			fmt.Println(bin.FormatTable(table, " "))
+			fmt.Printf(" 文件扫目标目录： %v.\r\n", dd.BaseDir())
 			fmt.Printf(" 文件扫描数： %v, 目录: %v, 文件： %v.\r\n", dd.AllItem, dd.AllDirItem, dd.AllFileItem)
 			fmt.Printf(" 目录大小: %v.\r\n", fs.ByteSize(dd.AllSize))
 			fmt.Printf(" 使用时间： %v.\r\n", dd.Runtime)
@@ -118,7 +119,7 @@ func application() {
 		fmt.Println("主要命令如下: ")
 		fmt.Println("   pinyin           汉字转拼音查询")
 		fmt.Println("   cache, cc        字段文件缓存器")
-		fmt.Println("   scan, sc         文件扫码, --include 包含, --exclude 排除")
+		fmt.Println("   scan, sc <dir>   文件扫描, --include 包含, --exclude 排除")
 		fmt.Println("   uymas-ls, uls    系统全部的命令行列表")
 		fmt.Println("   repl             交互式对话命令")
 	}, "help", "?")

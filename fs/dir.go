@@ -34,13 +34,33 @@ type DirScanner struct {
 
 //exclude exp for dir scan
 func (ds *DirScanner) Exclude(excludes ...string) *DirScanner {
-	ds.excludeExp = append(ds.excludeExp, excludes...)
+	var newExcludes []string
+	for _, ecld := range excludes {
+		if "" == strings.TrimSpace(ecld) {
+			continue
+		}
+		newExcludes = append(newExcludes, ecld)
+	}
+	if len(newExcludes) == 0 {
+		return ds
+	}
+	ds.excludeExp = append(ds.excludeExp, newExcludes...)
 	return ds
 }
 
 //exclude exp for dir scan
 func (ds *DirScanner) Include(includes ...string) *DirScanner {
-	ds.includeExp = append(ds.includeExp, includes...)
+	var newInclude []string
+	for _, icld := range includes {
+		if "" == strings.TrimSpace(icld) {
+			continue
+		}
+		newInclude = append(newInclude, icld)
+	}
+	if len(newInclude) == 0 {
+		return ds
+	}
+	ds.includeExp = append(ds.includeExp, newInclude...)
 	return ds
 }
 
@@ -64,6 +84,7 @@ func (ds *DirScanner) Scan() error {
 func (ds *DirScanner) scanRecursion(vDir string) int64 {
 	files, err := ioutil.ReadDir(vDir)
 	if err != nil {
+		fmt.Println(err)
 		return 0
 	}
 	isTopClass := false
@@ -99,13 +120,16 @@ func (ds *DirScanner) scanRecursion(vDir string) int64 {
 	return currentSize
 }
 
-//忽略扫描
+//ignore scan target name
 func (ds *DirScanner) ignoreScan(name string) bool {
 	ignore := false
 	allExp := "*"
 	if len(ds.includeExp) > 0 {
 		isFilter := false
 		for _, filter := range ds.includeExp {
+			if "" == strings.TrimSpace(filter) {
+				continue
+			}
 			if idx := strings.Index(name, allExp); idx > -1 {
 				filter = strings.ReplaceAll(filter, allExp, ".*")
 				if isMatch, er := regexp.MatchString(filter, name); er == nil && isMatch {
@@ -122,6 +146,9 @@ func (ds *DirScanner) ignoreScan(name string) bool {
 	if len(ds.excludeExp) > 0 {
 		isExclude := false
 		for _, filter := range ds.includeExp {
+			if "" == strings.TrimSpace(filter) {
+				continue
+			}
 			if idx := strings.Index(name, allExp); idx > -1 {
 				filter = strings.ReplaceAll(filter, allExp, ".*")
 				if isMatch, er := regexp.MatchString(filter, name); er == nil && isMatch {
@@ -139,8 +166,12 @@ func (ds *DirScanner) ignoreScan(name string) bool {
 	return ignore
 }
 
+func (ds *DirScanner) BaseDir() string {
+	return ds.baseDir
+}
+
 func NewDirScanner(vDir string) *DirScanner {
 	ds := &DirScanner{}
-	ds.baseDir = vDir
+	ds.baseDir = StdDir(vDir)
 	return ds
 }
