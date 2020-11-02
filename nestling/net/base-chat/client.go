@@ -13,27 +13,34 @@ import (
 	"time"
 )
 
+var lgger chat2.Logger
+
 //客户端
 func main() {
+	lgger := chat2.NewLogger("")
 	cli := bin.NewCLI()
-	defPort, defNetwork := "7400", "tcp"
 	//call
 	cli.RegisterFunc(func(cc *bin.CliCmd) {
 		//端口号 [1-65535]; 一般不使用 0-1023
 		port := cc.ArgRaw("port", "P")
 		if "" == port {
-			port = defPort
+			port = chat2.DefChatPort
 		}
 		network := cc.ArgRaw("network", "N")
 		if "" == network {
-			network = defNetwork
+			network = chat2.DefChatNetwork
 		}
-		fmt.Printf("正在连接……，网络类型 => %v, 端口号 => %v.\r\n", network, port)
-		repl(network, port)
+		host := cc.ArgRaw("host", "H")
+		if "" == network {
+			host = chat2.DefChatHost
+		}
+
+		lgger.Info("正在连接……，网络类型 => %v, 端口号 => %v.\r\n", network, port)
+		repl(network, port, host)
 	}, "call", "c")
 	//默认启动请求
 	cli.RegisterFunc(func(cc *bin.CliCmd) {
-		repl(defPort, defNetwork)
+		repl(chat2.DefChatPort, chat2.DefChatNetwork, chat2.DefChatHost)
 	})
 	//默认服务
 	cli.RegisterFunc(func(cc *bin.CliCmd) {
@@ -46,18 +53,18 @@ func main() {
 }
 
 //交互式网络请求
-func repl(port, network string) {
-	hostAdrr := fmt.Sprintf("127.0.0.1:%v", port)
+func repl(port, network, host string) {
+	hostAdrr := fmt.Sprintf("%v:%v", host, port)
 	conn, err := net.Dial(network, hostAdrr)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("服务（%v）已连接成功.\r\n", hostAdrr)
+	lgger.Info("服务（%v）已连接成功.\r\n", hostAdrr)
 	defer conn.Close()
 	username := input("请输入您的姓名：", true)
 	pwsd := input("请输入密码（123456）：", true)
 	if pwsd != "123456" {
-		log.Fatal("您的用户密码错误！！")
+		lgger.Error("您的用户密码错误！！")
 		return
 	}
 
@@ -105,24 +112,38 @@ func NewChat(conn net.Conn, username string) *Chat {
 	chat := &Chat{
 		conn: conn,
 	}
-	_, err := conn.Write([]byte(fmt.Sprintf("native-message://authorization?username=%v", username)))
+	addr := chat2.Address{
+		Protocol: "native-message",
+		Action:   "authorization",
+	}
+	uV := &url.Values{}
+	uV.Add("username", username)
+	err := addr.SendValue(conn, uV)
 	if err != nil {
-		log.Fatalf("用户请求认证错误，Error: %v.", err)
+		lgger.Error("用户请求认证错误，Error: %v.", err)
+		return nil
 	}
 
 	timer := chat2.Timer(60 * time.Second)
 	for {
 		if timer() {
-			log.Fatal("等待服务响应超时")
+			lgger.Fatal("等待服务响应超时")
 		}
-		addr := chat2.RespondContent(conn)
-		log.Printf("server>>\r\n%v", addr.Content)
-		if addr.Action == "authorization" {
-			v := addr.URL.Query()
-			if "true" == v.Get("success") {
-				log.Println("您成功登录服务器！")
-				break
+		addr, err := chat2.RespondContent(conn)
+		if err != nil {
+			lgger.Fatal("读取服务器数据错误，信息：%v", lgger)
+		}
+		if addr != nil {
+			log.Printf("server>>\r\n%v", addr.Content)
+			if addr.Action == "authorization" {
+				v := addr.URL.Query()
+				if "true" == v.Get("success") {
+					lgger.Info("您成功登录服务器！")
+					break
+				}
 			}
+		} else {
+			lgger.Error("服务器接收的数据为空！")
 		}
 	}
 
@@ -154,10 +175,13 @@ func NewChat(conn net.Conn, username string) *Chat {
 					uV.Add("message", text)
 					send := chat2.Address{
 						Protocol: "native-message",
+						Action:   "broadcast",
 					}
-					_, er := conn.Write([]byte(send.Send("broadcast", uV)))
+					er := send.SendValue(conn, uV)
 					if er != nil {
-						log.Printf("发送广播服务错误！信息: %v.\r\n", er.Error())
+						lgger.Error("发送广播服务错误！信息: %v.\r\n", er.Error())
+					} else {
+						lgger.Info("广播信息已发送")
 					}
 				}
 			}
@@ -188,10 +212,13 @@ func NewChat(conn net.Conn, username string) *Chat {
 						uV.Add("username", toUser)
 						send := chat2.Address{
 							Protocol: "native-message",
+							Action:   "send-message",
 						}
-						_, er := conn.Write([]byte(send.Send("send-message", uV)))
+						er := send.SendValue(conn, uV)
 						if er != nil {
-							log.Printf("发送信息到用户(%v)，失败！错误：%v.", toUser, er.Error())
+							lgger.Error("发送信息到用户(%v)，失败！错误：%v.", toUser, er.Error())
+						} else {
+							lgger.Info("信息已发送")
 						}
 					}
 				}
