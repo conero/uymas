@@ -25,7 +25,8 @@
     - (+) *`CheckSetting`* 新增 app 选项是否存其中，支持多个参数
     - (+) *`CheckMustKey` 检测必须的键值是否存在*
   - **CLI**
-    - Optimize) `RegisterEmpty` 和 `RegisterUnfind` 支持简化版的注册函数，即 `cc *CliCmd` 非回调函数必须。
+    - optimize) `RegisterEmpty` 和 `RegisterUnfind` 支持简化版的注册函数，即 `cc *CliCmd` 非回调函数必须。
+    - new) `Inject` 和 `GetInjection` 新增数据注入器，用于实现如 chan 信号控制等
   - **CliCmd**
     - optimize) `ArgRaw` 添加支持多参数获取单一值得能力
   - **Option**

@@ -171,3 +171,6 @@ func NewLogger(level string) *Logger {
 	}
 	return &Logger{level: lv}
 }
+
+//默认日志
+var Log = NewLogger("")

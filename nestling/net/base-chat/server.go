@@ -11,11 +11,8 @@ import (
 	"time"
 )
 
-var lgger *chat.Logger
-
 //tcp 服务器
 func main() {
-	lgger = chat.NewLogger("")
 	cli := bin.NewCLI()
 	cli.RegisterFunc(chatServer, "server", "sv")
 	cli.RegisterEmpty(chatServer)
@@ -51,7 +48,7 @@ func chatServer(cc *bin.CliCmd) {
 		network = chat.DefChatNetwork
 	}
 
-	lgger.Info("已启动服务器：网络类型 => %v, 端口号 => %v.\r\n", network, port)
+	chat.Log.Info("已启动服务器：网络类型 => %v, 端口号 => %v.\r\n", network, port)
 	listener, err := net.Listen(network, fmt.Sprintf(":%v", port))
 	if err != nil {
 		log.Fatal(err)
@@ -78,7 +75,7 @@ func chatServer(cc *bin.CliCmd) {
 		go func(index int64) {
 			ptl := NewProtocol(conn)
 			if ptl.IsValid {
-				lgger.Info("用户【%v】接入网络，链接ID【%v】.\r\n", ptl.username, index)
+				chat.Log.Info("用户【%v】接入网络，链接ID【%v】.\r\n", ptl.username, index)
 				ConnPools[index] = &ConnCache{
 					ConnId:   fmt.Sprintf("%v-%v", connIdex, str.RandStr.SafeStr(20)),
 					conn:     conn,
@@ -107,18 +104,19 @@ func (c *Protocol) Broadcast(msg string, adr *chat.Address) {
 			v.Add("from_user", c.username)
 			_, er := pool.conn.Write([]byte(adr.Send(adr.Action, v)))
 			if er != nil {
-				lgger.Error("Error, 广播发送连接ID为: %v 发生错误，信息: %v.\r\n",
+				chat.Log.Error("Error, 广播发送连接ID为: %v 发生错误，信息: %v.\r\n",
 					pool.ConnId, er.Error())
 				pool.IsOnline = false
 				pool.conn = nil
 				ConnPools[idx] = pool
 			} else {
-				lgger.Info("广播，数据发送方：%v 的消息成功.\r\n", pool.ConnId)
+				chat.Log.Info("广播，数据发送方：%v 的消息成功.\r\n", pool.ConnId)
 			}
 		}
 	}
 }
 
+//发送信息到用户
 func (c *Protocol) ToUser(username, msg string, adr *chat.Address) {
 	for _, pool := range ConnPools {
 		if pool.IsOnline && pool.conn != nil && username == pool.Username {
@@ -127,10 +125,10 @@ func (c *Protocol) ToUser(username, msg string, adr *chat.Address) {
 			v.Add("from_user", c.username)
 			_, er := pool.conn.Write([]byte(adr.Send(adr.Action, v)))
 			if er != nil {
-				lgger.Error("Error, 广播发送连接ID为: %v 发生错误，信息: %v.\r\n",
+				chat.Log.Error("Error, 广播发送连接ID为: %v 发生错误，信息: %v.\r\n",
 					pool.ConnId, er.Error())
 			} else {
-				lgger.Info("发送到用户：%v 的消息成功", username)
+				chat.Log.Info("发送到用户：%v 的消息成功", username)
 			}
 		}
 	}
@@ -142,7 +140,7 @@ func (c *Protocol) connect() {
 	overTime := chat.Timer(time.Second * 60)
 	for {
 		if overTime() {
-			lgger.Error("等待客服端请求超时！")
+			chat.Log.Error("等待客服端请求超时！")
 			break
 		}
 		addr, er := chat.RespondContent(c.conn)
@@ -156,14 +154,14 @@ func (c *Protocol) connect() {
 					v.Add("name", username)
 					_, er := c.conn.Write([]byte(addr.Send("authorization", v)))
 					if er != nil {
-						lgger.Error("返回用户数据错误，信息: %v\r\n", er.Error())
+						chat.Log.Error("返回用户数据错误，信息: %v\r\n", er.Error())
 						c.username = ""
 					}
 					break
 				}
 			}
 		} else if er != nil {
-			lgger.Error("服务器认证读取客户端数据出错，信息：%v.\r\n", er.Error())
+			chat.Log.Error("服务器认证读取客户端数据出错，信息：%v.\r\n", er.Error())
 			break
 		}
 		fmt.Printf("client>> %v.\r\n", addr.Content)
@@ -180,7 +178,7 @@ func (c *Protocol) Handler() {
 	for {
 		adr, er := chat.RespondContent(c.conn)
 		if er != nil {
-			lgger.Error("认证完成后读取客服端数据错误，信息：%v\r\n", er.Error())
+			chat.Log.Error("认证完成后读取客服端数据错误，信息：%v\r\n", er.Error())
 			break
 		}
 		u := adr.URL
@@ -193,13 +191,13 @@ func (c *Protocol) Handler() {
 			if value != nil {
 				c.Broadcast(value.Get("message"), adr)
 			} else {
-				lgger.Error("广播信息时数据错误，message 数据不存在")
+				chat.Log.Error("广播信息时数据错误，message 数据不存在")
 			}
 		case "send-message":
 			if value != nil {
 				c.ToUser(value.Get("username"), value.Get("message"), adr)
 			} else {
-				lgger.Error("广播信息时数据错误，username, message 数据不存在")
+				chat.Log.Error("广播信息时数据错误，username, message 数据不存在")
 			}
 		}
 	}

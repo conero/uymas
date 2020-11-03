@@ -4,70 +4,69 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/conero/uymas/bin"
-	chat2 "github.com/conero/uymas/nestling/net/base-chat/chat"
+	"github.com/conero/uymas/nestling/net/base-chat/chat"
 	"log"
 	"net"
 	"net/url"
 	"os"
 	"strings"
+	"sync"
 	"time"
 )
 
-var lgger chat2.Logger
-
 //客户端
 func main() {
-	lgger := chat2.NewLogger("")
 	cli := bin.NewCLI()
 	//call
 	cli.RegisterFunc(func(cc *bin.CliCmd) {
 		//端口号 [1-65535]; 一般不使用 0-1023
 		port := cc.ArgRaw("port", "P")
 		if "" == port {
-			port = chat2.DefChatPort
+			port = chat.DefChatPort
 		}
 		network := cc.ArgRaw("network", "N")
 		if "" == network {
-			network = chat2.DefChatNetwork
+			network = chat.DefChatNetwork
 		}
 		host := cc.ArgRaw("host", "H")
 		if "" == network {
-			host = chat2.DefChatHost
+			host = chat.DefChatHost
 		}
 
-		lgger.Info("正在连接……，网络类型 => %v, 端口号 => %v.\r\n", network, port)
+		chat.Log.Info("正在连接……，网络类型 => %v, 端口号 => %v.\r\n", network, port)
 		repl(network, port, host)
 	}, "call", "c")
 	//默认启动请求
 	cli.RegisterFunc(func(cc *bin.CliCmd) {
-		repl(chat2.DefChatPort, chat2.DefChatNetwork, chat2.DefChatHost)
+		repl(chat.DefChatPort, chat.DefChatNetwork, chat.DefChatHost)
 	})
 	//默认服务
 	cli.RegisterFunc(func(cc *bin.CliCmd) {
 		fmt.Println("普通的 TCP 服务器，命令如下")
 		fmt.Println("  call,cc 请求tcp服务器")
-		fmt.Println("     --port,-P=7400       设置端口号 ")
-		fmt.Println("     --network,-N=tcp     设置网络协议 tcp,tcp4,tcp6,unix，unixpacket ")
+		fmt.Printf("     --port,-P=%v         设置端口号 \r\n", chat.DefChatPort)
+		fmt.Printf("     --network,-N=%v     设置网络协议 tcp,tcp4,tcp6,unix，unixpacket \r\n", chat.DefChatNetwork)
 	}, "help", "?")
 	cli.Run()
 }
 
 //交互式网络请求
 func repl(port, network, host string) {
+	username := input("请输入您的姓名：", true)
+	//@todo 开始注释密码
+	//pwsd := input("请输入密码（123456）：", true)
+	//if pwsd != "123456" {
+	//	chat.Log.Error("您的用户密码错误！！")
+	//	return
+	//}
+
 	hostAdrr := fmt.Sprintf("%v:%v", host, port)
 	conn, err := net.Dial(network, hostAdrr)
 	if err != nil {
 		log.Fatal(err)
 	}
-	lgger.Info("服务（%v）已连接成功.\r\n", hostAdrr)
+	chat.Log.Info("服务（%v）已连接成功.\r\n", hostAdrr)
 	defer conn.Close()
-	username := input("请输入您的姓名：", true)
-	pwsd := input("请输入密码（123456）：", true)
-	if pwsd != "123456" {
-		lgger.Error("您的用户密码错误！！")
-		return
-	}
-
 	NewChat(conn, username)
 	/*inputReader := bufio.NewReader(os.Stdin)
 	for {
@@ -103,16 +102,39 @@ func input(tip string, required bool) string {
 }
 
 //聊天器
-type Chat struct {
+type ClientChat struct {
 	conn net.Conn
 }
 
+//信息打印
+func (c *ClientChat) ShowMessage() {
+	for {
+		addr, err := chat.RespondContent(c.conn)
+		if err != nil {
+			chat.Log.Error("读取服务器信息错误，信息: %v\r\n.", err.Error())
+			break
+		}
+		switch addr.Protocol {
+		case "native-message": //本地消息
+			if u := addr.URL; u != nil {
+				if uv := u.Query(); uv != nil {
+					message := uv.Get("message")
+					fromUser := uv.Get("from_user")
+					fmt.Printf("\r\n ~~[Server] %v>> %v\r\n", fromUser, message)
+				}
+			}
+		default:
+			fmt.Printf("\r\n ~~[Server/Unhanlder]>> %v\r\n", addr.Content)
+		}
+	}
+}
+
 //构造函数
-func NewChat(conn net.Conn, username string) *Chat {
-	chat := &Chat{
+func NewChat(conn net.Conn, username string) *ClientChat {
+	cc := &ClientChat{
 		conn: conn,
 	}
-	addr := chat2.Address{
+	addr := chat.Address{
 		Protocol: "native-message",
 		Action:   "authorization",
 	}
@@ -120,30 +142,31 @@ func NewChat(conn net.Conn, username string) *Chat {
 	uV.Add("username", username)
 	err := addr.SendValue(conn, uV)
 	if err != nil {
-		lgger.Error("用户请求认证错误，Error: %v.", err)
+		chat.Log.Error("用户请求认证错误，Error: %v.", err)
 		return nil
 	}
 
-	timer := chat2.Timer(60 * time.Second)
+	var subReplCmd = make(chan string)
+	timer := chat.Timer(60 * time.Second)
 	for {
 		if timer() {
-			lgger.Fatal("等待服务响应超时")
+			chat.Log.Fatal("等待服务响应超时")
 		}
-		addr, err := chat2.RespondContent(conn)
+		addr, err := chat.RespondContent(conn)
 		if err != nil {
-			lgger.Fatal("读取服务器数据错误，信息：%v", lgger)
+			chat.Log.Fatal("读取服务器数据错误，信息：%v", chat.Log)
 		}
 		if addr != nil {
 			log.Printf("server>>\r\n%v", addr.Content)
 			if addr.Action == "authorization" {
 				v := addr.URL.Query()
 				if "true" == v.Get("success") {
-					lgger.Info("您成功登录服务器！")
+					chat.Log.Info("您成功登录服务器！")
 					break
 				}
 			}
 		} else {
-			lgger.Error("服务器接收的数据为空！")
+			chat.Log.Error("服务器接收的数据为空！")
 		}
 	}
 
@@ -168,20 +191,25 @@ func NewChat(conn net.Conn, username string) *Chat {
 			switch text {
 			case "exit":
 				fmt.Println("您将退出系统！")
+				if signal := cCli.GetInjection("signal_chan"); signal != nil {
+					sc := signal.(chan string)
+					sc <- text
+					chat.Log.Info("broadcast -> exit")
+				}
 				break
 			default:
 				if "" != text {
 					uV := &url.Values{}
 					uV.Add("message", text)
-					send := chat2.Address{
+					send := chat.Address{
 						Protocol: "native-message",
 						Action:   "broadcast",
 					}
 					er := send.SendValue(conn, uV)
 					if er != nil {
-						lgger.Error("发送广播服务错误！信息: %v.\r\n", er.Error())
+						chat.Log.Error("发送广播服务错误！信息: %v.\r\n", er.Error())
 					} else {
-						lgger.Info("广播信息已发送")
+						chat.Log.Info("广播信息已发送")
 					}
 				}
 			}
@@ -204,21 +232,26 @@ func NewChat(conn net.Conn, username string) *Chat {
 				switch text {
 				case "exit":
 					fmt.Println("您将退出系统！")
+					fmt.Println("您将退出系统！")
+					if signal := cCli.GetInjection("signal_chan"); signal != nil {
+						sc := signal.(chan string)
+						sc <- text
+					}
 					break
 				default:
 					if "" != text {
 						uV := &url.Values{}
 						uV.Add("message", text)
 						uV.Add("username", toUser)
-						send := chat2.Address{
+						send := chat.Address{
 							Protocol: "native-message",
 							Action:   "send-message",
 						}
 						er := send.SendValue(conn, uV)
 						if er != nil {
-							lgger.Error("发送信息到用户(%v)，失败！错误：%v.", toUser, er.Error())
+							chat.Log.Error("发送信息到用户(%v)，失败！错误：%v.", toUser, er.Error())
 						} else {
-							lgger.Info("信息已发送")
+							chat.Log.Info("信息已发送")
 						}
 					}
 				}
@@ -227,6 +260,9 @@ func NewChat(conn net.Conn, username string) *Chat {
 			}
 		}
 	}, "user", "us")
+
+	//显示数据
+	go cc.ShowMessage()
 
 	//命令执行
 	var input = bufio.NewScanner(os.Stdin)
@@ -241,11 +277,37 @@ func NewChat(conn net.Conn, username string) *Chat {
 			fmt.Println("您将退出系统！")
 			os.Exit(0)
 		default:
-			cCli.Run(strings.Split(text, " ")...)
+			//isContinue := false
+			var wg sync.WaitGroup
+			wg.Add(1)
+			go func(src chan string) {
+				defer wg.Done()
+				chat.Log.Info("测试，数据@1")
+				cCli.Inject("signal_chan", src)
+				chat.Log.Info("测试，数据@2")
+				cCli.Run(strings.Split(text, " ")...)
+				//chat.Log.Info("测试，数据@3")
+				//src <- "exit"
+				//chat.Log.Info("测试，数据@4")
+			}(subReplCmd)
+			select {
+			case cx := <-subReplCmd:
+				if cx == "exit" {
+					//isContinue = true
+					chat.Log.Info("信道获取数据：")
+					break
+				}
+			}
+			wg.Wait()
+
+			//for 循环继续
+			//if isContinue {
+			//	continue
+			//}
 		}
 
 		fmt.Println()
 		fmt.Printf("$ %v>", username)
 	}
-	return chat
+	return cc
 }
