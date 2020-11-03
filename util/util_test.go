@@ -58,3 +58,25 @@ func TestDecT62(t *testing.T) {
 		t.Fail()
 	}
 }
+
+func TestValueNull(t *testing.T) {
+	//null values test
+	values := []interface{}{
+		"", int(0), int16(0), int32(0), int64(0), float32(0), float64(0), false,
+	}
+	for _, v := range values {
+		if !ValueNull(v) {
+			t.Fail()
+		}
+	}
+
+	//not null values test
+	values = []interface{}{
+		" ", -1, int16(3), int32(2), int64(1), float32(-0.00000001), 0.01, true,
+	}
+	for _, v := range values {
+		if ValueNull(v) {
+			t.Fail()
+		}
+	}
+}

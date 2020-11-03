@@ -26,7 +26,7 @@
     - (+) *`CheckMustKey` 检测必须的键值是否存在*
   - **CLI**
     - optimize) `RegisterEmpty` 和 `RegisterUnfind` 支持简化版的注册函数，即 `cc *CliCmd` 非回调函数必须。
-    - new) `Inject` 和 `GetInjection` 新增数据注入器，用于实现如 chan 信号控制等
+    - +) `Inject` 和 `GetInjection` 新增数据注入器，用于实现如 chan 信号控制等
   - **CliCmd**
     - optimize) `ArgRaw` 添加支持多参数获取单一值得能力
   - **Option**
@@ -40,17 +40,18 @@
 - **bin/parser**
   - (+) 添加`bin/parser`子包专门用于实现命令行语法解析
 - **io**
-  - (修复) *io.StdPathName 特定下错误修复* 
+  - fixed) *io.StdPathName 特定下错误修复* 
 - **netutil** 网络请求助手(新增)
   - **Httpu** *http util 方法集合*
 - **storage**
 	- (+) 实验性引入内存数据存储器
 - **util**
-  - Del)  删除 `util.BaseError` 结构体，使用系统的 `errors.New()` 代替
+  - -)  删除 `util.BaseError` 结构体，使用系统的 `errors.New()` 代替
+  - +) 添加控制判断，以及控制对比的方法 `NullDefault` 和 `ValueNull`
 - **fs**
-  - New) `fs.DirScanner` 添加排序和过滤表达式，且在添加过滤时判断表达式的有效性
+  - +) `fs.DirScanner` 添加排序和过滤表达式，且在添加过滤时判断表达式的有效性
 - **cmd/uymas**
-  - New) 新增 help 命令，以及`scan`添加排除和过滤
+  - +) 新增 help 命令，以及`scan`添加排除和过滤
 
 
 
