@@ -25,7 +25,8 @@ type CLI struct {
 	actionEmptyRegister  interface{} // the register callback by empty action.
 	actionUnfindRegister interface{} // the register callback by command not handler
 	commands             map[string]Cmd
-	tempLastCommand      string // command Cache
+	tempLastCommand      string                 // command Cache
+	injectionData        map[string]interface{} //reject data from outside like chan control
 }
 
 // the command of the cli application.
@@ -367,6 +368,27 @@ func (cli *CLI) findRegisterValueByCommand(c string) interface{} {
 		}
 	}
 	return value
+}
+
+//inject for data from outside.
+func (cli *CLI) Inject(key string, value interface{}) *CLI {
+	if cli.injectionData == nil {
+		cli.injectionData = map[string]interface{}{}
+	}
+	cli.injectionData[key] = value
+	return cli
+}
+
+//get Injection data
+func (cli *CLI) GetInjection(key string) interface{} {
+	if cli.injectionData == nil {
+		return nil
+	}
+	value, has := cli.injectionData[key]
+	if has {
+		return value
+	}
+	return nil
 }
 
 /*****  methods of the `CliCmd` ***/
