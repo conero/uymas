@@ -146,6 +146,7 @@ func NewChat(conn net.Conn, username string) *ClientChat {
 		return nil
 	}
 
+	//授权认证
 	var subReplCmd = make(chan string)
 	timer := chat.Timer(60 * time.Second)
 	for {
@@ -170,13 +171,14 @@ func NewChat(conn net.Conn, username string) *ClientChat {
 		}
 	}
 
+	//主线程命令集
 	cCli := bin.NewCLI()
 
 	//help
 	cCli.RegisterFunc(func(cc *bin.CliCmd) {
 		fmt.Println(" exit              退户程序")
 		fmt.Println(" broadcast,bc      广播信息")
-		fmt.Println(" user,us <user>    与用户进行聊天")
+		fmt.Println(" chat,c <user>     与用户进行聊天")
 	}, "help", "?")
 
 	//bc
@@ -188,15 +190,11 @@ func NewChat(conn net.Conn, username string) *ClientChat {
 		for input.Scan() {
 			text := input.Text()
 			text = strings.TrimSpace(text)
+			breakMk := false
 			switch text {
-			case "exit":
+			case "exit", ":q":
 				fmt.Println("您将退出系统！")
-				if signal := cCli.GetInjection("signal_chan"); signal != nil {
-					sc := signal.(chan string)
-					sc <- text
-					chat.Log.Info("broadcast -> exit")
-				}
-				break
+				breakMk = true
 			default:
 				if "" != text {
 					uV := &url.Values{}
@@ -213,31 +211,30 @@ func NewChat(conn net.Conn, username string) *ClientChat {
 					}
 				}
 			}
+			if breakMk {
+				break
+			}
 			fmt.Println()
 			fmt.Printf("$ broadcast/%v>", username)
 		}
 	}, "bc", "broadcast")
 
-	//user
+	//chat
 	cCli.RegisterFunc(func(cc *bin.CliCmd) {
 		toUser := cc.SubCommand
 		if toUser != "" {
 			var input = bufio.NewScanner(os.Stdin)
 			fmt.Println("驻留式命令行程序")
-			fmt.Printf("$ %v>", username)
+			fmt.Printf("$ chat/%v>", username)
 			for input.Scan() {
 				text := input.Text()
 				text = strings.TrimSpace(text)
 
+				breakMk := false
 				switch text {
-				case "exit":
+				case "exit", ":q":
 					fmt.Println("您将退出系统！")
-					fmt.Println("您将退出系统！")
-					if signal := cCli.GetInjection("signal_chan"); signal != nil {
-						sc := signal.(chan string)
-						sc <- text
-					}
-					break
+					breakMk = true
 				default:
 					if "" != text {
 						uV := &url.Values{}
@@ -255,11 +252,14 @@ func NewChat(conn net.Conn, username string) *ClientChat {
 						}
 					}
 				}
+				if breakMk {
+					break
+				}
 				fmt.Println()
-				fmt.Printf("$ %v>", username)
+				fmt.Printf("$ chat/%v>", username)
 			}
 		}
-	}, "user", "us")
+	}, "chat", "c")
 
 	//显示数据
 	go cc.ShowMessage()
@@ -273,28 +273,21 @@ func NewChat(conn net.Conn, username string) *ClientChat {
 		text = strings.TrimSpace(text)
 
 		switch text {
-		case "exit":
+		case "exit", ":q":
 			fmt.Println("您将退出系统！")
 			os.Exit(0)
 		default:
-			//isContinue := false
 			var wg sync.WaitGroup
 			wg.Add(1)
 			go func(src chan string) {
 				defer wg.Done()
-				chat.Log.Info("测试，数据@1")
 				cCli.Inject("signal_chan", src)
-				chat.Log.Info("测试，数据@2")
 				cCli.Run(strings.Split(text, " ")...)
-				//chat.Log.Info("测试，数据@3")
-				//src <- "exit"
-				//chat.Log.Info("测试，数据@4")
+				src <- "exit"
 			}(subReplCmd)
 			select {
 			case cx := <-subReplCmd:
 				if cx == "exit" {
-					//isContinue = true
-					chat.Log.Info("信道获取数据：")
 					break
 				}
 			}
@@ -307,7 +300,7 @@ func NewChat(conn net.Conn, username string) *ClientChat {
 		}
 
 		fmt.Println()
-		fmt.Printf("$ %v>", username)
+		fmt.Printf("$ home/%v>", username)
 	}
 	return cc
 }

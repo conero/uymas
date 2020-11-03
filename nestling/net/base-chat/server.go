@@ -168,8 +168,9 @@ func (c *Protocol) connect() {
 	}
 
 	if c.username == "" {
+		c.IsValid = false
 		c.conn.Close()
-		log.Fatal("客服端请求无效，为获取的用户信息")
+		chat.Log.Error("客服端请求无效，未获取德用户信息")
 	}
 }
 
