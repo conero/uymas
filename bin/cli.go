@@ -5,6 +5,7 @@ import (
 	"github.com/conero/uymas"
 	"github.com/conero/uymas/bin/butil"
 	"github.com/conero/uymas/str"
+	"log"
 	"os"
 	"reflect"
 	"strconv"
@@ -227,7 +228,7 @@ func (cli *CLI) RegisterEmpty(action interface{}) *CLI {
 }
 
 // when command input not handler will callback the register, the format like:
-//   1. function `func(cmd string, cc *CliCmd)`/func(cmd string)`
+//   1. function `func(cmd string, cc *CliCmd)`/`func(cmd string)`/`func(cc *CliCmd)`
 func (cli *CLI) RegisterUnfind(action interface{}) *CLI {
 	cli.actionUnfindRegister = action
 	return cli
@@ -305,6 +306,11 @@ func (cli *CLI) router(cc *CliCmd) {
 				case func(cmd string):
 					aur.(func(cmd string))(cc.Command)
 					routerValidMk = true
+				case func(cc *CliCmd):
+					aur.(func(cc *CliCmd))(cc)
+					routerValidMk = true
+				default:
+					log.Printf("[WARNING] the method `RegisterUnfind` of param is valid, please reference the doc.")
 				}
 			}
 
