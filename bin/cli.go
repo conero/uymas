@@ -472,6 +472,18 @@ func (app *CliCmd) ArgRaw(keys ...string) string {
 	return value
 }
 
+//get args data see as int
+func (app *CliCmd) ArgInt(keys ...string) int {
+	value := app.ArgRaw(keys...)
+	if "" == value {
+		return 0
+	}
+	if num, err := strconv.Atoi(value); err == nil {
+		return num
+	}
+	return 0
+}
+
 // get raw arg has default
 func (app *CliCmd) ArgRawDefault(key, def string) string {
 	var value = def
@@ -482,10 +494,13 @@ func (app *CliCmd) ArgRawDefault(key, def string) string {
 }
 
 // get arg after parsed the raw data
-func (app *CliCmd) Arg(key string) interface{} {
+func (app *CliCmd) Arg(keys ...string) interface{} {
 	var value interface{} = nil
-	if v, b := app.Data[key]; b {
-		value = v
+	for _, key := range keys {
+		if v, b := app.Data[key]; b {
+			value = v
+			break
+		}
 	}
 	return value
 }

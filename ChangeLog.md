@@ -29,6 +29,8 @@
     - +) `Inject` 和 `GetInjection` 新增数据注入器，用于实现如 chan 信号控制等
   - **CliCmd**
     - optimize) `ArgRaw` 添加支持多参数获取单一值得能力
+    - new) 添加方法 `ArgInt` 用于后去整形数据
+    - optimize) `Arg` 扩展器支持多参数与 `ArgRaw` 参数保持一致
   - **Option**
     - +) 新增选项解析类，用于对 `args` 值得映射
   - (调整) 函数式注册方法，统一新增参数 `a *bin.App` 。 [非兼容性调整]
