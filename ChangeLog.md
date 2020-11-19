@@ -53,10 +53,14 @@
 - **util**
   - -)  删除 `util.BaseError` 结构体，使用系统的 `errors.New()` 代替
   - +) 添加控制判断，以及控制对比的方法 `NullDefault` 和 `ValueNull`
+  - +) 新增 object 对象，初步实现了 map/struct 之间的 assign 操作
 - **fs**
   - +) `fs.DirScanner` 添加排序和过滤表达式，且在添加过滤时判断表达式的有效性
 - **cmd/uymas**
   - +) 新增 help 命令，以及`scan`添加排除和过滤
+- **xsql**
+  - optimize) 数据库连接器增加对 `join` 的支持
+  - fixed) 修复数据库查询为空时的参数错误。
 
 
 

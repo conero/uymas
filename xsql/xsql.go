@@ -53,13 +53,19 @@ func (c *Query) RowsDick(rows *sql.Rows) ([]map[string]interface{}, error) {
 
 		dataTypeStr := strings.ToUpper(cType.DatabaseTypeName())
 		switch dataTypeStr {
-		case "INT", "SMALLINT", "TINYINT":
+		//@todo fail to map
+		//case "DATETIME", "DATE":
+		//	var a interface{}
+		//	receive[index] = &a
+		case "INT", "SMALLINT", "TINYINT", "BIT", "BOOL", "BOOLEAN", "MEDIUMINT", "INTEGER",
+			"BIGINT", "YEAR", "TIMESTAMP", "TIME":
 			var a sql.NullInt64
 			receive[index] = &a
-		case "VARCHAR", "CHAR", "TEXT":
+		case "VARCHAR", "CHAR", "TEXT", "BINARY", "VARBINARY", "TINYBLOB", "TINYTEXT", "BLOB",
+			"MEDIUMBLOB", "MEDIUMTEXT", "LONGBLOB", "LONGTEXT":
 			var a sql.NullString
 			receive[index] = &a
-		case "DECIMAL":
+		case "DECIMAL", "FLOAT", "DOUBLE", "NUMERIC":
 			var a sql.NullFloat64
 			receive[index] = &a
 		default:
@@ -83,7 +89,8 @@ func (c *Query) RowsDick(rows *sql.Rows) ([]map[string]interface{}, error) {
 
 			dataTypeStr := strings.ToUpper(cType.DatabaseTypeName())
 			switch dataTypeStr {
-			case "INT", "SMALLINT", "TINYINT":
+			case "INT", "SMALLINT", "TINYINT", "BIT", "BOOL", "BOOLEAN", "MEDIUMINT", "INTEGER",
+				"BIGINT", "YEAR", "TIMESTAMP", "TIME":
 				var anyVal = *v.(*sql.NullInt64)
 				if anyVal.Valid {
 					item[col] = anyVal.Int64
@@ -97,14 +104,15 @@ func (c *Query) RowsDick(rows *sql.Rows) ([]map[string]interface{}, error) {
 					timeStr = fmt.Sprintf("%s", tmpValue)
 				}
 				item[col] = timeStr
-			case "VARCHAR", "CHAR", "TEXT":
+			case "VARCHAR", "CHAR", "TEXT", "BINARY", "VARBINARY", "TINYBLOB", "TINYTEXT", "BLOB",
+				"MEDIUMBLOB", "MEDIUMTEXT", "LONGBLOB", "LONGTEXT":
 				var anyVal = *v.(*sql.NullString)
 				if anyVal.Valid {
 					item[col] = anyVal.String
 				} else {
 					item[col] = ""
 				}
-			case "DECIMAL":
+			case "DECIMAL", "FLOAT", "DOUBLE", "NUMERIC":
 				var anyVal = *v.(*sql.NullFloat64)
 				if anyVal.Valid {
 					item[col] = anyVal.Float64
