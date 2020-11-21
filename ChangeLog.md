@@ -40,8 +40,9 @@
   - (try) 新增 Option 对象，严格控制option的输入是否正确
 - **bin/buitl**
   - (+) *新增 `bin util` 包，使其区分 bin 中 `init()`， 后者无该函数*
-  - (+) 新增 `GetBasedir()` 函数，用于获取应用运行的基础目录地址
+  - (+) 新增 `GetBasedir()` 函数，用于获取应用运行的基础目录地址，增加缓存。
   - (+) *新增函数 `StringToArgs()`, 用于将字符串安装args模式切割为数组*
+  - +) 新增 `GetPathDir` 函数用于获取基于应用所在目录的地址
 - **bin/parser**
   - (+) 添加`bin/parser`子包专门用于实现命令行语法解析
 - **io**
