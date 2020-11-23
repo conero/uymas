@@ -131,7 +131,7 @@ func application() {
 		fmt.Printf("  SubCommand: %v \r\n", cc.SubCommand)
 		fmt.Printf("  Option: %v \r\n", cc.Setting)
 		fmt.Printf("  DataRaw: %v \r\n", cc.DataRaw)
-		fmt.Printf("  DataRaw: %#v \r\n", cc.Data)
+		fmt.Printf("  Data: %#v \r\n", cc.Data)
 		fmt.Printf("  Input: %#v \r\n", strings.Join(cc.Raw, " "))
 		fmt.Println()
 	}, "test")

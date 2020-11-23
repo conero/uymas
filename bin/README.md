@@ -74,6 +74,8 @@ $ 'a','b','c','d'		# array [a, b, c, d]
 # "," 分割
 $ --separator-comma 
 $ -spt-c
+$ --array a1 a3 a4 a5
+$ --array {a1,a3,a4,a5}
 ```
 
 
