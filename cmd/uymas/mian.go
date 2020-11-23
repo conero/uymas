@@ -122,7 +122,19 @@ func application() {
 		fmt.Println("   scan, sc <dir>   文件扫描, --include 包含, --exclude 排除")
 		fmt.Println("   uymas-ls, uls    系统全部的命令行列表")
 		fmt.Println("   repl             交互式对话命令")
+		fmt.Println("   test             命令行解析测试")
 	}, "help", "?")
+
+	//test 用于命令行解析等测试
+	cli.RegisterFunc(func(cc *bin.CliCmd) {
+		fmt.Println(" 命令行测试")
+		fmt.Printf("  SubCommand: %v \r\n", cc.SubCommand)
+		fmt.Printf("  Option: %v \r\n", cc.Setting)
+		fmt.Printf("  DataRaw: %v \r\n", cc.DataRaw)
+		fmt.Printf("  DataRaw: %#v \r\n", cc.Data)
+		fmt.Printf("  Input: %#v \r\n", strings.Join(cc.Raw, " "))
+		fmt.Println()
+	}, "test")
 
 	cli.Run()
 }

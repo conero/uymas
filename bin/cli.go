@@ -520,6 +520,11 @@ func (app *CliCmd) ArgDefault(key string, def interface{}) interface{} {
 	return value
 }
 
+//get the raw line input.
+func (app *CliCmd) ArgRawLine() string {
+	return strings.Join(app.Raw, " ")
+}
+
 // the application parse raw args inner.
 //
 // the command format like that:

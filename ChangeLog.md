@@ -26,6 +26,7 @@
   - **App**
     - (+) *`CheckSetting`* 新增 app 选项是否存其中，支持多个参数
     - (+) *`CheckMustKey` 检测必须的键值是否存在*
+    - (+) `ArgRawLine` 返回原始输入行字符串
   - **CLI**
     - optimize) `RegisterEmpty` 和 `RegisterUnfind` 支持简化版的注册函数，即 `cc *CliCmd` 非回调函数必须。
     - +) `Inject` 和 `GetInjection` 新增数据注入器，用于实现如 chan 信号控制等
@@ -59,6 +60,7 @@
   - +) `fs.DirScanner` 添加排序和过滤表达式，且在添加过滤时判断表达式的有效性
 - **cmd/uymas**
   - +) 新增 help 命令，以及`scan`添加排除和过滤
+  - +) 新增 test 命令，用于测试命令行解析程序情况
 - **xsql**
   - optimize) 数据库连接器增加对 `join` 的支持
   - fixed) 修复数据库查询为空时的参数错误。
