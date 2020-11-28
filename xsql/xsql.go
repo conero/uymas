@@ -58,7 +58,7 @@ func (c *Query) RowsDick(rows *sql.Rows) ([]map[string]interface{}, error) {
 		//	var a interface{}
 		//	receive[index] = &a
 		case "INT", "SMALLINT", "TINYINT", "BIT", "BOOL", "BOOLEAN", "MEDIUMINT", "INTEGER",
-			"BIGINT", "YEAR", "TIMESTAMP", "TIME":
+			"BIGINT", "YEAR", "TIMESTAMP":
 			var a sql.NullInt64
 			receive[index] = &a
 		case "VARCHAR", "CHAR", "TEXT", "BINARY", "VARBINARY", "TINYBLOB", "TINYTEXT", "BLOB",
@@ -90,14 +90,14 @@ func (c *Query) RowsDick(rows *sql.Rows) ([]map[string]interface{}, error) {
 			dataTypeStr := strings.ToUpper(cType.DatabaseTypeName())
 			switch dataTypeStr {
 			case "INT", "SMALLINT", "TINYINT", "BIT", "BOOL", "BOOLEAN", "MEDIUMINT", "INTEGER",
-				"BIGINT", "YEAR", "TIMESTAMP", "TIME":
+				"BIGINT", "YEAR", "TIMESTAMP":
 				var anyVal = *v.(*sql.NullInt64)
 				if anyVal.Valid {
 					item[col] = anyVal.Int64
 				} else {
 					item[col] = nil
 				}
-			case "DATETIME", "DATE":
+			case "DATETIME", "DATE", "TIME":
 				tmpValue := *v.(*interface{})
 				var timeStr string
 				if tmpValue != nil {
