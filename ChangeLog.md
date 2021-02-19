@@ -13,28 +13,35 @@
   - [ ] `--full-name, -F` 通过设置，自动生成文档，新增一个对象用于实现。
   - [ ] 是否增加系统日志，来调试命令程序？
   - [ ] 类似与git查询相识的命令，若命令不存在
-  - [ ] 语法解析不太准确，可使用正常先处理在分割
+  - [ ] 语法解析不太准确，可使用正常先处理再分割
   - [ ] `--name a1 --name=a2` 处理为数组。支持数组格式
+  - [ ] 基于os.ENV 的session机制
+  - [x] ~~使用内置的 history~~（系统提供遂放弃）
 
 
 
-### 1.0.0/Next
+### 1.0.0/2021-02-19
 
 **由于，在 0.6.0 上的开发出现非兼容方法，因此发布版本计划进行改变** (~~0.6.0/Next~~)
+
+因版本计划过长，本次直接发布该版本，后续优化体现在 1.0.x 版本中。
 
 *alpha 版本可为功能快照，加快功能迭代，原则上新增的功能将保留在(x.z.)版本中，若需要删除在下一版本中实现*
 
 - **bin**
   - **App**
-    - (+) *`CheckSetting`* 新增 app 选项是否存其中，支持多个参数
-    - (+) *`CheckMustKey` 检测必须的键值是否存在*
-    - (+) `ArgRawLine` 返回原始输入行字符串
+    - +) *`CheckSetting`* 新增 app 选项是否存其中，支持多个参数
+    - +) *`CheckMustKey` 检测必须的键值是否存在*
+    - +) `ArgRawLine` 返回原始输入行字符串
   - **CLI**
-    - optimize) `RegisterEmpty` 和 `RegisterUnfind` 支持简化版的注册函数，即 `cc *CliCmd` 非回调函数必须。
+    - +) 新增 `CallCmd` 用于内部调用存在的命令
     - +) `Inject` 和 `GetInjection` 新增数据注入器，用于实现如 chan 信号控制等
+    - +) 新增方法 `CmdExist` 用于检测命令是否存在
+    - optimize) `RegisterEmpty` 和 `RegisterUnfind` 支持简化版的注册函数，即 `cc *CliCmd` 非回调函数必须
   - **CliCmd**
+    - +) 新增 **CLI** 上下文`context`，使用具有调用命令的能力（`CallCmd`）
+    - +) 添加方法 `ArgInt` 用于后去整形数据
     - optimize) `ArgRaw` 添加支持多参数获取单一值得能力
-    - new) 添加方法 `ArgInt` 用于后去整形数据
     - optimize) `Arg` 扩展器支持多参数与 `ArgRaw` 参数保持一致
     - optimize) `RegisterUnfind` 参数错误时提供日志级别的提醒
   - **Option**
@@ -42,18 +49,18 @@
   - (调整) 函数式注册方法，统一新增参数 `a *bin.App` 。 [非兼容性调整]
   - (try) 新增 Option 对象，严格控制option的输入是否正确
 - **bin/buitl**
-  - (+) *新增 `bin util` 包，使其区分 bin 中 `init()`， 后者无该函数*
-  - (+) 新增 `GetBasedir()` 函数，用于获取应用运行的基础目录地址，增加缓存。
-  - (+) *新增函数 `StringToArgs()`, 用于将字符串安装args模式切割为数组*
+  - +) *新增 `bin util` 包，使其区分 bin 中 `init()`， 后者无该函数*
+  - +) 新增 `GetBasedir()` 函数，用于获取应用运行的基础目录地址，增加缓存。
+  - +) *新增函数 `StringToArgs()`, 用于将字符串安装args模式切割为数组*
   - +) 新增 `GetPathDir` 函数用于获取基于应用所在目录的地址
 - **bin/parser**
-  - (+) 添加`bin/parser`子包专门用于实现命令行语法解析
+  - +) 添加`bin/parser`子包专门用于实现命令行语法解析
 - **io**
   - fixed) *io.StdPathName 特定下错误修复* 
 - **netutil** 网络请求助手(新增)
   - **Httpu** *http util 方法集合*
 - **storage**
-	- (+) 实验性引入内存数据存储器
+	- +) 实验性引入内存数据存储器
 - **util**
   - -)  删除 `util.BaseError` 结构体，使用系统的 `errors.New()` 代替
   - +) 添加控制判断，以及控制对比的方法 `NullDefault` 和 `ValueNull`

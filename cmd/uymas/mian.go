@@ -34,7 +34,16 @@ func application() {
 	}, "pinyin")
 
 	//empty
+	//option: -v,--version; -h,--help
 	cli.RegisterEmpty(func(cc *bin.CliCmd) {
+		if cc.CheckSetting("v", "version") {
+			fmt.Printf("v%v/%v\r\n", uymas.Version, uymas.Release)
+			return
+		} else if cc.CheckSetting("h", "help") {
+			cc.CallCmd("help")
+			return
+		}
+
 		fmt.Printf(" wecolme use the <%v>. \r\n", uymas.Name)
 		fmt.Printf(" %v/%v\r\n", uymas.Version, uymas.Release)
 		fmt.Printf(" Power by %v.\r\n", uymas.Author)

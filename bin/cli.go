@@ -38,6 +38,7 @@ type CliCmd struct {
 	SubCommand string                 // the sub command
 	Setting    []string               // the setting of command
 	Raw        []string               // the raw args
+	context    CLI
 }
 
 // the cli app.
@@ -249,9 +250,47 @@ func (cli *CLI) Run(args ...string) {
 	cli.router(cmd)
 }
 
+//call the application cmd
+func (cli *CLI) CallCmd(cmd string) {
+	cm := NewCliCmd(cmd)
+	cli.router(cm)
+}
+
+//test cmd exist in application
+func (cli *CLI) CmdExist(cmds ...string) bool {
+	cmdExist := false
+	for _, cmd := range cmds {
+		_, exist := cli.cmdMap[cmd]
+		if exist {
+			cmdExist = true
+			break
+		}
+	}
+
+	if !cmdExist {
+		for _, cm := range cli.cmdMap {
+			//KV: string->string
+			if cmStr, isStr := cm.(string); isStr && str.InQue(cmStr, cmds) > -1 {
+				cmdExist = true
+				break
+			} else if cmStrQue, isStrArray := cm.([]string); isStrArray {
+				for _, cStr := range cmds {
+					if str.InQue(cStr, cmStrQue) > -1 {
+						cmdExist = true
+						break
+					}
+				}
+			}
+		}
+	}
+	return cmdExist
+}
+
 // @todo need to make it.
 // to star `router`
 func (cli *CLI) router(cc *CliCmd) {
+	//set the last `*CLI` as context of `CliCmd`.
+	cc.context = *cli
 	routerValidMk := false
 	if cc.Command != "" {
 		value := cli.findRegisterValueByCommand(cc.Command)
@@ -523,6 +562,15 @@ func (app *CliCmd) ArgDefault(key string, def interface{}) interface{} {
 //get the raw line input.
 func (app *CliCmd) ArgRawLine() string {
 	return strings.Join(app.Raw, " ")
+}
+
+//call cmd
+func (app *CliCmd) CallCmd(cmd string) {
+	context := app.context
+	if context.CmdExist(cmd) && app.Command != cmd {
+		app.Command = cmd
+		context.router(app)
+	}
 }
 
 // the application parse raw args inner.

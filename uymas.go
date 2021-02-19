@@ -6,8 +6,8 @@ package uymas
 // @Name:    Uymas 包信息
 
 const (
-	Version        = "1.0.0-alpha.4" //dev 为非发行版本
-	Release        = "2020-07-27"
+	Version        = "1.0.0" //dev 为非发行版本
+	Release        = "2021-02-19"
 	Since          = "20181030"
 	Author         = "Joshua Conero"
 	Email          = "conero@163.com"
