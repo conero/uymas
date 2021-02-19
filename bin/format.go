@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/conero/uymas/number"
 	"github.com/conero/uymas/str"
+	"sort"
 	"strconv"
 	"strings"
 )
@@ -86,6 +87,50 @@ func FormatKv(kv map[string]interface{}, params ...string) string {
 			s += "\n"
 		}
 		s += pref + k + strings.Repeat(bit, maxLen-len(k)) + fmt.Sprintf("%v", v)
+	}
+	return s
+}
+
+// The `k-v` data format to beautiful str.
+//
+// FormatKvSort(kv map[string]interface{}, pref string)				含前缀的字符输出.
+// FormatKvSort(kv map[string]interface{}, pref string, md string)	含前缀和中间连接符号的字符输出.
+func FormatKvSort(kv map[string]interface{}, params ...string) string {
+	var s, pref, d = "", "", ""
+	var pLen = len(params)
+	if pLen > 0 {
+		pref = params[0]
+	}
+	if pLen > 1 {
+		d = params[1]
+	}
+
+	// 计算最大长度
+	// 最大长度
+	maxLen := len(pref)
+	var sortKeys []string
+	for k, _ := range kv {
+		sortKeys = append(sortKeys, k)
+		kLen := len(k)
+		if kLen > maxLen {
+			maxLen = kLen
+		}
+	}
+
+	if d == "" {
+		// 4 个空格
+		d = "   "
+	}
+	bit := d[0:1]
+	maxLen += len(d)
+
+	sort.Strings(sortKeys)
+	// 格式化
+	for _, k := range sortKeys {
+		if s != "" {
+			s += "\n"
+		}
+		s += pref + k + strings.Repeat(bit, maxLen-len(k)) + fmt.Sprintf("%v", kv[k])
 	}
 	return s
 }

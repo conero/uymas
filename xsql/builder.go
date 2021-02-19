@@ -27,6 +27,45 @@ type Builder struct {
 	condGroupBys []string               //group-by
 	pageSize     int                    // default the pageSize to 20
 	data         map[string]interface{} //the data to update or insert
+	joins        [][]string             //json table list, [table alias, cond, type]
+}
+
+func (c *Builder) Join(table, cond, vtype string) *Builder {
+	c.joins = append(c.joins, []string{table, cond, vtype})
+	return c
+}
+
+func (c *Builder) LeftJoin(table, cond string) *Builder {
+	return c.Join(table, cond, "LEFT")
+}
+
+func (c *Builder) RightJoin(table, cond string) *Builder {
+	return c.Join(table, cond, "RIGHT")
+}
+
+func (c *Builder) InnerJoin(table, cond string) *Builder {
+	return c.Join(table, cond, "INNER")
+}
+
+func (c *Builder) GetTableString() string {
+	table := c.table
+	if c.alias != "" {
+		table = fmt.Sprintf("%v %v", table, c.alias)
+	}
+
+	var queue []string
+	for _, join := range c.joins {
+		vLen := len(join)
+		if vLen == 3 {
+			queue = append(queue, fmt.Sprintf("%v JOIN %v ON %v", join[2], join[0], join[1]))
+		} else if vLen == 2 {
+			queue = append(queue, fmt.Sprintf("INNER JOIN %v ON %v", join[0], join[1]))
+		}
+	}
+	if len(queue) > 0 {
+		table = fmt.Sprintf("%v %v", table, strings.Join(queue, " "))
+	}
+	return table
 }
 
 func (c *Builder) Insert(data map[string]interface{}) *Builder {
@@ -179,10 +218,7 @@ func (c *Builder) createUpdateSql() {
 }
 
 func (c *Builder) createSelectSql() {
-	table := c.table
-	if c.alias != "" {
-		table = table + " " + c.alias
-	}
+	table := c.GetTableString()
 
 	columns := "*"
 	if len(c.columns) > 0 {

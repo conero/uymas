@@ -5,6 +5,7 @@ import (
 	"github.com/conero/uymas"
 	"github.com/conero/uymas/bin/butil"
 	"github.com/conero/uymas/str"
+	"log"
 	"os"
 	"reflect"
 	"strconv"
@@ -25,7 +26,8 @@ type CLI struct {
 	actionEmptyRegister  interface{} // the register callback by empty action.
 	actionUnfindRegister interface{} // the register callback by command not handler
 	commands             map[string]Cmd
-	tempLastCommand      string // command Cache
+	tempLastCommand      string                 // command Cache
+	injectionData        map[string]interface{} //reject data from outside like chan control
 }
 
 // the command of the cli application.
@@ -36,6 +38,7 @@ type CliCmd struct {
 	SubCommand string                 // the sub command
 	Setting    []string               // the setting of command
 	Raw        []string               // the raw args
+	context    CLI
 }
 
 // the cli app.
@@ -219,14 +222,14 @@ func (cli *CLI) RegisterApps(aps map[string]interface{}) *CLI {
 }
 
 // when the cmd is empty then callback the function, action only be
-//   1. function `func(cc *CliCmd)` or struct.
+//   1. function `func(cc *CliCmd)`/`func()` or struct.
 func (cli *CLI) RegisterEmpty(action interface{}) *CLI {
 	cli.actionEmptyRegister = action
 	return cli
 }
 
 // when command input not handler will callback the register, the format like:
-//   1. function `func(cmd string, cc *CliCmd)`
+//   1. function `func(cmd string, cc *CliCmd)`/`func(cmd string)`/`func(cc *CliCmd)`
 func (cli *CLI) RegisterUnfind(action interface{}) *CLI {
 	cli.actionUnfindRegister = action
 	return cli
@@ -247,9 +250,47 @@ func (cli *CLI) Run(args ...string) {
 	cli.router(cmd)
 }
 
+//call the application cmd
+func (cli *CLI) CallCmd(cmd string) {
+	cm := NewCliCmd(cmd)
+	cli.router(cm)
+}
+
+//test cmd exist in application
+func (cli *CLI) CmdExist(cmds ...string) bool {
+	cmdExist := false
+	for _, cmd := range cmds {
+		_, exist := cli.cmdMap[cmd]
+		if exist {
+			cmdExist = true
+			break
+		}
+	}
+
+	if !cmdExist {
+		for _, cm := range cli.cmdMap {
+			//KV: string->string
+			if cmStr, isStr := cm.(string); isStr && str.InQue(cmStr, cmds) > -1 {
+				cmdExist = true
+				break
+			} else if cmStrQue, isStrArray := cm.([]string); isStrArray {
+				for _, cStr := range cmds {
+					if str.InQue(cStr, cmStrQue) > -1 {
+						cmdExist = true
+						break
+					}
+				}
+			}
+		}
+	}
+	return cmdExist
+}
+
 // @todo need to make it.
 // to star `router`
 func (cli *CLI) router(cc *CliCmd) {
+	//set the last `*CLI` as context of `CliCmd`.
+	cc.context = *cli
 	routerValidMk := false
 	if cc.Command != "" {
 		value := cli.findRegisterValueByCommand(cc.Command)
@@ -301,6 +342,14 @@ func (cli *CLI) router(cc *CliCmd) {
 				case func(cmd string, cc *CliCmd):
 					aur.(func(cmd string, cc *CliCmd))(cc.Command, cc)
 					routerValidMk = true
+				case func(cmd string):
+					aur.(func(cmd string))(cc.Command)
+					routerValidMk = true
+				case func(cc *CliCmd):
+					aur.(func(cc *CliCmd))(cc)
+					routerValidMk = true
+				default:
+					log.Printf("[WARNING] the method `RegisterUnfind` of param is valid, please reference the doc.")
 				}
 			}
 
@@ -321,7 +370,11 @@ func (cli *CLI) router(cc *CliCmd) {
 			case func(cc *CliCmd):
 				aer.(func(cc *CliCmd))(cc)
 				routerValidMk = true
+			case func():
+				aer.(func())()
+				routerValidMk = true
 			}
+
 		}
 	}
 }
@@ -360,6 +413,27 @@ func (cli *CLI) findRegisterValueByCommand(c string) interface{} {
 		}
 	}
 	return value
+}
+
+//inject for data from outside.
+func (cli *CLI) Inject(key string, value interface{}) *CLI {
+	if cli.injectionData == nil {
+		cli.injectionData = map[string]interface{}{}
+	}
+	cli.injectionData[key] = value
+	return cli
+}
+
+//get Injection data
+func (cli *CLI) GetInjection(key string) interface{} {
+	if cli.injectionData == nil {
+		return nil
+	}
+	value, has := cli.injectionData[key]
+	if has {
+		return value
+	}
+	return nil
 }
 
 /*****  methods of the `CliCmd` ***/
@@ -430,13 +504,29 @@ func (app *CliCmd) Next(keys ...string) string {
 	return value
 }
 
-// get raw arg data
-func (app *CliCmd) ArgRaw(key string) string {
+// get raw args data, because some args has alias list.
+func (app *CliCmd) ArgRaw(keys ...string) string {
 	var value string
-	if v, b := app.DataRaw[key]; b {
-		value = v
+	for _, key := range keys {
+		if v, b := app.DataRaw[key]; b {
+			value = v
+			break
+		}
 	}
+
 	return value
+}
+
+//get args data see as int
+func (app *CliCmd) ArgInt(keys ...string) int {
+	value := app.ArgRaw(keys...)
+	if "" == value {
+		return 0
+	}
+	if num, err := strconv.Atoi(value); err == nil {
+		return num
+	}
+	return 0
 }
 
 // get raw arg has default
@@ -449,10 +539,13 @@ func (app *CliCmd) ArgRawDefault(key, def string) string {
 }
 
 // get arg after parsed the raw data
-func (app *CliCmd) Arg(key string) interface{} {
+func (app *CliCmd) Arg(keys ...string) interface{} {
 	var value interface{} = nil
-	if v, b := app.Data[key]; b {
-		value = v
+	for _, key := range keys {
+		if v, b := app.Data[key]; b {
+			value = v
+			break
+		}
 	}
 	return value
 }
@@ -464,6 +557,20 @@ func (app *CliCmd) ArgDefault(key string, def interface{}) interface{} {
 		value = v
 	}
 	return value
+}
+
+//get the raw line input.
+func (app *CliCmd) ArgRawLine() string {
+	return strings.Join(app.Raw, " ")
+}
+
+//call cmd
+func (app *CliCmd) CallCmd(cmd string) {
+	context := app.context
+	if context.CmdExist(cmd) && app.Command != cmd {
+		app.Command = cmd
+		context.router(app)
+	}
 }
 
 // the application parse raw args inner.

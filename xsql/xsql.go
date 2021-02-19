@@ -53,21 +53,20 @@ func (c *Query) RowsDick(rows *sql.Rows) ([]map[string]interface{}, error) {
 
 		dataTypeStr := strings.ToUpper(cType.DatabaseTypeName())
 		switch dataTypeStr {
-		case "INT":
-			var a int64
-			receive[index] = &a
 		//@todo fail to map
 		//case "DATETIME", "DATE":
 		//	var a interface{}
 		//	receive[index] = &a
-		case "SMALLINT", "TINYINT":
-			var a int
+		case "INT", "SMALLINT", "TINYINT", "BIT", "BOOL", "BOOLEAN", "MEDIUMINT", "INTEGER",
+			"BIGINT", "YEAR", "TIMESTAMP":
+			var a sql.NullInt64
 			receive[index] = &a
-		case "VARCHAR", "CHAR", "TEXT":
-			var a string
+		case "VARCHAR", "CHAR", "TEXT", "BINARY", "VARBINARY", "TINYBLOB", "TINYTEXT", "BLOB",
+			"MEDIUMBLOB", "MEDIUMTEXT", "LONGBLOB", "LONGTEXT":
+			var a sql.NullString
 			receive[index] = &a
-		case "DECIMAL":
-			var a float64
+		case "DECIMAL", "FLOAT", "DOUBLE", "NUMERIC":
+			var a sql.NullFloat64
 			receive[index] = &a
 		default:
 			var a interface{}
@@ -90,21 +89,36 @@ func (c *Query) RowsDick(rows *sql.Rows) ([]map[string]interface{}, error) {
 
 			dataTypeStr := strings.ToUpper(cType.DatabaseTypeName())
 			switch dataTypeStr {
-			case "INT":
-				item[col] = *v.(*int64)
-			case "DATETIME", "DATE":
+			case "INT", "SMALLINT", "TINYINT", "BIT", "BOOL", "BOOLEAN", "MEDIUMINT", "INTEGER",
+				"BIGINT", "YEAR", "TIMESTAMP":
+				var anyVal = *v.(*sql.NullInt64)
+				if anyVal.Valid {
+					item[col] = anyVal.Int64
+				} else {
+					item[col] = nil
+				}
+			case "DATETIME", "DATE", "TIME":
 				tmpValue := *v.(*interface{})
 				var timeStr string
 				if tmpValue != nil {
 					timeStr = fmt.Sprintf("%s", tmpValue)
 				}
 				item[col] = timeStr
-			case "SMALLINT", "TINYINT":
-				item[col] = *v.(*int)
-			case "VARCHAR", "CHAR", "TEXT":
-				item[col] = *v.(*string)
-			case "DECIMAL":
-				item[col] = *v.(*float64)
+			case "VARCHAR", "CHAR", "TEXT", "BINARY", "VARBINARY", "TINYBLOB", "TINYTEXT", "BLOB",
+				"MEDIUMBLOB", "MEDIUMTEXT", "LONGBLOB", "LONGTEXT":
+				var anyVal = *v.(*sql.NullString)
+				if anyVal.Valid {
+					item[col] = anyVal.String
+				} else {
+					item[col] = ""
+				}
+			case "DECIMAL", "FLOAT", "DOUBLE", "NUMERIC":
+				var anyVal = *v.(*sql.NullFloat64)
+				if anyVal.Valid {
+					item[col] = anyVal.Float64
+				} else {
+					item[col] = nil
+				}
 			default:
 				item[col] = *v.(*interface{})
 			}

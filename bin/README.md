@@ -74,6 +74,8 @@ $ 'a','b','c','d'		# array [a, b, c, d]
 # "," 分割
 $ --separator-comma 
 $ -spt-c
+$ --array a1 a3 a4 a5
+$ --array {a1,a3,a4,a5}
 ```
 
 
@@ -222,6 +224,32 @@ FRdata
 ##### url-style
 
 ##### session-style
+
+
+
+
+
+#### struct 设置到命令路由
+
+定义Struct直接映射为命令路由注册
+
+```go
+type CMD struct {
+	Title    string   //标题
+	Command  string   //命令行
+	Alias    []string //别名
+	Describe string   //描述
+
+	HelpMessage string           //帮助信息
+	HelpCall    func(cc *CliCmd) //帮助信息回调
+
+	//回调，可以默认为当前本身
+	Todo    func(cc *CliCmd) //命令回调
+	TodoApp interface{}      //命令绑定信息
+}
+```
+
+
 
 
 

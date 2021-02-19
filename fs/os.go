@@ -1,8 +1,8 @@
 package fs
 
 import (
+	"errors"
 	"github.com/conero/uymas/str"
-	"github.com/conero/uymas/util"
 	"os"
 	"strings"
 )
@@ -41,7 +41,7 @@ func AddEnvPath(paths ...string) error {
 		// fmt.Println(os.Getenv(V_EnvPath))
 		return err
 	}
-	return &util.BaseError{"输入为空或者环境变量已经存在"}
+	return errors.New("输入为空或者环境变量已经存在")
 }
 
 // 删除环境变量

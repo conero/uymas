@@ -11,9 +11,9 @@ import (
 //		多行以“行\n分割"分割
 func NewParser(script string) [][]string {
 	var cmds [][]string
-	var reg = regexp.MustCompile(`\n|;`)         //分行
+	var reg = regexp.MustCompile(`[\n;]`)        //分行
 	var regComment = regexp.MustCompile(`#.*$+`) //注释
-	var regSpan = regexp.MustCompile(`\s{1,}`)
+	var regSpan = regexp.MustCompile(`\s+`)
 	//var regSign = regexp.MustCompile(`('[^\']*')|("[^\"]*")`)
 	var strArr = reg.Split(script, -1)
 

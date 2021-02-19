@@ -1,6 +1,6 @@
 # uymas
 
-*查看文档 [conero/uymas godoc 文档](https://www.godoc.org/github.com/conero/uymas)*
+*查看文档 [conero/uymas godoc 文档](https://pkg.go.dev/github.com/conero/uymas)*
 
 **代码仓库介绍**
 

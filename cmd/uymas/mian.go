@@ -34,7 +34,16 @@ func application() {
 	}, "pinyin")
 
 	//empty
+	//option: -v,--version; -h,--help
 	cli.RegisterEmpty(func(cc *bin.CliCmd) {
+		if cc.CheckSetting("v", "version") {
+			fmt.Printf("v%v/%v\r\n", uymas.Version, uymas.Release)
+			return
+		} else if cc.CheckSetting("h", "help") {
+			cc.CallCmd("help")
+			return
+		}
+
 		fmt.Printf(" wecolme use the <%v>. \r\n", uymas.Name)
 		fmt.Printf(" %v/%v\r\n", uymas.Version, uymas.Release)
 		fmt.Printf(" Power by %v.\r\n", uymas.Author)
@@ -68,11 +77,19 @@ func application() {
 			baseDir = "./"
 		}
 		dd := fs.NewDirScanner(baseDir)
+
+		//过滤
+		dd.Exclude(cc.ArgRaw("exclude"))
+		dd.Include(cc.ArgRaw("include"))
+
 		if er := dd.Scan(); er == nil {
+			var table [][]interface{}
 			for key, tcd := range dd.TopChildDick {
-				fmt.Printf(" %v, %v.\r\n", key, fs.ByteSize(tcd.Size))
+				table = append(table, []interface{}{key, fs.ByteSize(tcd.Size)})
 			}
 
+			fmt.Println(bin.FormatTable(table, " "))
+			fmt.Printf(" 文件扫目标目录： %v.\r\n", dd.BaseDir())
 			fmt.Printf(" 文件扫描数： %v, 目录: %v, 文件： %v.\r\n", dd.AllItem, dd.AllDirItem, dd.AllFileItem)
 			fmt.Printf(" 目录大小: %v.\r\n", fs.ByteSize(dd.AllSize))
 			fmt.Printf(" 使用时间： %v.\r\n", dd.Runtime)
@@ -105,6 +122,28 @@ func application() {
 			fmt.Print("$ uymas>")
 		}
 	}, "repl")
+
+	//help
+	cli.RegisterFunc(func(cc *bin.CliCmd) {
+		fmt.Println("主要命令如下: ")
+		fmt.Println("   pinyin           汉字转拼音查询")
+		fmt.Println("   cache, cc        字段文件缓存器")
+		fmt.Println("   scan, sc <dir>   文件扫描, --include 包含, --exclude 排除")
+		fmt.Println("   uymas-ls, uls    系统全部的命令行列表")
+		fmt.Println("   repl             交互式对话命令")
+		fmt.Println("   test             命令行解析测试")
+	}, "help", "?")
+
+	//test 用于命令行解析等测试
+	cli.RegisterFunc(func(cc *bin.CliCmd) {
+		fmt.Println(" 命令行测试")
+		fmt.Printf("  SubCommand: %v \r\n", cc.SubCommand)
+		fmt.Printf("  Option: %v \r\n", cc.Setting)
+		fmt.Printf("  DataRaw: %v \r\n", cc.DataRaw)
+		fmt.Printf("  Data: %#v \r\n", cc.Data)
+		fmt.Printf("  Input: %#v \r\n", strings.Join(cc.Raw, " "))
+		fmt.Println()
+	}, "test")
 
 	cli.Run()
 }

@@ -4,6 +4,7 @@ package util
 import (
 	"fmt"
 	"math"
+	"reflect"
 	"time"
 )
 
@@ -78,4 +79,21 @@ func DecT36(num int) string {
 // 数据进制转换
 func DecT62(num int) string {
 	return (&Decimal{num}).T62()
+}
+
+//null value handler to default.
+func NullDefault(value, def interface{}) interface{} {
+	if ValueNull(value) {
+		return def
+	}
+	return value
+}
+
+//to find if is null
+func ValueNull(value interface{}) bool {
+	if nil == value {
+		return true
+	}
+	v := reflect.ValueOf(value)
+	return v.IsZero()
 }
