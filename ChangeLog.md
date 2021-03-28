@@ -26,6 +26,9 @@
   - +) 使用 Go 1.16 的 embed 特性，添加文本式的命令文档
 - **bin**
   - +) 新增方法 *GetHelpEmbed* 用于读取命令行文档格式
+  - +) 新增方法 `CliCmd.Context` 获取`CLI`对象的上下文。
+  - +) 新增方法 `CliCmd.CmdType` 获取系统 Cmd 类型，目前为分为`App/Func`。
+  - optimize) `CliCmd.Next` 参会为空时，获取当前应用的的下一个子命令。
 - change) go 版本要求 1.16+
 
 

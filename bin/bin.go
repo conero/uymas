@@ -12,3 +12,11 @@ const (
 	AppMethodHelp     = "Help"
 	FuncRegisterEmpty = "_inner_empty_func"
 )
+
+type initIota int
+
+//the Cmd of type
+const (
+	CmdApp initIota = iota
+	CmdFunc
+)

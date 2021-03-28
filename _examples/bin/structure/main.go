@@ -6,20 +6,23 @@ import (
 )
 
 func main() {
-	bin.Register("test", new(TypeCommand))
-	bin.Run()
+	cli := bin.NewCLI()
+	cli.RegisterApp(new(TypeCommand), "test")
+	cli.RegisterApp(new(TypeCommand), "type")
+	cli.Run()
 }
 
 
 type TypeCommand struct {
-	bin.Command
+	bin.CliApp
 }
 
-func (tc *TypeCommand) Init()  {
-	tc.Command.Init()
+func (tc *TypeCommand) Construct()  {
 }
 
-
-func (tc *TypeCommand) Run()  {
-	fmt.Println(tc.App.DataRaw)
+//
+func (tc *TypeCommand) Debug()  {
+	context := tc.Cc.Context()
+	vList := context.GetCmdList()
+	fmt.Printf("GetCmdList: %#v\r\n", vList)
 }

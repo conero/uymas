@@ -141,6 +141,9 @@ func application() {
 		fmt.Println()
 	}, "test")
 
+	//app App 应用
+	cli.RegisterApp(new(App), "app")
+
 	cli.Run()
 }
 
