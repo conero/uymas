@@ -29,6 +29,9 @@
   - +) 新增方法 `CliCmd.Context` 获取`CLI`对象的上下文。
   - +) 新增方法 `CliCmd.CmdType` 获取系统 Cmd 类型，目前为分为`App/Func`。
   - optimize) `CliCmd.Next` 参会为空时，获取当前应用的的下一个子命令。
+  - optimize) `FormatKvSort` 和 `FormatKv` 使用反射改写是函数支持任何格式的Map类型
+- **number**
+  - +) 新增类型 `Unit` 并增加方法 `K/W/M/G` 方法，`Unit` 用于替代 `One`。
 - change) go 版本要求 1.16+
 
 

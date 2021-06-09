@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/conero/uymas/number"
 	"github.com/conero/uymas/str"
+	"reflect"
 	"sort"
 	"strconv"
 	"strings"
@@ -54,7 +55,11 @@ func FormatStr(d string, ss ...[][]string) string {
 //
 // FormatKv(kv map[string]interface{}, pref string)				含前缀的字符输出.
 // FormatKv(kv map[string]interface{}, pref string, md string)	含前缀和中间连接符号的字符输出.
-func FormatKv(kv map[string]interface{}, params ...string) string {
+func FormatKv(kv interface{}, params ...string) string {
+	var vf = reflect.ValueOf(kv)
+	if vf.Kind() != reflect.Map {
+		return ""
+	}
 	var s, pref, d = "", "", ""
 	var pLen = len(params)
 	if pLen > 0 {
@@ -67,8 +72,8 @@ func FormatKv(kv map[string]interface{}, params ...string) string {
 	// 计算最大长度
 	// 最大长度
 	maxLen := len(pref)
-	for k, _ := range kv {
-		kLen := len(k)
+	for mr := vf.MapRange(); mr.Next(); {
+		kLen := len(fmt.Sprintf("%v", mr.Key()))
 		if kLen > maxLen {
 			maxLen = kLen
 		}
@@ -82,10 +87,12 @@ func FormatKv(kv map[string]interface{}, params ...string) string {
 	maxLen += len(d)
 
 	// 格式化
-	for k, v := range kv {
+	for mr := vf.MapRange(); mr.Next(); {
 		if s != "" {
 			s += "\n"
 		}
+		k := fmt.Sprintf("%v", mr.Key())
+		v := fmt.Sprintf("%v", mr.Value())
 		s += pref + k + strings.Repeat(bit, maxLen-len(k)) + fmt.Sprintf("%v", v)
 	}
 	return s
@@ -95,7 +102,11 @@ func FormatKv(kv map[string]interface{}, params ...string) string {
 //
 // FormatKvSort(kv map[string]interface{}, pref string)				含前缀的字符输出.
 // FormatKvSort(kv map[string]interface{}, pref string, md string)	含前缀和中间连接符号的字符输出.
-func FormatKvSort(kv map[string]interface{}, params ...string) string {
+func FormatKvSort(kv interface{}, params ...string) string {
+	var vf = reflect.ValueOf(kv)
+	if vf.Kind() != reflect.Map {
+		return ""
+	}
 	var s, pref, d = "", "", ""
 	var pLen = len(params)
 	if pLen > 0 {
@@ -109,7 +120,8 @@ func FormatKvSort(kv map[string]interface{}, params ...string) string {
 	// 最大长度
 	maxLen := len(pref)
 	var sortKeys []string
-	for k, _ := range kv {
+	for mr := vf.MapRange(); mr.Next(); {
+		k := fmt.Sprintf("%v", mr.Key())
 		sortKeys = append(sortKeys, k)
 		kLen := len(k)
 		if kLen > maxLen {
@@ -126,11 +138,12 @@ func FormatKvSort(kv map[string]interface{}, params ...string) string {
 
 	sort.Strings(sortKeys)
 	// 格式化
-	for _, k := range sortKeys {
+	for mr := vf.MapRange(); mr.Next(); {
+		k := fmt.Sprintf("%v", mr.Key())
 		if s != "" {
 			s += "\n"
 		}
-		s += pref + k + strings.Repeat(bit, maxLen-len(k)) + fmt.Sprintf("%v", kv[k])
+		s += pref + k + strings.Repeat(bit, maxLen-len(k)) + fmt.Sprintf("%v", mr.Value())
 	}
 	return s
 }
