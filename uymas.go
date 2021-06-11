@@ -7,11 +7,11 @@ package uymas
 
 const (
 	Version        = "1.0.1" //dev 为非发行版本
-	Release        = "dev"
+	Release        = "20210611"
 	Since          = "20181030"
 	Author         = "Joshua Conero"
 	Email          = "conero@163.com"
 	Name           = "uymas"
 	PkgName        = "conero/uymas"
-	TimeLayoutDate = "20060102" // 日期格式
+	TimeLayoutDate = "20060102" // 日期格式-20060102
 )
