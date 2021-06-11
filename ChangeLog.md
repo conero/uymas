@@ -32,6 +32,7 @@
   - optimize) `FormatKvSort` 和 `FormatKv` 使用反射改写是函数支持任何格式的Map类型
 - **number**
   - +) 新增类型 `Unit` 并增加方法 `K/W/M/G` 方法，`Unit` 用于替代 `One`。
+  - +) 新增 `BitSize` 类型转换处理类，参照 `Unit` 增加子方法，并同时支持 `KiB` 与 `KB`。
 - change) go 版本要求 1.16+
 
 
