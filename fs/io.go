@@ -1,4 +1,3 @@
-// 文件系统处理扩展，文件/目录操作
 package fs
 
 import (

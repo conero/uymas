@@ -1,3 +1,6 @@
+// @DATE        2019/6/5
+// @NAME        Joshua Conero
+
 package bin
 
 import (
@@ -10,14 +13,7 @@ import (
 	"strings"
 )
 
-/**
- * @DATE        2019/6/5
- * @NAME        Joshua Conero
- * @DESCRIPIT   命令行输出格式化
- **/
-
-// 获取字符串格式化
-// [[k,  v]]
+// Get the Queue type pretty format for output. [[k,  v]]
 // Deprecated: Use FormatKv instead.
 func FormatStr(d string, ss ...[][]string) string {
 	if d == "" {
@@ -51,10 +47,11 @@ func FormatStr(d string, ss ...[][]string) string {
 	return contents
 }
 
-// The `k-v` data format to beautiful str.
-//
-// FormatKv(kv map[string]interface{}, pref string)				含前缀的字符输出.
-// FormatKv(kv map[string]interface{}, pref string, md string)	含前缀和中间连接符号的字符输出.
+/*
+The `k-v` data format to beautiful str.
+	FormatKv(kv map[string]interface{}, pref string)				 provide pref param form FormatKv.
+	FormatKv(kv map[string]interface{}, pref string, md string)	     provide pref and middle param form FormatK.
+*/
 func FormatKv(kv interface{}, params ...string) string {
 	var vf = reflect.ValueOf(kv)
 	if vf.Kind() != reflect.Map {
@@ -98,10 +95,11 @@ func FormatKv(kv interface{}, params ...string) string {
 	return s
 }
 
-// The `k-v` data format to beautiful str.
-//
-// FormatKvSort(kv map[string]interface{}, pref string)				含前缀的字符输出.
-// FormatKvSort(kv map[string]interface{}, pref string, md string)	含前缀和中间连接符号的字符输出.
+/*
+The `k-v` data format to beautiful str.
+	FormatKvSort(kv map[string]interface{}, pref string)				 provide pref param form FormatKv.
+	FormatKvSort(kv map[string]interface{}, pref string, md string)	     provide pref and middle param form FormatK.
+*/
 func FormatKvSort(kv interface{}, params ...string) string {
 	var vf = reflect.ValueOf(kv)
 	if vf.Kind() != reflect.Map {
@@ -174,10 +172,10 @@ func FormatQue(que []interface{}, prefs ...string) string {
 	return s
 }
 
-// Bug(FormatQue): 中文长度无法使字符串字符对齐
-
-// 表格格式化
-// (data, bool) 是否使用 idx
+// Bug(FormatQue): chinese text cannot alignment
+//
+// Table format output by slice:
+// 	(data, bool) if is use the idx
 func FormatTable(data [][]interface{}, args ...interface{}) string {
 	useIdxMk := true
 	if args != nil {

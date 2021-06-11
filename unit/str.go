@@ -1,4 +1,4 @@
-// 单元测试
+// Package test unit.
 package unit
 
 import (

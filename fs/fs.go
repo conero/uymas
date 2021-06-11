@@ -1,3 +1,4 @@
+//Package fs support facilitate for handler file and direction.
 package fs
 
 import (
@@ -6,6 +7,7 @@ import (
 )
 
 //ByteSize is a example like `time.Duration`
+// Deprecated: Use number.ByteSize replace.
 type ByteSize int64
 
 //1 Bytes = 8Bit					byte

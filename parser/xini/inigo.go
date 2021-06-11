@@ -1,4 +1,4 @@
-// go 版的 ini 文件解析库
+//Package xini parse ini config files and utils.
 package xini
 
 import (

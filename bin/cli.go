@@ -702,11 +702,13 @@ func isVaildCmd(c string) bool {
 	return true
 }
 
-// cl  eanout the raw input string like:
-//		`"string"`		=> `string`
-//		`"'string'"`	=> `'string'`
-//		`'string'`		=> `string`
-//		`'"string"'`	=> `"string"`
+/*
+clear out the raw input string like:
+	`"string"`		=> `string`
+	`"'string'"`	=> `'string'`
+	`'string'`		=> `string`
+	`'"string"'`	=> `"string"`
+*/
 func CleanoutString(ss string) string {
 	ssLen := len(ss)
 	first, last := ss[0:1], ss[ssLen-1:]
@@ -719,7 +721,7 @@ func CleanoutString(ss string) string {
 	return ss
 }
 
-//将字符串解析为任一值
+//parse the command value to really type by format.
 func ParseValueByStr(ss string) interface{} {
 	ss = strings.TrimSpace(ss)
 	ssLow := strings.ToLower(ss)

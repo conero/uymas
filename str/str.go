@@ -1,4 +1,4 @@
-// 字符串处理工具包
+//Package str string handler method.
 package str
 
 import (

@@ -1,4 +1,4 @@
-// 其他工具栏
+//Package util implements other tool more.
 package util
 
 import (

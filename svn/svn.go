@@ -1,4 +1,4 @@
-// svn 命令包类
+//Package svn command parser.
 package svn
 
 import (
