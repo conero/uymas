@@ -125,13 +125,9 @@ func application() {
 
 	//help
 	cli.RegisterFunc(func(cc *bin.CliCmd) {
-		fmt.Println("主要命令如下: ")
-		fmt.Println("   pinyin           汉字转拼音查询")
-		fmt.Println("   cache, cc        字段文件缓存器")
-		fmt.Println("   scan, sc <dir>   文件扫描, --include 包含, --exclude 排除")
-		fmt.Println("   uymas-ls, uls    系统全部的命令行列表")
-		fmt.Println("   repl             交互式对话命令")
-		fmt.Println("   test             命令行解析测试")
+		lang := cc.ArgRaw("lang", "L")
+		content := bin.GetHelpEmbed(s, lang)
+		fmt.Println(content)
 	}, "help", "?")
 
 	//test 用于命令行解析等测试
@@ -144,6 +140,9 @@ func application() {
 		fmt.Printf("  Input: %#v \r\n", strings.Join(cc.Raw, " "))
 		fmt.Println()
 	}, "test")
+
+	//app App 应用
+	cli.RegisterApp(new(App), "app")
 
 	cli.Run()
 }

@@ -5,21 +5,24 @@ import (
 	"math"
 )
 
-type One int64
+type Unit int64
+
+// Deprecated:  the type `One` will deprecated when `v1.1.0` please use `Unit` replace.
+type One = Unit
 
 // 1k = 1000 thousand/kilo
 // 1M = 1000_000 million
 // 1G = 1000_000_000 billion
 const (
-	A One = 1
-	K     = 1000 * A
-	W     = 10 * K
-	M     = 1000 * K
-	G     = 1000 * M
+	A Unit = 1
+	K      = 1000 * A
+	W      = 10 * K
+	M      = 1000 * K
+	G      = 1000 * M
 )
 
 //get the format of byte size
-func (b One) Format() (float64, string) {
+func (b Unit) Format() (float64, string) {
 	if b == 0 {
 		return 0, ""
 	}
@@ -33,7 +36,23 @@ func (b One) Format() (float64, string) {
 	return float64(b) / math.Pow(1000, i), sizes[int(i)]
 }
 
-func (b One) String() string {
+func (b Unit) String() string {
 	v, unit := b.Format()
 	return fmt.Sprintf("%.4f %v", v, unit)
+}
+
+func (b Unit) K() float64 {
+	return float64(b / K)
+}
+
+func (b Unit) W() float64 {
+	return float64(b / W)
+}
+
+func (b Unit) M() float64 {
+	return float64(b / M)
+}
+
+func (b Unit) G() float64 {
+	return float64(b / G)
 }

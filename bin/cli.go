@@ -39,6 +39,7 @@ type CliCmd struct {
 	Setting    []string               // the setting of command
 	Raw        []string               // the raw args
 	context    CLI
+	cmdType    int //the command type enumeration
 }
 
 // the cli app.
@@ -291,20 +292,23 @@ func (cli *CLI) CmdExist(cmds ...string) bool {
 func (cli *CLI) router(cc *CliCmd) {
 	//set the last `*CLI` as context of `CliCmd`.
 	cc.context = *cli
+	cc.cmdType = int(CmdFunc)
 	routerValidMk := false
 	if cc.Command != "" {
 		value := cli.findRegisterValueByCommand(cc.Command)
 		if value != nil {
 			switch value.(type) {
-			// call the functional
+			// call the FuncCmd
 			case func(c *CliCmd):
 				value.(func(c *CliCmd))(cc)
 				routerValidMk = true
 			default:
+				// call the AppCmd
 				v := reflect.ValueOf(value).Elem()
 				ccStr := "Cc"
 				// set `Cc` that is struct of field.
 				if v.FieldByName(ccStr).IsValid() {
+					cc.cmdType = int(CmdApp)
 					v.FieldByName(ccStr).Set(reflect.ValueOf(cc))
 				} else {
 					panic(fmt.Sprintf("%v:the command field of `Cc` is not valid filed.", cc.Command))
@@ -492,9 +496,14 @@ func (app *CliCmd) QueueNext(key string) string {
 	return vaule
 }
 
-// 多简直获取键值
+// Get key values from multiple key values
 func (app *CliCmd) Next(keys ...string) string {
 	var value string
+	var vLen = len(keys)
+	//when keys is empty default use the current Next value
+	if vLen == 0 {
+		return app.Next(app.SubCommand)
+	}
 	for _, k := range keys {
 		value = app.QueueNext(k)
 		if value != "" {
@@ -571,6 +580,15 @@ func (app *CliCmd) CallCmd(cmd string) {
 		app.Command = cmd
 		context.router(app)
 	}
+}
+
+// get the context of `CLI`, in case `AppCmd` not `FunctionCmd`
+func (app *CliCmd) Context() CLI {
+	return app.context
+}
+
+func (app *CliCmd) CmdType() int {
+	return app.cmdType
 }
 
 // the application parse raw args inner.

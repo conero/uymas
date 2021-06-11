@@ -20,6 +20,23 @@
 
 
 
+### 1.0.1/2021-06-11
+
+- **cmd/uymas**
+  - +) 使用 Go 1.16 的 embed 特性，添加文本式的命令文档
+- **bin**
+  - +) 新增方法 *GetHelpEmbed* 用于读取命令行文档格式
+  - +) 新增方法 `CliCmd.Context` 获取`CLI`对象的上下文。
+  - +) 新增方法 `CliCmd.CmdType` 获取系统 Cmd 类型，目前为分为`App/Func`。
+  - optimize) `CliCmd.Next` 参会为空时，获取当前应用的的下一个子命令。
+  - optimize) `FormatKvSort` 和 `FormatKv` 使用反射改写是函数支持任何格式的Map类型
+- **number**
+  - +) 新增类型 `Unit` 并增加方法 `K/W/M/G` 方法，`Unit` 用于替代 `One`。
+  - +) 新增 `BitSize` 类型转换处理类，参照 `Unit` 增加子方法，并同时支持 `KiB` 与 `KB`。
+- change) go 版本要求 1.16+
+
+
+
 ### 1.0.0/2021-02-19
 
 **由于，在 0.6.0 上的开发出现非兼容方法，因此发布版本计划进行改变** (~~0.6.0/Next~~)
