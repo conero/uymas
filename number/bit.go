@@ -16,18 +16,18 @@ const (
 	GB           = 1000 * MB   //gigabyte
 	TB           = 1000 * GB   //terabyte
 	PB           = 1000 * TB   //petabyte
-	EB           = 1000 * PB   //exabyte
-	ZB           = 1000 * EB   //zettabyte
-	YB           = 1000 * ZB   //yottabyte
+	//EB           = 1000 * PB   //exabyte
+	//ZB           = 1000 * EB   //zettabyte
+	//YB           = 1000 * ZB   //yottabyte
 
 	KiB = 1024 * Byte // kibibyte
 	MiB = 1024 * KiB  //	mebibyte
 	GiB = 1024 * MiB  //	gibibyte
 	TiB = 1024 * GiB  //	tebibyte
 	PiB = 1024 * TiB  //	pebibyte
-	EiB = 1024 * PiB  //	exbibyte
-	ZiB = 1024 * EiB  //	zebibyte
-	YiB = 1024 * ZiB  //yobibyte
+	//EiB = 1024 * PiB  //	exbibyte
+	//ZiB = 1024 * EiB  //	zebibyte
+	//YiB = 1024 * ZiB  //yobibyte
 )
 
 //get the format of byte size
@@ -96,18 +96,6 @@ func (b BitSize) PB() float64 {
 	return float64(b / PB)
 }
 
-func (b BitSize) EB() float64 {
-	return float64(b / EB)
-}
-
-func (b BitSize) ZB() float64 {
-	return float64(b / ZB)
-}
-
-func (b BitSize) YB() float64 {
-	return float64(b / YB)
-}
-
 func (b BitSize) KiB() float64 {
 	return float64(b / KiB)
 }
@@ -126,18 +114,6 @@ func (b BitSize) TiB() float64 {
 
 func (b BitSize) PiB() float64 {
 	return float64(b / PiB)
-}
-
-func (b BitSize) EiB() float64 {
-	return float64(b / EiB)
-}
-
-func (b BitSize) ZiB() float64 {
-	return float64(b / ZiB)
-}
-
-func (b BitSize) YiB() float64 {
-	return float64(b / YiB)
 }
 
 func (b BitSize) String() string {
