@@ -76,6 +76,14 @@ func (b BitSize) Format2() (float64, string) {
 	return float64(b) / math.Pow(1024, i), sizes[int(i)]
 }
 
+func (b BitSize) Bit() float64 {
+	return float64(b)
+}
+
+func (b BitSize) Byte() float64 {
+	return float64(b / Byte)
+}
+
 func (b BitSize) KB() float64 {
 	return float64(b / KB)
 }
@@ -116,7 +124,8 @@ func (b BitSize) PiB() float64 {
 	return float64(b / PiB)
 }
 
+// The file size default use 1024.
 func (b BitSize) String() string {
-	v, unit := b.Format()
+	v, unit := b.Format2()
 	return fmt.Sprintf("%.4f %v", v, unit)
 }
