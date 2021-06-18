@@ -171,3 +171,24 @@ func TestLowerStyle(t *testing.T) {
 		t.Fatalf("%v --> %v VS %v", vStr, gStr, rStr)
 	}
 }
+
+//	`first_name` 			-> `FirstName`,
+//	`get_height_width_rate` 	-> `GetHeightWidthRate`
+func TestCamelCase(t *testing.T) {
+	// Case 1
+	vStr := "first_name"
+	rStr := "FirstName"
+	gStr := CamelCase(vStr)
+	if gStr != rStr {
+		t.Fatalf("%v --> %v VS %v", vStr, gStr, rStr)
+	}
+
+	// Case 2
+	vStr = "get_height_width_rate"
+	rStr = "GetHeightWidthRate"
+	gStr = CamelCase(vStr)
+	if gStr != rStr {
+		t.Fatalf("%v --> %v VS %v", vStr, gStr, rStr)
+	}
+
+}

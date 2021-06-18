@@ -45,8 +45,9 @@
 - **str**
   - +) `IsLatinAlpha` 判断是否为拉丁文字母
   - +) `LowerStyle` 将峰坨式命名规则转为小写风格命名规范
-
-
+  - +) `CamelCase`  使用 snake case（蛇式）转 CamelCase 实现
+  
+  
 
 ### 1.0.1/2021-06-11
 

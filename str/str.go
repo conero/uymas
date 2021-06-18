@@ -84,6 +84,7 @@ func IsLatinAlpha(alpha string) bool {
 	return strings.Index(LowerStr, strings.ToLower(alpha)) > -1
 }
 
+// camelcase --> snake case
 // covert string to be lower style, like:
 //	`FirstName` 			-> `first_name`,
 //	`getHeightWidthRate` 	-> `get_height_width_rate`
@@ -118,6 +119,27 @@ func LowerStyle(vStr string) string {
 			return strings.ToLower(vStr)
 		}
 		return strings.ToLower(strings.Join(valueQueue, "_"))
+	}
+	return vStr
+}
+
+// camelcase --> snake case
+// covert string to be lower style, like:
+//	`first_name` 			-> `FirstName`,
+//	`get_height_width_rate` 	-> `GetHeightWidthRate`
+// snake case --> camelcase
+func CamelCase(vStr string) string {
+	if vLen := len(vStr); vLen > 0 {
+		vQueue := strings.Split(vStr, "_")
+		var newQue []string
+		for _, vQ := range vQueue {
+			vQ = strings.TrimSpace(vQ)
+			if vQ == "" {
+				continue
+			}
+			newQue = append(newQue, strings.Title(vQ))
+		}
+		vStr = strings.Join(newQue, "")
 	}
 	return vStr
 }
