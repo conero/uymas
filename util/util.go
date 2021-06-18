@@ -27,6 +27,32 @@ func InQue(val interface{}, que []interface{}) int {
 	return idx
 }
 
+//Check keys if exist in Array Or Slice.
+func InQueAny(que interface{}, keys ...interface{}) int {
+	idx := -1
+
+	vt := reflect.ValueOf(que)
+	//Only Array And Slice.
+	if vt.Kind() == reflect.Array || vt.Kind() == reflect.Slice {
+		vLen := vt.Len()
+		for i := 0; i < vLen; i++ {
+			value := vt.Index(i)
+			for j := 0; j < len(keys); j++ {
+				vsKey := keys[j]
+				if reflect.DeepEqual(value.Interface(), vsKey) {
+					idx = i
+					break
+				}
+			}
+			if idx != -1 {
+				break
+			}
+		}
+	}
+
+	return idx
+}
+
 //返回秒用于计算程序用时,参数为0时返回当前的毫秒，否则返回计算后的秒差
 func Sec(start float64) float64 {
 	t := time.Now()

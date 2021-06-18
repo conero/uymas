@@ -23,24 +23,6 @@ func TestFormatStr(t *testing.T) {
 	fmt.Println(s)
 }
 
-func TestFormatQue(t *testing.T) {
-	// 用于输出格式
-	// 实际测试时将会忽略信息
-	t.Skip()
-
-	data := []interface{}{}
-	data = []interface{}{
-		"中文", "letter", "letter", "letter", "letter", "letter", "letter",
-		"中文", "letter", "letter", "letter", "letter", "letter", "letter",
-		"中文", "letter", "letter", "letter", "letter", "letter", "letter",
-	}
-	s := FormatQue(data)
-	fmt.Println(s)
-
-	s = FormatQue(data, " .", "-")
-	fmt.Println(s)
-}
-
 func TestFormatTable(t *testing.T) {
 	// 用于输出格式
 	// 实际测试时将会忽略信息

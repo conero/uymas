@@ -37,6 +37,10 @@
   - +)  `BitSize` 增加方法 `Bit/Byte` 以完善可自由获取不同的单位
   - optimize) `BitSize`默认输出采用 1024 制式而非原来的1000
   - +) `Unit` 增加方法 `Unit` 以完善可自由获取不同的单位
+- **bin**
+  - 优化) `FormatQue` 使用反射调整其支持任一类型的 array/slice数据
+- **util**
+  - +) `InQueAny` 新增方法来支持任一类型的 array/slice数据键值检测
 
 
 

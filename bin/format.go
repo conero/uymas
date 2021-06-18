@@ -149,7 +149,7 @@ func FormatKvSort(kv interface{}, params ...string) string {
 // 格式化数组字符
 // 用于命令行输出
 // prefs 为 "" 时默认以数组索引开头；否则默给定的输出
-func FormatQue(que []interface{}, prefs ...string) string {
+func FormatQue(que interface{}, prefs ...string) string {
 	pref := ""  // 开头符号
 	dter := " " // 空格
 	if prefs != nil && len(prefs) > 0 {
@@ -159,14 +159,23 @@ func FormatQue(que []interface{}, prefs ...string) string {
 		}
 	}
 	s := ""
-	queLen := len(que)
+	vt := reflect.ValueOf(que)
+	var queLen int
+	//Only Support Array/Slice, other output itself.
+	if vt.Kind() == reflect.Array || vt.Kind() == reflect.Slice {
+		queLen = vt.Len()
+	} else {
+		return fmt.Sprintf("%v", que)
+	}
+
 	mdLen := 4 + len(strconv.Itoa(queLen))
-	for i, q := range que {
+	for i := 0; i < queLen; i++ {
+		qVal := vt.Index(i).Interface()
 		if pref == "" {
 			iStr := strconv.Itoa(i) + "."
-			s += iStr + strings.Repeat(dter, mdLen-len(iStr)) + fmt.Sprintf(" %v\n", q)
+			s += iStr + strings.Repeat(dter, mdLen-len(iStr)) + fmt.Sprintf(" %v\n", qVal)
 		} else {
-			s += pref + strings.Repeat(dter, mdLen-len(pref)) + fmt.Sprintf(" %v\n", q)
+			s += pref + strings.Repeat(dter, mdLen-len(pref)) + fmt.Sprintf(" %v\n", qVal)
 		}
 	}
 	return s
