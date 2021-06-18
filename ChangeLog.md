@@ -38,9 +38,13 @@
   - optimize) `BitSize`默认输出采用 1024 制式而非原来的1000
   - +) `Unit` 增加方法 `Unit` 以完善可自由获取不同的单位
 - **bin**
+  - +) `StructToMap` 和 `StructToMapLStyle` 新增 struct 转 map 的方法
   - 优化) `FormatQue` 使用反射调整其支持任一类型的 array/slice数据
 - **util**
   - +) `InQueAny` 新增方法来支持任一类型的 array/slice数据键值检测
+- **str**
+  - +) `IsLatinAlpha` 判断是否为拉丁文字母
+  - +) `LowerStyle` 将峰坨式命名规则转为小写风格命名规范
 
 
 

@@ -2,6 +2,7 @@ package util
 
 import (
 	"github.com/conero/uymas/unit"
+	"math"
 	"testing"
 )
 
@@ -94,5 +95,23 @@ func TestInQueAny(t *testing.T) {
 	if index == testIdx {
 		t.Fatalf("Surong index is not %#v", queStr)
 	}
+
+}
+
+func TestStructToMap(t *testing.T) {
+	type Ty struct {
+		Name          string
+		Age           int
+		HeightWidthLv float64
+	}
+
+	tt := Ty{}
+	t.Logf("%v", StructToMap(tt))
+
+	tt.Name = "Joshua Conero"
+	tt.HeightWidthLv = math.Pi
+	tt.Age = 58
+	t.Logf("%v", StructToMap(tt))
+	t.Logf("StructToMapLStyle: %#v", StructToMapLStyle(tt))
 
 }
