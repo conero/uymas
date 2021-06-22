@@ -5,6 +5,8 @@ import "testing"
 func TestBitSize_Format(t *testing.T) {
 	var bit BitSize = 8 * 1234
 	t.Log(bit)
+	//0 值检测
+	t.Log(BitSize(0))
 
 	// Size-turn test, Link: https://www.bejson.com/convert/filesize/
 	// 4362076160->545259520->532480->520->0.5078125->0.00049591064453125

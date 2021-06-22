@@ -33,11 +33,11 @@ const (
 //get the format of byte size
 func (b BitSize) Format() (float64, string) {
 	if b == 0 {
-		return 0, ""
+		return 0, "bit"
 	}
 	// Byte
 	if b < Byte {
-		return float64(b), ""
+		return float64(b), "bit"
 	}
 	// Byte
 	if b < KB {
@@ -56,11 +56,11 @@ func (b BitSize) Format() (float64, string) {
 //get the format of byte size
 func (b BitSize) Format2() (float64, string) {
 	if b == 0 {
-		return 0, ""
+		return 0, "bit"
 	}
 	// Byte
 	if b < Byte {
-		return float64(b), ""
+		return float64(b), "bit"
 	}
 	// Byte
 	if b < KiB {
@@ -127,5 +127,8 @@ func (b BitSize) PiB() float64 {
 // The file size default use 1024.
 func (b BitSize) String() string {
 	v, unit := b.Format2()
+	if v == 0 {
+		return fmt.Sprintf("%v %v", v, unit)
+	}
 	return fmt.Sprintf("%.4f %v", v, unit)
 }
