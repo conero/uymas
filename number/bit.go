@@ -67,13 +67,13 @@ func (b BitSize) Format2() (float64, string) {
 		return float64(b) / float64(Byte), "Byte"
 	}
 	var sizes = []string{"", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"}
-	var i = math.Floor(math.Log2(float64(b)) / math.Log2(1000))
+	var i = math.Floor(math.Log(float64(b)/float64(Byte)) / math.Log(1024))
 	//the max data unit is to `YB`
 	var sizesLen = float64(len(sizes))
 	if i > sizesLen {
 		i = sizesLen - 1
 	}
-	return float64(b) / math.Pow(1024, i), sizes[int(i)]
+	return float64(b/Byte) / math.Pow(1024, i), sizes[int(i)]
 }
 
 func (b BitSize) Bit() float64 {
@@ -131,4 +131,9 @@ func (b BitSize) String() string {
 		return fmt.Sprintf("%v %v", v, unit)
 	}
 	return fmt.Sprintf("%.4f %v", v, unit)
+}
+
+//get the bit size by bytes
+func Bytes(bytes int64) BitSize {
+	return BitSize(bytes) * Byte
 }

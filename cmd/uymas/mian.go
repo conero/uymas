@@ -8,6 +8,7 @@ import (
 	"github.com/conero/uymas/bin/parser"
 	"github.com/conero/uymas/culture/pinyin"
 	"github.com/conero/uymas/fs"
+	"github.com/conero/uymas/number"
 	"github.com/conero/uymas/storage"
 	"os"
 	"strings"
@@ -72,6 +73,8 @@ func application() {
 
 	//scan, sc
 	cli.RegisterFunc(func(cc *bin.CliCmd) {
+		var mu fs.MemUsage
+		memSubCall := mu.GetSysMemSub()
 		baseDir := cc.SubCommand
 		if baseDir == "" {
 			baseDir = "./"
@@ -85,15 +88,16 @@ func application() {
 		if er := dd.Scan(); er == nil {
 			var table [][]interface{}
 			for key, tcd := range dd.TopChildDick {
-				table = append(table, []interface{}{key, fs.ByteSize(tcd.Size)})
+				table = append(table, []interface{}{key, number.Bytes(tcd.Size)})
 			}
 
 			fmt.Println(bin.FormatTable(table, " "))
 			fmt.Printf(" 文件扫目标目录： %v.\r\n", dd.BaseDir())
 			fmt.Printf(" 文件扫描数： %v, 目录: %v, 文件： %v.\r\n", dd.AllItem, dd.AllDirItem, dd.AllFileItem)
-			fmt.Printf(" 目录大小: %v.\r\n", fs.ByteSize(dd.AllSize))
+			fmt.Printf(" 目录大小: %v.\r\n", number.Bytes(dd.AllSize))
 			fmt.Printf(" 使用时间： %v.\r\n", dd.Runtime)
 		}
+		fmt.Printf(" 内存消耗：%v\r\n", memSubCall())
 
 	}, "scan", "sc")
 

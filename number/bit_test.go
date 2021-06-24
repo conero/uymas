@@ -37,3 +37,41 @@ func TestBitSize_Format(t *testing.T) {
 		t.Errorf("GB/当前值与实际不同：%f (%v) != %f", m520.GiB(), m520, testy.GiB())
 	}
 }
+
+// Size-turn test, Link: https://www.bejson.com/convert/filesize/
+func TestBytes(t *testing.T) {
+	var bytes int64 = 11264
+	var refBit BitSize = KiB * 11
+	vBit := Bytes(bytes)
+
+	if vBit != refBit {
+		t.Errorf("bytes -> Kib != infact: %v -> %v != %v <- %v", bytes, vBit, refBit, refBit.Byte())
+	}
+
+	// case 2
+	bytes = 2088763392
+	refBit = MiB * 1992
+	vBit = Bytes(bytes)
+
+	if vBit != refBit {
+		t.Errorf("bytes -> MiB != infact: %v -> %v != %v <- %.f", bytes, vBit, refBit, refBit.Byte())
+	}
+
+	// case 3
+	bytes = 3221225472
+	refBit = GiB * 3
+	vBit = Bytes(bytes)
+
+	if vBit != refBit {
+		t.Errorf("bytes -> GiB != infact: %v -> %v != %v <- %.f", bytes, vBit, refBit, refBit.Byte())
+	}
+
+	// case 4
+	bytes = 1992
+	refBit = Byte * 1992
+	vBit = Bytes(bytes)
+
+	if vBit != refBit {
+		t.Errorf("bytes -> Byte != infact: %v -> %v != %v <- %.f", bytes, vBit, refBit, refBit.Byte())
+	}
+}
