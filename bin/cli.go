@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/conero/uymas"
 	"github.com/conero/uymas/bin/butil"
+	"github.com/conero/uymas/bin/parser"
 	"github.com/conero/uymas/str"
 	"log"
 	"os"
@@ -28,6 +29,9 @@ type CLI struct {
 	commands             map[string]Cmd
 	tempLastCommand      string                 // command Cache
 	injectionData        map[string]interface{} //reject data from outside like chan control
+
+	//external fields
+	UnLoadDataSyntax bool //not support load data syntax, like json/url.
 }
 
 // the command of the cli application.
@@ -287,7 +291,7 @@ func (cli *CLI) CmdExist(cmds ...string) bool {
 	return cmdExist
 }
 
-// @todo need to make it.
+// @todo never stop to optimize the method.
 // to star `router`
 func (cli *CLI) router(cc *CliCmd) {
 	//set the last `*CLI` as context of `CliCmd`.
@@ -300,6 +304,7 @@ func (cli *CLI) router(cc *CliCmd) {
 			switch value.(type) {
 			// call the FuncCmd
 			case func(c *CliCmd):
+				cli.hookBeforeCall(cc)
 				value.(func(c *CliCmd))(cc)
 				routerValidMk = true
 			default:
@@ -328,6 +333,7 @@ func (cli *CLI) router(cc *CliCmd) {
 				if subCmdStr != "" {
 					subCmdStr = str.Ucfirst(subCmdStr)
 					if v.MethodByName(subCmdStr).IsValid() {
+						cli.hookBeforeCall(cc)
 						v.MethodByName(subCmdStr).Call(nil)
 					} else {
 						panic(fmt.Sprintf("the method `%s` do not have a handler as `%v`.", cc.SubCommand, subCmdStr))
@@ -344,12 +350,15 @@ func (cli *CLI) router(cc *CliCmd) {
 				aur := cli.actionUnfindRegister
 				switch aur.(type) {
 				case func(cmd string, cc *CliCmd):
+					cli.hookBeforeCall(cc)
 					aur.(func(cmd string, cc *CliCmd))(cc.Command, cc)
 					routerValidMk = true
 				case func(cmd string):
+					cli.hookBeforeCall(cc)
 					aur.(func(cmd string))(cc.Command)
 					routerValidMk = true
 				case func(cc *CliCmd):
+					cli.hookBeforeCall(cc)
 					aur.(func(cc *CliCmd))(cc)
 					routerValidMk = true
 				default:
@@ -372,13 +381,64 @@ func (cli *CLI) router(cc *CliCmd) {
 			aer := cli.actionEmptyRegister
 			switch aer.(type) {
 			case func(cc *CliCmd):
+				cli.hookBeforeCall(cc)
 				aer.(func(cc *CliCmd))(cc)
 				routerValidMk = true
 			case func():
+				cli.hookBeforeCall(cc)
 				aer.(func())()
 				routerValidMk = true
 			}
+		}
+	}
+}
 
+// the hook before call the func
+func (cli *CLI) hookBeforeCall(cc *CliCmd) {
+	cli.loadDataSyntax(cc)
+}
+
+// the do load data by setting syntax
+func (cli *CLI) loadDataSyntax(cc *CliCmd) {
+	raw := cc.DataRaw
+	if !cli.UnLoadDataSyntax && len(raw) > 0 {
+		allowLoads := []string{
+			"load-json", "LJ", "load-json-file", "LJF", "load-json-url", "LJU",
+			"load-url", "LU", "load-url-file", "LUF", "load-url-url", "LUU",
+		}
+		for _, allow := range allowLoads {
+			var (
+				loadType    string
+				contentType parser.DataReceiverType
+			)
+			if content, exist := raw[allow]; exist {
+				switch allow {
+				case "load-json", "LJ":
+					loadType = parser.RJson
+					contentType = parser.ReceiverContent
+				case "load-json-file", "LJF":
+					loadType = parser.RJson
+					contentType = parser.ReceiverFile
+				case "load-json-url", "LJU":
+					loadType = parser.RJson
+					contentType = parser.ReceiverUrl
+				case "load-url", "LU":
+					loadType = parser.RUrl
+					contentType = parser.ReceiverContent
+				case "load-url-file", "LUF":
+					loadType = parser.RUrl
+					contentType = parser.ReceiverFile
+				case "load-url-url", "LUU":
+					loadType = parser.RUrl
+					contentType = parser.ReceiverUrl
+				}
+
+				if loadType != "" {
+					dr, _ := parser.NewDataReceiver(loadType)
+					dr.Receiver(contentType, content)
+					cc.AppendData(dr.GetData())
+				}
+			}
 		}
 	}
 }
@@ -589,6 +649,27 @@ func (app *CliCmd) Context() CLI {
 
 func (app *CliCmd) CmdType() int {
 	return app.cmdType
+}
+
+// append the Data
+func (app *CliCmd) AppendData(vMap map[string]interface{}) *CliCmd {
+	if len(vMap) > 0 {
+		if app.Data == nil {
+			app.Data = map[string]interface{}{}
+		}
+		if app.DataRaw == nil {
+			app.DataRaw = map[string]string{}
+		}
+		for k, v := range vMap {
+			var value string
+			if v != nil {
+				value = fmt.Sprintf("%v", v)
+			}
+			app.Data[k] = v
+			app.DataRaw[k] = value
+		}
+	}
+	return app
 }
 
 // the application parse raw args inner.

@@ -54,7 +54,8 @@ func InQueAny(que interface{}, keys ...interface{}) int {
 	return idx
 }
 
-//返回秒用于计算程序用时,参数为0时返回当前的毫秒，否则返回计算后的秒差
+// Get the program spend second time with second float64
+// Deprecated: will remove when next version v1.1.x use `SpendTimeDiff` replace
 func Sec(start float64) float64 {
 	t := time.Now()
 	ns := float64(t.Nanosecond())
@@ -67,7 +68,8 @@ func Sec(start float64) float64 {
 	return ds
 }
 
-// 返回运算秒的秒数
+// Get the program spend second time with callback
+// Deprecated: will remove when next version v1.1.x use `SpendTimeDiff` replace
 func SecCall() func() float64 {
 	start := Sec(0)
 	return func() float64 {
@@ -75,11 +77,20 @@ func SecCall() func() float64 {
 	}
 }
 
-// 返回字符串式的运行毫秒
+// Get the program spend second time with second string
+// Deprecated: will remove when next version v1.1.x use `SpendTimeDiff` replace
 func SecCallStr() func() string {
 	start := time.Now()
 	return func() string {
 		return fmt.Sprintf("%s", time.Since(start))
+	}
+}
+
+// Get the program spend time for any format.
+func SpendTimeDiff() func() time.Duration {
+	now := time.Now()
+	return func() time.Duration {
+		return time.Now().Sub(now)
 	}
 }
 

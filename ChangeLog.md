@@ -12,6 +12,16 @@
 
 
 
+## v1.1.x/dev
+
+- **bin**
+  - +) `CLI.hookBeforeCall` 新增 hook 机制，实现在调用回调前的请求事件。
+  - +) `CliCmd.AppendData` 新增数据合并接口，使 CliCmd 支持外部数据导入。
+  - **parser**
+    - +) `DataReceiver` 新增数据接收器，实现对 json/url等数据格式的解析支持。
+
+
+
 ## 1.0.x
 
 - [ ] 删除历史版本中标注遗弃的方法
@@ -54,6 +64,7 @@
   
 - **util**
   - +) `InQueAny` 新增方法来支持任一类型的 array/slice数据键值检测
+  - +) `SendTimeDiff` 新增方法用于计算更加统计的时间消耗，用于替代旧方法：`Sec、SecCall、SecCallStr`。
   
 - **str**
   - +) `IsLatinAlpha` 判断是否为拉丁文字母
@@ -64,6 +75,10 @@
   - +) `GetMemStatsRange` 新增方法用于计算程序内存消耗
   - +) `MemUsage` 新增结构体用于快速计算系统的内存消耗情况
 
+- **cmd/uymas**
+  
+  - optimize) `scan, sc` 增加内存使用监控
+  
   
 
 ### 1.0.1/2021-06-11

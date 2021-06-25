@@ -10,19 +10,23 @@ import (
 	"github.com/conero/uymas/fs"
 	"github.com/conero/uymas/number"
 	"github.com/conero/uymas/storage"
+	"github.com/conero/uymas/util"
 	"os"
 	"strings"
+	"time"
 )
 
 var (
 	cli         *bin.CLI
 	pinyinCache *pinyin.Pinyin = nil
+	gMu         fs.MemUsage
+	gSpendTm    func() time.Duration
+	gSpendMem   func() number.BitSize
 )
 
 //the cli app tools
 func application() {
 	cli = bin.NewCLI()
-
 	//pinyin
 	cli.RegisterFunc(func(cc *bin.CliCmd) {
 		words := cc.SubCommand
@@ -73,8 +77,7 @@ func application() {
 
 	//scan, sc
 	cli.RegisterFunc(func(cc *bin.CliCmd) {
-		var mu fs.MemUsage
-		memSubCall := mu.GetSysMemSub()
+		memSubCall := gMu.GetSysMemSub()
 		baseDir := cc.SubCommand
 		if baseDir == "" {
 			baseDir = "./"
@@ -142,6 +145,7 @@ func application() {
 		fmt.Printf("  DataRaw: %v \r\n", cc.DataRaw)
 		fmt.Printf("  Data: %#v \r\n", cc.Data)
 		fmt.Printf("  Input: %#v \r\n", strings.Join(cc.Raw, " "))
+		fmt.Printf(" %v \r\n", getSpendStr())
 		fmt.Println()
 	}, "test")
 
@@ -185,4 +189,15 @@ func getCache(key, value string) (bool, storage.Any) {
 		}
 		return true, store.SetValue(key, storage.NewLite(value).GetAny())
 	}
+}
+
+//消耗时间、内存等计算
+func getSpendStr() string {
+	return fmt.Sprintf("时间和内存消耗，用时 %v, 内存消耗 %v", gSpendTm(), gSpendMem())
+}
+
+func init() {
+	//时间统计
+	gSpendMem = gMu.GetSysMemSub()
+	gSpendTm = util.SpendTimeDiff()
 }
