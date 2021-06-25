@@ -1,7 +1,6 @@
 package parser
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -13,5 +12,5 @@ func TestNewParser(t *testing.T) {
 	# 支持代码注释，单行注释
 	`
 	tmpArr := NewParser(script)
-	fmt.Println(tmpArr)
+	t.Log(tmpArr)
 }

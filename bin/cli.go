@@ -287,7 +287,7 @@ func (cli *CLI) CmdExist(cmds ...string) bool {
 	return cmdExist
 }
 
-// @todo need to make it.
+// @todo never stop to optimize the method.
 // to star `router`
 func (cli *CLI) router(cc *CliCmd) {
 	//set the last `*CLI` as context of `CliCmd`.
@@ -589,6 +589,27 @@ func (app *CliCmd) Context() CLI {
 
 func (app *CliCmd) CmdType() int {
 	return app.cmdType
+}
+
+// append the Data
+func (app *CliCmd) AppendData(vMap map[string]interface{}) *CliCmd {
+	if len(vMap) > 0 {
+		if app.Data == nil {
+			app.Data = map[string]interface{}{}
+		}
+		if app.DataRaw == nil {
+			app.DataRaw = map[string]string{}
+		}
+		for k, v := range vMap {
+			var value string
+			if v != nil {
+				value = fmt.Sprintf("%v", v)
+			}
+			app.Data[k] = v
+			app.DataRaw[k] = value
+		}
+	}
+	return app
 }
 
 // the application parse raw args inner.
