@@ -4,10 +4,10 @@ package butil
 
 import (
 	"fmt"
+	"github.com/conero/uymas/bin/parser"
 	"github.com/conero/uymas/fs"
 	"os"
 	"path"
-	"strings"
 )
 
 var (
@@ -33,15 +33,14 @@ func GetPathDir(vPath string) string {
 
 //make the string to bin/Args, it's used in interactive cli
 func StringToArgs(str string) []string {
-	a := []string{}
-	strArr := strings.Split(str, " ")
-	for _, sv := range strArr {
-		sv = strings.TrimSpace(sv)
-		if sv == "" {
-			continue
-		}
-		a = append(a, sv)
+	args := parser.ParseLine(str)
+	if len(args) > 0 {
+		return args[0]
 	}
+	return nil
+}
 
-	return a
+//string line parse multi line, support ";" split.
+func StringToMultiArgs(str string) [][]string {
+	return parser.ParseLine(str)
 }

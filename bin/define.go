@@ -10,11 +10,11 @@ type CMD struct {
 	Alias   []string //别名
 
 	//帮助信息
-	Describe    string           //描述
-	HelpMessage string           //帮助信息
-	HelpCall    func(cc *CliCmd) //帮助信息回调
+	Describe    string        //描述
+	HelpMessage string        //帮助信息
+	HelpCall    func(*CliCmd) //帮助信息回调
 
 	//回调，可以默认为当前本身
-	Todo    func(cc *CliCmd) //命令回调
-	TodoApp interface{}      //命令绑定信息
+	Todo    func(*CliCmd) //命令回调
+	TodoApp interface{}   //命令绑定信息
 }
