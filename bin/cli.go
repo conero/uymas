@@ -331,7 +331,7 @@ func (cli *CLI) router(cc *CliCmd) {
 				//the subCommand string
 				subCmdStr := cc.SubCommand
 				if subCmdStr != "" {
-					subCmdStr = str.Ucfirst(subCmdStr)
+					subCmdStr = strings.Title(subCmdStr)
 					if v.MethodByName(subCmdStr).IsValid() {
 						cli.hookBeforeCall(cc)
 						v.MethodByName(subCmdStr).Call(nil)

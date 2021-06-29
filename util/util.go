@@ -2,7 +2,6 @@
 package util
 
 import (
-	"fmt"
 	"github.com/conero/uymas/str"
 	"math"
 	"reflect"
@@ -52,38 +51,6 @@ func InQueAny(que interface{}, keys ...interface{}) int {
 	}
 
 	return idx
-}
-
-// Get the program spend second time with second float64
-// Deprecated: will remove when next version v1.1.x use `SpendTimeDiff` replace
-func Sec(start float64) float64 {
-	t := time.Now()
-	ns := float64(t.Nanosecond())
-	ms := ns / math.Pow10(6) //1ms = 10^6ns
-	if start == 0 {
-		return ms
-	}
-	ds := (ms - start) / math.Pow10(3)
-	ds = Round(ds, 5)
-	return ds
-}
-
-// Get the program spend second time with callback
-// Deprecated: will remove when next version v1.1.x use `SpendTimeDiff` replace
-func SecCall() func() float64 {
-	start := Sec(0)
-	return func() float64 {
-		return Sec(start)
-	}
-}
-
-// Get the program spend second time with second string
-// Deprecated: will remove when next version v1.1.x use `SpendTimeDiff` replace
-func SecCallStr() func() string {
-	start := time.Now()
-	return func() string {
-		return fmt.Sprintf("%s", time.Since(start))
-	}
 }
 
 // Get the program spend time for any format.

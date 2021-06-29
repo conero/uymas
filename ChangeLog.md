@@ -17,8 +17,18 @@
 - **bin**
   - +) `CLI.hookBeforeCall` 新增 hook 机制，实现在调用回调前的请求事件。
   - +) `CliCmd.AppendData` 新增数据合并接口，使 CliCmd 支持外部数据导入。
+  - -) 移除遗弃标注项：`FormatStr`
   - **parser**
     - +) `DataReceiver` 新增数据接收器，实现对 json/url等数据格式的解析支持。
+
+- **fs**
+  - -) 移除遗弃标注项：`Struct --> ByteSize`
+- **str**
+  - -) 移除遗弃标注项：`Func -> UcWords`
+- **number**
+  - -) 移除遗弃标注项：`Struct -> One`
+- **util**
+  - -) 移除遗弃标注项：`Func -> Sec、SecCall、SecCallStr`
 
 
 

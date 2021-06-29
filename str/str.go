@@ -40,29 +40,6 @@ func (wr *WriterToContent) Content() string {
 	return wr.content
 }
 
-// Converts the first character of each word in a string to uppercase.
-// Deprecated: maybe next version v1.1.0 will be removed, use the `strings.Title` replace.
-func UcWords(str string) string {
-	idx := strings.Index(str, " ")
-	if idx > -1 {
-		var newStr []string
-		for _, s := range strings.Split(str, " ") {
-			newStr = append(newStr, Ucfirst(s))
-		}
-		str = strings.Join(newStr, "")
-	} else {
-		if len(str) > 0 {
-			str = strings.ToUpper(str[0:1]) + str[1:]
-		}
-	}
-	return str
-}
-
-// Deprecated: maybe next version v1.1.0 will be removed, use the `strings.Title` replace.
-func Ucfirst(str string) string {
-	return UcWords(str)
-}
-
 // Converts the first character of each word in a string to lowercase.
 func Lcfirst(str string) string {
 	idx := strings.Index(str, " ")

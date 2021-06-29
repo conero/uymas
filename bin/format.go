@@ -13,40 +13,6 @@ import (
 	"strings"
 )
 
-// Get the Queue type pretty format for output. [[k,  v]]
-// Deprecated: Use FormatKv instead.
-func FormatStr(d string, ss ...[][]string) string {
-	if d == "" {
-		// 4 个空格
-		d = "   "
-	}
-	bit := d[0:1]
-
-	// 或者最大长度
-	maxLen := 0
-	for _, sg := range ss {
-		for _, s := range sg {
-			kLen := len(s[0])
-			if kLen > maxLen {
-				maxLen = kLen
-			}
-		}
-	}
-
-	maxLen += len(d)
-
-	// 格式化
-	var contents string
-	for _, sg := range ss {
-		for _, s := range sg {
-			ss1 := s[0] + strings.Repeat(bit, maxLen-len(s[0])) + s[1] + "\n"
-			contents += ss1
-		}
-	}
-
-	return contents
-}
-
 /*
 The `k-v` data format to beautiful str.
 	FormatKv(kv map[string]interface{}, pref string)				 provide pref param form FormatKv.
