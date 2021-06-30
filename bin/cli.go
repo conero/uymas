@@ -17,6 +17,10 @@ const (
 	actionRunConstruct = "Construct"
 )
 
+const (
+	scriptOption = "file,f" // --file,-f <script>
+)
+
 // the cli application
 type CLI struct {
 	cmds map[string]interface{} // the register of commands.
@@ -31,7 +35,8 @@ type CLI struct {
 	injectionData        map[string]interface{} //reject data from outside like chan control
 
 	//external fields
-	UnLoadDataSyntax bool //not support load data syntax, like json/url.
+	UnLoadDataSyntax   bool //not support load data syntax, like json/url.
+	UnLoadScriptSyntax bool // disable allow load script like shell syntax.
 }
 
 // the command of the cli application.
@@ -396,9 +401,15 @@ func (cli *CLI) router(cc *CliCmd) {
 // the hook before call the func
 func (cli *CLI) hookBeforeCall(cc *CliCmd) {
 	cli.loadDataSyntax(cc)
+	cli.loadScriptSyntax(cc)
 }
 
-// the do load data by setting syntax
+// let program exit by unconventionally
+func (cli *CLI) hookInterruptExit() {
+	os.Exit(0)
+}
+
+// to do load data by setting syntax
 func (cli *CLI) loadDataSyntax(cc *CliCmd) {
 	raw := cc.DataRaw
 	if !cli.UnLoadDataSyntax && len(raw) > 0 {
@@ -440,6 +451,29 @@ func (cli *CLI) loadDataSyntax(cc *CliCmd) {
 				}
 			}
 		}
+	}
+}
+
+// to checkout if load script file
+func (cli *CLI) loadScriptSyntax(cc *CliCmd) {
+	if cli.UnLoadScriptSyntax {
+		return
+	}
+	scriptFile := cc.ArgRaw(strings.Split(scriptOption, ",")...)
+	if scriptFile != "" && cc.Command == "" {
+		lines := parser.NewScriptFile(scriptFile)
+		if len(lines) > 0 {
+			for _, line := range lines {
+				for _, command := range parser.ParseLine(line) {
+					if len(command) > 0 {
+						cli.Run(command...)
+					}
+				}
+			}
+		} else {
+			panic("script is empty or load fail.")
+		}
+		cli.hookInterruptExit()
 	}
 }
 
