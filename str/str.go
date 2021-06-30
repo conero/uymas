@@ -270,3 +270,14 @@ func Base64_decode(code string) string {
 	}
 	return string(decode)
 }
+
+// get not empty by many strings.
+func GetNotEmpty(strs ...string) string {
+	for _, str := range strs {
+		str = strings.TrimSpace(str)
+		if str != "" {
+			return str
+		}
+	}
+	return ""
+}

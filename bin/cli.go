@@ -18,7 +18,8 @@ const (
 )
 
 const (
-	scriptOption = "file,f" // --file,-f <script>
+	scriptFileOption = "file,f"   // --file,-f <script-file>
+	scriptOption     = "script,s" // --script,-s <script>
 )
 
 // the cli application
@@ -35,8 +36,10 @@ type CLI struct {
 	injectionData        map[string]interface{} //reject data from outside like chan control
 
 	//external fields
-	UnLoadDataSyntax   bool //not support load data syntax, like json/url.
-	UnLoadScriptSyntax bool // disable allow load script like shell syntax.
+	UnLoadDataSyntax   bool   //not support load data syntax, like json/url.
+	UnLoadScriptSyntax bool   // disable allow load script like shell syntax.
+	ScriptOption       string // default: --script,-s
+	ScriptFileOption   string // default: --file,-f
 }
 
 // the command of the cli application.
@@ -454,12 +457,14 @@ func (cli *CLI) loadDataSyntax(cc *CliCmd) {
 	}
 }
 
-// to checkout if load script file
+// to checkout if load script file, script mutil lines
 func (cli *CLI) loadScriptSyntax(cc *CliCmd) {
 	if cli.UnLoadScriptSyntax {
 		return
 	}
-	scriptFile := cc.ArgRaw(strings.Split(scriptOption, ",")...)
+	// script file
+	fileOpt := str.GetNotEmpty(cli.ScriptFileOption, scriptFileOption)
+	scriptFile := cc.ArgRaw(strings.Split(fileOpt, ",")...)
 	if scriptFile != "" && cc.Command == "" {
 		lines := parser.NewScriptFile(scriptFile)
 		if len(lines) > 0 {
@@ -472,6 +477,18 @@ func (cli *CLI) loadScriptSyntax(cc *CliCmd) {
 			}
 		} else {
 			panic("script is empty or load fail.")
+		}
+		cli.hookInterruptExit()
+	}
+
+	// script muti line s
+	scriptOpt := str.GetNotEmpty(cli.ScriptOption, scriptOption)
+	script := cc.ArgRaw(strings.Split(scriptOpt, ",")...)
+	if script != "" && cc.Command == "" {
+		for _, command := range parser.ParseLine(script) {
+			if len(command) > 0 {
+				cli.Run(command...)
+			}
 		}
 		cli.hookInterruptExit()
 	}
