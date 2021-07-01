@@ -12,8 +12,7 @@ import (
 // @Author:  Joshua Conero
 // @Name:    读写
 
-// 不稳定，不建议使用
-// Fs 系统的文件读写接口尝试
+// FsReaderWriter [Experimental] file read interface
 type FsReaderWriter struct {
 	content  []byte
 	dstFile  string
@@ -61,8 +60,7 @@ func copyBaseDiy(dstFile, srcFile string) (bool, error) {
 	return true, nil
 }
 
-// 文件复制
-// 基于读写
+// Copy copy file by io
 func Copy(dstFile, srcFile string) (bool, error) {
 	// 获取源文件
 	content, err := ioutil.ReadFile(srcFile)
@@ -77,7 +75,7 @@ func Copy(dstFile, srcFile string) (bool, error) {
 	return true, nil
 }
 
-// 全目录文件复制
+// CopyDir copy all file in a dir
 func CopyDir(dst, src string) {
 	dst = StdDir(dst)
 	src = StdDir(src)
@@ -97,8 +95,7 @@ func CopyDir(dst, src string) {
 	}
 }
 
-// 检测目录，不存在则并创建
-// 获取并返回标准目录
+// CheckDir checkout if dir exist, when not exist will try to build it and return the path.
 func CheckDir(dir string) string {
 	dir = StdDir(dir)
 	_, err := os.Open(dir)
@@ -108,7 +105,7 @@ func CheckDir(dir string) string {
 	return dir
 }
 
-// 检测目录是否存在
+// IsDir checkout string path is dir.
 func IsDir(dir string) bool {
 	_, err := os.Open(dir)
 	if err != nil {
@@ -117,7 +114,7 @@ func IsDir(dir string) bool {
 	return true
 }
 
-// 文件/文件等路径是否存在
+// ExistPath checkout the path of file/dir exist.
 func ExistPath(vpath string) bool {
 	_, err := os.Stat(vpath)
 	if err == nil {
@@ -129,7 +126,7 @@ func ExistPath(vpath string) bool {
 	return false
 }
 
-// 获取标准目录
+// StdDir the standard dir format
 func StdDir(d string) string {
 	d = StdPathName(d)
 	if d != "" && "/" != d[len(d)-1:] {
@@ -138,17 +135,17 @@ func StdDir(d string) string {
 	return d
 }
 
-// 获取标准的路径名称
-func StdPathName(vpath string) string {
-	if vpath != "" {
-		vpath = strings.Replace(vpath, "\\", "/", -1)
+// StdPathName the standard path format
+func StdPathName(vPath string) string {
+	if vPath != "" {
+		vPath = strings.Replace(vPath, "\\", "/", -1)
 		reg := regexp.MustCompile("[\\/]{2,}")
-		vpath = reg.ReplaceAllString(vpath, "/")
+		vPath = reg.ReplaceAllString(vPath, "/")
 	}
-	return vpath
+	return vPath
 }
 
-// 文件尾部附加内容
+// Append append content to a file
 func Append(filename, text string) error {
 	f, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
 	if err != nil {
@@ -159,7 +156,7 @@ func Append(filename, text string) error {
 	return err
 }
 
-// 文件覆盖
+// Put rewrite content to file
 func Put(filename, text string) error {
 	f, err := os.OpenFile(filename, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0666)
 	if err != nil {

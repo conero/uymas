@@ -12,15 +12,12 @@ import (
  * @DESCRIPIT   Url 带命名空间的 URL 处理类
 **/
 
-// 仅仅作为命名空间
-
-// URL 相关处理类
+// Url only any the url methods of namespace
 type Url struct {
 }
 
+// AbsHref Get the absolute address of the path: path address path, URL is the top-level path, which can be empty
 // BUG(AbsHref): Url.AbsHref 中解析 "vpath" `test/p1/p2` 与 `./test/p1/p2` 的一致性问题
-
-// 获取路径的绝对地址： path 地址路径， url 为顶级路径可为空
 func (u Url) AbsHref(vpath, vurl string) string {
 	var href string
 

@@ -18,7 +18,7 @@ const (
 	G      = 1000 * M
 )
 
-//get the format of byte size
+// Format get the format of byte size
 func (b Unit) Format() (float64, string) {
 	if b == 0 {
 		return 0, ""

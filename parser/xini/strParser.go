@@ -9,7 +9,7 @@ import (
 // @Author:  Joshua Conero
 // @Name:    字符串解析器
 
-// 字符串解析器
+// StrParser the string parse
 type StrParser interface {
 	Line() int
 	GetData() map[interface{}]interface{}

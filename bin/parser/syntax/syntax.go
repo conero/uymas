@@ -3,6 +3,7 @@ package syntax
 
 import (
 	"fmt"
+	"github.com/conero/uymas/str"
 	"regexp"
 	"strconv"
 	"strings"
@@ -11,6 +12,7 @@ import (
 // NumberOpera @TODO Need to do more optimize.
 // NumberOpera parse string equation for number digital.
 func NumberOpera(equation string) float64 {
+	equation = str.ClearSpace(equation)
 	var result float64
 	// equation contain `()`
 	reg := regexp.MustCompile(`^\([^(]+\)+`)
@@ -33,9 +35,9 @@ func NumberOpera(equation string) float64 {
 	//fmt.Println("  M ", equation)
 	// add , subtract , multiply and divide
 	// check -> [+,-,*,/]
-	multiplyReg := regexp.MustCompile(`[\d.]+[\s-]*[*][\s-]*[\d.]+`)
-	divideReg := regexp.MustCompile(`[\d.]+[\s-]*[/][\s-]*[\d.]+`)
-	subtractReg := regexp.MustCompile(`[\d.]+\s*[+-]\s*[\d.]+`)
+	multiplyReg := regexp.MustCompile(`[\d.]+[-]*[*][-]*[\d.]+`)
+	divideReg := regexp.MustCompile(`[\d.]+[-]*[/][-]*[\d.]+`)
+	subtractReg := regexp.MustCompile(`[\d.]+[+-][\d.]+`)
 	symCheckReg := regexp.MustCompile(`[*/]+`)
 	for {
 		// `*`
@@ -117,7 +119,7 @@ func NumberOpera(equation string) float64 {
 
 // string cover float64
 func stringToF64(vStr string) float64 {
-	vStr = strings.TrimSpace(vStr)
+	vStr = str.ClearSpace(vStr)
 	if v, er := strconv.ParseFloat(vStr, 64); er == nil {
 		return v
 	}

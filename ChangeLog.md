@@ -26,6 +26,9 @@
 
 > 引入数据接收器后二进制编译尺寸大了一倍
 
+- all
+  - optimize) 根据 IDE 提示优化备注信息，并进一步将中文切换为英文。
+
 - **bin**
   - +) `CLI.hookBeforeCall` 新增 hook 机制，实现在调用回调前的请求事件。
   - +) `CliCmd.AppendData` 新增数据合并接口，使 CliCmd 支持外部数据导入。

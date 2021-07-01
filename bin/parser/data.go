@@ -24,19 +24,19 @@ const (
 	RUrl  = "url"
 )
 
-// the data parse tool
+// DataReceiver the data parse tool
 type DataReceiver interface {
 	Name() string
 	Receiver(DataReceiverType, string) DataReceiver
 	GetData() map[string]interface{}
 }
 
-// the url data receiver
+// BaseReceiver the url data receiver
 type BaseReceiver struct {
 	vMap map[string]interface{}
 }
 
-// the data parse grammar, support json/url
+// JsonReceiver the data parse grammar, support json/url
 type JsonReceiver struct {
 	BaseReceiver
 }
@@ -60,12 +60,12 @@ func (c *JsonReceiver) parseJson(vByte []byte) *JsonReceiver {
 	return c
 }
 
-//parse json string
+// JsonStr parse json string
 func (c *JsonReceiver) JsonStr(vStr string) *JsonReceiver {
 	return c.parseJson([]byte(vStr))
 }
 
-// parse json from json-file
+// JsonFile parse json from json-file
 func (c *JsonReceiver) JsonFile(filename string) *JsonReceiver {
 	bys, er := ioutil.ReadFile(filename)
 	if er == nil {
@@ -74,7 +74,7 @@ func (c *JsonReceiver) JsonFile(filename string) *JsonReceiver {
 	return c
 }
 
-// parse json from json-url, only http.get
+// JsonUrl parse json from json-url, only http.get
 func (c *JsonReceiver) JsonUrl(vUrl string) *JsonReceiver {
 	if bys := GetUrlContent(vUrl); bys != nil {
 		return c.parseJson(bys)
@@ -86,7 +86,7 @@ func (c *JsonReceiver) Name() string {
 	return "json"
 }
 
-// receiver data
+// Receiver receiver data
 func (c *JsonReceiver) Receiver(vType DataReceiverType, content string) DataReceiver {
 	switch vType {
 	case ReceiverContent:
@@ -99,12 +99,12 @@ func (c *JsonReceiver) Receiver(vType DataReceiverType, content string) DataRece
 	return c
 }
 
-//get finally data by parse
+// GetData get finally data by parse
 func (c *JsonReceiver) GetData() map[string]interface{} {
 	return c.vMap
 }
 
-// get url content
+// GetUrlContent get url content
 func GetUrlContent(vUrl string) []byte {
 	resp, er := http.Get(vUrl)
 	if er == nil {
@@ -118,17 +118,17 @@ func GetUrlContent(vUrl string) []byte {
 	return nil
 }
 
-// the url data receiver
+// UrlReceiver the url data receiver
 type UrlReceiver struct {
 	BaseReceiver
 }
 
-//parse json string
+// UrlStr parse json string
 func (c *UrlReceiver) UrlStr(vStr string) *UrlReceiver {
 	return c.parse(string(vStr))
 }
 
-// parse json from json-file
+// UrlFile parse json from json-file
 func (c *UrlReceiver) UrlFile(filename string) *UrlReceiver {
 	bys, er := ioutil.ReadFile(filename)
 	if er == nil {
@@ -137,7 +137,7 @@ func (c *UrlReceiver) UrlFile(filename string) *UrlReceiver {
 	return c
 }
 
-// parse json from json-url, only http.get
+// UrlUrl parse json from json-url, only http.get
 func (c *UrlReceiver) UrlUrl(vUrl string) *UrlReceiver {
 	if bys := GetUrlContent(vUrl); bys != nil {
 		return c.parse(string(bys))
@@ -172,7 +172,7 @@ func (c *UrlReceiver) Name() string {
 	return "url"
 }
 
-// receiver data
+// Receiver receiver data
 func (c *UrlReceiver) Receiver(vType DataReceiverType, content string) DataReceiver {
 	switch vType {
 	case ReceiverContent:
@@ -185,12 +185,12 @@ func (c *UrlReceiver) Receiver(vType DataReceiverType, content string) DataRecei
 	return c
 }
 
-//get finally data by parse
+// GetData get finally data by parse
 func (c *UrlReceiver) GetData() map[string]interface{} {
 	return c.vMap
 }
 
-//get DataReceiver by different type.
+// NewDataReceiver get DataReceiver by different type.
 func NewDataReceiver(vType string) (DataReceiver, error) {
 	var dr DataReceiver = nil
 	var er error = nil

@@ -18,7 +18,7 @@ const (
 	baseSecRegPref = "__sec_" // 节前缀
 )
 
-// 基本/默认的解析器，支持标准的 ini 格式
+// BaseParser base and default file parse, support the standard ini configure file
 type BaseParser struct {
 	valid   bool
 	section []string
@@ -28,7 +28,7 @@ type BaseParser struct {
 	errorMsg  string            // 错误信息
 }
 
-// 获取原始值，非解析后的
+// Raw get the raw value that not parse to what the data by itself
 func (p *BaseParser) Raw(key string) string {
 	var raw string
 	if v, has := p.rawKvData[key]; has {
@@ -37,12 +37,10 @@ func (p *BaseParser) Raw(key string) string {
 	return raw
 }
 
-// 获取 ini 文件所有 “节”列表
 func (p *BaseParser) GetAllSection() []string {
 	return p.section
 }
 
-// 获取文件节
 func (p *BaseParser) Section(params ...interface{}) interface{} {
 	var value interface{}
 	var section, key string
@@ -71,30 +69,25 @@ func (p *BaseParser) Section(params ...interface{}) interface{} {
 	return value
 }
 
-// 设置解析器的值
 func (p *BaseParser) Set(key string, value interface{}) Parser {
 	p.GetData()
 	p.Data[key] = value
 	return p
 }
 
-// 删除键值
 func (p *BaseParser) Del(key string) bool {
 	return p.Container.Del(key)
 }
 
-// 函数式值获取
-func (p *BaseParser) GetFunc(key string, regFn func() interface{}) Parser {
-	p.Container.GetFunc(key, regFn)
+func (p *BaseParser) SetFunc(key string, regFn func() interface{}) Parser {
+	p.Container.SetFunc(key, regFn)
 	return p
 }
 
-// 判断解析器是否合法
 func (p *BaseParser) IsValid() bool {
 	return p.valid
 }
 
-// 打开文件并解析文件
 func (p *BaseParser) OpenFile(filename string) Parser {
 	reader := &baseFileParse{}
 	reader.read(filename)
@@ -109,18 +102,15 @@ func (p *BaseParser) OpenFile(filename string) Parser {
 	return p
 }
 
-// 解析字符串为参数
 func (p *BaseParser) ReadStr(content string) Parser {
 	return p
 }
 
-// 保存 ini 的值为文件
 func (p *BaseParser) Save() bool {
 	filename := p.filename
 	return p.SaveAsFile(filename)
 }
 
-// 保存 ini 为文件
 func (p *BaseParser) SaveAsFile(filename string) bool {
 	successMk := true
 	// 简单处理=字符串类型
@@ -149,51 +139,44 @@ func (p *BaseParser) SaveAsFile(filename string) bool {
 
 //---------------------------- 来自 Container 对象的方法重写 -------------------------
 
-// 只获取
 func (p *BaseParser) Get(key string) (bool, interface{}) {
 	return p.Container.Get(key)
 }
 
-// 带默认值得值获取
 func (p *BaseParser) GetDef(key string, def interface{}) interface{} {
 	return p.Container.GetDef(key, def)
 }
 
-// 带默认值得值获取
 func (p *BaseParser) HasKey(key string) bool {
 	return p.Container.HasKey(key)
 }
 
-// 错误错误信息
+// ErrorMsg get the last error message
 func (p *BaseParser) ErrorMsg() string {
 	return p.errorMsg
 }
 
-// 当前项目获取驱动名称
+// Driver the current reader driver type
 func (p BaseParser) Driver() string {
 	return SupportNameIni
 }
 
 // =>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>(BaseStrParse)>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 
-// baseStrParse
-// 基本字符串解析器
+// BaseStrParse base string to parse using ini syntax
 type BaseStrParse struct {
 	data map[interface{}]interface{}
 	line int
 }
 
-// 字符串行数
 func (p *BaseStrParse) Line() int {
 	return p.line
 }
 
-// 获取所有数据
 func (p *BaseStrParse) GetData() map[interface{}]interface{} {
 	return p.data
 }
 
-// 加载字符串参数
 func (p *BaseStrParse) LoadContent(content string) StrParser {
 	p.data = map[interface{}]interface{}{}
 	lineCtt := 0

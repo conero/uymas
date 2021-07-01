@@ -9,7 +9,7 @@ import (
 // @Author:  Joshua Conero
 // @Name:    文件解析器
 
-// 文件解析器
+// FileParser File parser
 type FileParser interface {
 	Line() int // 获取总行数
 	GetData() map[interface{}]interface{}
@@ -104,12 +104,12 @@ func (p *baseFileParse) read(filename string) *baseFileParse {
 	return p
 }
 
-// 获取文件的行数
+// Line get the file line count
 func (p *baseFileParse) Line() int {
 	return p.line
 }
 
-// 获取系统的值
+// GetData get all data by parse file.
 func (p *baseFileParse) GetData() map[interface{}]interface{} {
 	return p.data
 }

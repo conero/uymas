@@ -8,13 +8,13 @@ import (
 	"strings"
 )
 
-//Escape symbol
+// Transferred Escape symbol
 var Transferred map[string]string = map[string]string{
 	`\'`: "_Sg_.Qmark_", // Single quotation mark
 	`\"`: "_Db_.Qmark_", // Double quotation marks
 }
 
-//cli command 解析器
+// NewParser cli command 解析器
 //解析规则：
 //		单行以“;"分割
 //		多行以“行\n分割"分割
@@ -52,7 +52,7 @@ func NewParser(script string) [][]string {
 	return cmds
 }
 
-// parse the script file, the syntax like shell.
+// NewScriptFile parse the script file, the syntax like shell.
 //		"#"   comment line
 func NewScriptFile(filename string) []string {
 	var cmds []string
@@ -83,7 +83,7 @@ func NewScriptFile(filename string) []string {
 	return cmds
 }
 
-// parse shell line syntax to option
+// ParseLine parse shell line syntax to option
 func ParseLine(line string) [][]string {
 	var args [][]string
 	line = strings.TrimSpace(line)

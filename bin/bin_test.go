@@ -9,20 +9,6 @@ import (
 // @Author:  Joshua Conero
 // @Name:    bin 测试输出
 
-func TestFormatStr(t *testing.T) {
-	// 用于输出格式
-	// 实际测试时将会忽略信息
-	t.Skip()
-
-	s := FormatStr("   ", [][]string{
-		[]string{"c", "usage the \"c\""},
-		[]string{"mmm", "usage the \"mm\""},
-		[]string{"g", "usage the \"g\""},
-		[]string{"wwwwww", "usage the \"wwwwww\""},
-	})
-	fmt.Println(s)
-}
-
 func TestFormatTable(t *testing.T) {
 	// 用于输出格式
 	// 实际测试时将会忽略信息

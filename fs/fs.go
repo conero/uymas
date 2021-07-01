@@ -6,7 +6,7 @@ import (
 	"runtime"
 )
 
-// get memory stats range callback
+// GetMemStatsRange get memory stats range callback
 func GetMemStatsRange() func() (runtime.MemStats, runtime.MemStats) {
 	var mem runtime.MemStats
 	runtime.ReadMemStats(&mem)
@@ -17,11 +17,11 @@ func GetMemStatsRange() func() (runtime.MemStats, runtime.MemStats) {
 	}
 }
 
-//memory usage
+// MemUsage memory usage
 type MemUsage struct {
 }
 
-//get system memory range sub bytes
+// GetSysMemSub get system memory range sub bytes
 func (m *MemUsage) GetSysMemSub() func() number.BitSize {
 	mRangeCall := GetMemStatsRange()
 	return func() number.BitSize {

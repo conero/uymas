@@ -12,8 +12,7 @@ import (
 // @Author:  Joshua Conero
 // @Name:    工具栏
 
-// 数组中是否存在
-// 不存在返回 -1
+// InQue exist value exist in array, if not exists will return -1
 func InQue(val interface{}, que []interface{}) int {
 	idx := -1
 	if que != nil {
@@ -27,7 +26,7 @@ func InQue(val interface{}, que []interface{}) int {
 	return idx
 }
 
-//Check keys if exist in Array Or Slice.
+// InQueAny Check keys if exist in Array Or Slice.
 func InQueAny(que interface{}, keys ...interface{}) int {
 	idx := -1
 
@@ -53,7 +52,7 @@ func InQueAny(que interface{}, keys ...interface{}) int {
 	return idx
 }
 
-// Get the program spend time for any format.
+// SpendTimeDiff Get the program spend time for any format.
 func SpendTimeDiff() func() time.Duration {
 	now := time.Now()
 	return func() time.Duration {
@@ -61,7 +60,7 @@ func SpendTimeDiff() func() time.Duration {
 	}
 }
 
-//字符串方法处理float等长数据 规定位数
+// Round String method processing float equal length data specified digits
 func Round(num float64, b int) float64 {
 	if b == 0 {
 		return float64(int(num))
@@ -76,17 +75,17 @@ func Round(num float64, b int) float64 {
 	return num
 }
 
-// 数据进制转换
+// DecT36 Data conversion
 func DecT36(num int) string {
 	return (&Decimal{num}).T36()
 }
 
-// 数据进制转换
+// DecT62 Data conversion
 func DecT62(num int) string {
 	return (&Decimal{num}).T62()
 }
 
-//null value handler to default.
+// NullDefault null value handler to default.
 func NullDefault(value, def interface{}) interface{} {
 	if ValueNull(value) {
 		return def
@@ -94,7 +93,7 @@ func NullDefault(value, def interface{}) interface{} {
 	return value
 }
 
-//to find if is null
+// ValueNull to find if is null
 func ValueNull(value interface{}) bool {
 	if nil == value {
 		return true
@@ -103,7 +102,7 @@ func ValueNull(value interface{}) bool {
 	return v.IsZero()
 }
 
-// convert Struct field to by Map
+// StructToMap convert Struct field to by Map
 func StructToMap(value interface{}) map[string]interface{} {
 	rv := reflect.ValueOf(value)
 	if rv.Kind() == reflect.Struct {
@@ -121,7 +120,7 @@ func StructToMap(value interface{}) map[string]interface{} {
 	return nil
 }
 
-// convert Struct field to by Map and key is Lower style.
+// StructToMapLStyle convert Struct field to by Map and key is Lower style.
 func StructToMapLStyle(value interface{}) map[string]interface{} {
 	rv := reflect.ValueOf(value)
 	if rv.Kind() == reflect.Struct {

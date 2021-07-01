@@ -13,11 +13,9 @@ import (
 	"strings"
 )
 
-/*
-The `k-v` data format to beautiful str.
-	FormatKv(kv map[string]interface{}, pref string)				 provide pref param form FormatKv.
-	FormatKv(kv map[string]interface{}, pref string, md string)	     provide pref and middle param form FormatK.
-*/
+// FormatKv The `k-v` data format to beautiful str.
+//FormatKv(kv map[string]interface{}, pref string)				 provide pref param form FormatKv.
+//FormatKv(kv map[string]interface{}, pref string, md string)	     provide pref and middle param form FormatK.
 func FormatKv(kv interface{}, params ...string) string {
 	var vf = reflect.ValueOf(kv)
 	if vf.Kind() != reflect.Map {
@@ -61,11 +59,9 @@ func FormatKv(kv interface{}, params ...string) string {
 	return s
 }
 
-/*
-The `k-v` data format to beautiful str.
-	FormatKvSort(kv map[string]interface{}, pref string)				 provide pref param form FormatKv.
-	FormatKvSort(kv map[string]interface{}, pref string, md string)	     provide pref and middle param form FormatK.
-*/
+// FormatKvSort The `k-v` data format to beautiful str.
+//FormatKvSort(kv map[string]interface{}, pref string)				 provide pref param form FormatKv.
+//FormatKvSort(kv map[string]interface{}, pref string, md string)	     provide pref and middle param form FormatK.
 func FormatKvSort(kv interface{}, params ...string) string {
 	var vf = reflect.ValueOf(kv)
 	if vf.Kind() != reflect.Map {
@@ -112,9 +108,8 @@ func FormatKvSort(kv interface{}, params ...string) string {
 	return s
 }
 
-// 格式化数组字符
-// 用于命令行输出
-// prefs 为 "" 时默认以数组索引开头；否则默给定的输出
+// FormatQue format the string array, using for cli output pretty.
+// where prefs is empty default use the array index
 func FormatQue(que interface{}, prefs ...string) string {
 	pref := ""  // 开头符号
 	dter := " " // 空格
@@ -147,10 +142,9 @@ func FormatQue(que interface{}, prefs ...string) string {
 	return s
 }
 
-// Bug(FormatQue): chinese text cannot alignment
-//
-// Table format output by slice:
+// FormatTable Table format output by slice:
 // 	(data, bool) if is use the idx
+// Bug(FormatQue): chinese text cannot alignment
 func FormatTable(data [][]interface{}, args ...interface{}) string {
 	useIdxMk := true
 	if args != nil {

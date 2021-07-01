@@ -7,7 +7,7 @@ import (
 	"runtime"
 )
 
-//@experimental it's a try
+// Clear @experimental it's a try
 //clear the cli app
 func Clear() error {
 	osName := runtime.GOOS

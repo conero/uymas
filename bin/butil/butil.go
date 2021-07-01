@@ -1,4 +1,4 @@
-// bin util package
+// Package butil bin util package
 // will not run the init(), but bin will
 package butil
 
@@ -14,7 +14,7 @@ var (
 	cacheBaseDir string
 )
 
-//get the root base Dir
+// GetBasedir get the root base Dir
 func GetBasedir() string {
 	if cacheBaseDir != "" {
 		return cacheBaseDir
@@ -26,12 +26,12 @@ func GetBasedir() string {
 	return rwd
 }
 
-//the path dir by application same location.
+// GetPathDir the path dir by application same location.
 func GetPathDir(vPath string) string {
 	return fmt.Sprintf("%v%v", GetBasedir(), vPath)
 }
 
-//make the string to bin/Args, it's used in interactive cli
+// StringToArgs make the string to bin/Args, it's used in interactive cli
 func StringToArgs(str string) []string {
 	args := parser.ParseLine(str)
 	if len(args) > 0 {
@@ -40,7 +40,7 @@ func StringToArgs(str string) []string {
 	return nil
 }
 
-//string line parse multi line, support ";" split.
+// StringToMultiArgs string line parse multi line, support ";" split.
 func StringToMultiArgs(str string) [][]string {
 	return parser.ParseLine(str)
 }

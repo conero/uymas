@@ -28,4 +28,12 @@ func TestNumberOpera(t *testing.T) {
 	if fmt.Sprintf("%.6f", res) != fmt.Sprintf("%.6f", refRes) {
 		t.Fatalf("eqal [%v] -> %v != %v", eqal, res, refRes)
 	}
+
+	// Case 3
+	eqal = " 365 * ( 1921 - 2021 ) "
+	refRes = -36500
+	res = NumberOpera(eqal)
+	if fmt.Sprintf("%.6f", res) != fmt.Sprintf("%.6f", refRes) {
+		t.Fatalf("eqal [%v] -> %v != %v", eqal, res, refRes)
+	}
 }

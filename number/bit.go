@@ -5,7 +5,7 @@ import (
 	"math"
 )
 
-//ByteSize is a example like `time.Duration`
+// BitSize is a example like `time.Duration`
 // The Bytes unit for resource file.
 type BitSize int64
 
@@ -44,7 +44,7 @@ const (
 	//YiB = 1024 * ZiB  //yobibyte
 )
 
-//get the format of byte size
+// Format get the format of byte size
 func (b BitSize) Format() (float64, string) {
 	if b == 0 {
 		return 0, "bit"
@@ -67,7 +67,7 @@ func (b BitSize) Format() (float64, string) {
 	return float64(b) / math.Pow(1000, i), sizes[int(i)]
 }
 
-//get the format of byte size
+// Format2 get the format of byte size
 func (b BitSize) Format2() (float64, string) {
 	if b == 0 {
 		return 0, "bit"
@@ -147,7 +147,7 @@ func (b BitSize) String() string {
 	return fmt.Sprintf("%.4f %v", v, unit)
 }
 
-//get the bit size by bytes
+// Bytes get the bit size by bytes
 func Bytes(bytes int64) BitSize {
 	return BitSize(bytes) * Byte
 }

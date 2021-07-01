@@ -22,7 +22,7 @@ const (
 	scriptOption     = "script,s" // --script,-s <script>
 )
 
-// the cli application
+// CLI the cli application
 type CLI struct {
 	cmds map[string]interface{} // the register of commands.
 
@@ -42,7 +42,7 @@ type CLI struct {
 	ScriptFileOption   string // default: --file,-f
 }
 
-// the command of the cli application.
+// CliCmd the command of the cli application.
 type CliCmd struct {
 	Data       map[string]interface{} // the data from the `DataRaw` by parse for type
 	DataRaw    map[string]string      // the cli application apply the data
@@ -54,12 +54,12 @@ type CliCmd struct {
 	cmdType    int //the command type enumeration
 }
 
-// the cli app.
+// CliApp the cli app.
 type CliApp struct {
 	Cc *CliCmd
 }
 
-// the interface of CliApp
+// CliAppInterface the interface of CliApp
 type CliAppInterface interface {
 	Construct()
 }
@@ -70,7 +70,7 @@ type CmdOptions struct {
 	Describe string
 }
 
-//define the struct command
+// Cmd define the struct command
 type Cmd struct {
 	Command  string
 	Alias    interface{}           //string, []string. the alias of the command
@@ -79,7 +79,7 @@ type Cmd struct {
 	Options  map[string]CmdOptions // the command option
 }
 
-// the construct of `CLI`
+// NewCLI the construct of `CLI`
 func NewCLI() *CLI {
 	cli := &CLI{
 		cmds:     map[string]interface{}{},
@@ -89,7 +89,7 @@ func NewCLI() *CLI {
 	return cli
 }
 
-// the construct of `CliCmd`
+// NewCliCmd the construct of `CliCmd`
 func NewCliCmd(args ...string) *CliCmd {
 	c := &CliCmd{
 		Raw:     args,
@@ -102,13 +102,13 @@ func NewCliCmd(args ...string) *CliCmd {
 	return c
 }
 
-//@todo notice: `--test-string="Joshua 存在空格的字符串 Conero"` 解析失败
-// construction of `CliCmd` by string
+// NewCliCmdByString construction of `CliCmd` by string
+//  @todo notice: `--test-string="Joshua 存在空格的字符串 Conero"` 解析失败
 func NewCliCmdByString(ss string) *CliCmd {
 	return NewCliCmd(butil.StringToArgs(ss)...)
 }
 
-//get the list cmd of application
+// GetCmdList get the list cmd of application
 func (cli *CLI) GetCmdList() []string {
 	var list []string
 	if cli.cmds != nil {
@@ -131,7 +131,7 @@ func (cli *CLI) GetCmdList() []string {
 	return list
 }
 
-//register functional command, the format like
+// RegisterFunc register functional command, the format like
 //  `RegisterFunc(todo func(cc *CliCmd), cmd string)` or `RegisterFunc(todo func(), cmd, alias string)`
 func (cli *CLI) RegisterFunc(todo func(cc *CliCmd), cmds ...string) *CLI {
 	if len(cmds) > 0 {
@@ -180,7 +180,7 @@ func (cli *CLI) Describe(desc string) bool {
 	return false
 }
 
-// support the `cmd, alias` param.
+// GetDescribe support the `cmd, alias` param.
 func (cli *CLI) GetDescribe(cmd string) string {
 	if strings.Index(cmd, ",") > -1 {
 		que := strings.Split(cmd, ",")
@@ -194,7 +194,7 @@ func (cli *CLI) GetDescribe(cmd string) string {
 	return fmt.Sprintf("the command %v", cmd)
 }
 
-//register by command struct data
+// RegisterCommand register by command struct data
 func (cli *CLI) RegisterCommand(c Cmd) *CLI {
 	if c.Command != "" {
 		cli.commands[c.Command] = c
@@ -214,7 +214,7 @@ func (cli *CLI) RegisterCommand(c Cmd) *CLI {
 	return cli
 }
 
-//register the struct app, the format same as RegisterFunc. cmds any be `cmd string` or `cmd, alias string`
+// RegisterApp register the struct app, the format same as RegisterFunc. cmds any be `cmd string` or `cmd, alias string`
 func (cli *CLI) RegisterApp(ap interface{}, cmds ...string) *CLI {
 	if cmds != nil && len(cmds) > 0 {
 		cmd := cmds[0]
@@ -226,7 +226,7 @@ func (cli *CLI) RegisterApp(ap interface{}, cmds ...string) *CLI {
 	return cli
 }
 
-//Register many apps once.
+// RegisterApps Register many apps once.
 func (cli *CLI) RegisterApps(aps map[string]interface{}) *CLI {
 	for c, ap := range aps {
 		cli.RegisterApp(ap, c)
@@ -234,21 +234,21 @@ func (cli *CLI) RegisterApps(aps map[string]interface{}) *CLI {
 	return cli
 }
 
-// when the cmd is empty then callback the function, action only be
+// RegisterEmpty when the cmd is empty then callback the function, action only be
 //   1. function `func(cc *CliCmd)`/`func()` or struct.
 func (cli *CLI) RegisterEmpty(action interface{}) *CLI {
 	cli.actionEmptyRegister = action
 	return cli
 }
 
-// when command input not handler will callback the register, the format like:
+// RegisterUnfind when command input not handler will callback the register, the format like:
 //   1. function `func(cmd string, cc *CliCmd)`/`func(cmd string)`/`func(cc *CliCmd)`
 func (cli *CLI) RegisterUnfind(action interface{}) *CLI {
 	cli.actionUnfindRegister = action
 	return cli
 }
 
-//the run the application
+// Run the run the application
 func (cli *CLI) Run(args ...string) {
 	if args == nil {
 		// if the args is empty then use the `os.Args`
@@ -263,13 +263,13 @@ func (cli *CLI) Run(args ...string) {
 	cli.router(cmd)
 }
 
-//call the application cmd
+// CallCmd call the application cmd
 func (cli *CLI) CallCmd(cmd string) {
 	cm := NewCliCmd(cmd)
 	cli.router(cm)
 }
 
-//test cmd exist in application
+// CmdExist test cmd exist in application
 func (cli *CLI) CmdExist(cmds ...string) bool {
 	cmdExist := false
 	for _, cmd := range cmds {
@@ -481,7 +481,7 @@ func (cli *CLI) loadScriptSyntax(cc *CliCmd) {
 		cli.hookInterruptExit()
 	}
 
-	// script muti line s
+	// script multi line string
 	scriptOpt := str.GetNotEmpty(cli.ScriptOption, scriptOption)
 	script := cc.ArgRaw(strings.Split(scriptOpt, ",")...)
 	if script != "" && cc.Command == "" {
@@ -530,7 +530,7 @@ func (cli *CLI) findRegisterValueByCommand(c string) interface{} {
 	return value
 }
 
-//inject for data from outside.
+// Inject inject for data from outside.
 func (cli *CLI) Inject(key string, value interface{}) *CLI {
 	if cli.injectionData == nil {
 		cli.injectionData = map[string]interface{}{}
@@ -539,7 +539,7 @@ func (cli *CLI) Inject(key string, value interface{}) *CLI {
 	return cli
 }
 
-//get Injection data
+// GetInjection get Injection data
 func (cli *CLI) GetInjection(key string) interface{} {
 	if cli.injectionData == nil {
 		return nil
@@ -551,17 +551,7 @@ func (cli *CLI) GetInjection(key string) interface{} {
 	return nil
 }
 
-/*****  methods of the `CliCmd` ***/
-// 检测属性是否存在
-func (app *CliCmd) HasSetting(set string) bool {
-	has := false
-	if idx := str.InQue(set, app.Setting); idx > -1 {
-		has = true
-	}
-	return has
-}
-
-// 检测设置是否存在，支持多个
+// CheckSetting to checkout if the set exist in `CliCmd` sets and support multi.
 func (app *CliCmd) CheckSetting(sets ...string) bool {
 	has := false
 	for _, set := range sets {
@@ -573,7 +563,7 @@ func (app *CliCmd) CheckSetting(sets ...string) bool {
 	return has
 }
 
-//检测必须要的参数值
+// CheckMustKey check the data key must in the sets and support multi
 func (app *CliCmd) CheckMustKey(keys ...string) bool {
 	check := true
 	for _, k := range keys {
@@ -585,29 +575,29 @@ func (app *CliCmd) CheckMustKey(keys ...string) bool {
 	return check
 }
 
-// 获取当的工作目录
+// Cwd get the application current word dir.
 func (app *CliCmd) Cwd() string {
 	return butil.GetBasedir()
 }
 
-// 队列右邻值
+// QueueNext get next key from order left to right
 func (app *CliCmd) QueueNext(key string) string {
 	idx := -1
 	qLen := len(app.Raw)
-	var vaule string
+	var value string
 	for i := 0; i < qLen; i++ {
 		if idx == i {
-			vaule = app.Raw[i]
+			value = app.Raw[i]
 			break
 		}
 		if key == app.Raw[i] {
 			idx = i + 1
 		}
 	}
-	return vaule
+	return value
 }
 
-// Get key values from multiple key values
+// Next Get key values from multiple key values
 func (app *CliCmd) Next(keys ...string) string {
 	var value string
 	var vLen = len(keys)
@@ -624,7 +614,7 @@ func (app *CliCmd) Next(keys ...string) string {
 	return value
 }
 
-// get raw args data, because some args has alias list.
+// ArgRaw get raw args data, because some args has alias list.
 func (app *CliCmd) ArgRaw(keys ...string) string {
 	var value string
 	for _, key := range keys {
@@ -637,7 +627,7 @@ func (app *CliCmd) ArgRaw(keys ...string) string {
 	return value
 }
 
-//get args data see as int
+// ArgInt get args data see as int
 func (app *CliCmd) ArgInt(keys ...string) int {
 	value := app.ArgRaw(keys...)
 	if "" == value {
@@ -649,7 +639,7 @@ func (app *CliCmd) ArgInt(keys ...string) int {
 	return 0
 }
 
-// get raw arg has default
+// ArgRawDefault get raw arg has default
 func (app *CliCmd) ArgRawDefault(key, def string) string {
 	var value = def
 	if v, b := app.DataRaw[key]; b {
@@ -658,7 +648,7 @@ func (app *CliCmd) ArgRawDefault(key, def string) string {
 	return value
 }
 
-// get arg after parsed the raw data
+// Arg get arg after parsed the raw data
 func (app *CliCmd) Arg(keys ...string) interface{} {
 	var value interface{} = nil
 	for _, key := range keys {
@@ -670,7 +660,7 @@ func (app *CliCmd) Arg(keys ...string) interface{} {
 	return value
 }
 
-// can default value to get the arg
+// ArgDefault can default value to get the arg
 func (app *CliCmd) ArgDefault(key string, def interface{}) interface{} {
 	var value = def
 	if v, b := app.Data[key]; b {
@@ -679,12 +669,12 @@ func (app *CliCmd) ArgDefault(key string, def interface{}) interface{} {
 	return value
 }
 
-//get the raw line input.
+// ArgRawLine get the raw line input.
 func (app *CliCmd) ArgRawLine() string {
 	return strings.Join(app.Raw, " ")
 }
 
-//call cmd
+// CallCmd call cmd
 func (app *CliCmd) CallCmd(cmd string) {
 	context := app.context
 	if context.CmdExist(cmd) && app.Command != cmd {
@@ -693,7 +683,7 @@ func (app *CliCmd) CallCmd(cmd string) {
 	}
 }
 
-// get the context of `CLI`, in case `AppCmd` not `FunctionCmd`
+// Context get the context of `CLI`, in case `AppCmd` not `FunctionCmd`
 func (app *CliCmd) Context() CLI {
 	return app.context
 }
@@ -702,7 +692,7 @@ func (app *CliCmd) CmdType() int {
 	return app.cmdType
 }
 
-// append the Data
+// AppendData append the Data
 func (app *CliCmd) AppendData(vMap map[string]interface{}) *CliCmd {
 	if len(vMap) > 0 {
 		if app.Data == nil {
@@ -834,13 +824,11 @@ func isVaildCmd(c string) bool {
 	return true
 }
 
-/*
-clear out the raw input string like:
-	`"string"`		=> `string`
-	`"'string'"`	=> `'string'`
-	`'string'`		=> `string`
-	`'"string"'`	=> `"string"`
-*/
+// CleanoutString clear out the raw input string like:
+//	`"string"`		=> `string`
+//	`"'string'"`	=> `'string'`
+//	`'string'`		=> `string`
+//	`'"string"'`	=> `"string"`
 func CleanoutString(ss string) string {
 	ssLen := len(ss)
 	first, last := ss[0:1], ss[ssLen-1:]
@@ -853,7 +841,7 @@ func CleanoutString(ss string) string {
 	return ss
 }
 
-//parse the command value to really type by format.
+// ParseValueByStr parse the command value to really type by format.
 func ParseValueByStr(ss string) interface{} {
 	ss = strings.TrimSpace(ss)
 	ssLow := strings.ToLower(ss)

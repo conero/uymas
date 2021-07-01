@@ -1,4 +1,4 @@
-// net util
+// Package netutil net util
 package netutil
 
 import (
@@ -11,12 +11,11 @@ import (
 	"path/filepath"
 )
 
-// http 助手
+// HttpUtil http util tool
 type HttpUtil struct {
 }
 
-//post 文件以及键值
-//支持多文件，以及多参数
+// PostForm post file and form data. support multi files or data
 func (hu HttpUtil) PostForm(rUrl string, files map[string]string, data map[string]string) (*http.Response, error) {
 	buf := &bytes.Buffer{}
 	bufWrite := multipart.NewWriter(buf)
@@ -66,7 +65,7 @@ func (hu HttpUtil) PostForm(rUrl string, files map[string]string, data map[strin
 	return res, er
 }
 
-// postForm 直接返回字符串内容
+// PostFormString postForm post add the directly by string content
 func (hu HttpUtil) PostFormString(rUrl string, files map[string]string, data map[string]string) string {
 	res, er := hu.PostForm(rUrl, files, data)
 
