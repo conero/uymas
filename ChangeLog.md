@@ -33,23 +33,26 @@
   - +) `CLI.hookBeforeCall` 新增 hook 机制，实现在调用回调前的请求事件。
   - +) `CliCmd.AppendData` 新增数据合并接口，使 CliCmd 支持外部数据导入。
   - +) `CLI.UnLoadScriptSyntax` 支持可选的（`--file,-f`） 语言集合脚本文件，（`--script,-s`）语言文本进行解析。
-  - -) 移除遗弃标注项：`FormatStr`
+  - -) 移除遗弃标注项：`FormatStr`、`CliCmd.HasSetting`
   - **parser**
     - +) `DataReceiver` 新增数据接收器，实现对 json/url等数据格式的解析支持。
     - +) `NewScriptFile` 新增用于解析脚本的函数，初步支持 shell语法。
     - +) `ParseLine` 新增行解析，不再简单的根据空格分割。
     - **syntax**  初步增加语言语法支持，常用
       - +) `NumberOpera` 实现字符串的等式的运算
-  
 - **fs**
   - -) 移除遗弃标注项：`Struct --> ByteSize`
 - **str**
   - -) 移除遗弃标注项：`Func -> UcWords`
+  - -) `str.WriterToContent` 移除实验性的词方法，使用语言支持库。
   - +) `GetNotEmpty` 使用从多个字符串中获取非空字符串
 - **number**
   - -) 移除遗弃标注项：`Struct -> One`
 - **util**
   - -) 移除遗弃标注项：`Func -> Sec、SecCall、SecCallStr`
+- **parse/xini**
+  - change) `GetFunc` -> `SetFunc`
+  - optimize) `Container.HasKey` 扩展支持多个键值检测
 
 
 
