@@ -35,6 +35,8 @@
     - +) `DataReceiver` 新增数据接收器，实现对 json/url等数据格式的解析支持。
     - +) `NewScriptFile` 新增用于解析脚本的函数，初步支持 shell语法。
     - +) `ParseLine` 新增行解析，不再简单的根据空格分割。
+    - **syntax**  初步增加语言语法支持，常用
+      - +) `NumberOpera` 实现字符串的等式的运算
   
 - **fs**
   - -) 移除遗弃标注项：`Struct --> ByteSize`
