@@ -2,7 +2,6 @@ package str
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 )
 
@@ -22,25 +21,6 @@ func compareStr(expect, real string) bool {
 func compareStrFunc(expect func() string, real string) bool {
 	s := expect()
 	return compareStr(s, real)
-}
-
-func TestUcfirst(t *testing.T) {
-	fn := func(s, sT string, args ...string) {
-		if ClearSpace(s) != sT {
-			t.Fatalf("%v VS %v", s, sT)
-		} else if len(args) > 0 {
-			t.Logf("Compare to strings.Title: %v -> %v", args[0], strings.Title(args[0]))
-		}
-	}
-
-	testStr := " i am joshua conero"
-	fn(Ucfirst(testStr), "IAmJoshuaConero", testStr)
-	testStr = " joshuaConero"
-	fn(Ucfirst(testStr), "JoshuaConero", testStr)
-	testStr = " test "
-	fn(Ucfirst(testStr), "Test", testStr)
-	testStr = " tEST "
-	fn(Ucfirst(testStr), "TEST", testStr)
 }
 
 func TestLcfirst(t *testing.T) {

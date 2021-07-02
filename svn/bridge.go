@@ -32,20 +32,21 @@ import (
    </entry>
 </info>
 */
-// repository
+
+// XIRepo repository
 type XIRepo struct {
 	XMLName xml.Name `xml:"repository"`
 	Root    string   `xml:"root"`
 	Uuid    string   `xml:"uuid"`
 }
 
-// wc-info
+// XIWc wc-info
 type XIWc struct {
 	XMLName xml.Name `xml:"wc-info"`
 	Path    string   `xml:"wcroot-abspath"`
 }
 
-// commit
+// XICommit commit
 type XICommit struct {
 	XMLName  xml.Name `xml:"commit"`
 	Author   string   `xml:"author"`
@@ -53,7 +54,7 @@ type XICommit struct {
 	Revision string   `xml:"revision,attr"`
 }
 
-// enter
+// XIEnter enter
 type XIEnter struct {
 	XMLName  xml.Name `xml:"entry"`
 	Path     string   `xml:"path,attr"`
@@ -65,43 +66,40 @@ type XIEnter struct {
 	Commit   XICommit
 }
 
-// info xml 格式
+// XmlInfo info xml format
 type XmlInfo struct {
 	XMLName xml.Name `xml:"info"`
 	Enter   XIEnter
 }
 
-// 地址
+// Url the the repository url
 func (x *XmlInfo) Url() string {
 	return x.Enter.Url
 }
 
-// author
+// Author get author
 func (x *XmlInfo) Author() string {
 	return x.Enter.Commit.Author
 }
 
-// 日期
 func (x *XmlInfo) Date() string {
 	return x.Enter.Commit.Date
 }
 
-// 版本信息
+// Revision get the svn version/revision
 func (x *XmlInfo) Revision() string {
 	return x.Enter.Commit.Revision
 }
 
-// uuid
 func (x *XmlInfo) Uuid() string {
 	return x.Enter.Repo.Uuid
 }
 
-// 与 svn 之间的cli-命令桥
+// Bridge cLI command bridge between SVN and SVN
 type Bridge struct {
 	Path string // svn path
 }
 
-// 获取命令
 func (b *Bridge) GetArgs(args ...string) []string {
 	if b.Path != "" {
 		b.Path = fs.StdDir(b.Path)
@@ -110,7 +108,7 @@ func (b *Bridge) GetArgs(args ...string) []string {
 	return args
 }
 
-// svn info --xml
+// Info svn info --xml
 func (b *Bridge) Info(pArgs ...string) (XmlInfo, error) {
 	args := b.GetArgs("info", "--xml")
 	// 附加参数
@@ -156,13 +154,13 @@ type XLEnter struct {
 	Msg      string   `xml:"msg"`
 }
 
-// log --xml 输出格式
+// XmlLog log --xml output format
 type XmlLog struct {
 	XMLName xml.Name  `xml:"log"`
 	Enter   []XLEnter `xml:"logentry"`
 }
 
-// svn log --xml
+// Log svn log --xml
 func (b *Bridge) Log(pArgs ...string) (XmlLog, error) {
 	args := b.GetArgs("log", "--xml")
 	// 附加参数

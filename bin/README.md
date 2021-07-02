@@ -80,6 +80,30 @@ $ --array {a1,a3,a4,a5}
 
 
 
+#### 特殊数据支持
+
+> 待实现
+
+```shell
+#
+# 解析 json 字符串、支持json字符串、文件或地址
+$ --load-json,--LJ <json-string>
+$ --load-json-file,--LJF <json-filename>
+$ --load-json-url,--LJU <json-url-url>
+
+#
+# url 地址数据形式支持
+$ --load-url,--LU <url-字符串数据>
+$ --load-url-file,--LUF <url-filename>
+$ --load-url-url,--LUU <url-url-url>
+
+#
+# 脚本支持
+$ --script <file-name> 只是脚本解析
+```
+
+
+
 
 
 #### 解析算法实现

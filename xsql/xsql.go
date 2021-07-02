@@ -1,4 +1,4 @@
-//extends for the sql package.
+// Package xsql extends for the sql package.
 //power by <Joshua Conero>(2020)
 package xsql
 
@@ -16,7 +16,6 @@ type Query struct {
 	RowCount int //the count query result lines.
 }
 
-//select
 func (c *Query) Select(query string, args ...interface{}) ([]map[string]interface{}, error) {
 	db := c.DB
 	rows, err := db.Query(query, args...)
@@ -26,7 +25,7 @@ func (c *Query) Select(query string, args ...interface{}) ([]map[string]interfac
 	return c.RowsDick(rows)
 }
 
-//reference link: https://blog.csdn.net/weimingjue/article/details/91042649
+// RowsDick reference link: https://blog.csdn.net/weimingjue/article/details/91042649
 //get the rows dick
 //database map to golang type:
 //		INT    							int64

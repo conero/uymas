@@ -7,9 +7,6 @@ import (
 
 type Unit int64
 
-// Deprecated:  the type `One` will deprecated when `v1.1.0` please use `Unit` replace.
-type One = Unit
-
 // 1k = 1000 thousand/kilo
 // 1M = 1000_000 million
 // 1G = 1000_000_000 billion
@@ -21,7 +18,7 @@ const (
 	G      = 1000 * M
 )
 
-//get the format of byte size
+// Format get the format of byte size
 func (b Unit) Format() (float64, string) {
 	if b == 0 {
 		return 0, ""

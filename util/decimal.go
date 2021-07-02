@@ -24,7 +24,7 @@ type Decimal struct {
 	dec int
 }
 
-// 转化为N进制
+// ToN convert to n-ary
 func (d *Decimal) ToN(base int) string {
 	num := d.dec
 	bits := []int{}
@@ -50,27 +50,27 @@ func (d *Decimal) ToN(base int) string {
 	return value
 }
 
-// 2 进制
+// T2 2 Base system
 func (d *Decimal) T2() string {
 	return d.ToN(N2)
 }
 
-// 8 进制
+// T8 8 Base system
 func (d *Decimal) T8() string {
 	return d.ToN(N8)
 }
 
-// 16 进制
+// T16 16 Base system
 func (d *Decimal) T16() string {
 	return d.ToN(N16)
 }
 
-// 32 进制
+// T32 32 Base system
 func (d *Decimal) T32() string {
 	return d.ToN(N32)
 }
 
-// 36 进制
+// T36 36 Base system
 func (d *Decimal) T36() string {
 	return d.ToN(N36)
 }
@@ -79,7 +79,7 @@ func (d *Decimal) T62() string {
 	return d.ToN(N62)
 }
 
-// 十进制
+// NewDec decimal system
 func NewDec(dec int) *Decimal {
 	return &Decimal{dec}
 }

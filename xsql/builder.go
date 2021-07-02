@@ -12,7 +12,7 @@ const (
 	builderSelect = "SELECT"
 )
 
-//need to do.
+// Builder need to do.
 //the sql builder
 type Builder struct {
 	table        string
@@ -131,13 +131,13 @@ func (c *Builder) Page(page int, orPageSize ...int) *Builder {
 	return c
 }
 
-//call once, than more to reset.
+// GroupBy call once, than more to reset.
 func (c *Builder) GroupBy(groupBys ...string) *Builder {
 	c.condGroupBys = groupBys
 	return c
 }
 
-//call once, than more to reset.
+// OrderBy call once, than more to reset.
 func (c *Builder) OrderBy(orderBys ...string) *Builder {
 	c.condOrderBys = orderBys
 	return c
@@ -246,7 +246,7 @@ func (c *Builder) createSelectSql() {
 	c.vSql = strings.TrimSpace(c.vSql)
 }
 
-//build SQL every time
+// ToSQL build SQL every time
 func (c *Builder) ToSQL() (string, []interface{}) {
 	keyword := c.keyword
 	if keyword == "" {
@@ -266,7 +266,7 @@ func (c *Builder) ToSQL() (string, []interface{}) {
 	return c.vSql, c.binds
 }
 
-//only get SQL where exist sql if not will call SQL builder
+// GetSQL only get SQL where exist sql if not will call SQL builder
 func (c *Builder) GetSQL() (string, []interface{}) {
 	if c.vSql == "" {
 		c.ToSQL()
@@ -274,7 +274,7 @@ func (c *Builder) GetSQL() (string, []interface{}) {
 	return c.vSql, c.binds
 }
 
-//Table(string/string interface)
+// Table Table(string/string interface)
 //Table([]string{name, alias})
 func Table(table interface{}, alias ...string) *Builder {
 	if table == nil {

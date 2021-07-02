@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-//GetHelpEmbed(content string, lang string)
+// GetHelpEmbed GetHelpEmbed(content string, lang string)
 func GetHelpEmbed(content string, args ...string) string {
 	queue := strings.Split(content, "\n")
 	argsLine := ""

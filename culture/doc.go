@@ -1,2 +1,2 @@
-// [pinyin] the chinese pinyin
+// Package culture [pinyin] the chinese pinyin
 package culture

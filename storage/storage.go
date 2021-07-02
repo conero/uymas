@@ -9,13 +9,13 @@ import (
 	"github.com/conero/uymas"
 )
 
-//the any type of the data
+// Any the any type of the data
 type Any interface{}
 
-// the Kv style data
+// Kv the Kv style data
 type Kv map[Any]Any
 
-// the list of table
+// Table the list of table
 type Table []Any
 
 const (
@@ -31,10 +31,10 @@ var (
 	memoryStorageCache *Storage
 )
 
-//the Literal variable. this is value from string
+// Literal the Literal variable. this is value from string
 type Literal string
 
-//the storage of cache
+// Storage the storage of cache
 type Storage struct {
 	namespace string
 	data      Kv

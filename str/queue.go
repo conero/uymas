@@ -6,8 +6,7 @@ import "strings"
 // @Author:  Joshua Conero
 // @Name:    字符互队列
 
-// 字符串对是否存在
-// 不存在返回 -1
+// InQue checkout substring exist in array
 func InQue(s string, que []string) int {
 	idx := -1
 	for i, v := range que {
@@ -19,7 +18,7 @@ func InQue(s string, que []string) int {
 	return idx
 }
 
-// 不区分大小写
+// InQuei checkout substring exist in array that case insensitive
 func InQuei(s string, que []string) int {
 	idx := -1
 	s = strings.ToLower(s)
@@ -32,7 +31,7 @@ func InQuei(s string, que []string) int {
 	return idx
 }
 
-// 删除队列
+// DelQue del queue from array
 func DelQue(que []string, ss ...string) []string {
 	var value []string
 	if que != nil && ss != nil {

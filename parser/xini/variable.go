@@ -12,7 +12,6 @@ const (
 	SupportNameToml = "toml"
 )
 
-// 系统常量
 const (
 	Author      = "Joshua Conero" // author 作者
 	Name        = "conero/ini"
@@ -23,7 +22,7 @@ const (
 	Copyright   = "@Conero"               // copyright 版权
 )
 
-// ini-parse 设置
+// IniParseSettings ini-parse set base
 var IniParseSettings map[string]string = map[string]string{
 	"equal":          "=",                    // 等号符
 	"comment":        "#|;",                  // 注释符号
@@ -50,7 +49,7 @@ var IniParseSettings map[string]string = map[string]string{
 	"reg_mlstring_end": `^[^"'=]*['"\,]+$`, // 多行字符正则结束 支持分隔符
 }
 
-// 转移字符解析
+// TranStrMap transfer character parsing
 var TranStrMap map[string]string = map[string]string{
 	`\,`: "_JC__COMMA", // 逗号转移符
 	`\{`: "_L__BRACE",  // 左大括弧号
@@ -58,8 +57,7 @@ var TranStrMap map[string]string = map[string]string{
 	`\=`: "_JC__EQUAL", // 等于符号转移替代
 }
 
-// 转移字符解析
-// 注释符号
+// TranCommentMap comment character parsing
 var TranCommentMap map[string]string = map[string]string{
 	`\;`: "_JC__COMMIT1",
 	`\#`: "_JC__COMMIT2",

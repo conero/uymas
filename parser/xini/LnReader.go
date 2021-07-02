@@ -10,20 +10,19 @@ import (
 	"os"
 )
 
-// 行阅读器
+// LnReader the lines of file reader
 type LnReader struct {
 	Filename string // 文件名
 	error
 }
 
-// 实例阅读器
 func NewLnRer(filename string) *LnReader {
 	return &LnReader{
 		Filename: filename,
 	}
 }
 
-// 行扫描
+// Scan scan file lines
 func (ln *LnReader) Scan(callback func(line string)) bool {
 	fs, err := os.Open(ln.Filename)
 	if err == nil {

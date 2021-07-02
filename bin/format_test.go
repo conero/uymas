@@ -1,6 +1,7 @@
 package bin
 
 import (
+	"math"
 	"testing"
 )
 
@@ -50,4 +51,46 @@ func TestFormatQue(t *testing.T) {
 
 	//[]int
 	t.Logf("[]int：\n%v", FormatQue([]int{1992, 5, 20210618, 0, 62}))
+}
+
+func TestFormatTable(t *testing.T) {
+	// 用于输出格式
+	// 实际测试时将会忽略信息
+	//t.Skip()
+
+	data := [][]interface{}{
+		[]interface{}{"1", 2, "eree", "dsdsdsd", 8},
+		// TODO [BUG-20181220]中文无效
+		//[]interface{}{"中国", "贵州", "贵阳", "经开", ".."},
+		[]interface{}{"xx", "yyy", "a", "abc", "success"},
+		[]interface{}{"a", "bb", "cccccccc", "f", "Joshua"},
+		[]interface{}{nil, "I-Heart-Mira", 3.4512, true, 210702},
+	}
+	t.Logf("\r\n%v", FormatTable(data))
+	t.Logf("\r\n%v", FormatTable(data, false))
+}
+
+func BenchmarkFormatTable(b *testing.B) {
+	//内存分配的基准测试
+	b.ReportAllocs()
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		//xy = 10*10
+		data := [][]interface{}{
+			[]interface{}{"1", 2, "eree", "dsdsdsd", 8, 1992, false, math.Pi, math.Phi, 1300_000},
+			[]interface{}{"1", 2, "eree", "dsdsdsd", 8, 1992, false, math.Pi, math.Phi, 1300_000},
+			[]interface{}{"1", 2, "eree", "dsdsdsd", 8, 1992, false, math.Pi, math.Phi, 1300_000},
+			[]interface{}{"1", 2, "eree", "dsdsdsd", 8, 1992, false, math.Pi, math.Phi, 1300_000},
+			[]interface{}{"1", 2, "eree", "dsdsdsd", 8, 1992, false, math.Pi, math.Phi, 1300_000},
+			// TODO [BUG-20181220]中文无效
+			//[]interface{}{"中国", "贵州", "贵阳", "经开", ".."},
+			{"xx", "yyy", "a", "abc", "success"},
+			{"a", "bb", "cccccccc", "f", "Joshua"},
+			{nil, "I-Heart-Mira", 3.4512, true, 210702},
+			{nil, "I-Heart-Mira", 3.4512, true, 210702, nil, nil, nil, nil, false},
+			{nil, "I-Heart-Mira", 3.4512, true, 210702, nil, nil, nil, nil, false},
+		}
+		//b.Logf("\r\n%v", FormatTable(data))
+		FormatTable(data)
+	}
 }

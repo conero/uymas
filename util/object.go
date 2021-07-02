@@ -8,7 +8,7 @@ import (
 type Object struct {
 }
 
-//@todo
+// Assign @todo
 //	Base of `reflect` to come true like javascript `Object.Assign`, target should be pointer best.
 //	It can be Multiple, only for `reflect.Map`.
 func (obj Object) Assign(target interface{}, source interface{}) interface{} {
@@ -53,7 +53,7 @@ func (obj Object) Assign(target interface{}, source interface{}) interface{} {
 	return m
 }
 
-//Assign Map/Struct to map
+// AssignMap Assign Map/Struct to map
 func (obj Object) AssignMap(targetMap interface{}, srcMapOrStruct interface{}) {
 	tVal := reflect.ValueOf(targetMap)
 	sVal := reflect.ValueOf(srcMapOrStruct)

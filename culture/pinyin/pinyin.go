@@ -1,4 +1,4 @@
-//the chinese pinyin.
+// Package pinyin the chinese pinyin.
 package pinyin
 
 import (
@@ -49,13 +49,12 @@ var (
 	}
 )
 
-//含声调的拼音
+// Pinyin the pinyin dick creator
 type Pinyin struct {
 	filename string
 	Dicks    map[string]map[string]string
 }
 
-//初始化
 func NewPinyin(filename string) *Pinyin {
 	pyt := &Pinyin{
 		filename: filename,
@@ -95,13 +94,13 @@ func (pyt *Pinyin) loadData() {
 	pyt.Dicks = innerDick
 }
 
-//获取拼音声调
+// GetPyTone get pinyin with tone
 func (pyt *Pinyin) GetPyTone(chinese string) string {
 	chinese = pyt.GetPyToneFunc(chinese, nil)
 	return chinese
 }
 
-//拼音数字标注法
+// GetPyToneNumber get pinyin with tone that replace by number (1-4)
 func (pyt *Pinyin) GetPyToneNumber(chinese string) string {
 	chinese = pyt.GetPyToneFunc(chinese, func(word string) string {
 		for k, m := range ChineseToneMap {
@@ -123,7 +122,7 @@ func (pyt *Pinyin) GetPyToneNumber(chinese string) string {
 	return chinese
 }
 
-//拼音数字标注法
+// GetPyToneAlpha get pinyin without tone
 func (pyt *Pinyin) GetPyToneAlpha(chinese string) string {
 	chinese = pyt.GetPyToneFunc(chinese, func(word string) string {
 		for k, m := range ChineseToneMap {
@@ -144,11 +143,10 @@ func (pyt *Pinyin) GetPyToneAlpha(chinese string) string {
 	return chinese
 }
 
-//获取pinyin tone 字符，待回调
-// call 为 `nil` 是为默认
+// GetPyToneFunc get pinyin with tone by callback Func
 func (pyt *Pinyin) GetPyToneFunc(chinese string, call func(word string) string) string {
 	queue := strings.Split(chinese, "")
-	words := []string{}
+	var words []string
 
 	dicks := pyt.Dicks
 	for _, c := range queue {

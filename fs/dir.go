@@ -15,7 +15,7 @@ type ChildDirData struct {
 	IsDir bool
 }
 
-//the tool to scan the dirs.
+// DirScanner the tool to scan the dirs.
 type DirScanner struct {
 	baseDir      string
 	AllItem      int
@@ -32,7 +32,7 @@ type DirScanner struct {
 	includeExp []string
 }
 
-//exclude exp for dir scan
+// Exclude exclude exp for dir scan
 func (ds *DirScanner) Exclude(excludes ...string) *DirScanner {
 	var newExcludes []string
 	for _, ecld := range excludes {
@@ -48,7 +48,7 @@ func (ds *DirScanner) Exclude(excludes ...string) *DirScanner {
 	return ds
 }
 
-//exclude exp for dir scan
+// Include exclude exp for dir scan
 func (ds *DirScanner) Include(includes ...string) *DirScanner {
 	var newInclude []string
 	for _, icld := range includes {
@@ -64,7 +64,7 @@ func (ds *DirScanner) Include(includes ...string) *DirScanner {
 	return ds
 }
 
-//to star scan the dir.
+// Scan to star scan the dir.
 func (ds *DirScanner) Scan() error {
 	baseDir := ds.baseDir
 	ds.Runtime = time.Duration(0)
