@@ -34,6 +34,7 @@
   - +) `CliCmd.AppendData` 新增数据合并接口，使 CliCmd 支持外部数据导入。
   - +) `CLI.UnLoadScriptSyntax` 支持可选的（`--file,-f`） 语言集合脚本文件，（`--script,-s`）语言文本进行解析。
   - -) 移除遗弃标注项：`FormatStr`、`CliCmd.HasSetting`
+  - optimize) `bin.FormatTable` 使用**reflect**扩展器支持任意2维度数组格式化。
   - **parser**
     - +) `DataReceiver` 新增数据接收器，实现对 json/url等数据格式的解析支持。
     - +) `NewScriptFile` 新增用于解析脚本的函数，初步支持 shell语法。

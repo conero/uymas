@@ -143,9 +143,9 @@ func FormatQue(que interface{}, prefs ...string) string {
 }
 
 // FormatTable Table format output by slice:
-// 	(data, bool) if is use the idx
+// 	(table, bool) if is use the idx, table is 2 dimensional array.
 // Bug(FormatQue): chinese text cannot alignment
-func FormatTable(data [][]interface{}, args ...interface{}) string {
+func FormatTable(table interface{}, args ...interface{}) string {
 	useIdxMk := true
 	if args != nil {
 		if v, isBool := args[0].(bool); isBool {
@@ -153,28 +153,54 @@ func FormatTable(data [][]interface{}, args ...interface{}) string {
 		}
 	}
 
-	// 数据处理
-	data2Str := [][]string{}
-	maxLenQue := []int{}
-	for _, dd := range data {
-		ddStr := []string{}
-		for i, d := range dd {
-			vStr := fmt.Sprintf("%v", d)
-			ddStr = append(ddStr, vStr)
-			ddStrLen := len(vStr)
-			if len(maxLenQue) > i {
-				if maxLenQue[i] < ddStrLen {
-					maxLenQue[i] = ddStrLen
+	rv := reflect.ValueOf(table)
+	var vLen int
+	//Only Support Array/Slice, other output itself.
+	if rv.Kind() == reflect.Array || rv.Kind() == reflect.Slice {
+		vLen = rv.Len()
+	} else {
+		return fmt.Sprintf("%v", table)
+	}
+
+	var data2Str [][]string
+	var maxLenQue []int
+
+	for i := 0; i < vLen; i++ {
+		arr := rv.Index(i).Interface()
+		rvD1 := reflect.ValueOf(arr)
+		//Only Support Array/Slice, other output itself.
+		var ddStr []string
+		var vStr string
+		if rvD1.Kind() == reflect.Array || rvD1.Kind() == reflect.Slice {
+			vLenD1 := rvD1.Len()
+			for j := 0; j < vLenD1; j++ {
+				vD1 := rvD1.Index(j).Interface()
+				if vD1 == nil {
+					vD1 = ""
 				}
-			} else {
-				maxLenQue = append(maxLenQue, ddStrLen)
+				vStr = fmt.Sprintf("%v", vD1)
+				ddStr = append(ddStr, vStr)
+				ddStrLen := len(vStr)
+				if len(maxLenQue) > j {
+					if maxLenQue[j] < ddStrLen {
+						maxLenQue[j] = ddStrLen
+					}
+				} else {
+					maxLenQue = append(maxLenQue, ddStrLen)
+				}
 			}
+		} else {
+			if arr == nil {
+				arr = ""
+			}
+			vStr = fmt.Sprintf("%v", arr)
+			ddStr = append(ddStr, vStr)
 		}
 		data2Str = append(data2Str, ddStr)
 	}
 
 	var s string
-	dCtt := len(data)
+	dCtt := vLen
 	maxLen := number.SumQInt(maxLenQue) + dCtt*2
 	if useIdxMk {
 		dCttLen := len(strconv.Itoa(dCtt) + ".")
