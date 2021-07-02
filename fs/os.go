@@ -12,20 +12,20 @@ import (
 // @Name:    操作系统相关的数据读写
 
 const (
-	V_EnvPath = "path"
+	VEnvPath = "path"
 )
 
-// 获取项目路径
+// EnvPath get os env path list
 func EnvPath() []string {
-	value := []string{}
-	path := os.Getenv(V_EnvPath)
+	var value []string
+	path := os.Getenv(VEnvPath)
 	if path != "" {
 		value = strings.Split(path, ";")
 	}
 	return value
 }
 
-// 设置环境变量
+// AddEnvPath and path to env
 func AddEnvPath(paths ...string) error {
 	refPath := EnvPath()
 	addMk := false
@@ -36,7 +36,7 @@ func AddEnvPath(paths ...string) error {
 		}
 	}
 	if addMk {
-		err := os.Setenv(V_EnvPath, strings.Join(refPath, ";"))
+		err := os.Setenv(VEnvPath, strings.Join(refPath, ";"))
 		// [TIP] 仅仅在当前进程中/实例中有效
 		// fmt.Println(os.Getenv(V_EnvPath))
 		return err
@@ -44,7 +44,7 @@ func AddEnvPath(paths ...string) error {
 	return errors.New("输入为空或者环境变量已经存在")
 }
 
-// 删除环境变量
+// DelEnvPath del the path from env path list.
 func DelEnvPath(paths ...string) error {
 	return nil
 }

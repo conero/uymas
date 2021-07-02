@@ -14,7 +14,7 @@ const (
 	BaseVersion = "1.8.3" // 依赖版本信息
 )
 
-// 获取版本信息
+// Version get the svn version information
 func Version() string {
 	c := exec.Command(CliName, "--version", "--quiet")
 	var out bytes.Buffer
@@ -25,7 +25,7 @@ func Version() string {
 	return out.String()
 }
 
-// 调用命令
+// Call call the system command
 func Call(args ...string) (string, error) {
 	c := exec.Command(CliName, args...)
 	var out bytes.Buffer

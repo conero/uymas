@@ -5,10 +5,10 @@ package number
 // @Author:  Joshua Conero
 // @Name:    数字包
 
-// 集合求和
-// 支持格式： int, int8, int16, int32, int64
-// 支持格式： uint, uint8, uint16, uint32, uint64
-// 支持格式： float32, float64
+// SumQueue the sum value by any number type
+// support type: int, int8, int16, int32, int64
+// support type: uint, uint8, uint16, uint32, uint64
+// support type: float32, float64
 func SumQueue(data []interface{}) interface{} {
 	var a interface{} = nil
 	for _, d := range data {
@@ -84,7 +84,7 @@ func SumQueue(data []interface{}) interface{} {
 	return a
 }
 
-// 集合
+// SumQInt the sum value from int array
 func SumQInt(data []int) int {
 	if data == nil {
 		data = []int{}

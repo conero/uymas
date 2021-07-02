@@ -2,7 +2,7 @@ package number
 
 import "testing"
 
-func TestOne_String(t *testing.T) {
+func TestUnit_String(t *testing.T) {
 	var m = 10 * M
 	t.Log(m)
 
@@ -12,7 +12,7 @@ func TestOne_String(t *testing.T) {
 	var g = 58392 * G
 	t.Log(g)
 
-	var n One
+	var n Unit
 
 	n = 1234
 	t.Log(n)

@@ -5,9 +5,23 @@ import (
 	"math"
 )
 
+// BitSize is a example like `time.Duration`
 // The Bytes unit for resource file.
 type BitSize int64
 
+//1 Bytes = 8Bit					byte
+//1 B 	  = 8Bit					byte			字节
+//1 KB    = 1024 Bytes			    Kilobyte		千字节
+//1 MB	  = 1024 KB				    Megabyte		百万字节		   兆
+//1 GB    = 1024 MB				    Gigabyte		千兆			   吉
+//1 TB	  = 1024 GB				    Terabyte		万亿字节		   太
+//1 PB	  = 1024 TB				    Petabyte		千万亿字节	   拍
+//1 EB	  = 1024 PB				    Exabyte			百亿亿字节	   艾
+//1 ZB	  = 1024 EB				    Zettabyte		十万亿亿字节	   泽
+//1 YB	  = 1024 ZB				    Yottabyte		一亿亿亿字节	   尧
+//1 BB	  = 1024 YB				    Brontobyte
+//1 NB	  = 1024 BB				    NonaByte
+//1 DB	  = 1024 NB				    DoggaByte
 const (
 	Bit  BitSize = 1
 	Byte         = 8 * Bit
@@ -30,7 +44,7 @@ const (
 	//YiB = 1024 * ZiB  //yobibyte
 )
 
-//get the format of byte size
+// Format get the format of byte size
 func (b BitSize) Format() (float64, string) {
 	if b == 0 {
 		return 0, "bit"
@@ -53,7 +67,7 @@ func (b BitSize) Format() (float64, string) {
 	return float64(b) / math.Pow(1000, i), sizes[int(i)]
 }
 
-//get the format of byte size
+// Format2 get the format of byte size
 func (b BitSize) Format2() (float64, string) {
 	if b == 0 {
 		return 0, "bit"
@@ -133,7 +147,7 @@ func (b BitSize) String() string {
 	return fmt.Sprintf("%.4f %v", v, unit)
 }
 
-//get the bit size by bytes
+// Bytes get the bit size by bytes
 func Bytes(bytes int64) BitSize {
 	return BitSize(bytes) * Byte
 }

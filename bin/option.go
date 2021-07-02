@@ -8,12 +8,12 @@ import (
 
 const OptionTagName = "arg"
 
-//the command of options parse.
+// Option the command of options parse.
 type Option struct {
 	cc *CliCmd
 }
 
-//parse the struct tag name arg <Name type `arg:"i name"`>
+// Unmarshal parse the struct tag name arg <Name type `arg:"i name"`>
 func (c *Option) Unmarshal(v interface{}) {
 	cc := c.cc
 	vt := reflect.TypeOf(v).Elem()

@@ -11,7 +11,7 @@ import (
 // @Author:  Joshua Conero
 // @Name:    库主文件
 
-// 实例化解析器
+// NewParser instantiate the Parser
 // param format(single param)
 // 		opts map[string]string{}|string
 //			driver SupportNameRong SupportNameIni
@@ -49,15 +49,14 @@ func NewParser(params ...interface{}) Parser {
 	default:
 		return new(BaseParser)
 	}
-	return nil
 }
 
-// 参数解析规则
-// bool:   true/false/TRUE/FALSE
-// string: '字符串', "字符串" 以及无法解析的参数
-// int64: 47, 52, -49552
-// float64: 3.14, -0.24552
-// null: nil     空值时，默认为 nil
+// ParseValue parse the data value, the format like
+// 		bool:   true/false/TRUE/FALSE
+// 		string: '字符串', "字符串" 以及无法解析的参数
+// 		int64: 47, 52, -49552
+// 		float64: 3.14, -0.24552
+// 		null: nil     空值时，默认为 nil
 func ParseValue(v string) interface{} {
 	var value interface{} = nil
 	v = strings.TrimSpace(v)
@@ -162,7 +161,7 @@ func ParseValue(v string) interface{} {
 	return value
 }
 
-// 字符串清洗
+// StrClear the string data clear
 func StrClear(s string) string {
 	s = strings.TrimSpace(s)
 	if s != "" {

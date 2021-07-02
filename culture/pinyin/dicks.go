@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-//从 ini 文加读取字典
+// ReadDickFromIni read file and parse from ini files
 func ReadDickFromIni(filename string) map[string]map[string]string {
 	dick := map[string]map[string]string{}
 
@@ -59,9 +59,7 @@ func ReadDickFromIni(filename string) map[string]map[string]string {
 	return dick
 }
 
-// 读取ini文件行
-//支持， [key] 等键值
-//支持重复，行解析
+// ReadIniLines read ini file as line array, support [key], and repeat parse line.
 func ReadIniLines(lines []string) map[string]map[string]string {
 	dick := map[string]map[string]string{}
 
@@ -114,12 +112,12 @@ func ReadIniLines(lines []string) map[string]map[string]string {
 	return dick
 }
 
-// 是否为汉字
+// IsChineseCharacters check if the string is chinese character
 func IsChineseCharacters(word string) bool {
 	return CcReg.MatchString(word)
 }
 
-//the line from file
+// GetLinesFromFile the line from file
 func GetLinesFromFile(filename string) []string {
 	fh, err := os.Open(filename)
 	if err == nil {

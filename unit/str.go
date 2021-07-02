@@ -9,7 +9,7 @@ import (
 // @Author:  Joshua Conero
 // @Name:    单元测试
 
-// 反转测试
+// StrSingLine reversal test
 // data [][]string{expected, input, output}
 // bool 表通过与否； string 错误消息
 // args[0]  = "{expected} {input}, {output}  "

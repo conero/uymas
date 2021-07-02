@@ -4,14 +4,13 @@ package xini
 // @Author:  Joshua Conero
 // @Name:    抽象容器
 
-// 抽象参数容器
+// Container  abstract data container
 type Container struct {
 	Data        map[interface{}]interface{}
 	_eventGetFn map[interface{}]func() interface{}
 }
 
-// data 数据检测
-// 获取容器的全部数据，并且可实例化数据
+// GetData the data of `Container`
 func (c *Container) GetData() map[interface{}]interface{} {
 	if c.Data == nil {
 		c.Data = map[interface{}]interface{}{}
@@ -19,7 +18,6 @@ func (c *Container) GetData() map[interface{}]interface{} {
 	return c.Data
 }
 
-// 获取值
 func (c *Container) Get(key interface{}) (bool, interface{}) {
 	data := c.GetData()
 	value, has := data[key]
@@ -35,13 +33,13 @@ func (c *Container) Get(key interface{}) (bool, interface{}) {
 	return has, value
 }
 
-// 获取值，且含默认值
+// GetDef get value by key with default.
 func (c *Container) GetDef(key interface{}, def interface{}) interface{} {
 	return c.Value(key, nil, def)
 }
 
-// get 参数注册
-func (c *Container) GetFunc(key string, fn func() interface{}) *Container {
+// SetFunc set func to container
+func (c *Container) SetFunc(key string, fn func() interface{}) *Container {
 	if c._eventGetFn == nil {
 		c._eventGetFn = map[interface{}]func() interface{}{}
 	}
@@ -49,17 +47,21 @@ func (c *Container) GetFunc(key string, fn func() interface{}) *Container {
 	return c
 }
 
-// 是否存在键值
-func (c *Container) HasKey(key interface{}) bool {
+// HasKey checkout if keys exist
+func (c *Container) HasKey(keys ...interface{}) bool {
 	data := c.GetData()
-	_, has := data[key]
-	return has
+	for _, key := range keys {
+		if _, has := data[key]; has {
+			return true
+		}
+	}
+	return false
 }
 
-// 容器值得获取/设置
-// Container.Value(key interface{})  			获取数据
-// Container.Value(key, value interface{})  	设置数据
-// Container.Value(key, nil, def interface{})  	获取值并带参数，可使用新的方法 c.GetDef(key, def interface{})
+// Value the container get or set value
+// Container.Value(key interface{})  			get data value
+// Container.Value(key, value interface{})  	set data value
+// Container.Value(key, nil, def interface{})  	get data value with default c.GetDef(key, def interface{})
 func (c *Container) Value(params ...interface{}) interface{} {
 	if len(params) > 2 { // key, nil, def
 		if has, value := c.Get(params[0].(string)); has {
@@ -76,14 +78,14 @@ func (c *Container) Value(params ...interface{}) interface{} {
 	return nil
 }
 
-// 设置容器参数
+// Set set container value
 func (c *Container) Set(key, value interface{}) *Container {
 	c.GetData()
 	c.Data[key] = value
 	return c
 }
 
-// 删除容器的值
+// Del del key from container
 func (c *Container) Del(key interface{}) bool {
 	if c.HasKey(key) {
 		delete(c.Data, key)
@@ -92,7 +94,7 @@ func (c *Container) Del(key interface{}) bool {
 	return false
 }
 
-// 数据合并
+// Merge merge data from map set
 func (c *Container) Merge(data map[interface{}]interface{}) *Container {
 	for k, v := range data {
 		c.Set(k, v)
@@ -100,7 +102,7 @@ func (c *Container) Merge(data map[interface{}]interface{}) *Container {
 	return c
 }
 
-// 重置容器的值
+// Reset reset container will del all data
 func (c *Container) Reset() *Container {
 	c.Data = map[interface{}]interface{}{}
 	return c

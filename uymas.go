@@ -6,7 +6,7 @@
 package uymas
 
 const (
-	Version        = "1.0.2" //dev is not product but development tag.
+	Version        = "1.1.0-a1" //dev is not product but development tag.
 	Release        = "20210702"
 	Since          = "20181030"
 	Author         = "Joshua Conero"

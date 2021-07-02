@@ -8,14 +8,14 @@ import (
 	"strings"
 )
 
-//字面变量实际值
+// Lite literal variable actual value
 type Lite struct {
 	variable string
 	vType    string // data type
 	anyValue Any    // the true map data
 }
 
-//new literal variable
+// NewLite new literal variable
 func NewLite(variable string) *Lite {
 	variable = strings.TrimSpace(variable)
 	lite := &Lite{
@@ -73,13 +73,13 @@ func (lite *Lite) judgeType() {
 	}
 }
 
-//literal turn on
+// GetAny literal turn on
 func (lite *Lite) GetAny() Any {
 	value := lite.variable
 	return value
 }
 
-//获取数据类型
+// GetType get value type
 func (lite *Lite) GetType() string {
 	return lite.vType
 }
@@ -88,7 +88,7 @@ func (lite *Lite) IsNumber() bool {
 	return lite.vType == LiteralInt || lite.vType == LiteralFloat
 }
 
-// support mathematical expression
+// LiteralExpression support mathematical expression
 func LiteralExpression(expression string) (float64, error) {
 	reg := regexp.MustCompile(`^[(+\-*/)\d\s.]+$`)
 	if reg.MatchString(expression) {
@@ -110,7 +110,7 @@ func LiteralExpression(expression string) (float64, error) {
 	return 0, errors.New("expression not a valid mathematical expression")
 }
 
-//the expression without bracket
+// ExpNoBracket the expression without bracket
 func ExpNoBracket(expression string) string {
 	var result string = "0"
 	reg := regexp.MustCompile(`^[+\-*/\d\s.]+$`)
