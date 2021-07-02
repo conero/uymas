@@ -35,5 +35,6 @@ func TestFormatTable(t *testing.T) {
 		[]interface{}{"xx", "yyy", "a", "abc", "success"},
 		[]interface{}{"a", "bb", "cccccccc", "f", "Joshua"},
 	}
-	fmt.Println(FormatTable(data))
+	t.Logf("\r\n%v", FormatTable(data))
+	t.Logf("\r\n%v", FormatTable(data, false))
 }
