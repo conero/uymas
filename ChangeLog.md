@@ -80,9 +80,9 @@
   
     
 
-### 1.0.2/dev
+### 1.0.2/2021-07-02
 
-- [ ] doc 文档修改为英文。
+- [x] doc 文档修改为英文。
 
 > v1.0 修复版本
 
@@ -95,6 +95,7 @@
 - **bin**
   
   - +) `StructToMap` 和 `StructToMapLStyle` 新增 struct 转 map 的方法
+  - +) `CliCmd.AppendData` 新增数据合并接口，使 CliCmd 支持外部数据导入。
   - 优化) `FormatQue` 使用反射调整其支持任一类型的 array/slice数据
   
 - **util**
@@ -112,9 +113,9 @@
 
 - **cmd/uymas**
   
-  - optimize) `scan, sc` 增加内存使用监控
+  - optimize) `scan, sc` 增加内存使用监控、时间消耗的监控。
   
-  
+    
 
 ### 1.0.1/2021-06-11
 
