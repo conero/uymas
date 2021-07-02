@@ -55,6 +55,10 @@
   - change) `GetFunc` -> `SetFunc`
   - optimize) `Container.HasKey` 扩展支持多个键值检测
 
+#### alpha版本
+
+###### v1.1.0-a1/20210702
+
 
 
 ## 1.0.x
