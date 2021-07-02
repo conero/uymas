@@ -41,6 +41,10 @@ func (b Unit) String() string {
 	return fmt.Sprintf("%.4f %v", v, unit)
 }
 
+func (b Unit) Unit() float64 {
+	return float64(b)
+}
+
 func (b Unit) K() float64 {
 	return float64(b / K)
 }

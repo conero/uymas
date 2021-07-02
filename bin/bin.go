@@ -1,9 +1,8 @@
-// 轻量级命令行框架
-package bin
-
 // @Date：   2018/10/30 0030 13:20
 // @Author:  Joshua Conero
-// @Name:    库入口文件
+
+// Package bin is sample command application lib, provides functional and classic style Apis.
+package bin
 
 const (
 	AppMethodInit     = "Init"

@@ -2,6 +2,7 @@ package util
 
 import (
 	"github.com/conero/uymas/unit"
+	"math"
 	"testing"
 )
 
@@ -79,4 +80,38 @@ func TestValueNull(t *testing.T) {
 			t.Fail()
 		}
 	}
+}
+
+func TestInQueAny(t *testing.T) {
+	queStr := []string{"I", "am", "Joshua", "Conero", "."}
+	testIdx := 1
+	index := InQueAny(queStr, "am")
+
+	//case 1
+	if index != testIdx {
+		t.Fatalf("am index(%v) is not %v", index, testIdx)
+	}
+	index = InQueAny(queStr, "Surong")
+	if index == testIdx {
+		t.Fatalf("Surong index is not %#v", queStr)
+	}
+
+}
+
+func TestStructToMap(t *testing.T) {
+	type Ty struct {
+		Name          string
+		Age           int
+		HeightWidthLv float64
+	}
+
+	tt := Ty{}
+	t.Logf("%v", StructToMap(tt))
+
+	tt.Name = "Joshua Conero"
+	tt.HeightWidthLv = math.Pi
+	tt.Age = 58
+	t.Logf("%v", StructToMap(tt))
+	t.Logf("StructToMapLStyle: %#v", StructToMapLStyle(tt))
+
 }

@@ -287,7 +287,7 @@ func (cli *CLI) CmdExist(cmds ...string) bool {
 	return cmdExist
 }
 
-// @todo need to make it.
+// @todo never stop to optimize the method.
 // to star `router`
 func (cli *CLI) router(cc *CliCmd) {
 	//set the last `*CLI` as context of `CliCmd`.
@@ -591,6 +591,27 @@ func (app *CliCmd) CmdType() int {
 	return app.cmdType
 }
 
+// append the Data
+func (app *CliCmd) AppendData(vMap map[string]interface{}) *CliCmd {
+	if len(vMap) > 0 {
+		if app.Data == nil {
+			app.Data = map[string]interface{}{}
+		}
+		if app.DataRaw == nil {
+			app.DataRaw = map[string]string{}
+		}
+		for k, v := range vMap {
+			var value string
+			if v != nil {
+				value = fmt.Sprintf("%v", v)
+			}
+			app.Data[k] = v
+			app.DataRaw[k] = value
+		}
+	}
+	return app
+}
+
 // the application parse raw args inner.
 //
 // the command format like that:
@@ -702,11 +723,13 @@ func isVaildCmd(c string) bool {
 	return true
 }
 
-// cl  eanout the raw input string like:
-//		`"string"`		=> `string`
-//		`"'string'"`	=> `'string'`
-//		`'string'`		=> `string`
-//		`'"string"'`	=> `"string"`
+/*
+clear out the raw input string like:
+	`"string"`		=> `string`
+	`"'string'"`	=> `'string'`
+	`'string'`		=> `string`
+	`'"string"'`	=> `"string"`
+*/
 func CleanoutString(ss string) string {
 	ssLen := len(ss)
 	first, last := ss[0:1], ss[ssLen-1:]
@@ -719,7 +742,7 @@ func CleanoutString(ss string) string {
 	return ss
 }
 
-//将字符串解析为任一值
+//parse the command value to really type by format.
 func ParseValueByStr(ss string) interface{} {
 	ss = strings.TrimSpace(ss)
 	ssLow := strings.ToLower(ss)

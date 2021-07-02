@@ -1,4 +1,4 @@
-// 数值运算/处理库
+//Package number handler like unit cover.
 package number
 
 // @Date：   2018/12/20 0020 16:16

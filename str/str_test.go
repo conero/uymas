@@ -2,6 +2,7 @@ package str
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 )
 
@@ -24,16 +25,22 @@ func compareStrFunc(expect func() string, real string) bool {
 }
 
 func TestUcfirst(t *testing.T) {
-	fn := func(s, sT string) {
+	fn := func(s, sT string, args ...string) {
 		if ClearSpace(s) != sT {
-			fmt.Println(s + " VS " + sT)
-			t.Fail()
+			t.Fatalf("%v VS %v", s, sT)
+		} else if len(args) > 0 {
+			t.Logf("Compare to strings.Title: %v -> %v", args[0], strings.Title(args[0]))
 		}
 	}
-	fn(Ucfirst(" i am joshua conero"), "IAmJoshuaConero")
-	fn(Ucfirst(" joshuaConero"), "JoshuaConero")
-	fn(Ucfirst(" test "), "Test")
-	fn(Ucfirst(" tEST "), "TEST")
+
+	testStr := " i am joshua conero"
+	fn(Ucfirst(testStr), "IAmJoshuaConero", testStr)
+	testStr = " joshuaConero"
+	fn(Ucfirst(testStr), "JoshuaConero", testStr)
+	testStr = " test "
+	fn(Ucfirst(testStr), "Test", testStr)
+	testStr = " tEST "
+	fn(Ucfirst(testStr), "TEST", testStr)
 }
 
 func TestLcfirst(t *testing.T) {
@@ -137,4 +144,51 @@ func TestPadRight(t *testing.T) {
 		[]string{"11-=-=", PadRight("11", "-=", 6)},
 		[]string{"ivu*-*-*-*", PadRight("ivu", "*-", 10)},
 	}, t)
+}
+
+func TestLowerStyle(t *testing.T) {
+	// Case 1
+	vStr := "FirstName"
+	rStr := "first_name"
+	gStr := LowerStyle(vStr)
+	if gStr != rStr {
+		t.Fatalf("%v --> %v VS %v", vStr, gStr, rStr)
+	}
+
+	// Case 2
+	vStr = "getHeightWidthRate"
+	rStr = "get_height_width_rate"
+	gStr = LowerStyle(vStr)
+	if gStr != rStr {
+		t.Fatalf("%v --> %v VS %v", vStr, gStr, rStr)
+	}
+
+	// Case 2
+	vStr = "_stringIsLowerStyleAndNeedTrimWithoutFuncButFieldIsAlpha2Email0519"
+	rStr = "_string_is_lower_style_and_need_trim_without_func_but_field_is_alpha2_email0519"
+	gStr = LowerStyle(vStr)
+	if gStr != rStr {
+		t.Fatalf("%v --> %v VS %v", vStr, gStr, rStr)
+	}
+}
+
+//	`first_name` 			-> `FirstName`,
+//	`get_height_width_rate` 	-> `GetHeightWidthRate`
+func TestCamelCase(t *testing.T) {
+	// Case 1
+	vStr := "first_name"
+	rStr := "FirstName"
+	gStr := CamelCase(vStr)
+	if gStr != rStr {
+		t.Fatalf("%v --> %v VS %v", vStr, gStr, rStr)
+	}
+
+	// Case 2
+	vStr = "get_height_width_rate"
+	rStr = "GetHeightWidthRate"
+	gStr = CamelCase(vStr)
+	if gStr != rStr {
+		t.Fatalf("%v --> %v VS %v", vStr, gStr, rStr)
+	}
+
 }

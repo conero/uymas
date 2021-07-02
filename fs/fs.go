@@ -1,11 +1,15 @@
+//Package fs support facilitate for handler file and direction.
 package fs
 
 import (
 	"fmt"
+	"github.com/conero/uymas/number"
 	"math"
+	"runtime"
 )
 
 //ByteSize is a example like `time.Duration`
+// Deprecated: Use number.ByteSize replace.
 type ByteSize int64
 
 //1 Bytes = 8Bit					byte
@@ -53,4 +57,28 @@ func (b ByteSize) Format() (float64, string) {
 func (b ByteSize) String() string {
 	v, unit := b.Format()
 	return fmt.Sprintf("%.4f %v", v, unit)
+}
+
+// get memory stats range callback
+func GetMemStatsRange() func() (runtime.MemStats, runtime.MemStats) {
+	var mem runtime.MemStats
+	runtime.ReadMemStats(&mem)
+	return func() (runtime.MemStats, runtime.MemStats) {
+		var mem2 runtime.MemStats
+		runtime.ReadMemStats(&mem2)
+		return mem, mem2
+	}
+}
+
+//memory usage
+type MemUsage struct {
+}
+
+//get system memory range sub bytes
+func (m *MemUsage) GetSysMemSub() func() number.BitSize {
+	mRangeCall := GetMemStatsRange()
+	return func() number.BitSize {
+		m1, m2 := mRangeCall()
+		return number.Byte * number.BitSize(m2.Sys-m1.Sys)
+	}
 }

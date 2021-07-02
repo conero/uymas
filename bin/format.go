@@ -1,3 +1,6 @@
+// @DATE        2019/6/5
+// @NAME        Joshua Conero
+
 package bin
 
 import (
@@ -10,14 +13,7 @@ import (
 	"strings"
 )
 
-/**
- * @DATE        2019/6/5
- * @NAME        Joshua Conero
- * @DESCRIPIT   命令行输出格式化
- **/
-
-// 获取字符串格式化
-// [[k,  v]]
+// Get the Queue type pretty format for output. [[k,  v]]
 // Deprecated: Use FormatKv instead.
 func FormatStr(d string, ss ...[][]string) string {
 	if d == "" {
@@ -51,10 +47,11 @@ func FormatStr(d string, ss ...[][]string) string {
 	return contents
 }
 
-// The `k-v` data format to beautiful str.
-//
-// FormatKv(kv map[string]interface{}, pref string)				含前缀的字符输出.
-// FormatKv(kv map[string]interface{}, pref string, md string)	含前缀和中间连接符号的字符输出.
+/*
+The `k-v` data format to beautiful str.
+	FormatKv(kv map[string]interface{}, pref string)				 provide pref param form FormatKv.
+	FormatKv(kv map[string]interface{}, pref string, md string)	     provide pref and middle param form FormatK.
+*/
 func FormatKv(kv interface{}, params ...string) string {
 	var vf = reflect.ValueOf(kv)
 	if vf.Kind() != reflect.Map {
@@ -98,10 +95,11 @@ func FormatKv(kv interface{}, params ...string) string {
 	return s
 }
 
-// The `k-v` data format to beautiful str.
-//
-// FormatKvSort(kv map[string]interface{}, pref string)				含前缀的字符输出.
-// FormatKvSort(kv map[string]interface{}, pref string, md string)	含前缀和中间连接符号的字符输出.
+/*
+The `k-v` data format to beautiful str.
+	FormatKvSort(kv map[string]interface{}, pref string)				 provide pref param form FormatKv.
+	FormatKvSort(kv map[string]interface{}, pref string, md string)	     provide pref and middle param form FormatK.
+*/
 func FormatKvSort(kv interface{}, params ...string) string {
 	var vf = reflect.ValueOf(kv)
 	if vf.Kind() != reflect.Map {
@@ -151,7 +149,7 @@ func FormatKvSort(kv interface{}, params ...string) string {
 // 格式化数组字符
 // 用于命令行输出
 // prefs 为 "" 时默认以数组索引开头；否则默给定的输出
-func FormatQue(que []interface{}, prefs ...string) string {
+func FormatQue(que interface{}, prefs ...string) string {
 	pref := ""  // 开头符号
 	dter := " " // 空格
 	if prefs != nil && len(prefs) > 0 {
@@ -161,24 +159,33 @@ func FormatQue(que []interface{}, prefs ...string) string {
 		}
 	}
 	s := ""
-	queLen := len(que)
+	vt := reflect.ValueOf(que)
+	var queLen int
+	//Only Support Array/Slice, other output itself.
+	if vt.Kind() == reflect.Array || vt.Kind() == reflect.Slice {
+		queLen = vt.Len()
+	} else {
+		return fmt.Sprintf("%v", que)
+	}
+
 	mdLen := 4 + len(strconv.Itoa(queLen))
-	for i, q := range que {
+	for i := 0; i < queLen; i++ {
+		qVal := vt.Index(i).Interface()
 		if pref == "" {
 			iStr := strconv.Itoa(i) + "."
-			s += iStr + strings.Repeat(dter, mdLen-len(iStr)) + fmt.Sprintf(" %v\n", q)
+			s += iStr + strings.Repeat(dter, mdLen-len(iStr)) + fmt.Sprintf(" %v\n", qVal)
 		} else {
-			s += pref + strings.Repeat(dter, mdLen-len(pref)) + fmt.Sprintf(" %v\n", q)
+			s += pref + strings.Repeat(dter, mdLen-len(pref)) + fmt.Sprintf(" %v\n", qVal)
 		}
 	}
 	return s
 }
 
-// Bug(FormatQue): 中文长度无法使字符串字符对齐
-
-// 表格格式化
-// (data, bool) 是否使用 idx
-func FormatTable(data [][]interface{}, args ...interface{}) string {
+// Bug(FormatQue): chinese text cannot alignment
+//
+// Table format output by slice:
+// 	(data, bool) if is use the idx
+func FormatTable(table interface{}, args ...interface{}) string {
 	useIdxMk := true
 	if args != nil {
 		if v, isBool := args[0].(bool); isBool {
@@ -186,28 +193,54 @@ func FormatTable(data [][]interface{}, args ...interface{}) string {
 		}
 	}
 
-	// 数据处理
-	data2Str := [][]string{}
-	maxLenQue := []int{}
-	for _, dd := range data {
-		ddStr := []string{}
-		for i, d := range dd {
-			vStr := fmt.Sprintf("%v", d)
-			ddStr = append(ddStr, vStr)
-			ddStrLen := len(vStr)
-			if len(maxLenQue) > i {
-				if maxLenQue[i] < ddStrLen {
-					maxLenQue[i] = ddStrLen
+	rv := reflect.ValueOf(table)
+	var vLen int
+	//Only Support Array/Slice, other output itself.
+	if rv.Kind() == reflect.Array || rv.Kind() == reflect.Slice {
+		vLen = rv.Len()
+	} else {
+		return fmt.Sprintf("%v", table)
+	}
+
+	var data2Str [][]string
+	var maxLenQue []int
+
+	for i := 0; i < vLen; i++ {
+		arr := rv.Index(i).Interface()
+		rvD1 := reflect.ValueOf(arr)
+		//Only Support Array/Slice, other output itself.
+		var ddStr []string
+		var vStr string
+		if rvD1.Kind() == reflect.Array || rvD1.Kind() == reflect.Slice {
+			vLenD1 := rvD1.Len()
+			for j := 0; j < vLenD1; j++ {
+				vD1 := rvD1.Index(j).Interface()
+				if vD1 == nil {
+					vD1 = ""
 				}
-			} else {
-				maxLenQue = append(maxLenQue, ddStrLen)
+				vStr = fmt.Sprintf("%v", vD1)
+				ddStr = append(ddStr, vStr)
+				ddStrLen := len(vStr)
+				if len(maxLenQue) > j {
+					if maxLenQue[j] < ddStrLen {
+						maxLenQue[j] = ddStrLen
+					}
+				} else {
+					maxLenQue = append(maxLenQue, ddStrLen)
+				}
 			}
+		} else {
+			if arr == nil {
+				arr = ""
+			}
+			vStr = fmt.Sprintf("%v", arr)
+			ddStr = append(ddStr, vStr)
 		}
 		data2Str = append(data2Str, ddStr)
 	}
 
 	var s string
-	dCtt := len(data)
+	dCtt := vLen
 	maxLen := number.SumQInt(maxLenQue) + dCtt*2
 	if useIdxMk {
 		dCttLen := len(strconv.Itoa(dCtt) + ".")

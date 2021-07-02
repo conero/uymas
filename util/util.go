@@ -1,8 +1,9 @@
-// 其他工具栏
+//Package util implements other tool more, like type cover, type value check.
 package util
 
 import (
 	"fmt"
+	"github.com/conero/uymas/str"
 	"math"
 	"reflect"
 	"time"
@@ -27,7 +28,34 @@ func InQue(val interface{}, que []interface{}) int {
 	return idx
 }
 
-//返回秒用于计算程序用时,参数为0时返回当前的毫秒，否则返回计算后的秒差
+//Check keys if exist in Array Or Slice.
+func InQueAny(que interface{}, keys ...interface{}) int {
+	idx := -1
+
+	vt := reflect.ValueOf(que)
+	//Only Array And Slice.
+	if vt.Kind() == reflect.Array || vt.Kind() == reflect.Slice {
+		vLen := vt.Len()
+		for i := 0; i < vLen; i++ {
+			value := vt.Index(i)
+			for j := 0; j < len(keys); j++ {
+				vsKey := keys[j]
+				if reflect.DeepEqual(value.Interface(), vsKey) {
+					idx = i
+					break
+				}
+			}
+			if idx != -1 {
+				break
+			}
+		}
+	}
+
+	return idx
+}
+
+// Get the program spend second time with second float64
+// Deprecated: will remove when next version v1.1.x use `SpendTimeDiff` replace
 func Sec(start float64) float64 {
 	t := time.Now()
 	ns := float64(t.Nanosecond())
@@ -40,7 +68,8 @@ func Sec(start float64) float64 {
 	return ds
 }
 
-// 返回运算秒的秒数
+// Get the program spend second time with callback
+// Deprecated: will remove when next version v1.1.x use `SpendTimeDiff` replace
 func SecCall() func() float64 {
 	start := Sec(0)
 	return func() float64 {
@@ -48,11 +77,20 @@ func SecCall() func() float64 {
 	}
 }
 
-// 返回字符串式的运行毫秒
+// Get the program spend second time with second string
+// Deprecated: will remove when next version v1.1.x use `SpendTimeDiff` replace
 func SecCallStr() func() string {
 	start := time.Now()
 	return func() string {
 		return fmt.Sprintf("%s", time.Since(start))
+	}
+}
+
+// Get the program spend time for any format.
+func SpendTimeDiff() func() time.Duration {
+	now := time.Now()
+	return func() time.Duration {
+		return time.Now().Sub(now)
 	}
 }
 
@@ -96,4 +134,40 @@ func ValueNull(value interface{}) bool {
 	}
 	v := reflect.ValueOf(value)
 	return v.IsZero()
+}
+
+// convert Struct field to by Map
+func StructToMap(value interface{}) map[string]interface{} {
+	rv := reflect.ValueOf(value)
+	if rv.Kind() == reflect.Struct {
+		rt := reflect.TypeOf(value)
+		vMap := map[string]interface{}{}
+		for i := 0; i < rv.NumField(); i++ {
+			field := rv.Field(i)
+			if field.Kind() != reflect.Func {
+				name := rt.Field(i).Name
+				vMap[name] = field.Interface()
+			}
+		}
+		return vMap
+	}
+	return nil
+}
+
+// convert Struct field to by Map and key is Lower style.
+func StructToMapLStyle(value interface{}) map[string]interface{} {
+	rv := reflect.ValueOf(value)
+	if rv.Kind() == reflect.Struct {
+		rt := reflect.TypeOf(value)
+		vMap := map[string]interface{}{}
+		for i := 0; i < rv.NumField(); i++ {
+			field := rv.Field(i)
+			if field.Kind() != reflect.Func {
+				name := rt.Field(i).Name
+				vMap[str.LowerStyle(name)] = field.Interface()
+			}
+		}
+		return vMap
+	}
+	return nil
 }

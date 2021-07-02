@@ -33,11 +33,11 @@ const (
 //get the format of byte size
 func (b BitSize) Format() (float64, string) {
 	if b == 0 {
-		return 0, ""
+		return 0, "bit"
 	}
 	// Byte
 	if b < Byte {
-		return float64(b), ""
+		return float64(b), "bit"
 	}
 	// Byte
 	if b < KB {
@@ -56,24 +56,32 @@ func (b BitSize) Format() (float64, string) {
 //get the format of byte size
 func (b BitSize) Format2() (float64, string) {
 	if b == 0 {
-		return 0, ""
+		return 0, "bit"
 	}
 	// Byte
 	if b < Byte {
-		return float64(b), ""
+		return float64(b), "bit"
 	}
 	// Byte
 	if b < KiB {
 		return float64(b) / float64(Byte), "Byte"
 	}
 	var sizes = []string{"", "KiB", "MiB", "GiB", "TiB", "PiB", "EiB", "ZiB", "YiB"}
-	var i = math.Floor(math.Log2(float64(b)) / math.Log2(1000))
+	var i = math.Floor(math.Log(float64(b)/float64(Byte)) / math.Log(1024))
 	//the max data unit is to `YB`
 	var sizesLen = float64(len(sizes))
 	if i > sizesLen {
 		i = sizesLen - 1
 	}
-	return float64(b) / math.Pow(1024, i), sizes[int(i)]
+	return float64(b/Byte) / math.Pow(1024, i), sizes[int(i)]
+}
+
+func (b BitSize) Bit() float64 {
+	return float64(b)
+}
+
+func (b BitSize) Byte() float64 {
+	return float64(b / Byte)
 }
 
 func (b BitSize) KB() float64 {
@@ -116,7 +124,16 @@ func (b BitSize) PiB() float64 {
 	return float64(b / PiB)
 }
 
+// The file size default use 1024.
 func (b BitSize) String() string {
-	v, unit := b.Format()
+	v, unit := b.Format2()
+	if v == 0 {
+		return fmt.Sprintf("%v %v", v, unit)
+	}
 	return fmt.Sprintf("%.4f %v", v, unit)
+}
+
+//get the bit size by bytes
+func Bytes(bytes int64) BitSize {
+	return BitSize(bytes) * Byte
 }

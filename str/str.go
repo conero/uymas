@@ -1,4 +1,4 @@
-// 字符串处理工具包
+//Package str string handler method.
 package str
 
 import (
@@ -40,11 +40,12 @@ func (wr *WriterToContent) Content() string {
 	return wr.content
 }
 
-// 首字母大写
-func Ucfirst(str string) string {
+// Converts the first character of each word in a string to uppercase.
+// Deprecated: maybe next version v1.1.0 will be removed, use the `strings.Title` replace.
+func UcWords(str string) string {
 	idx := strings.Index(str, " ")
 	if idx > -1 {
-		newStr := []string{}
+		var newStr []string
 		for _, s := range strings.Split(str, " ") {
 			newStr = append(newStr, Ucfirst(s))
 		}
@@ -57,11 +58,16 @@ func Ucfirst(str string) string {
 	return str
 }
 
-// 首字母小写
+// Deprecated: maybe next version v1.1.0 will be removed, use the `strings.Title` replace.
+func Ucfirst(str string) string {
+	return UcWords(str)
+}
+
+// Converts the first character of each word in a string to lowercase.
 func Lcfirst(str string) string {
 	idx := strings.Index(str, " ")
 	if idx > -1 {
-		newStr := []string{}
+		var newStr []string
 		for _, s := range strings.Split(str, " ") {
 			newStr = append(newStr, Lcfirst(s))
 		}
@@ -72,6 +78,70 @@ func Lcfirst(str string) string {
 		}
 	}
 	return str
+}
+
+func IsLatinAlpha(alpha string) bool {
+	return strings.Index(LowerStr, strings.ToLower(alpha)) > -1
+}
+
+// camelcase --> snake case
+// covert string to be lower style, like:
+//	`FirstName` 			-> `first_name`,
+//	`getHeightWidthRate` 	-> `get_height_width_rate`
+func LowerStyle(vStr string) string {
+	vLen := len(vStr)
+	if vLen > 0 {
+		bys := []byte(vStr)
+		var upperQueue []int
+		for i := 0; i < vLen; i++ {
+			alpha := vStr[i : i+1]
+			if IsLatinAlpha(alpha) && alpha == strings.ToUpper(alpha) {
+				upperQueue = append(upperQueue, i)
+			}
+		}
+
+		var valueQueue []string
+		var lastIndex = 0
+		var uQLen = len(upperQueue)
+		for j, v := range upperQueue {
+			if v == 0 {
+				continue
+			}
+			valueQueue = append(valueQueue, string(bys[lastIndex:v]))
+			lastIndex = v
+			//Last
+			if j == (uQLen - 1) {
+				valueQueue = append(valueQueue, string(bys[lastIndex:]))
+			}
+		}
+
+		if len(valueQueue) == 0 {
+			return strings.ToLower(vStr)
+		}
+		return strings.ToLower(strings.Join(valueQueue, "_"))
+	}
+	return vStr
+}
+
+// camelcase --> snake case
+// covert string to be lower style, like:
+//	`first_name` 			-> `FirstName`,
+//	`get_height_width_rate` 	-> `GetHeightWidthRate`
+// snake case --> camelcase
+func CamelCase(vStr string) string {
+	if vLen := len(vStr); vLen > 0 {
+		vQueue := strings.Split(vStr, "_")
+		var newQue []string
+		for _, vQ := range vQueue {
+			vQ = strings.TrimSpace(vQ)
+			if vQ == "" {
+				continue
+			}
+			newQue = append(newQue, strings.Title(vQ))
+		}
+		vStr = strings.Join(newQue, "")
+	}
+	return vStr
 }
 
 // 安全字符串分割

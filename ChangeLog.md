@@ -4,21 +4,73 @@
 
 
 
+**版本介绍**
+
+- **x.y.z**     	保证的兼容性，可新增功能（用于版本阶段性开发）、修复或调整版本。（待移除使用 `// Deprecated:  descript text` 标记，或说明）
+- **x.y**            不保证的兼容性，删除旧版本遗弃的方法
+- **x**               重大（颠覆性）的改变，重要里程碑开发
+
+
+
 ## 1.0.x
 
 - [ ] 删除历史版本中标注遗弃的方法
 - [ ] godoc 内部文档统一替换为英文
 - [ ] bin
   - [x] `--fixed` 与 `-fixed` 的区别，前者指代全拼 *fixed*，后者 *`-f -i -x -e -d `无序化，两者有一个对应列表；*
+  
   - [ ] `--full-name, -F` 通过设置，自动生成文档，新增一个对象用于实现。
+  
   - [ ] 是否增加系统日志，来调试命令程序？
+  
   - [ ] 类似与git查询相识的命令，若命令不存在
+  
   - [ ] 语法解析不太准确，可使用正常先处理再分割
+  
   - [ ] `--name a1 --name=a2` 处理为数组。支持数组格式
+  
   - [ ] 基于os.ENV 的session机制
+  
   - [x] ~~使用内置的 history~~（系统提供遂放弃）
+  
+    
 
+### 1.0.2/dev
 
+- [ ] doc 文档修改为英文。
+
+> v1.0 修复版本
+
+- **number**
+  - +)  `BitSize` 增加方法 `Bit/Byte` 以完善可自由获取不同的单位
+  - optimize) `BitSize`默认输出采用 1024 制式而非原来的1000
+  - +) `Unit` 增加方法 `Unit` 以完善可自由获取不同的单位
+  - +) `Bytes` 方法用于字节快速转 `BitSize` 的方法
+  
+- **bin**
+  
+  - +) `StructToMap` 和 `StructToMapLStyle` 新增 struct 转 map 的方法
+  - +) `CliCmd.AppendData` 新增数据合并接口，使 CliCmd 支持外部数据导入。
+  - 优化) `FormatQue` 使用反射调整其支持任一类型的 array/slice数据
+  
+- **util**
+  - +) `InQueAny` 新增方法来支持任一类型的 array/slice数据键值检测
+  - +) `SendTimeDiff` 新增方法用于计算更加统计的时间消耗，用于替代旧方法：`Sec、SecCall、SecCallStr`。
+  
+- **str**
+  - +) `IsLatinAlpha` 判断是否为拉丁文字母
+  - +) `LowerStyle` 将峰坨式命名规则转为小写风格命名规范
+  - +) `CamelCase`  使用 snake case（蛇式）转 CamelCase 实现
+
+- **fs**
+  - +) `GetMemStatsRange` 新增方法用于计算程序内存消耗
+  - +) `MemUsage` 新增结构体用于快速计算系统的内存消耗情况
+
+- **cmd/uymas**
+  
+  - optimize) `scan, sc` 增加内存使用监控、时间消耗的监控。
+  
+  
 
 ### 1.0.1/2021-06-11
 
