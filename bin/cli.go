@@ -15,7 +15,11 @@ import (
 
 const (
 	actionRunConstruct = "Construct"
-	appCliFieldCliCmd  = "Cc" // the AppCli field of Cc.
+	actionRunIndex     = "DefaultIndex"     // the AppCli empty Call
+	actionRunUnmatched = "DefaultUnmatched" // the AppCli unmatched router Call
+	actionRunHelp      = "DefaultHelp"      // the AppCli unmatched router Call
+	actionRunHelpName  = "Help"             // the alis of `help`, will to call `DefaultHelp` method.
+	appCliFieldCliCmd  = "Cc"               // the AppCli field of Cc.
 )
 
 const (
@@ -63,6 +67,16 @@ type CliApp struct {
 // CliAppInterface the interface of CliApp
 type CliAppInterface interface {
 	Construct()
+}
+
+// CliAppCompleteInterface the complete CliApp show hand method
+// should have a field name like `Cc *CliCmd`
+// the method call order by `construct > command > help > index > unmatched`
+type CliAppCompleteInterface interface {
+	CliAppInterface
+	DefaultHelp()
+	DefaultIndex()
+	DefaultUnmatched()
 }
 
 type CmdOptions struct {
@@ -371,15 +385,47 @@ func (cli *CLI) routerCommand(cc *CliCmd) bool {
 				panic(fmt.Sprintf("%v: the command is not vaild.", cc.Command))
 			}
 
+			// many Call-func
+			callFunc := func(vMethod string) {
+				if vMth := v.MethodByName(vMethod); vMth.IsValid() {
+					switch vMth.Interface().(type) {
+					case func(*CliCmd):
+						routerValidMk = true
+						vMth.Call([]reflect.Value{reflect.ValueOf(cc)})
+					case func():
+						routerValidMk = true
+						vMth.Call(nil)
+					}
+				}
+			}
+
 			//the subCommand string
 			subCmdStr := cc.SubCommand
 			if subCmdStr != "" {
 				subCmdStr = strings.Title(subCmdStr)
-				if v.MethodByName(subCmdStr).IsValid() {
-					v.MethodByName(subCmdStr).Call(nil)
-				} else {
-					panic(fmt.Sprintf("the method `%s` do not have a handler as `%v`.", cc.SubCommand, subCmdStr))
-				}
+				callFunc(subCmdStr)
+			}
+
+			// actionRunHelp, support the command/option like:
+			//	command		=> help,?
+			//	option		=> --help,-h,-?
+			if !routerValidMk && (subCmdStr == actionRunHelpName || subCmdStr == "?" || (subCmdStr == "" && cc.
+				CheckSetting("help", "h", "?"))) {
+				callFunc(actionRunHelp)
+			}
+
+			// actionRunIndex
+			if !routerValidMk && subCmdStr == "" {
+				callFunc(actionRunIndex)
+			}
+
+			// actionRunUnmatched
+			if !routerValidMk {
+				callFunc(actionRunUnmatched)
+			}
+
+			if !routerValidMk {
+				panic(fmt.Sprintf("the method `%s` do not have a handler as `%v`.", cc.SubCommand, subCmdStr))
 			}
 
 			routerValidMk = true
@@ -420,28 +466,26 @@ func (cli *CLI) routerAny(cc *CliCmd) bool {
 		aur.(func(*CliCmd))(cc)
 		isRouterMk = true
 	default:
-		if cc.Command != "" {
-			// actionAnyRegister support the like `CliApp` any struct
-			rv := reflect.ValueOf(aur)
-			if rv.Kind() == reflect.Ptr && rv.Elem().Kind() == reflect.Struct {
-				rvEl := rv.Elem()
-				// CliCmd field
-				if cCField := rvEl.FieldByName(appCliFieldCliCmd); cCField.IsValid() {
-					//fmt.Printf("%T, %v\r\n", cCField.Interface(), cCField.Interface())
-					switch cCField.Interface().(type) {
-					case *CliCmd:
-						rvEl.FieldByName(appCliFieldCliCmd).Set(reflect.ValueOf(cc))
-					case CliCmd:
-						rvEl.FieldByName(appCliFieldCliCmd).Set(reflect.ValueOf(cc).Elem())
-					}
+		// actionAnyRegister support the like `CliApp` any struct
+		rv := reflect.ValueOf(aur)
+		if rv.Kind() == reflect.Ptr && rv.Elem().Kind() == reflect.Struct {
+			rvEl := rv.Elem()
+			// CliCmd field
+			if cCField := rvEl.FieldByName(appCliFieldCliCmd); cCField.IsValid() {
+				switch cCField.Interface().(type) {
+				case *CliCmd:
+					rvEl.FieldByName(appCliFieldCliCmd).Set(reflect.ValueOf(cc))
+				case CliCmd:
+					rvEl.FieldByName(appCliFieldCliCmd).Set(reflect.ValueOf(cc).Elem())
 				}
-				// init-method
-				if initMth := rv.MethodByName(actionRunConstruct); initMth.IsValid() {
-					initMth.Call(nil)
-					isRouterMk = true
-				}
-				// call method
-				if vMth := rv.MethodByName(strings.Title(cc.Command)); vMth.IsValid() {
+			}
+			// init-method
+			if initMth := rv.MethodByName(actionRunConstruct); initMth.IsValid() {
+				initMth.Call(nil)
+			}
+			// many Call-func
+			callFunc := func(vMethod string) {
+				if vMth := rv.MethodByName(vMethod); vMth.IsValid() {
 					switch vMth.Interface().(type) {
 					case func(*CliCmd):
 						isRouterMk = true
@@ -450,11 +494,40 @@ func (cli *CLI) routerAny(cc *CliCmd) bool {
 						isRouterMk = true
 						vMth.Call(nil)
 					}
-
-					if !isRouterMk {
-						log.Printf("[WARNING] the method `RegisterUnfind` of param is valid, please reference the doc.")
-					}
 				}
+			}
+			var cmdTitle string
+			// try to find `command`
+			if cc.Command != "" {
+				cmdTitle = strings.Title(cc.Command)
+				// check `Construct` repeat call(2 times)
+				if cmdTitle != actionRunConstruct {
+					// call method
+					callFunc(cmdTitle)
+				}
+			}
+
+			// actionRunHelp, support the command/option like:
+			//	command		=> help,?
+			//	option		=> --help,-h,-?
+			if !isRouterMk && (cmdTitle == actionRunHelpName || cmdTitle == "?" || (cmdTitle == "" && cc.
+				CheckSetting("help", "h", "?"))) {
+				callFunc(actionRunHelp)
+			}
+
+			//default empty call be a index action.
+			if !isRouterMk && cmdTitle == "" {
+				callFunc(actionRunIndex)
+			}
+
+			// actionRunUnmatched
+			if !isRouterMk {
+				callFunc(actionRunUnmatched)
+			}
+
+			// finally not match any method will print the tips.
+			if !isRouterMk {
+				log.Printf("[WARNING] the method `RegisterUnfind` of param is valid, please reference the doc.")
 			}
 		}
 

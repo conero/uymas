@@ -34,6 +34,7 @@
   - +) `CLI.hookBeforeCall` 新增 hook 机制，实现在调用回调前的请求事件。
   - +) `CliCmd.AppendData` 新增数据合并接口，使 CliCmd 支持外部数据导入。
   - +) `CLI.UnLoadScriptSyntax` 支持可选的（`--file,-f`） 语言集合脚本文件，（`--script,-s`）语言文本进行解析。
+  - +) `CLI.CliAppCompleteInterface`, 并且使其支持系统的内置的固定方法如：`construct > command > help > unmatched > index`（顺序规则）.
   - -) 移除遗弃标注项：`FormatStr`、`CliCmd.HasSetting`
   - optimize) `bin.FormatTable` 使用**reflect**扩展器支持任意2维度数组格式化。
   - optimze) `CLI.router` 路由重写将过程化的代码转换为多函数调用，未定义方法注册检测更广泛。
