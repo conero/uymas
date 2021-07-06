@@ -28,13 +28,16 @@
 
 - all
   - optimize) 根据 IDE 提示优化备注信息，并进一步将中文切换为英文。
-
+  - optimize) 回调函数参数尽量不写实际参数（编写风格）
+  
 - **bin**
   - +) `CLI.hookBeforeCall` 新增 hook 机制，实现在调用回调前的请求事件。
   - +) `CliCmd.AppendData` 新增数据合并接口，使 CliCmd 支持外部数据导入。
   - +) `CLI.UnLoadScriptSyntax` 支持可选的（`--file,-f`） 语言集合脚本文件，（`--script,-s`）语言文本进行解析。
   - -) 移除遗弃标注项：`FormatStr`、`CliCmd.HasSetting`
   - optimize) `bin.FormatTable` 使用**reflect**扩展器支持任意2维度数组格式化。
+  - optimze) `CLI.router` 路由重写将过程化的代码转换为多函数调用，未定义方法注册检测更广泛。
+  - change) 重命名 `CLI.RegisterUnfind` --> `CLI.RegisterAny`
   - **parser**
     - +) `DataReceiver` 新增数据接收器，实现对 json/url等数据格式的解析支持。
     - +) `NewScriptFile` 新增用于解析脚本的函数，初步支持 shell语法。

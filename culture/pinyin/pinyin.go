@@ -144,7 +144,7 @@ func (pyt *Pinyin) GetPyToneAlpha(chinese string) string {
 }
 
 // GetPyToneFunc get pinyin with tone by callback Func
-func (pyt *Pinyin) GetPyToneFunc(chinese string, call func(word string) string) string {
+func (pyt *Pinyin) GetPyToneFunc(chinese string, call func(string) string) string {
 	queue := strings.Split(chinese, "")
 	var words []string
 

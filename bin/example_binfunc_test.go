@@ -19,7 +19,7 @@ func main() {
 	}, "name")
 
 	// 未知命令
-	cli.RegisterUnfind(func(cmd string, cc *CliCmd) {
+	cli.RegisterAny(func(cmd string, cc *CliCmd) {
 		fmt.Println(cmd + "unfind（functional）")
 	})
 

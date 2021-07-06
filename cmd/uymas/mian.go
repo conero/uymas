@@ -108,7 +108,7 @@ func application() {
 	cli.RegisterFunc(func(cc *bin.CliCmd) {
 		var input = bufio.NewScanner(os.Stdin)
 		fmt.Println("驻留式命令行程序")
-		fmt.Print("$ uymas>")
+		fmt.Print("$ uymas> ")
 
 		for input.Scan() {
 			text := input.Text()
@@ -126,7 +126,7 @@ func application() {
 
 			fmt.Println()
 			fmt.Println()
-			fmt.Print("$ uymas>")
+			fmt.Print("$ uymas> ")
 		}
 	}, "repl")
 
