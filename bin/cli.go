@@ -39,6 +39,7 @@ type CLI struct {
 	commands            map[string]Cmd
 	tempLastCommand     string                 // command Cache
 	injectionData       map[string]interface{} //reject data from outside like chan control
+	registerCmdList     []string               // register name list
 
 	//external fields
 	UnLoadDataSyntax   bool   //not support load data syntax, like json/url.
@@ -125,9 +126,8 @@ func NewCliCmdByString(ss string) *CliCmd {
 
 // GetCmdList get the list cmd of application
 func (cli *CLI) GetCmdList() []string {
-	var list []string
+	var list = cli.registerCmdList
 	if cli.cmds != nil {
-		list = []string{}
 		for cmd, _ := range cli.cmds {
 			if alias, hasMk := cli.cmdMap[cmd]; hasMk {
 				var cmdList = []string{cmd}
@@ -260,6 +260,20 @@ func (cli *CLI) RegisterEmpty(action interface{}) *CLI {
 //   1. function `func(cmd string, cc *CliCmd)`/`func(cmd string)`/`func(cc *CliCmd)`/CliApp/Base Struct
 func (cli *CLI) RegisterAny(action interface{}) *CLI {
 	cli.actionAnyRegister = action
+	// check if cmd dist
+	rv := reflect.ValueOf(action)
+	if rv.Kind() == reflect.Ptr && rv.Elem().Kind() == reflect.Struct {
+		rt := reflect.TypeOf(action)
+		defMth := []string{actionRunConstruct, actionRunHelp, actionRunIndex, actionRunUnmatched}
+		for i := 0; i < rv.NumMethod(); i++ {
+			vMth := rt.Method(i)
+			name := vMth.Name
+			if str.InQue(name, defMth) > -1 {
+				continue
+			}
+			cli.registerCmdList = append(cli.registerCmdList, strings.ToLower(name))
+		}
+	}
 	return cli
 }
 

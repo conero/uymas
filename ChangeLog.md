@@ -29,7 +29,6 @@
 - all
   - optimize) 根据 IDE 提示优化备注信息，并进一步将中文切换为英文。
   - optimize) 回调函数参数尽量不写实际参数（编写风格）
-  
 - **bin**
   - +) `CLI.hookBeforeCall` 新增 hook 机制，实现在调用回调前的请求事件。
   - +) `CliCmd.AppendData` 新增数据合并接口，使 CliCmd 支持外部数据导入。
@@ -58,6 +57,9 @@
 - **parse/xini**
   - change) `GetFunc` -> `SetFunc`
   - optimize) `Container.HasKey` 扩展支持多个键值检测
+- **cmd/uymas**
+
+  - optimize) 使用类式来重写应用，避免一个函数内部的代码量太长
 
 #### alpha版本
 
