@@ -6,7 +6,12 @@ import (
 	"io/ioutil"
 	"regexp"
 	"strings"
+	"sync"
 	"time"
+)
+
+const (
+	DirScannerChanMax = 5000
 )
 
 type ChildDirData struct {
@@ -19,13 +24,18 @@ type ChildDirData struct {
 
 // DirScanner the tool to scan the dirs.
 type DirScanner struct {
-	baseDir      string
-	AllItem      int
-	AllDirItem   int
-	AllFileItem  int
-	AllSize      int64
-	TopChildDick map[string]ChildDirData
-	Runtime      time.Duration
+	baseDir       string
+	AllItem       int
+	AllDirItem    int
+	AllFileItem   int
+	AllSize       int64
+	TopChildDick  map[string]ChildDirData
+	Runtime       time.Duration
+	cddWait       sync.WaitGroup    // [Experimental]
+	cddChan       chan ChildDirData // [Experimental]
+	cddChanDone   chan bool         // [Experimental]
+	CddChanMax    int               // [Experimental]
+	iCddChanCount int               // [Experimental]
 
 	//struct inner/private valuable
 	//排除名称，以"*"匹配（不包含）
@@ -136,6 +146,124 @@ func (ds *DirScanner) scanRecursion(vDir string, depth int) int64 {
 	return currentSize
 }
 
+// ScanParallel to star scan the dir.[Experimental]
+func (ds *DirScanner) ScanParallel() error {
+	baseDir := ds.baseDir
+	ds.Runtime = time.Duration(0)
+	var err error = nil
+	if IsDir(baseDir) {
+		start := time.Now()
+		//default channel cache
+		if ds.CddChanMax < 1 {
+			ds.CddChanMax = DirScannerChanMax
+		}
+
+		ds.cddChan = make(chan ChildDirData, ds.CddChanMax)
+		ds.cddChanDone = make(chan bool)
+
+		// sync read the channel
+		go func() {
+			isDown := false
+			var sizeCount int64
+			for {
+				select {
+				case cc := <-ds.cddChan:
+					sizeCount += cc.Size
+				case <-ds.cddChanDone:
+					isDown = true
+				default:
+				}
+				if isDown {
+					break
+				}
+			}
+
+			//add the parallel scan
+			ds.AllSize += sizeCount
+		}()
+
+		ds.scanRecursionParallel(baseDir, 0)
+		// read the chan
+		//for cc :=<-ds.cddChan; cc.Name != "";{
+		//	fmt.Printf("%#v\r\n", cc)
+		//}
+
+		//wait all goroutine is done
+		ds.cddWait.Wait()
+		ds.cddChanDone <- true
+
+		ds.AllItem = ds.AllDirItem + ds.AllFileItem
+		ds.Runtime = time.Since(start)
+	} else {
+		err = errors.New(fmt.Sprintf("%v is not a valid dir.", baseDir))
+	}
+	return err
+}
+
+//recursion to scan dir, return the children count size.[Experimental]
+func (ds *DirScanner) scanRecursionParallel(vDir string, depth int) int64 {
+	files, err := ioutil.ReadDir(vDir)
+	if err != nil {
+		fmt.Println(err)
+		return 0
+	}
+	isTopClass := false
+	if ds.TopChildDick == nil {
+		ds.TopChildDick = map[string]ChildDirData{}
+		isTopClass = true
+	}
+	var currentSize int64 = 0
+	for _, fl := range files {
+		name := fl.Name()
+		vPath := StdPathName(fmt.Sprintf("%v/%v", vDir, name))
+		var size int64
+		if fl.IsDir() {
+			ds.AllDirItem += 1
+			depth += 1
+			// if goroutine is bigger than `ds.CddChanMax` will stop to distributive it.
+			if ds.iCddChanCount > ds.CddChanMax {
+				size = ds.scanRecursionParallel(vPath, depth)
+			} else {
+				ds.cddWait.Add(1)
+				ds.iCddChanCount += 1
+				go func(vp string, cdd chan ChildDirData) {
+					defer ds.cddWait.Done()
+					chSize := ds.scanRecursionParallel(vPath, depth)
+					cdd <- ChildDirData{
+						Name:  name,
+						Size:  chSize,
+						IsDir: true,
+						Path:  vPath,
+						Depth: depth,
+					}
+				}(vPath, ds.cddChan)
+			}
+			currentSize += size
+		} else {
+			if ds.ignoreScan(name) {
+				continue
+			}
+			size = fl.Size()
+			currentSize += size
+			ds.AllSize += fl.Size()
+			ds.AllFileItem += 1
+		}
+		if isTopClass {
+			// filter zero top dir when have a filter rule
+			if ds.filterNameMK && size == 0 {
+				continue
+			}
+			ds.TopChildDick[name] = ChildDirData{
+				Name:  name,
+				Size:  size,
+				IsDir: fl.IsDir(),
+				Depth: depth,
+			}
+		}
+	}
+	return currentSize
+}
+
 //ignore scan target name
 func (ds *DirScanner) ignoreScan(name string) bool {
 	ignore := false
@@ -184,6 +312,10 @@ func (ds *DirScanner) ignoreScan(name string) bool {
 
 func (ds *DirScanner) BaseDir() string {
 	return ds.baseDir
+}
+
+func (ds *DirScanner) ChanNumber() int {
+	return ds.iCddChanCount
 }
 
 func NewDirScanner(vDir string) *DirScanner {

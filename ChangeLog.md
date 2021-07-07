@@ -46,6 +46,7 @@
     - **syntax**  初步增加语言语法支持，常用
       - +) `NumberOpera` 实现字符串的等式的运算
 - **fs**
+  - +) `DirScanner` 增加实现性的并行扫描（待优化）**[Experimental]**
   - -) 移除遗弃标注项：`Struct --> ByteSize`
   - fixed) `DirScanner` 扫描目录时文件过滤规则错误。
 - **str**
