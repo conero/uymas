@@ -13,6 +13,8 @@ type ChildDirData struct {
 	Name  string
 	Size  int64
 	IsDir bool
+	Path  string
+	Depth int // the max depth of dir. @todo need to do
 }
 
 // DirScanner the tool to scan the dirs.
@@ -25,11 +27,12 @@ type DirScanner struct {
 	TopChildDick map[string]ChildDirData
 	Runtime      time.Duration
 
-	//内部变量
+	//struct inner/private valuable
 	//排除名称，以"*"匹配（不包含）
 	excludeExp []string
 	//过滤表达式（包含）
-	includeExp []string
+	includeExp   []string
+	filterNameMK bool
 }
 
 // Exclude exclude exp for dir scan
@@ -45,6 +48,9 @@ func (ds *DirScanner) Exclude(excludes ...string) *DirScanner {
 		return ds
 	}
 	ds.excludeExp = append(ds.excludeExp, newExcludes...)
+	if !ds.filterNameMK {
+		ds.filterNameMK = len(ds.excludeExp) > 0
+	}
 	return ds
 }
 
@@ -61,6 +67,9 @@ func (ds *DirScanner) Include(includes ...string) *DirScanner {
 		return ds
 	}
 	ds.includeExp = append(ds.includeExp, newInclude...)
+	if !ds.filterNameMK {
+		ds.filterNameMK = len(ds.includeExp) > 0
+	}
 	return ds
 }
 
@@ -95,21 +104,26 @@ func (ds *DirScanner) scanRecursion(vDir string) int64 {
 	var currentSize int64 = 0
 	for _, fl := range files {
 		name := fl.Name()
-		if ds.ignoreScan(name) {
-			continue
-		}
+		vPath := StdPathName(fmt.Sprintf("%v/%v", vDir, name))
 		var size int64
 		if fl.IsDir() {
 			ds.AllDirItem += 1
-			size = ds.scanRecursion(StdDir(vDir + "/" + name))
+			size = ds.scanRecursion(vPath)
 			currentSize += size
 		} else {
+			if ds.ignoreScan(name) {
+				continue
+			}
 			size = fl.Size()
 			currentSize += size
 			ds.AllSize += fl.Size()
 			ds.AllFileItem += 1
 		}
 		if isTopClass {
+			// filter zero top dir when have a filter rule
+			if ds.filterNameMK && size == 0 {
+				continue
+			}
 			ds.TopChildDick[name] = ChildDirData{
 				Name:  name,
 				Size:  size,
@@ -130,7 +144,7 @@ func (ds *DirScanner) ignoreScan(name string) bool {
 			if "" == strings.TrimSpace(filter) {
 				continue
 			}
-			if idx := strings.Index(name, allExp); idx > -1 {
+			if idx := strings.Index(filter, allExp); idx > -1 {
 				filter = strings.ReplaceAll(filter, allExp, ".*")
 				if isMatch, er := regexp.MatchString(filter, name); er == nil && isMatch {
 					isFilter = true
@@ -149,7 +163,7 @@ func (ds *DirScanner) ignoreScan(name string) bool {
 			if "" == strings.TrimSpace(filter) {
 				continue
 			}
-			if idx := strings.Index(name, allExp); idx > -1 {
+			if idx := strings.Index(filter, allExp); idx > -1 {
 				filter = strings.ReplaceAll(filter, allExp, ".*")
 				if isMatch, er := regexp.MatchString(filter, name); er == nil && isMatch {
 					isExclude = true

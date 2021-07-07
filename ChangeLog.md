@@ -46,6 +46,7 @@
       - +) `NumberOpera` 实现字符串的等式的运算
 - **fs**
   - -) 移除遗弃标注项：`Struct --> ByteSize`
+  - fixed) `DirScanner` 扫描目录时文件过滤规则错误。
 - **str**
   - -) 移除遗弃标注项：`Func -> UcWords`
   - -) `str.WriterToContent` 移除实验性的词方法，使用语言支持库。
