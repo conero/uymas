@@ -204,16 +204,16 @@ func (c *defaultApp) Scan() {
 	dd := fs.NewDirScanner(baseDir)
 
 	//过滤
-	dd.Exclude(cc.ArgRaw("exclude"))
-	dd.Include(cc.ArgRaw("include"))
+	dd.Exclude(cc.ArgStringSlice("exclude")...)
+	dd.Include(cc.ArgStringSlice("include")...)
 
 	if er := dd.Scan(); er == nil {
-		var table [][]interface{}
+		var table = [][]interface{}{{"Path", "Size", "Depth"}}
 		for key, tcd := range dd.TopChildDick {
-			table = append(table, []interface{}{key, number.Bytes(tcd.Size)})
+			table = append(table, []interface{}{key, number.Bytes(tcd.Size), tcd.Depth})
 		}
 
-		fmt.Println(bin.FormatTable(table, " "))
+		fmt.Println(bin.FormatTable(table, false))
 		fmt.Printf(" 文件扫目标目录： %v.\r\n", dd.BaseDir())
 		fmt.Printf(" 文件扫描数： %v, 目录: %v, 文件： %v.\r\n", dd.AllItem, dd.AllDirItem, dd.AllFileItem)
 		fmt.Printf(" 目录大小: %v.\r\n", number.Bytes(dd.AllSize))

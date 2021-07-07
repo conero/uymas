@@ -80,7 +80,7 @@ func (ds *DirScanner) Scan() error {
 	var err error = nil
 	if IsDir(baseDir) {
 		start := time.Now()
-		ds.scanRecursion(baseDir)
+		ds.scanRecursion(baseDir, 0)
 		ds.AllItem = ds.AllDirItem + ds.AllFileItem
 		ds.Runtime = time.Since(start)
 	} else {
@@ -90,7 +90,7 @@ func (ds *DirScanner) Scan() error {
 }
 
 //recursion to scan dir, return the children count size.
-func (ds *DirScanner) scanRecursion(vDir string) int64 {
+func (ds *DirScanner) scanRecursion(vDir string, depth int) int64 {
 	files, err := ioutil.ReadDir(vDir)
 	if err != nil {
 		fmt.Println(err)
@@ -108,7 +108,8 @@ func (ds *DirScanner) scanRecursion(vDir string) int64 {
 		var size int64
 		if fl.IsDir() {
 			ds.AllDirItem += 1
-			size = ds.scanRecursion(vPath)
+			depth += 1
+			size = ds.scanRecursion(vPath, depth)
 			currentSize += size
 		} else {
 			if ds.ignoreScan(name) {
@@ -128,6 +129,7 @@ func (ds *DirScanner) scanRecursion(vDir string) int64 {
 				Name:  name,
 				Size:  size,
 				IsDir: fl.IsDir(),
+				Depth: depth,
 			}
 		}
 	}

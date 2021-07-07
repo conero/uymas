@@ -787,6 +787,31 @@ func (app *CliCmd) ArgInt(keys ...string) int {
 	return 0
 }
 
+// ArgStringSlice get string-slice param args
+func (app *CliCmd) ArgStringSlice(keys ...string) []string {
+	value := app.Arg(keys...)
+	if value != nil {
+		switch value.(type) {
+		case []string:
+			return value.([]string)
+		case string:
+			return []string{value.(string)}
+		default:
+			var vSlice []string
+			vr := reflect.ValueOf(value)
+			if vr.Kind() == reflect.Array || vr.Kind() == reflect.Slice {
+				for i := 0; i < vr.Len(); i++ {
+					vSlice = append(vSlice, fmt.Sprintf("%v", vr.Index(i).Interface()))
+				}
+			} else {
+				vSlice = append(vSlice, fmt.Sprintf("%v", keys))
+			}
+			return vSlice
+		}
+	}
+	return nil
+}
+
 // ArgRawDefault get raw arg has default
 func (app *CliCmd) ArgRawDefault(key, def string) string {
 	var value = def
