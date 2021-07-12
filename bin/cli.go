@@ -416,7 +416,7 @@ func (cli *CLI) routerCommand(cc *CliCmd) bool {
 			//the subCommand string
 			subCmdStr := cc.SubCommand
 			if subCmdStr != "" {
-				subCmdStr = strings.Title(subCmdStr)
+				subCmdStr = Cmd2StringMap(subCmdStr)
 				callFunc(subCmdStr)
 			}
 
@@ -513,7 +513,7 @@ func (cli *CLI) routerAny(cc *CliCmd) bool {
 			var cmdTitle string
 			// try to find `command`
 			if cc.Command != "" {
-				cmdTitle = strings.Title(cc.Command)
+				cmdTitle = Cmd2StringMap(cc.Command)
 				// check `Construct` repeat call(2 times)
 				if cmdTitle != actionRunConstruct {
 					// call method

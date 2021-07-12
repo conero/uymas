@@ -35,6 +35,7 @@
   - +) `CLI.UnLoadScriptSyntax` 支持可选的（`--file,-f`） 语言集合脚本文件，（`--script,-s`）语言文本进行解析。
   - +) `CLI.CliAppCompleteInterface`, 并且使其支持系统的内置的固定方法如：`construct > command > help > unmatched > index`（顺序规则）.
   - +) `CliCmd.ArgStringSlice` 用于获取数组式参数
+  - +) `Cmd2StringMap` 用户数实现命令字符串转golang风格字符串，并使用其优化命令行路由
   - -) 移除遗弃标注项：`FormatStr`、`CliCmd.HasSetting`
   - optimize) `bin.FormatTable` 使用**reflect**扩展器支持任意2维度数组格式化。
   - optimze) `CLI.router` 路由重写将过程化的代码转换为多函数调用，未定义方法注册检测更广泛。
