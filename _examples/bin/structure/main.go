@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/conero/uymas/bin"
+	"gitee.com/conero/uymas/bin"
 )
 
 func main() {

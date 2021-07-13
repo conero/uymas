@@ -2,7 +2,7 @@ package svn
 
 import (
 	"encoding/xml"
-	"github.com/conero/uymas/fs"
+	"gitee.com/conero/uymas/fs"
 )
 
 // @Date：   2018/12/5 0005 22:57

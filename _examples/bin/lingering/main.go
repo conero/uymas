@@ -3,10 +3,10 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"github.com/conero/uymas"
-	"github.com/conero/uymas/bin"
-	"github.com/conero/uymas/bin/butil"
-	"github.com/conero/uymas/bin/parser"
+	"gitee.com/conero/uymas"
+	"gitee.com/conero/uymas/bin"
+	"gitee.com/conero/uymas/bin/butil"
+	"gitee.com/conero/uymas/bin/parser"
 	"os"
 	"strings"
 )

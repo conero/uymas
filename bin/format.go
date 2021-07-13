@@ -5,8 +5,8 @@ package bin
 
 import (
 	"fmt"
-	"github.com/conero/uymas/number"
-	"github.com/conero/uymas/str"
+	"gitee.com/conero/uymas/number"
+	"gitee.com/conero/uymas/str"
 	"reflect"
 	"sort"
 	"strconv"

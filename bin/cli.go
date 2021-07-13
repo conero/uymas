@@ -2,10 +2,10 @@ package bin
 
 import (
 	"fmt"
-	"github.com/conero/uymas"
-	"github.com/conero/uymas/bin/butil"
-	"github.com/conero/uymas/bin/parser"
-	"github.com/conero/uymas/str"
+	"gitee.com/conero/uymas"
+	"gitee.com/conero/uymas/bin/butil"
+	"gitee.com/conero/uymas/bin/parser"
+	"gitee.com/conero/uymas/str"
 	"log"
 	"os"
 	"reflect"
@@ -359,7 +359,7 @@ func (cli *CLI) router(cc *CliCmd) {
 			fmt.Printf("   Power by framework %v, Version: %v/%v.\r\n", uymas.PkgName,
 				uymas.Version, uymas.Release)
 			fmt.Printf("   You call register `Unfind` handler for it.\r\n")
-			fmt.Printf("   Welcome to learn more doc from link. https://pkg.go.dev/github.com/conero/uymas \r\n")
+			fmt.Printf("   Welcome to learn more doc from link. https://pkg.go.dev/gitee.com/conero/uymas \r\n")
 			fmt.Println()
 			isRouterMk = false
 		}

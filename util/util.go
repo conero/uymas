@@ -2,7 +2,7 @@
 package util
 
 import (
-	"github.com/conero/uymas/str"
+	"gitee.com/conero/uymas/str"
 	"math"
 	"reflect"
 	"time"
