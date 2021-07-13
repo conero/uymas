@@ -72,7 +72,7 @@
 ###### v1.1.0-ea1/20210713
 
 - **ea** 为 ` experimental alpha`  实验性的alpha版本
-- 将`github.com` 重命名为 `gitee.com` 包名
+- 将`github.com` 重命名为 `gitee.com` 包名（预计2021-07-20合并到开发分支、develop分支冻结）
 
 
 
