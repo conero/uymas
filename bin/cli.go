@@ -50,14 +50,16 @@ type CLI struct {
 
 // CliCmd the command of the cli application.
 type CliCmd struct {
-	Data       map[string]interface{} // the data from the `DataRaw` by parse for type
-	DataRaw    map[string]string      // the cli application apply the data
-	Command    string                 // the current command
-	SubCommand string                 // the sub command
-	Setting    []string               // the setting of command
-	Raw        []string               // the raw args
-	context    CLI
-	cmdType    int //the command type enumeration
+	Data            map[string]interface{} // the data from the `DataRaw` by parse for type
+	DataRaw         map[string]string      // the cli application apply the data
+	Command         string                 // the current command
+	SubCommand      string                 // the sub command
+	Setting         []string               // the setting of command
+	Raw             []string               // the raw args
+	context         CLI
+	cmdType         int                 //the command type enumeration
+	commandAlias    map[string][]string // the alias of command, using for App-style
+	subCommandAlias map[string][]string // the alias of command, using for App-style
 }
 
 // CliApp the cli app.
@@ -416,6 +418,7 @@ func (cli *CLI) routerCommand(cc *CliCmd) bool {
 			//the subCommand string
 			subCmdStr := cc.SubCommand
 			if subCmdStr != "" {
+				subCmdStr = cc.getAlias(cc.subCommandAlias, subCmdStr)
 				subCmdStr = Cmd2StringMap(subCmdStr)
 				callFunc(subCmdStr)
 			}
@@ -513,7 +516,8 @@ func (cli *CLI) routerAny(cc *CliCmd) bool {
 			var cmdTitle string
 			// try to find `command`
 			if cc.Command != "" {
-				cmdTitle = Cmd2StringMap(cc.Command)
+				cmdTitle = cc.getAlias(cc.commandAlias, cc.Command)
+				cmdTitle = Cmd2StringMap(cmdTitle)
 				// check `Construct` repeat call(2 times)
 				if cmdTitle != actionRunConstruct {
 					// call method
@@ -987,6 +991,46 @@ func (app *CliCmd) parseArgs() {
 			}
 		}
 	}
+}
+
+func (app *CliCmd) addAlias(value map[string][]string, key string, alias ...string) map[string][]string {
+	if value == nil {
+		value = map[string][]string{}
+	}
+	que, hasKey := value[key]
+	if hasKey {
+		que = append(que, alias...)
+	} else {
+		que = alias
+	}
+
+	value[key] = que
+	return value
+}
+
+func (app *CliCmd) getAlias(value map[string][]string, c string) string {
+	for key, alias := range value {
+		if key == c {
+			return key
+		}
+		for _, a := range alias {
+			if a == c {
+				return key
+			}
+		}
+	}
+
+	return c
+}
+
+func (app *CliCmd) CommandAlias(key string, alias ...string) *CliCmd {
+	app.commandAlias = app.addAlias(app.commandAlias, key, alias...)
+	return app
+}
+
+func (app *CliCmd) SubCommandAlias(key string, alias ...string) *CliCmd {
+	app.subCommandAlias = app.addAlias(app.subCommandAlias, key, alias...)
+	return app
 }
 
 // check the cmd of validation
