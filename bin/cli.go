@@ -58,8 +58,8 @@ type CliCmd struct {
 	Raw             []string               // the raw args
 	context         CLI
 	cmdType         int                 //the command type enumeration
-	commandAlias    map[string][]string // the alias of command, using for App-style
-	subCommandAlias map[string][]string // the alias of command, using for App-style
+	commandAlias    map[string][]string // the alias of command, using for App-style and runtime state
+	subCommandAlias map[string][]string // the alias of command, using for App-style and runtime state
 }
 
 // CliApp the cli app.
@@ -1008,6 +1008,23 @@ func (app *CliCmd) addAlias(value map[string][]string, key string, alias ...stri
 	return value
 }
 
+func (app *CliCmd) addAliasAll(value map[string][]string, alias map[string][]string) map[string][]string {
+	if value == nil {
+		value = alias
+	} else {
+		for key, vm := range alias {
+			oAlias, has := value[key]
+			if has {
+				oAlias = append(oAlias, vm...)
+			} else {
+				oAlias = vm
+			}
+			value[key] = oAlias
+		}
+	}
+	return value
+}
+
 func (app *CliCmd) getAlias(value map[string][]string, c string) string {
 	for key, alias := range value {
 		if key == c {
@@ -1023,13 +1040,24 @@ func (app *CliCmd) getAlias(value map[string][]string, c string) string {
 	return c
 }
 
+// CommandAlias Tip: in the future will merge method like CommandAlias And CommandAliasAll, chose one from twos.
 func (app *CliCmd) CommandAlias(key string, alias ...string) *CliCmd {
 	app.commandAlias = app.addAlias(app.commandAlias, key, alias...)
 	return app
 }
 
+func (app *CliCmd) CommandAliasAll(alias map[string][]string) *CliCmd {
+	app.commandAlias = app.addAliasAll(app.commandAlias, alias)
+	return app
+}
+
 func (app *CliCmd) SubCommandAlias(key string, alias ...string) *CliCmd {
 	app.subCommandAlias = app.addAlias(app.subCommandAlias, key, alias...)
+	return app
+}
+
+func (app *CliCmd) SubCommandAliasAll(alias map[string][]string) *CliCmd {
+	app.subCommandAlias = app.addAliasAll(app.subCommandAlias, alias)
 	return app
 }
 

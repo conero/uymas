@@ -80,16 +80,16 @@ type defaultApp struct {
 
 func (c *defaultApp) Construct() {
 	cc := c.Cc
-	switch cc.Command {
-	case "uymas-ls":
-		cc.Command = "uls"
-	case "cc": // "cache", "cc"
-		cc.Command = "cache"
-	case "sc": //
-		cc.Command = "scan"
-	case "py":
-		cc.Command = "pinyin"
-	}
+	cc.CommandAliasAll(map[string][]string{
+		"pinyin": {"py"},
+		"scan":   {"sc"},
+		"cache":  {"cc"},
+		"uls":    {"uymas-ls"},
+	})
+	/*cc.CommandAlias("pinyin", "py").
+	CommandAlias("scan", "sc").
+	CommandAlias("cache", "cc").
+	CommandAlias("uls", "uymas-ls")*/
 }
 
 // DefaultIndex index
@@ -118,6 +118,7 @@ func (c *defaultApp) DefaultHelp() {
 
 func (c *defaultApp) DefaultUnmatched() {
 	fmt.Printf(" Oop, 命令'%v'还没有实现呢，老兄！\r\n", c.Cc.Command)
+	fmt.Println()
 }
 
 // Test test 用于命令行解析等测试
