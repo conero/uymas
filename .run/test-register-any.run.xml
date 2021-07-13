@@ -3,7 +3,7 @@
     <module name="uymas" />
     <working_directory value="$PROJECT_DIR$" />
     <kind value="FILE" />
-    <package value="github.com/conero/uymas/_examples/trys/bin" />
+    <package value="gitee.com/conero/uymas/_examples/trys/bin" />
     <directory value="$PROJECT_DIR$" />
     <filePath value="$PROJECT_DIR$/_examples/trys/bin/register-any.go" />
     <output_directory value="$PROJECT_DIR$" />
