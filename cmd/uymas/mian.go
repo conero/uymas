@@ -126,10 +126,12 @@ func (c *defaultApp) Test() {
 	cc := c.Cc
 	fmt.Println(" 命令行测试")
 	fmt.Printf("  SubCommand: %v \r\n", cc.SubCommand)
-	fmt.Printf("  Option: %v \r\n", cc.Setting)
-	fmt.Printf("  DataRaw: %v \r\n", cc.DataRaw)
+	fmt.Printf("  Option: %#v \r\n", cc.Setting)
+	fmt.Printf("  Raw: %#v \r\n", cc.Raw)
+	fmt.Printf("  DataRaw: %#v \r\n", cc.DataRaw)
 	fmt.Printf("  Data: %#v \r\n", cc.Data)
 	fmt.Printf("  Input: %#v \r\n", strings.Join(cc.Raw, " "))
+
 	fmt.Printf(" %v \r\n", getSpendStr())
 	fmt.Println()
 }

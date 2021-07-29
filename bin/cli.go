@@ -905,7 +905,6 @@ func (app *CliCmd) AppendData(vMap map[string]interface{}) *CliCmd {
 //@todo app.Data --> 类型解析太简陋；支持类型与 Readme.md 不统一
 func (app *CliCmd) parseArgs() {
 	if app.Raw != nil {
-		optKeyList := []string{}
 		optKey := ""
 		for i, arg := range app.Raw {
 			if i == 0 && isVaildCmd(arg) {
@@ -924,9 +923,7 @@ func (app *CliCmd) parseArgs() {
 							app.Setting = append(app.Setting, arg)
 						} else { // --key=value
 							optKey = ""
-							tmpKey := arg[0:idx]
-							tmpValue := arg[idx+1:]
-							app.DataRaw[tmpKey] = tmpValue
+							app.saveOptionDick(arg[0:idx], arg[idx+1:])
 						}
 						markKeySuccess = true
 					} else if "-" == arg[0:1] {
@@ -941,56 +938,43 @@ func (app *CliCmd) parseArgs() {
 							for _, vs := range tmpArr {
 								app.Setting = append(app.Setting, vs)
 							}
+							tmpArrLen := len(tmpArr)
+							if tmpArrLen > 0 {
+								optKey = tmpArr[tmpArrLen-1]
+							}
 						}
 						markKeySuccess = true
 					}
 				}
 
 				if !markKeySuccess && optKey != "" {
-					arg = CleanoutString(arg)
-					if ddVal, ddHas := app.Data[optKey]; ddHas {
-						switch ddVal.(type) {
-						case string:
-							oldSs := app.Data[optKey].(string)
-							app.Data[optKey] = []string{oldSs, arg}
-						case []string:
-							oldVarr := app.Data[optKey].([]string)
-							oldVarr = append(oldVarr, arg)
-							app.Data[optKey] = oldVarr
-						}
-					} else {
-						app.Data[optKey] = arg
-					}
+					app.saveOptionDick(optKey, CleanoutString(arg))
 				}
-			}
-
-			if optKey != "" && -1 == str.InQue(optKey, optKeyList) {
-				optKeyList = append(optKeyList, optKey)
-			}
-		}
-
-		//`app.Data` => `app.DataRaw`
-		for _, k := range optKeyList {
-			if dV, kHas := app.Data[k]; kHas {
-				if _, rKhas := app.DataRaw[k]; !rKhas {
-					switch dV.(type) {
-					case []string:
-						app.DataRaw[k] = strings.Join(dV.([]string), " ")
-					case string:
-						app.DataRaw[k] = dV.(string)
-					}
-				}
-			}
-		}
-
-		//parse the raw cmd data to data.
-		//`app.DataRaw` => `app.Data`
-		for rawKey, rawVal := range app.DataRaw {
-			if _, hasRawKey := app.Data[rawKey]; !hasRawKey {
-				app.Data[rawKey] = ParseValueByStr(rawVal)
 			}
 		}
 	}
+}
+
+// merge data when parse options, Synchronous write Data and RawData.
+func (app *CliCmd) saveOptionDick(key string, value string) {
+	vRaw := value
+	if oV, hasOv := app.DataRaw[key]; hasOv {
+		vRaw = fmt.Sprintf("%v %v", oV, value)
+		if cData, hasData := app.Data[key]; hasData {
+			switch cData.(type) {
+			case string:
+				oldSs := app.Data[key].(string)
+				app.Data[key] = []string{oldSs, value}
+			case []string:
+				oldVar := app.Data[key].([]string)
+				oldVar = append(oldVar, value)
+				app.Data[key] = oldVar
+			}
+		}
+	} else {
+		app.Data[key] = value
+	}
+	app.DataRaw[key] = vRaw
 }
 
 func (app *CliCmd) addAlias(value map[string][]string, key string, alias ...string) map[string][]string {
