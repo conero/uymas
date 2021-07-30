@@ -441,7 +441,7 @@ func (cli *CLI) routerCommand(cc *CliCmd) bool {
 				callFunc(actionRunUnmatched)
 			}
 
-			if !routerValidMk {
+			if !routerValidMk && subCmdStr != "" {
 				panic(fmt.Sprintf("the method `%s` do not have a handler as `%v`.", cc.SubCommand, subCmdStr))
 			}
 
