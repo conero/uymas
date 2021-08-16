@@ -114,4 +114,10 @@ func TestStructToMap(t *testing.T) {
 	t.Logf("%v", StructToMap(tt))
 	t.Logf("StructToMapLStyle: %#v", StructToMapLStyle(tt))
 
+	// reflect.Ptr
+	ty := &Ty{}
+	ty = &tt
+	t.Logf("Ty -> %#v", ty)
+	t.Logf("%v", StructToMap(ty))
+
 }

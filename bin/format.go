@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"gitee.com/conero/uymas/number"
 	"gitee.com/conero/uymas/str"
+	"gitee.com/conero/uymas/util"
 	"reflect"
 	"sort"
 	"strconv"
@@ -16,8 +17,13 @@ import (
 // FormatKv The `k-v` data format to beautiful str.
 //FormatKv(kv map[string]interface{}, pref string)				 provide pref param form FormatKv.
 //FormatKv(kv map[string]interface{}, pref string, md string)	     provide pref and middle param form FormatK.
+//the `Kv` support map/struct, but not ptr(pointer)
 func FormatKv(kv interface{}, params ...string) string {
 	var vf = reflect.ValueOf(kv)
+	if vf.Kind() != reflect.Map {
+		kv = util.StructToMap(kv)
+		vf = reflect.ValueOf(kv)
+	}
 	if vf.Kind() != reflect.Map {
 		return ""
 	}

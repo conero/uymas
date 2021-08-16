@@ -26,6 +26,22 @@ func TestFormatKv(t *testing.T) {
 	t.Log("\n" + FormatKv(tdd2))
 	t.Log("\n" + FormatKv(tdd2, ". "))
 	t.Log("\n" + FormatKv(tdd2, ". ", "*"))
+
+	// struct
+	type Ty struct {
+		Name     string
+		Age      int
+		Sex      byte
+		birthday uint
+	}
+	ty := &Ty{
+		Name:     "Joshua Conero",
+		Age:      1994,
+		Sex:      'M',
+		birthday: 0522,
+	}
+	t.Logf("Struct/Ty -> %v\n", FormatKv(*ty))
+	t.Logf("Struct/Ty -> %v\n", FormatKv(ty))
 }
 
 func TestFormatQue(t *testing.T) {

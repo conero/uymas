@@ -102,15 +102,22 @@ func ValueNull(value interface{}) bool {
 	return v.IsZero()
 }
 
-// StructToMap convert Struct field to by Map
+// StructToMap convert Struct field to by Map, support the Ptr
 func StructToMap(value interface{}) map[string]interface{} {
 	rv := reflect.ValueOf(value)
+	var rt reflect.Type
+	if rv.Kind() == reflect.Ptr {
+		rv = rv.Elem()
+		rt = rv.Type()
+	}
 	if rv.Kind() == reflect.Struct {
-		rt := reflect.TypeOf(value)
+		if rt == nil {
+			rt = reflect.TypeOf(value)
+		}
 		vMap := map[string]interface{}{}
 		for i := 0; i < rv.NumField(); i++ {
 			field := rv.Field(i)
-			if field.Kind() != reflect.Func {
+			if field.Kind() != reflect.Func && field.CanInterface() {
 				name := rt.Field(i).Name
 				vMap[name] = field.Interface()
 			}
@@ -123,8 +130,15 @@ func StructToMap(value interface{}) map[string]interface{} {
 // StructToMapLStyle convert Struct field to by Map and key is Lower style.
 func StructToMapLStyle(value interface{}) map[string]interface{} {
 	rv := reflect.ValueOf(value)
+	var rt reflect.Type
+	if rv.Kind() == reflect.Ptr {
+		rv = rv.Elem()
+		rt = rv.Type()
+	}
 	if rv.Kind() == reflect.Struct {
-		rt := reflect.TypeOf(value)
+		if rt == nil {
+			rt = reflect.TypeOf(value)
+		}
 		vMap := map[string]interface{}{}
 		for i := 0; i < rv.NumField(); i++ {
 			field := rv.Field(i)
