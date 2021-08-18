@@ -2,6 +2,7 @@ package pinyin
 
 import (
 	"bufio"
+	"bytes"
 	"os"
 	"regexp"
 	"strings"
@@ -53,6 +54,41 @@ func ReadDickFromIni(filename string) map[string]map[string]string {
 			if err2 != nil {
 				break
 			}
+		}
+	}
+
+	return dick
+}
+
+// ReadDickFromByteKv read file and parse from ini files
+func ReadDickFromByteKv(content []byte) map[string]string {
+	dick := map[string]string{}
+
+	bf := bytes.NewBuffer(content)
+	buf := bufio.NewReader(bf)
+	var equalStr = "="
+	for {
+		line, err2 := buf.ReadString('\n')
+		line = strings.TrimSpace(line)
+		// "#/;" 开头含忽略
+		w := ""
+		if line != "" {
+			w = line[:1]
+		}
+		if w == "#" || w == ";" {
+			line = ""
+		}
+		if line != "" {
+			idx := strings.Index(line, equalStr)
+			if idx > -1 {
+				tKey := strings.TrimSpace(line[:idx])
+				tValue := strings.TrimSpace(line[idx+1:])
+				dick[tKey] = tValue
+			}
+		}
+		// 错误
+		if err2 != nil {
+			break
 		}
 	}
 
@@ -122,8 +158,8 @@ func GetLinesFromFile(filename string) []string {
 	fh, err := os.Open(filename)
 	if err == nil {
 		buf := bufio.NewReader(fh)
-		lines := []string{}
-		linesCase := []string{}
+		var lines []string
+		var linesCase []string
 		for {
 			line, err2 := buf.ReadString('\n')
 			line = strings.TrimSpace(line)
@@ -147,4 +183,33 @@ func GetLinesFromFile(filename string) []string {
 		return lines
 	}
 	return nil
+}
+
+// GetLinesFromByte the line byte
+func GetLinesFromByte(content []byte) []string {
+	bf := bytes.NewBuffer(content)
+	buf := bufio.NewReader(bf)
+	var lines []string
+	var linesCase []string
+	for {
+		line, err2 := buf.ReadString('\n')
+		line = strings.TrimSpace(line)
+		// "#/;" 开头含忽略
+		w := ""
+		if line != "" {
+			w = line[:1]
+		}
+		if w == "#" || w == ";" {
+			line = ""
+		}
+		if line != "" {
+			lines = append(lines, line)
+			linesCase = append(linesCase, line)
+		}
+		// 错误
+		if err2 != nil {
+			break
+		}
+	}
+	return lines
 }

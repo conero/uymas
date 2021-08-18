@@ -1,6 +1,11 @@
 //Package number handler like unit cover.
 package number
 
+import (
+	"fmt"
+	"strconv"
+)
+
 // @Date：   2018/12/20 0020 16:16
 // @Author:  Joshua Conero
 // @Name:    数字包
@@ -94,4 +99,27 @@ func SumQInt(data []int) int {
 		a += n
 	}
 	return a
+}
+
+func AnyInt64(v interface{}) int64 {
+	var i64 int64
+	if v != nil {
+		switch v.(type) {
+		case int64:
+			i64 = v.(int64)
+		case int32:
+			i64 = int64(v.(int32))
+		case int:
+			i64 = int64(v.(int))
+		case int16:
+			i64 = int64(v.(int16))
+		case int8:
+			i64 = int64(v.(int8))
+		default:
+			if i, er := strconv.ParseInt(fmt.Sprintf("%v", v), 10, 64); er == nil {
+				i64 = i
+			}
+		}
+	}
+	return i64
 }
