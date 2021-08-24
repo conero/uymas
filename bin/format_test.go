@@ -44,6 +44,45 @@ func TestFormatKv(t *testing.T) {
 	t.Logf("Struct/Ty -> %v\n", FormatKv(ty))
 }
 
+func TestFormatKvSort(t *testing.T) {
+	tdd := map[string]interface{}{
+		"author":                   "Joshua Conero",
+		"email":                    "conero@163",
+		"a":                        "TestFormatKv for beautify string.",
+		"canBeALongStringTestAlso": 2,
+	}
+	t.Log("\n" + FormatKvSort(tdd))
+	t.Log("\n" + FormatKvSort(tdd, ". "))
+	t.Log("\n" + FormatKvSort(tdd, ". ", "*"))
+
+	// support more type.
+	tdd2 := map[interface{}]interface{}{
+		"author":                   "Joshua Conero",
+		210609:                     "conero@163",
+		true:                       "TestFormatKv for beautify string.",
+		"canBeALongStringTestAlso": 2,
+	}
+	t.Log("\n" + FormatKvSort(tdd2))
+	t.Log("\n" + FormatKvSort(tdd2, ". "))
+	t.Log("\n" + FormatKvSort(tdd2, ". ", "*"))
+
+	// struct
+	type Ty struct {
+		Name     string
+		Age      int
+		Sex      byte
+		birthday uint
+	}
+	ty := &Ty{
+		Name:     "Joshua Conero",
+		Age:      1994,
+		Sex:      'M',
+		birthday: 0522,
+	}
+	t.Logf("Struct/Ty -> %v\n", FormatKvSort(*ty))
+	t.Logf("Struct/Ty -> %v\n", FormatKvSort(ty))
+}
+
 func TestFormatQue(t *testing.T) {
 	// 用于输出格式
 	// 实际测试时将会忽略信息
