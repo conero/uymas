@@ -90,11 +90,11 @@ func FormatKvSort(kv interface{}, params ...string) string {
 	// 最大长度
 	maxLen := len(pref)
 	var sortKeys []string
-	var values []string
+	var values = map[string]string{}
 	for mr := vf.MapRange(); mr.Next(); {
 		k := fmt.Sprintf("%v", mr.Key())
 		sortKeys = append(sortKeys, k)
-		values = append(values, fmt.Sprintf("%v", mr.Value()))
+		values[k] = fmt.Sprintf("%v", mr.Value())
 		kLen := len(k)
 		if kLen > maxLen {
 			maxLen = kLen
@@ -110,11 +110,11 @@ func FormatKvSort(kv interface{}, params ...string) string {
 
 	sort.Strings(sortKeys)
 	// format the map
-	for i, key := range sortKeys {
+	for _, key := range sortKeys {
 		if s != "" {
 			s += "\n"
 		}
-		s += pref + key + strings.Repeat(bit, maxLen-len(key)) + fmt.Sprintf("%v", values[i])
+		s += pref + key + strings.Repeat(bit, maxLen-len(key)) + fmt.Sprintf("%v", values[key])
 	}
 	return s
 }
