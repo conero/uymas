@@ -1,7 +1,6 @@
 package util
 
 import (
-	"fmt"
 	"reflect"
 )
 
@@ -14,14 +13,13 @@ type Object struct {
 func (obj Object) Assign(target interface{}, source interface{}) interface{} {
 	var m = target
 	tReft := reflect.TypeOf(target)
-	if tReft.Kind() == reflect.Struct {
+	if tReft.Kind() == reflect.Ptr {
 		tReft = tReft.Elem()
 	}
 	tRefv := reflect.ValueOf(target)
-	if tRefv.Kind() == reflect.Struct {
+	if tRefv.Kind() == reflect.Ptr {
 		tRefv = tRefv.Elem()
 	}
-	//@todo how to handler the map.
 	//if it's map that can add field
 	isMap := tReft.Kind() == reflect.Map
 	if isMap {
@@ -36,14 +34,17 @@ func (obj Object) Assign(target interface{}, source interface{}) interface{} {
 		sField := sRefv.FieldByName(field.Name)
 		tField := tRefv.Field(i)
 		if sField.IsValid() && !sField.IsZero() && sField.Kind() == tField.Kind() {
-			if sField.Kind() == reflect.Struct {
+			if sField.Kind() == reflect.Struct { // Nesting Assign
 				//Structure nesting handler
-				//@todo
+				//@todo <Nesting Assign>
 				//panic: reflect: Elem of invalid type reflect.Value
 				//fmt.Println(field.Name)
-				fmt.Println(tField)
-				fmt.Println(sField)
-				obj.Assign(tField, sField)
+				if tField.CanAddr() {
+					//fmt.Printf("Nest->tField %#v\n", tField)
+					//fmt.Printf("Nest->sField %#v\n", sField)
+					//obj.Assign(tField.Addr(), sField)
+					//obj.Assign(tField.Addr(), sField)
+				}
 			} else {
 				tField.Set(sField)
 			}
