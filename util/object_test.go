@@ -1,6 +1,9 @@
 package util
 
-import "testing"
+import (
+	"math"
+	"testing"
+)
 
 func TestObject_Assign(t *testing.T) {
 	o := Object{}
@@ -95,5 +98,32 @@ func TestObject_AssignMap(t *testing.T) {
 	tgt = map[string]interface{}{}
 	obj.AssignMap(tgt, dg)
 	t.Logf("%#v", tgt)
+
+}
+
+func TestStructToMap(t *testing.T) {
+	type Ty struct {
+		Name          string
+		Age           int
+		HeightWidthLv float64
+		EmptyInt      int
+		EmptyString   string
+	}
+
+	tt := Ty{}
+	t.Logf("%v", StructToMap(tt))
+
+	tt.Name = "Joshua Conero"
+	tt.HeightWidthLv = math.Pi
+	tt.Age = 58
+	t.Logf("%v", StructToMap(tt))
+	t.Logf("StructToMapLStyle: %#v", StructToMapLStyle(tt))
+	t.Logf("StructToMapLStyleIgnoreEmpty: %#v", ToMapLStyleIgnoreEmpty(tt))
+
+	// reflect.Ptr
+	ty := &Ty{}
+	ty = &tt
+	t.Logf("Ty -> %#v", ty)
+	t.Logf("%v", StructToMap(ty))
 
 }

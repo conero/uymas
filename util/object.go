@@ -1,6 +1,7 @@
 package util
 
 import (
+	"gitee.com/conero/uymas/str"
 	"reflect"
 )
 
@@ -84,4 +85,81 @@ func (obj Object) AssignMap(targetMap interface{}, srcMapOrStruct interface{}) {
 			}
 		}
 	}
+}
+
+// StructToMap convert Struct field to by Map, support the Ptr
+func StructToMap(value interface{}) map[string]interface{} {
+	rv := reflect.ValueOf(value)
+	var rt reflect.Type
+	if rv.Kind() == reflect.Ptr {
+		rv = rv.Elem()
+		rt = rv.Type()
+	}
+	if rv.Kind() == reflect.Struct {
+		if rt == nil {
+			rt = reflect.TypeOf(value)
+		}
+		vMap := map[string]interface{}{}
+		for i := 0; i < rv.NumField(); i++ {
+			field := rv.Field(i)
+			if field.Kind() != reflect.Func && field.CanInterface() {
+				name := rt.Field(i).Name
+				vMap[name] = field.Interface()
+			}
+		}
+		return vMap
+	}
+	return nil
+}
+
+// StructToMapLStyle convert Struct field to by Map and key is Lower style.
+func StructToMapLStyle(value interface{}) map[string]interface{} {
+	rv := reflect.ValueOf(value)
+	var rt reflect.Type
+	if rv.Kind() == reflect.Ptr {
+		rv = rv.Elem()
+		rt = rv.Type()
+	}
+	if rv.Kind() == reflect.Struct {
+		if rt == nil {
+			rt = reflect.TypeOf(value)
+		}
+		vMap := map[string]interface{}{}
+		for i := 0; i < rv.NumField(); i++ {
+			field := rv.Field(i)
+			if field.Kind() != reflect.Func {
+				name := rt.Field(i).Name
+				vMap[str.LowerStyle(name)] = field.Interface()
+			}
+		}
+		return vMap
+	}
+	return nil
+}
+
+// ToMapLStyleIgnoreEmpty convert Struct field to by Map and key is Lower style and ignore empty.
+func ToMapLStyleIgnoreEmpty(value interface{}) map[string]interface{} {
+	rv := reflect.ValueOf(value)
+	var rt reflect.Type
+	if rv.Kind() == reflect.Ptr {
+		rv = rv.Elem()
+		rt = rv.Type()
+	}
+	if rv.Kind() == reflect.Struct {
+		if rt == nil {
+			rt = reflect.TypeOf(value)
+		}
+		vMap := map[string]interface{}{}
+		for i := 0; i < rv.NumField(); i++ {
+			field := rv.Field(i)
+			if field.Kind() != reflect.Func && field.IsValid() {
+				if !field.IsZero() {
+					name := rt.Field(i).Name
+					vMap[str.LowerStyle(name)] = field.Interface()
+				}
+			}
+		}
+		return vMap
+	}
+	return nil
 }

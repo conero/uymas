@@ -69,6 +69,7 @@
   - -) 移除遗弃标注项：`Struct -> One`
 - **util**
   - -) 移除遗弃标注项：`Func -> Sec、SecCall、SecCallStr`
+  - +) 新增方法 `ToMapLStyleIgnoreEmpty` 并将 map 转换转移到 `object.go` 内
 - **parse/xini**
   - change) `GetFunc` -> `SetFunc`
   - optimize) `Container.HasKey` 扩展支持多个键值检测
