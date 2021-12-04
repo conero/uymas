@@ -14,9 +14,10 @@ import (
 type Level int8
 
 const (
-	LogDebug Level = iota
+	LogAll Level = iota
+	LogDebug
 	LogInfo
-	LogWarning
+	LogWarn
 	LogError
 	LogNone
 )
@@ -52,27 +53,35 @@ func (l Logger) Infof(message string, args ...interface{}) {
 	l.Format("INFO", message, args...)
 }
 
-func (l Logger) Warningf(message string, args ...interface{}) {
-	if l.Level > LogWarning {
+func (l Logger) Warnf(message string, args ...interface{}) {
+	if l.Level > LogWarn {
 		return
 	}
-	l.Format("WARNING", message, args...)
+	l.Format("WARN", message, args...)
 }
 
 func (l Logger) Errorf(message string, args ...interface{}) {
 	if l.Level > LogError {
 		return
 	}
-	l.Format("ERR", message, args...)
+	l.Format("ERROR", message, args...)
+}
+
+// Log get embed go lib log
+func (l Logger) Log() *log.Logger {
+	return l.logger
 }
 
 func NewLogger(cfg Config) *Logger {
-	lv := LogDebug
+	// default base log level is `Warn`
+	lv := LogWarn
 	switch strings.ToLower(cfg.Level) {
+	case "all":
+		lv = LogAll
 	case "error", "err":
 		lv = LogError
 	case "warning", "warn":
-		lv = LogWarning
+		lv = LogWarn
 	case "info":
 		lv = LogInfo
 	case "debug":
@@ -92,13 +101,13 @@ func NewLogger(cfg Config) *Logger {
 			fl, er := os.OpenFile(fmt.Sprintf("%v/%v.log", output, now.Format("02")),
 				os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0777)
 			if er == nil {
-				cfg.Log = log.New(fl, "\n", log.LstdFlags)
+				cfg.Log = log.New(fl, "", log.LstdFlags)
 			}
 		}
 
 		// 降级处理，所有驱动解析失败的使用控制台
 		if cfg.Log == nil {
-			cfg.Log = log.New(os.Stdout, "\n", log.LstdFlags)
+			cfg.Log = log.New(os.Stdout, "", log.LstdFlags)
 		}
 	}
 
