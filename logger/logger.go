@@ -1,4 +1,5 @@
-// Package logger basic and simple logger for application
+// Package logger basic and simple logger for application, it base the go embed `log` package.
+// it's able to control output by log level, level order `all<debug<info<warn<error<none`.
 package logger
 
 import (
@@ -27,12 +28,14 @@ type Logger struct {
 	Level  Level
 }
 
-// Config 日志配置文件
+// Config builder logging configure.
 type Config struct {
-	Log       *log.Logger
-	Level     string
-	Driver    string // 输出启驱动<stdout, file>
-	OutputDir string // 输出日志，设置是为文件驱动
+	Log   *log.Logger
+	Level string
+	// driver list: stdout, file
+	Driver string
+	// when Driver is file it will ok
+	OutputDir string
 }
 
 func (l Logger) Format(prefix, message string, args ...interface{}) {
@@ -67,11 +70,12 @@ func (l Logger) Errorf(message string, args ...interface{}) {
 	l.Format("ERROR", message, args...)
 }
 
-// Log get embed go lib log
+// Log get embed go lib log when you need the instance.
 func (l Logger) Log() *log.Logger {
 	return l.logger
 }
 
+// NewLogger build a simple logger user it.
 func NewLogger(cfg Config) *Logger {
 	// default base log level is `Warn`
 	lv := LogWarn
@@ -101,13 +105,13 @@ func NewLogger(cfg Config) *Logger {
 			fl, er := os.OpenFile(fmt.Sprintf("%v/%v.log", output, now.Format("02")),
 				os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0777)
 			if er == nil {
-				cfg.Log = log.New(fl, "", log.LstdFlags)
+				cfg.Log = log.New(fl, "", log.Ltime)
 			}
 		}
 
 		// 降级处理，所有驱动解析失败的使用控制台
 		if cfg.Log == nil {
-			cfg.Log = log.New(os.Stdout, "", log.LstdFlags)
+			cfg.Log = log.New(os.Stdout, "", log.Ltime)
 		}
 	}
 
