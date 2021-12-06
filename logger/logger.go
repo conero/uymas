@@ -95,10 +95,12 @@ func NewLogger(cfg Config) *Logger {
 	}
 
 	if cfg.Log == nil { // 默认日志
-		if lv != LogNone && (cfg.Driver == "file" || cfg.OutputDir != "") {
+		if lv != LogNone && cfg.Driver == "file" {
 			output := cfg.OutputDir
 			if output == "" {
 				output = butil.GetPathDir("/.runtime")
+			} else {
+				output = butil.GetPathDir(output)
 			}
 			now := time.Now()
 			output = fs.CheckDir(fmt.Sprintf("%v/%v", output, now.Format("2006/01")))
