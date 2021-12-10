@@ -102,7 +102,11 @@ func StructToMap(value interface{}) map[string]interface{} {
 		vMap := map[string]interface{}{}
 		for i := 0; i < rv.NumField(); i++ {
 			field := rv.Field(i)
-			if field.Kind() != reflect.Func && field.CanInterface() {
+			if !field.IsValid() {
+				continue
+			}
+			// Notice: struct lower field also can be scan, and ignore func/ptr.
+			if vKind := field.Kind(); vKind != reflect.Func && vKind != reflect.Ptr {
 				name := rt.Field(i).Name
 				vMap[name] = field.Interface()
 			}
@@ -127,7 +131,10 @@ func StructToMapLStyle(value interface{}) map[string]interface{} {
 		vMap := map[string]interface{}{}
 		for i := 0; i < rv.NumField(); i++ {
 			field := rv.Field(i)
-			if field.Kind() != reflect.Func {
+			if !field.IsValid() {
+				continue
+			}
+			if vKind := field.Kind(); vKind != reflect.Func && vKind != reflect.Ptr {
 				name := rt.Field(i).Name
 				vMap[str.LowerStyle(name)] = field.Interface()
 			}
@@ -152,7 +159,10 @@ func ToMapLStyleIgnoreEmpty(value interface{}) map[string]interface{} {
 		vMap := map[string]interface{}{}
 		for i := 0; i < rv.NumField(); i++ {
 			field := rv.Field(i)
-			if field.Kind() != reflect.Func && field.IsValid() {
+			if !field.IsValid() {
+				continue
+			}
+			if vKind := field.Kind(); vKind != reflect.Func && vKind != reflect.Ptr {
 				if !field.IsZero() {
 					name := rt.Field(i).Name
 					vMap[str.LowerStyle(name)] = field.Interface()
