@@ -1,6 +1,12 @@
-# uymas
+# Uymas
 
-*查看文档 [conero/uymas godoc 文档](https://pkg.go.dev/gitee.com/conero/uymas)*
+Golang 常用包，快速实现命令行程序开发、struct合并、随机数等生成.
+
+
+
+[![Go.Dev reference](https://img.shields.io/badge/go.dev-reference-blue?logo=go&logoColor=white)](https://pkg.go.dev/gitee.com/conero/uymas?tab=doc)
+
+
 
 **代码仓库介绍**
 
@@ -31,8 +37,6 @@ go-version： *v1.11.1*
 # 分支合并顺序
 nestling --> develop -->master
 ```
-
-
 
 
 
