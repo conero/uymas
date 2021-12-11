@@ -454,16 +454,20 @@ func (cli *CLI) routerCommand(cc *CliCmd) bool {
 // router when `command` is empty.
 func (cli *CLI) routerEmpty(cc *CliCmd) bool {
 	routerValidMk := false
-	if cli.actionEmptyRegister != nil {
-		aer := cli.actionEmptyRegister
-		switch aer.(type) {
+	runFunc := func(vFunc interface{}) {
+		switch vFunc.(type) {
 		case func(*CliCmd):
-			aer.(func(*CliCmd))(cc)
+			vFunc.(func(*CliCmd))(cc)
 			routerValidMk = true
 		case func():
-			aer.(func())()
+			vFunc.(func())()
 			routerValidMk = true
 		}
+	}
+	if cli.actionEmptyRegister != nil {
+		runFunc(cli.actionEmptyRegister)
+	} else if cli.actionAnyRegister != nil {
+		runFunc(cli.actionAnyRegister)
 	}
 	return routerValidMk
 }
