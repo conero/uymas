@@ -52,6 +52,7 @@
   - optimize) `bin.FormatTable` 使用**reflect**扩展器支持任意2维度数组格式化。
   - optimze) `CLI.router` 路由重写将过程化的代码转换为多函数调用，未定义方法注册检测更广泛。
   - optimize) `CliCmd.parseArgs` 简化代码，使用函数消除冗余，以及使其更好的支持 option 参数的解析。
+  - optimize) `bin.FormatKv` 优化支持 struct或map，`util.StructToMap` 增加对指针的支持。
   - change) 重命名 `CLI.RegisterUnfind` --> `CLI.RegisterAny`
   - **parser**
     - +) `DataReceiver` 新增数据接收器，实现对 json/url等数据格式的解析支持。
@@ -76,10 +77,12 @@
   - change) `GetFunc` -> `SetFunc`
   - optimize) `Container.HasKey` 扩展支持多个键值检测
 - **cmd/uymas**
-
-  - optimize) 使用类式来重写应用，避免一个函数内部的代码量太长
+- optimize) 使用类式来重写应用，避免一个函数内部的代码量太长
 - **logger**
   - feat) 新增日志基础包支持stdout、file 等输出，用于对基础`log`包的增强。（来源项目开发）
+- **pinyin**
+  - +) 新增为 embed 准备的文本素材
+
 
 
 #### alpha版本
@@ -90,6 +93,8 @@
 
 - **ea** 为 ` experimental alpha`  实验性的alpha版本
 - 将`github.com` 重命名为 `gitee.com` 包名（预计2021-07-20合并到开发分支、develop分支冻结）
+
+###### v1.1.0-ea3/20211215
 
 
 
@@ -125,6 +130,7 @@
 > v1.0 修复版本
 
 - **number**
+  
   - +)  `BitSize` 增加方法 `Bit/Byte` 以完善可自由获取不同的单位
   - optimize) `BitSize`默认输出采用 1024 制式而非原来的1000
   - +) `Unit` 增加方法 `Unit` 以完善可自由获取不同的单位
@@ -137,6 +143,7 @@
   - 优化) `FormatQue` 使用反射调整其支持任一类型的 array/slice数据
   
 - **util**
+  
   - +) `InQueAny` 新增方法来支持任一类型的 array/slice数据键值检测
   - +) `SendTimeDiff` 新增方法用于计算更加统计的时间消耗，用于替代旧方法：`Sec、SecCall、SecCallStr`。
   
