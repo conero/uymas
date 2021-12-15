@@ -70,7 +70,7 @@ func Round(num float64, b int) float64 {
 	if base > 5 {
 		n2t += 1
 	}
-	num = float64(int(num)) + float64(n2t)/float64(math.Pow10(b))
+	num = float64(int(num)) + float64(n2t)/math.Pow10(b)
 	return num
 }
 

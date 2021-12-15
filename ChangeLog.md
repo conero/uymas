@@ -16,6 +16,7 @@
 
 - **bin**
   - [ ] 是否增加可选的 *cache* 选项，实现对命令行程序缓存，增加程序响应。
+- [ ] 包支持 1.18并使用范类重写方法。(maybe v2.0.0）
 
 
 
@@ -68,6 +69,7 @@
   - -) 移除遗弃标注项：`Func -> UcWords`
   - -) `str.WriterToContent` 移除实验性的词方法，使用语言支持库。
   - +) `GetNotEmpty` 使用从多个字符串中获取非空字符串
+  - +) `StrQueueToAny` 字符串切片转化为任一类型切片
 - **number**
   - -) 移除遗弃标注项：`Struct -> One`
 - **util**

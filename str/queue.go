@@ -46,3 +46,12 @@ func DelQue(que []string, ss ...string) []string {
 	}
 	return value
 }
+
+// StrQueueToAny string slice convert to nany slice
+func StrQueueToAny(args []string) []interface{} {
+	var anyQueue []interface{}
+	for _, s := range args {
+		anyQueue = append(anyQueue, s)
+	}
+	return anyQueue
+}
