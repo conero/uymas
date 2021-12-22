@@ -187,7 +187,9 @@ func BenchmarkRandString_SafeStr(b *testing.B) {
 
 func TestRandString_SafeStr(t *testing.T) {
 	// case1
-	rss := repeatRandStringSafeStr(35, 100, nil)
+	rss := repeatRandStringSafeStr(35, 100, func(s string) {
+		t.Logf("%v", s)
+	})
 	if rss.uniqueCount != rss.Max {
 		t.Fatalf("重复率未满足百分之百 => %v/%v，重复率：%.4f", rss.uniqueCount, rss.Max, rss.Rate)
 	}
