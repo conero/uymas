@@ -220,5 +220,5 @@ func BenchmarkStructToMapLStyle(b *testing.B) {
 
 func TestStructToMapLStyle(t *testing.T) {
 	t.Logf("StructToMapLStyle => %#v", StructToMapLStyle(tom))
-	t.Logf("StructToMapLStyle => %#v", StructToMapLStyle(tom, "create_time", "ID", "sub_object"))
+	t.Logf("StructToMapLStyle => %#v", StructToMapLStyle(tom, "CreateTime", "ID", "SubObject"))
 }

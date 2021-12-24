@@ -110,7 +110,7 @@ func StructToMap(value interface{}, ignoreKeys ...string) map[string]interface{}
 			if vKind := field.Kind(); vKind != reflect.Func && vKind != reflect.Ptr {
 				name := rt.Field(i).Name
 				//ignore keys
-				if str.InQue(name, ignoreKeys) > -1 {
+				if str.InQuei(name, ignoreKeys) > -1 {
 					continue
 				}
 				vMap[name] = field.Interface()
@@ -141,11 +141,11 @@ func StructToMapLStyle(value interface{}, ignoreKeys ...string) map[string]inter
 			}
 			if vKind := field.Kind(); vKind != reflect.Func && vKind != reflect.Ptr {
 				name := rt.Field(i).Name
-				name = str.LowerStyle(name)
 				//ignore keys
-				if str.InQue(name, ignoreKeys) > -1 {
+				if str.InQuei(name, ignoreKeys) > -1 {
 					continue
 				}
+				name = str.LowerStyle(name)
 				vMap[name] = field.Interface()
 			}
 		}
@@ -176,11 +176,11 @@ func ToMapLStyleIgnoreEmpty(value interface{}, ignoreKeys ...string) map[string]
 			if vKind := field.Kind(); vKind != reflect.Func && vKind != reflect.Ptr {
 				if !field.IsZero() {
 					name := rt.Field(i).Name
-					name = str.LowerStyle(name)
 					//ignore keys
-					if str.InQue(name, ignoreKeys) > -1 {
+					if str.InQuei(name, ignoreKeys) > -1 {
 						continue
 					}
+					name = str.LowerStyle(name)
 					vMap[name] = field.Interface()
 				}
 			}
@@ -205,7 +205,7 @@ func StructToMapViaJson(value interface{}, ignoreKeys ...string) map[string]inte
 	if len(ignoreKeys) > 0 && newVal != nil {
 		for key, _ := range newVal {
 			//ignore keys
-			if str.InQue(key, ignoreKeys) > -1 {
+			if str.InQuei(key, ignoreKeys) > -1 {
 				delete(newVal, key)
 			}
 		}
