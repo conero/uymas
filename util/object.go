@@ -1,6 +1,7 @@
 package util
 
 import (
+	"encoding/json"
 	"gitee.com/conero/uymas/str"
 	"reflect"
 )
@@ -88,7 +89,7 @@ func (obj Object) AssignMap(targetMap interface{}, srcMapOrStruct interface{}) {
 }
 
 // StructToMap convert Struct field to by Map, support the Ptr
-func StructToMap(value interface{}) map[string]interface{} {
+func StructToMap(value interface{}, ignoreKeys ...string) map[string]interface{} {
 	rv := reflect.ValueOf(value)
 	var rt reflect.Type
 	if rv.Kind() == reflect.Ptr {
@@ -108,6 +109,10 @@ func StructToMap(value interface{}) map[string]interface{} {
 			// Notice: struct lower field also can be scan, and ignore func/ptr.
 			if vKind := field.Kind(); vKind != reflect.Func && vKind != reflect.Ptr {
 				name := rt.Field(i).Name
+				//ignore keys
+				if str.InQue(name, ignoreKeys) > -1 {
+					continue
+				}
 				vMap[name] = field.Interface()
 			}
 		}
@@ -117,7 +122,7 @@ func StructToMap(value interface{}) map[string]interface{} {
 }
 
 // StructToMapLStyle convert Struct field to by Map and key is Lower style.
-func StructToMapLStyle(value interface{}) map[string]interface{} {
+func StructToMapLStyle(value interface{}, ignoreKeys ...string) map[string]interface{} {
 	rv := reflect.ValueOf(value)
 	var rt reflect.Type
 	if rv.Kind() == reflect.Ptr {
@@ -136,7 +141,12 @@ func StructToMapLStyle(value interface{}) map[string]interface{} {
 			}
 			if vKind := field.Kind(); vKind != reflect.Func && vKind != reflect.Ptr {
 				name := rt.Field(i).Name
-				vMap[str.LowerStyle(name)] = field.Interface()
+				name = str.LowerStyle(name)
+				//ignore keys
+				if str.InQue(name, ignoreKeys) > -1 {
+					continue
+				}
+				vMap[name] = field.Interface()
 			}
 		}
 		return vMap
@@ -145,7 +155,8 @@ func StructToMapLStyle(value interface{}) map[string]interface{} {
 }
 
 // ToMapLStyleIgnoreEmpty convert Struct field to by Map and key is Lower style and ignore empty.
-func ToMapLStyleIgnoreEmpty(value interface{}) map[string]interface{} {
+// StructToMapViaJson is slower than StructToMapLStyle by Benchmark
+func ToMapLStyleIgnoreEmpty(value interface{}, ignoreKeys ...string) map[string]interface{} {
 	rv := reflect.ValueOf(value)
 	var rt reflect.Type
 	if rv.Kind() == reflect.Ptr {
@@ -165,11 +176,39 @@ func ToMapLStyleIgnoreEmpty(value interface{}) map[string]interface{} {
 			if vKind := field.Kind(); vKind != reflect.Func && vKind != reflect.Ptr {
 				if !field.IsZero() {
 					name := rt.Field(i).Name
-					vMap[str.LowerStyle(name)] = field.Interface()
+					name = str.LowerStyle(name)
+					//ignore keys
+					if str.InQue(name, ignoreKeys) > -1 {
+						continue
+					}
+					vMap[name] = field.Interface()
 				}
 			}
 		}
 		return vMap
 	}
 	return nil
+}
+
+// StructToMapViaJson convert map via json Marshal/Unmarshal
+// StructToMapViaJson is slower than StructToMapLStyle by Benchmark
+func StructToMapViaJson(value interface{}, ignoreKeys ...string) map[string]interface{} {
+	var newVal map[string]interface{}
+	marshal, err := json.Marshal(value)
+	if err != nil {
+		return nil
+	}
+	err = json.Unmarshal(marshal, &newVal)
+	if err != nil {
+		return nil
+	}
+	if len(ignoreKeys) > 0 && newVal != nil {
+		for key, _ := range newVal {
+			//ignore keys
+			if str.InQue(key, ignoreKeys) > -1 {
+				delete(newVal, key)
+			}
+		}
+	}
+	return newVal
 }
