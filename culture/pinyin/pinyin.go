@@ -67,6 +67,11 @@ func NewPinyin(filename string) *Pinyin {
 //数据加载
 func (pyt *Pinyin) loadData() {
 	lines := GetLinesFromFile(pyt.filename)
+	pyt.LineToDick(lines)
+}
+
+// LineToDick turn lines to dick data.
+func (pyt *Pinyin) LineToDick(lines []string) *Pinyin {
 	innerDick := map[string]map[string]string{}
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
@@ -90,8 +95,8 @@ func (pyt *Pinyin) loadData() {
 			"chinese": chinese,
 		}
 	}
-
 	pyt.Dicks = innerDick
+	return pyt
 }
 
 // GetPyTone get pinyin with tone
@@ -144,7 +149,7 @@ func (pyt *Pinyin) GetPyToneAlpha(chinese string) string {
 }
 
 // GetPyToneFunc get pinyin with tone by callback Func
-func (pyt *Pinyin) GetPyToneFunc(chinese string, call func(word string) string) string {
+func (pyt *Pinyin) GetPyToneFunc(chinese string, call func(string) string) string {
 	queue := strings.Split(chinese, "")
 	var words []string
 

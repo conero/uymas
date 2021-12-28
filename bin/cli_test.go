@@ -8,15 +8,15 @@ func TestNewCliCmd(t *testing.T) {
 	var testKey []string
 	var cc *CliCmd
 
-	cc = NewCliCmd(command, subcommand, "https://github.com/conero/uymas.git")
-	// case: `git clone https://github.com/conero/uymas.git`
+	cc = NewCliCmd(command, subcommand, "https://gitee.com/conero/uymas.git")
+	// case: `git clone https://gitee.com/conero/uymas.git`
 	if cc.Command != "git" || cc.SubCommand != "clone" {
 		t.Fatalf("the command parse fail. command: %v VS %v, subcommand: %v VS %v",
 			cc.Command, command, cc.SubCommand, subcommand)
 	}
-	// case: `git -u github.com/conero/uymas`
+	// case: `git -u gitee.com/conero/uymas`
 	command = "get"
-	cc = NewCliCmd(command, "-u", "github.com/conero/uymas")
+	cc = NewCliCmd(command, "-u", "gitee.com/conero/uymas")
 	if cc.Command != command || cc.SubCommand != "" {
 		t.Fatalf("the command parse fail. command: %v VS %v, subcommand: %v VS %v",
 			cc.Command, command, cc.SubCommand, "")

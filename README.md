@@ -1,10 +1,14 @@
-# uymas
+# Uymas
 
-*查看文档 [conero/uymas godoc 文档](https://pkg.go.dev/github.com/conero/uymas)*
+Golang 常用包，快速实现命令行程序开发、struct合并、随机数等生成.
+
+[![Go.Dev reference](https://img.shields.io/badge/go.dev-reference-blue?logo=go&logoColor=white)](https://pkg.go.dev/gitee.com/conero/uymas?tab=doc)  [![Goproxy.cn](https://goproxy.cn/stats/gitee.com/conero/uymas/badges/download-count.svg)](https://goproxy.cn)  [![](https://goreportcard.com/badge/gitee.com/uymas/conero)](https://goreportcard.com/report/gitee.com/conero/uymas)
+
+
 
 **代码仓库介绍**
 
-- [github](https://github.com/conero/uymas)
+- [~~github~~](https://github.com/conero/uymas) 由于网络原因取消改站点
 - [gitee](https://gitee.com/conero/uymas)
 
 
@@ -36,13 +40,11 @@ nestling --> develop -->master
 
 
 
-
-
 ## 安装
 
 ```ini
 # github
-$ go get -u  github.com/conero/uymas
+$ go get -u  gitee.com/conero/uymas
 
 ```
 
@@ -82,7 +84,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/conero/uymas/bin"
+	"gitee.com/conero/uymas/bin"
 )
 // 命令 test
 type Test struct {

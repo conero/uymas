@@ -5,8 +5,9 @@ package bin
 
 import (
 	"fmt"
-	"github.com/conero/uymas/number"
-	"github.com/conero/uymas/str"
+	"gitee.com/conero/uymas/number"
+	"gitee.com/conero/uymas/str"
+	"gitee.com/conero/uymas/util"
 	"reflect"
 	"sort"
 	"strconv"
@@ -16,8 +17,13 @@ import (
 // FormatKv The `k-v` data format to beautiful str.
 //FormatKv(kv map[string]interface{}, pref string)				 provide pref param form FormatKv.
 //FormatKv(kv map[string]interface{}, pref string, md string)	     provide pref and middle param form FormatK.
+//the `Kv` support map/struct, but not ptr(pointer)
 func FormatKv(kv interface{}, params ...string) string {
 	var vf = reflect.ValueOf(kv)
+	if vf.Kind() != reflect.Map {
+		kv = util.StructToMap(kv)
+		vf = reflect.ValueOf(kv)
+	}
 	if vf.Kind() != reflect.Map {
 		return ""
 	}
@@ -65,6 +71,10 @@ func FormatKv(kv interface{}, params ...string) string {
 func FormatKvSort(kv interface{}, params ...string) string {
 	var vf = reflect.ValueOf(kv)
 	if vf.Kind() != reflect.Map {
+		kv = util.StructToMap(kv)
+		vf = reflect.ValueOf(kv)
+	}
+	if vf.Kind() != reflect.Map {
 		return ""
 	}
 	var s, pref, d = "", "", ""
@@ -80,9 +90,11 @@ func FormatKvSort(kv interface{}, params ...string) string {
 	// 最大长度
 	maxLen := len(pref)
 	var sortKeys []string
+	var values = map[string]string{}
 	for mr := vf.MapRange(); mr.Next(); {
 		k := fmt.Sprintf("%v", mr.Key())
 		sortKeys = append(sortKeys, k)
+		values[k] = fmt.Sprintf("%v", mr.Value())
 		kLen := len(k)
 		if kLen > maxLen {
 			maxLen = kLen
@@ -97,13 +109,12 @@ func FormatKvSort(kv interface{}, params ...string) string {
 	maxLen += len(d)
 
 	sort.Strings(sortKeys)
-	// 格式化
-	for mr := vf.MapRange(); mr.Next(); {
-		k := fmt.Sprintf("%v", mr.Key())
+	// format the map
+	for _, key := range sortKeys {
 		if s != "" {
 			s += "\n"
 		}
-		s += pref + k + strings.Repeat(bit, maxLen-len(k)) + fmt.Sprintf("%v", mr.Value())
+		s += pref + key + strings.Repeat(bit, maxLen-len(key)) + fmt.Sprintf("%v", values[key])
 	}
 	return s
 }

@@ -137,7 +137,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/conero/uymas/bin"
+	"gitee.com/conero/uymas/bin"
 )
 // 命令 test
 type Test struct {
@@ -185,7 +185,7 @@ func main() {
 package main
 
 import (
-	"github.com/conero/uymas/bin"
+	"gitee.com/conero/uymas/bin"
 )
 
 

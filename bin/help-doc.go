@@ -2,7 +2,7 @@ package bin
 
 import (
 	"fmt"
-	"github.com/conero/uymas/str"
+	"gitee.com/conero/uymas/str"
 	"strings"
 )
 

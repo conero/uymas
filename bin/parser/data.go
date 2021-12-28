@@ -191,9 +191,7 @@ func (c *UrlReceiver) GetData() map[string]interface{} {
 }
 
 // NewDataReceiver get DataReceiver by different type.
-func NewDataReceiver(vType string) (DataReceiver, error) {
-	var dr DataReceiver = nil
-	var er error = nil
+func NewDataReceiver(vType string) (dr DataReceiver, er error) {
 	switch strings.ToLower(vType) {
 	case RJson:
 		dr = &JsonReceiver{}
@@ -202,5 +200,5 @@ func NewDataReceiver(vType string) (DataReceiver, error) {
 	default:
 		er = errors.New("DataReceiver type only support: json, url")
 	}
-	return dr, er
+	return
 }

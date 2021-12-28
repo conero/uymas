@@ -141,7 +141,7 @@ func Render(tpl string, data interface{}) (string, error) {
 func Reverse(s string) string {
 	sQue := strings.Split(s, "")
 	sQueLen := len(sQue)
-	sNewQue := []string{}
+	var sNewQue []string
 	for i := sQueLen - 1; i > -1; i-- {
 		sNewQue = append(sNewQue, sQue[i])
 	}
@@ -189,8 +189,8 @@ func RandStrBase(base string, length int) string {
 
 	if vLen > 0 {
 		var ss []string
-		r := rand.New(rand.NewSource(time.Now().UnixNano()))
 		for i := 0; i < length; i++ {
+			r := rand.New(rand.NewSource(time.Now().UnixNano() + int64(i)))
 			x := r.Intn(vLen)
 			ss = append(ss, base[x:x+1])
 		}

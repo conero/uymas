@@ -12,9 +12,21 @@
 
 
 
+## future
+
+- **bin**
+  - [ ] 是否增加可选的 *cache* 选项，实现对命令行程序缓存，增加程序响应。
+- [ ] 包支持 1.18并使用范类重写方法。(maybe v2.0.0）
+
+
+
+
+
 ## v1.1.x
 
 - [ ] 内置文本使用 embed 包重写，如拼音等。
+
+
 
 ### 1.1.0/dev
 
@@ -28,13 +40,21 @@
 
 - all
   - optimize) 根据 IDE 提示优化备注信息，并进一步将中文切换为英文。
-
+  - optimize) 回调函数参数尽量不写实际参数（编写风格）
 - **bin**
   - +) `CLI.hookBeforeCall` 新增 hook 机制，实现在调用回调前的请求事件。
   - +) `CliCmd.AppendData` 新增数据合并接口，使 CliCmd 支持外部数据导入。
   - +) `CLI.UnLoadScriptSyntax` 支持可选的（`--file,-f`） 语言集合脚本文件，（`--script,-s`）语言文本进行解析。
+  - +) `CLI.CliAppCompleteInterface`, 并且使其支持系统的内置的固定方法如：`construct > command > help > unmatched > index`（顺序规则）.
+  - +) `CliCmd.ArgStringSlice` 用于获取数组式参数
+  - +) `Cmd2StringMap` 用户数实现命令字符串转golang风格字符串，并使用其优化命令行路由
+  - +) `CommandAlias/SubCommandAlias/CommandAliasAll/SubCommandAliasAll` 添加内置的别名机制（适用于 `AppCmd-style`）。
   - -) 移除遗弃标注项：`FormatStr`、`CliCmd.HasSetting`
   - optimize) `bin.FormatTable` 使用**reflect**扩展器支持任意2维度数组格式化。
+  - optimze) `CLI.router` 路由重写将过程化的代码转换为多函数调用，未定义方法注册检测更广泛。
+  - optimize) `CliCmd.parseArgs` 简化代码，使用函数消除冗余，以及使其更好的支持 option 参数的解析。
+  - optimize) `bin.FormatKv` 优化支持 struct或map，`util.StructToMap` 增加对指针的支持。
+  - change) 重命名 `CLI.RegisterUnfind` --> `CLI.RegisterAny`
   - **parser**
     - +) `DataReceiver` 新增数据接收器，实现对 json/url等数据格式的解析支持。
     - +) `NewScriptFile` 新增用于解析脚本的函数，初步支持 shell语法。
@@ -42,22 +62,43 @@
     - **syntax**  初步增加语言语法支持，常用
       - +) `NumberOpera` 实现字符串的等式的运算
 - **fs**
+  - +) `DirScanner` 增加实现性的并行扫描（待优化）**[Experimental]**
   - -) 移除遗弃标注项：`Struct --> ByteSize`
+  - fixed) `DirScanner` 扫描目录时文件过滤规则错误。
 - **str**
   - -) 移除遗弃标注项：`Func -> UcWords`
   - -) `str.WriterToContent` 移除实验性的词方法，使用语言支持库。
   - +) `GetNotEmpty` 使用从多个字符串中获取非空字符串
+  - +) `StrQueueToAny` 字符串切片转化为任一类型切片
 - **number**
   - -) 移除遗弃标注项：`Struct -> One`
 - **util**
   - -) 移除遗弃标注项：`Func -> Sec、SecCall、SecCallStr`
+  - +) 新增方法 `ToMapLStyleIgnoreEmpty` 并将 map 转换转移到 `object.go` 内
 - **parse/xini**
   - change) `GetFunc` -> `SetFunc`
   - optimize) `Container.HasKey` 扩展支持多个键值检测
+- **cmd/uymas**
+- optimize) 使用类式来重写应用，避免一个函数内部的代码量太长
+- **logger**
+  - feat) 新增日志基础包支持stdout、file 等输出，用于对基础`log`包的增强。（来源项目开发）
+- **pinyin**
+  - +) 新增为 embed 准备的文本素材
+
+
 
 #### alpha版本
 
 ###### v1.1.0-a1/20210702
+
+###### v1.1.0-ea1/20210713
+
+- **ea** 为 ` experimental alpha`  实验性的alpha版本
+- 将`github.com` 重命名为 `gitee.com` 包名（预计2021-07-20合并到开发分支、develop分支冻结）
+
+###### v1.1.0-ea3/20211215
+
+
 
 
 
@@ -91,6 +132,7 @@
 > v1.0 修复版本
 
 - **number**
+  
   - +)  `BitSize` 增加方法 `Bit/Byte` 以完善可自由获取不同的单位
   - optimize) `BitSize`默认输出采用 1024 制式而非原来的1000
   - +) `Unit` 增加方法 `Unit` 以完善可自由获取不同的单位
@@ -103,6 +145,7 @@
   - 优化) `FormatQue` 使用反射调整其支持任一类型的 array/slice数据
   
 - **util**
+  
   - +) `InQueAny` 新增方法来支持任一类型的 array/slice数据键值检测
   - +) `SendTimeDiff` 新增方法用于计算更加统计的时间消耗，用于替代旧方法：`Sec、SecCall、SecCallStr`。
   

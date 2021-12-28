@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/conero/uymas/bin"
+	"gitee.com/conero/uymas/bin"
 	"strings"
 )
 
@@ -12,9 +12,10 @@ type App struct {
 }
 
 func (c *App) Construct() {
+	fmt.Println("App 初始化：Construct")
 }
 
-//测试命令
+// Test 测试命令
 func (c *App) Test() {
 	cc := c.Cc
 	fmt.Println(" 命令行测试")

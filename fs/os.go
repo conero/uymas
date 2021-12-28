@@ -2,7 +2,7 @@ package fs
 
 import (
 	"errors"
-	"github.com/conero/uymas/str"
+	"gitee.com/conero/uymas/str"
 	"os"
 	"strings"
 )

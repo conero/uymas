@@ -172,3 +172,56 @@ func TestCamelCase(t *testing.T) {
 	}
 
 }
+
+func BenchmarkRandString_SafeStr(b *testing.B) {
+	b.ResetTimer()
+	bit := 35
+	for i := 0; i < b.N; i++ {
+		if i < 2 {
+			continue
+		}
+		rss := repeatRandStringSafeStr(bit, i, nil)
+		b.Logf("重复率未满足百分之百 => %v/%v，重复率：%.4f", rss.uniqueCount, rss.Max, rss.Rate)
+	}
+}
+
+func TestRandString_SafeStr(t *testing.T) {
+	// case1
+	rss := repeatRandStringSafeStr(35, 100, func(s string) {
+		t.Logf("%v", s)
+	})
+	if rss.uniqueCount != rss.Max {
+		t.Fatalf("重复率未满足百分之百 => %v/%v，重复率：%.4f", rss.uniqueCount, rss.Max, rss.Rate)
+	}
+
+	// case2
+	rss = repeatRandStringSafeStr(50, 500, nil)
+	if rss.uniqueCount != rss.Max {
+		t.Fatalf("重复率未满足百分之百 => %v/%v，重复率：%.4f", rss.uniqueCount, rss.Max, rss.Rate)
+	}
+}
+
+type repeatRsss struct {
+	uniqueCount int
+	Max         int
+	Rate        float64
+}
+
+// 安全数随机生成
+func repeatRandStringSafeStr(bit, max int, scanFn func(s string)) repeatRsss {
+	var lastStrMap = map[string]int{}
+	for i := 0; i < max; i++ {
+		ss := RandStr.SafeStr(bit)
+		lastStrMap[ss] = 1
+		if scanFn != nil {
+			scanFn(fmt.Sprintf("%v => %v", i, ss))
+		}
+	}
+
+	uniqueCtt := len(lastStrMap)
+	return repeatRsss{
+		uniqueCount: uniqueCtt,
+		Max:         max,
+		Rate:        float64(max-uniqueCtt) / float64(max),
+	}
+}

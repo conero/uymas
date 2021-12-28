@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"github.com/conero/uymas/bin"
-	"github.com/conero/uymas/bin/butil"
+	"gitee.com/conero/uymas/bin"
+	"gitee.com/conero/uymas/bin/butil"
 )
 
 //the example about clear the clis

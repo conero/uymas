@@ -6,7 +6,7 @@ package storage
 
 import (
 	"fmt"
-	"github.com/conero/uymas"
+	"gitee.com/conero/uymas"
 )
 
 // Any the any type of the data

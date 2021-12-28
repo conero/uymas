@@ -3,7 +3,7 @@ package syntax
 
 import (
 	"fmt"
-	"github.com/conero/uymas/str"
+	"gitee.com/conero/uymas/str"
 	"regexp"
 	"strconv"
 	"strings"

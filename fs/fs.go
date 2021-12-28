@@ -2,7 +2,7 @@
 package fs
 
 import (
-	"github.com/conero/uymas/number"
+	"gitee.com/conero/uymas/number"
 	"runtime"
 )
 

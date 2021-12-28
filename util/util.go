@@ -2,7 +2,6 @@
 package util
 
 import (
-	"github.com/conero/uymas/str"
 	"math"
 	"reflect"
 	"time"
@@ -71,7 +70,7 @@ func Round(num float64, b int) float64 {
 	if base > 5 {
 		n2t += 1
 	}
-	num = float64(int(num)) + float64(n2t)/float64(math.Pow10(b))
+	num = float64(int(num)) + float64(n2t)/math.Pow10(b)
 	return num
 }
 
@@ -100,40 +99,4 @@ func ValueNull(value interface{}) bool {
 	}
 	v := reflect.ValueOf(value)
 	return v.IsZero()
-}
-
-// StructToMap convert Struct field to by Map
-func StructToMap(value interface{}) map[string]interface{} {
-	rv := reflect.ValueOf(value)
-	if rv.Kind() == reflect.Struct {
-		rt := reflect.TypeOf(value)
-		vMap := map[string]interface{}{}
-		for i := 0; i < rv.NumField(); i++ {
-			field := rv.Field(i)
-			if field.Kind() != reflect.Func {
-				name := rt.Field(i).Name
-				vMap[name] = field.Interface()
-			}
-		}
-		return vMap
-	}
-	return nil
-}
-
-// StructToMapLStyle convert Struct field to by Map and key is Lower style.
-func StructToMapLStyle(value interface{}) map[string]interface{} {
-	rv := reflect.ValueOf(value)
-	if rv.Kind() == reflect.Struct {
-		rt := reflect.TypeOf(value)
-		vMap := map[string]interface{}{}
-		for i := 0; i < rv.NumField(); i++ {
-			field := rv.Field(i)
-			if field.Kind() != reflect.Func {
-				name := rt.Field(i).Name
-				vMap[str.LowerStyle(name)] = field.Interface()
-			}
-		}
-		return vMap
-	}
-	return nil
 }

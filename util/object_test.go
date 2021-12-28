@@ -1,6 +1,85 @@
 package util
 
-import "testing"
+import (
+	"math"
+	"testing"
+	"time"
+)
+
+type testObjectTopMac struct {
+	ID         int       `json:"id"`
+	Mid        int       `json:"mid"`
+	Name       string    `json:"name"`
+	Label      string    `json:"label"`
+	IsAdd      int       `json:"is_add"`
+	IsUpd      int       `json:"is_upd"`
+	IsList     int       `json:"is_list"`
+	IsSearch   int       `json:"is_search"`
+	EditType   string    `json:"edit_type"`
+	EditOption string    `json:"edit_option"`
+	IsRequire  int       `json:"is_require"`
+	LsColWidth int       `json:"ls_col_width"`
+	VarDefault string    `json:"var_default"`
+	ColOrder   int       `json:"col_order"`
+	CreateTime time.Time `json:"create_time"`
+}
+
+// object 测试大工具
+type testObjectMax struct {
+	ID         int       `json:"id"`
+	Module     string    `json:"module"`
+	Label      string    `json:"label"`
+	IsOpen     int       `json:"is_open"`
+	Author     string    `json:"author"`
+	Version    string    `json:"version"`
+	MainTable  string    `json:"main_table"`
+	IsDel      int       `json:"is_del"`
+	IsUpd      int       `json:"is_upd"`
+	IsAdd      int       `json:"is_add"`
+	OperMain   string    `json:"oper_main"`
+	OperAdd    string    `json:"oper_add"`
+	OperEdit   string    `json:"oper_edit"`
+	OperDel    string    `json:"oper_del"`
+	LsWidth    int       `json:"ls_width"`
+	PageOption string    `json:"page_option"`
+	RouterName string    `json:"router_name"`
+	CreateTime time.Time `json:"create_time"`
+	SubObject  testObjectTopMac
+}
+
+var tom = testObjectMax{
+	ID:         1024,
+	Module:     "Uymas",
+	Label:      "Joshua Conero",
+	IsOpen:     1,
+	Author:     "古丞秋",
+	Version:    "v1.1.2",
+	MainTable:  "object_max",
+	IsDel:      0,
+	IsUpd:      1,
+	IsAdd:      0,
+	OperAdd:    "add",
+	OperDel:    "del",
+	PageOption: "遥望中原，荒烟外、许多城郭。想当年、花遮柳护，凤楼龙阁。万岁山前珠翠绕，蓬壶殿里笙歌作。到而今、铁骑满郊畿，风尘恶。兵安在，膏锋锷；民安在，填沟壑。叹江山如故，千村寥落。何日请缨提锐旅，一鞭直渡清河洛？却归来、再续汉阳游，骑黄鹤。",
+	CreateTime: time.Now(),
+	SubObject: testObjectTopMac{
+		ID:         1024,
+		Mid:        1024,
+		Name:       "name",
+		Label:      "姓名",
+		IsAdd:      0,
+		IsUpd:      1,
+		IsList:     0,
+		IsSearch:   2,
+		EditType:   "C",
+		EditOption: "君不见黄河之水天上来，奔流到海不复回。君不见高堂明镜悲白发，朝如青丝暮成雪。人生得意须尽欢，莫使金樽空对月。天生我材必有用，千金散尽还复来。烹羊宰牛且为乐，会须一饮三百杯。岑夫子，丹丘生，将进酒，君莫停。与君歌一曲，请君为我侧耳听。钟鼓馔玉不足贵，但愿长醉不愿醒。古来圣贤皆寂寞，惟有饮者留其名。陈王昔时宴平乐，斗酒十千恣欢谑。主人何为言少钱，径须沽取对君酌。五花马，千金裘，呼儿将出换美酒，与尔同销万古愁。",
+		IsRequire:  4,
+		LsColWidth: 5,
+		VarDefault: "txt",
+		ColOrder:   7,
+		CreateTime: time.Now(),
+	},
+}
 
 func TestObject_Assign(t *testing.T) {
 	o := Object{}
@@ -96,4 +175,50 @@ func TestObject_AssignMap(t *testing.T) {
 	obj.AssignMap(tgt, dg)
 	t.Logf("%#v", tgt)
 
+}
+
+func TestStructToMap(t *testing.T) {
+	type Ty struct {
+		Name          string
+		Age           int
+		HeightWidthLv float64
+		EmptyInt      int
+		EmptyString   string
+	}
+
+	tt := Ty{}
+	t.Logf("%v", StructToMap(tt))
+
+	tt.Name = "Joshua Conero"
+	tt.HeightWidthLv = math.Pi
+	tt.Age = 58
+	t.Logf("%v", StructToMap(tt))
+	t.Logf("StructToMapLStyle: %#v", StructToMapLStyle(tt))
+	t.Logf("StructToMapLStyleIgnoreEmpty: %#v", ToMapLStyleIgnoreEmpty(tt))
+
+	// reflect.Ptr
+	ty := &Ty{}
+	ty = &tt
+	t.Logf("Ty -> %#v", ty)
+	t.Logf("%v", StructToMap(ty))
+
+}
+
+func BenchmarkStructToMapViaJson(b *testing.B) {
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		StructToMapViaJson(tom)
+	}
+}
+
+func BenchmarkStructToMapLStyle(b *testing.B) {
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		StructToMapLStyle(tom)
+	}
+}
+
+func TestStructToMapLStyle(t *testing.T) {
+	t.Logf("StructToMapLStyle => %#v", StructToMapLStyle(tom))
+	t.Logf("StructToMapLStyle => %#v", StructToMapLStyle(tom, "CreateTime", "ID", "SubObject"))
 }
