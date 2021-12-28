@@ -121,7 +121,8 @@ func StructToMap(value interface{}, ignoreKeys ...string) map[string]interface{}
 	return nil
 }
 
-// StructToMapLStyle convert Struct field to by Map and key is Lower style.
+// StructToMapLStyle convert Struct field to by Map and key is Lower style, key support `JSON.TAG`.
+// Notice: reflect field num not contain inherit struct.
 func StructToMapLStyle(value interface{}, ignoreKeys ...string) map[string]interface{} {
 	rv := reflect.ValueOf(value)
 	var rt reflect.Type
@@ -140,12 +141,20 @@ func StructToMapLStyle(value interface{}, ignoreKeys ...string) map[string]inter
 				continue
 			}
 			if vKind := field.Kind(); vKind != reflect.Func && vKind != reflect.Ptr {
-				name := rt.Field(i).Name
+				tField := rt.Field(i)
+				// Support JSON/TAG
+				name := tField.Name
 				//ignore keys
 				if str.InQuei(name, ignoreKeys) > -1 {
 					continue
 				}
-				name = str.LowerStyle(name)
+				if tagName, isOk := tField.Tag.Lookup("json"); isOk {
+					if tagName != "-" && tagName != "" {
+						name = tagName
+					}
+				} else {
+					name = str.LowerStyle(name)
+				}
 				vMap[name] = field.Interface()
 			}
 		}
@@ -175,12 +184,21 @@ func ToMapLStyleIgnoreEmpty(value interface{}, ignoreKeys ...string) map[string]
 			}
 			if vKind := field.Kind(); vKind != reflect.Func && vKind != reflect.Ptr {
 				if !field.IsZero() {
-					name := rt.Field(i).Name
+					tField := rt.Field(i)
+					name := tField.Name
 					//ignore keys
 					if str.InQuei(name, ignoreKeys) > -1 {
 						continue
 					}
-					name = str.LowerStyle(name)
+
+					// Support JSON/TAG
+					if tagName, isOk := tField.Tag.Lookup("json"); isOk {
+						if tagName != "-" && tagName != "" {
+							name = tagName
+						}
+					} else {
+						name = str.LowerStyle(name)
+					}
 					vMap[name] = field.Interface()
 				}
 			}
