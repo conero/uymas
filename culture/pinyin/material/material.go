@@ -1,4 +1,4 @@
-// Package material the Material of pinyin dick
+// Package material the Material of pinyin dick, it's `embed`.
 package material
 
 import (

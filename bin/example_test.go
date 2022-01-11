@@ -1,7 +1,11 @@
 package bin
 
 import (
+	"bufio"
 	"fmt"
+	"gitee.com/conero/uymas/bin/parser"
+	"os"
+	"strings"
 	"testing"
 )
 
@@ -46,4 +50,34 @@ func TestNewCLI(t *testing.T) {
 	//ExampleXXX
 	//ExampleNewCLI_func()
 	ExampleNewCLI_struct()
+}
+
+func TestNewCLI_Repl(t *testing.T) {
+	ExampleNewCLI_repl()
+}
+
+func ExampleNewCLI_repl() {
+	var input = bufio.NewScanner(os.Stdin)
+	prefShow := func() {
+		fmt.Print("$ uymas> ")
+	}
+	cli := NewCLI()
+	cli.RegisterAny(new(defaultAppHelloWorld))
+	prefShow()
+	for input.Scan() {
+		text := input.Text()
+		text = strings.TrimSpace(text)
+		switch text {
+		case "exit":
+			os.Exit(0)
+		default:
+			// to run struct command.
+			var cmdsList = parser.NewParser(text)
+			for _, cmdArgs := range cmdsList {
+				cli.Run(cmdArgs...)
+			}
+		}
+		fmt.Println()
+		prefShow()
+	}
 }
