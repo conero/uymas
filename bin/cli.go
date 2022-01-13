@@ -757,9 +757,14 @@ func (app *CliCmd) QueueNext(key string) string {
 func (app *CliCmd) Next(keys ...string) string {
 	var value string
 	var vLen = len(keys)
-	//when keys is empty default use the current Next value
+	//when keys is empty default use the current Next value that next of `app.Command` or `queue index-2`
 	if vLen == 0 {
-		return app.Next(app.SubCommand)
+		if app.Command != "" {
+			return app.Next(app.Command)
+		} else if len(app.Raw) > 1 {
+			return app.Raw[1]
+		}
+		return ""
 	}
 	for _, k := range keys {
 		value = app.QueueNext(k)

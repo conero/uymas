@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"gitee.com/conero/uymas/bin"
+	"gitee.com/conero/uymas/bin/butil"
 	"strings"
 )
 
@@ -19,12 +20,13 @@ func (c *App) Construct() {
 func (c *App) Test() {
 	cc := c.Cc
 	fmt.Println(" 命令行测试")
-	fmt.Printf("  SubCommand: %v \r\n", cc.SubCommand)
-	fmt.Printf("  Option: %v \r\n", cc.Setting)
-	fmt.Printf("  DataRaw: %v \r\n", cc.DataRaw)
-	fmt.Printf("  Data: %#v \r\n", cc.Data)
-	fmt.Printf("  Input: %#v \r\n", strings.Join(cc.Raw, " "))
-	fmt.Printf("  Current next: %#v \r\n", cc.Next())
-	fmt.Printf("  Is CmdApp : %#v \r\n", cc.CmdType() == int(bin.CmdApp))
+	fmt.Printf("  SubCommand: %v \n", cc.SubCommand)
+	fmt.Printf("  Option: %v \n", cc.Setting)
+	fmt.Printf("  DataRaw: %v \n", cc.DataRaw)
+	fmt.Printf("  Data: %#v \n", cc.Data)
+	fmt.Printf("  Input: %#v \n", strings.Join(cc.Raw, " "))
+	fmt.Printf("  Current next: %#v \n", cc.Next())
+	fmt.Printf("  Is CmdApp : %#v \n", cc.CmdType() == int(bin.CmdApp))
+	fmt.Printf("  Basedir : %v \n", butil.GetBasedir())
 	fmt.Println()
 }

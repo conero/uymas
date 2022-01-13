@@ -10,8 +10,8 @@ package uymas
 // @Author:  Joshua Conero
 
 const (
-	Version        = "1.1.0" //dev is not product but development tag.
-	Release        = "2022-01-11"
+	Version        = "1.1.1" //dev is not product but development tag.
+	Release        = "dev"
 	Since          = "20181030"
 	Author         = "Joshua Conero"
 	Email          = "conero@163.com"

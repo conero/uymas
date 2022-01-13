@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"gitee.com/conero/uymas"
 	"gitee.com/conero/uymas/bin"
+	"gitee.com/conero/uymas/bin/butil"
 	"gitee.com/conero/uymas/bin/parser"
 	"gitee.com/conero/uymas/culture/pinyin"
 	"gitee.com/conero/uymas/fs"
@@ -96,16 +97,16 @@ func (c *defaultApp) Construct() {
 func (c *defaultApp) DefaultIndex() {
 	cc := c.Cc
 	if cc.CheckSetting("v", "version") {
-		fmt.Printf("v%v/%v\r\n", uymas.Version, uymas.Release)
+		fmt.Printf("v%v/%v\n", uymas.Version, uymas.Release)
 		return
 	} else if cc.CheckSetting("h", "help") {
 		cc.CallCmd("help")
 		return
 	}
 
-	fmt.Printf(" wecolme use the <%v>. \r\n", uymas.Name)
-	fmt.Printf(" %v/%v\r\n", uymas.Version, uymas.Release)
-	fmt.Printf(" Power by %v.\r\n", uymas.Author)
+	fmt.Printf(" wecolme use the <%v>. \n", uymas.Name)
+	fmt.Printf(" %v/%v\n", uymas.Version, uymas.Release)
+	fmt.Printf(" Power by %v.\n", uymas.Author)
 }
 
 // DefaultHelp help
@@ -117,22 +118,26 @@ func (c *defaultApp) DefaultHelp() {
 }
 
 func (c *defaultApp) DefaultUnmatched() {
-	fmt.Printf(" Oop, 命令'%v'还没有实现呢，老兄！\r\n", c.Cc.Command)
+	fmt.Printf(" Oop, 命令'%v'还没有实现呢，老兄！\n", c.Cc.Command)
 	fmt.Println()
 }
 
 // Test test 用于命令行解析等测试
 func (c *defaultApp) Test() {
 	cc := c.Cc
-	fmt.Println(" 命令行测试")
-	fmt.Printf("  SubCommand: %v \r\n", cc.SubCommand)
-	fmt.Printf("  Option: %#v \r\n", cc.Setting)
-	fmt.Printf("  Raw: %#v \r\n", cc.Raw)
-	fmt.Printf("  DataRaw: %#v \r\n", cc.DataRaw)
-	fmt.Printf("  Data: %#v \r\n", cc.Data)
-	fmt.Printf("  Input: %#v \r\n", strings.Join(cc.Raw, " "))
+	pwd, _ := os.Getwd()
 
-	fmt.Printf(" %v \r\n", getSpendStr())
+	fmt.Println(" 命令行测试")
+	fmt.Printf("  SubCommand: %v \n", cc.SubCommand)
+	fmt.Printf("  Option: %#v \n", cc.Setting)
+	fmt.Printf("  Raw: %#v \n", cc.Raw)
+	fmt.Printf("  DataRaw: %#v \n", cc.DataRaw)
+	fmt.Printf("  Data: %#v \n", cc.Data)
+	fmt.Printf("  Input: %#v \n", strings.Join(cc.Raw, " "))
+	fmt.Printf("  Basedir : %v \n", butil.GetBasedir())
+	fmt.Printf("  PWD : %v \n", pwd)
+
+	fmt.Printf(" %v \n", getSpendStr())
 	fmt.Println()
 }
 
@@ -176,7 +181,7 @@ func (c *defaultApp) Pinyin() {
 
 // Uls command allis: uls,uymas ls
 func (c *defaultApp) Uls() {
-	fmt.Println("  " + strings.Join(cli.GetCmdList(), "\r\n  "))
+	fmt.Println("  " + strings.Join(cli.GetCmdList(), "\n  "))
 }
 
 // Cache cache namespace@key.key setValue
@@ -187,12 +192,12 @@ func (c *defaultApp) Cache() {
 	hasCache, ccValue := getCache(key, value)
 	if value != "" {
 		if hasCache {
-			fmt.Printf("%v\r\n", ccValue)
+			fmt.Printf("%v\n", ccValue)
 		} else {
-			fmt.Printf("%v 没有设置值\r\n", key)
+			fmt.Printf("%v 没有设置值\n", key)
 		}
 	} else {
-		fmt.Printf("%v, %v 键值对已保存!\r\n", key, value)
+		fmt.Printf("%v, %v 键值对已保存!\n", key, value)
 	}
 }
 
@@ -227,12 +232,12 @@ func (c *defaultApp) Scan() {
 		}
 
 		fmt.Println(bin.FormatTable(table, false))
-		fmt.Printf(" 文件扫目标目录： %v，是否并发: %v(线程分配 %v).\r\n", dd.BaseDir(), isParallel, dd.ChanNumber())
-		fmt.Printf(" 文件扫描数： %v, 目录: %v, 文件： %v.\r\n", dd.AllItem, dd.AllDirItem, dd.AllFileItem)
-		fmt.Printf(" 目录大小: %v.\r\n", number.Bytes(dd.AllSize))
-		fmt.Printf(" 使用时间： %v.\r\n", dd.Runtime)
+		fmt.Printf(" 文件扫目标目录： %v，是否并发: %v(线程分配 %v).\n", dd.BaseDir(), isParallel, dd.ChanNumber())
+		fmt.Printf(" 文件扫描数： %v, 目录: %v, 文件： %v.\n", dd.AllItem, dd.AllDirItem, dd.AllFileItem)
+		fmt.Printf(" 目录大小: %v.\n", number.Bytes(dd.AllSize))
+		fmt.Printf(" 使用时间： %v.\n", dd.Runtime)
 	}
-	fmt.Printf(" 内存消耗：%v\r\n", memSubCall())
+	fmt.Printf(" 内存消耗：%v\n", memSubCall())
 
 }
 
