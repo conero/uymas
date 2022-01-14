@@ -932,7 +932,11 @@ func (app *CliCmd) parseArgs() {
 							app.Setting = append(app.Setting, arg)
 						} else { // --key=value
 							optKey = ""
-							app.saveOptionDick(arg[0:idx], arg[idx+1:])
+							k, v := arg[0:idx], arg[idx+1:]
+							app.saveOptionDick(k, v)
+							if str.InQue(k, app.Setting) == -1 {
+								app.Setting = append(app.Setting, k)
+							}
 						}
 						markKeySuccess = true
 					} else if "-" == arg[0:1] {
