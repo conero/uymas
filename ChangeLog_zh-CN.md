@@ -30,6 +30,26 @@
 
 ### v1.1.1/dev
 
+> 代码修复、以及文档参照 `godoc` 进行优化以及增加示例代码以减少学习/使用成本。
+
+- **bin**
+  - pref:  `App.Next` 控制时自动适应当前命令或选项
+  - fix: `CliCmd.parseArgs` 参数解析时忽略值 `--key=value`
+
+- **logger**
+  - doc: 添加示例代码 `NewLogger`
+  - feat: 增加日志驱动支持（`buffer`）以及驱动常量（内置：`stdout/file/buffer`）
+  - feat! : 增加“基本控制日志输出函数”（生成器）并用其重新日志级别输出
+  - feat: 增加“基本的带回调的函数”（生成器）并实现回调日志输出控制函数
+  - pref: 使 `NewLogger`  函数支持默认参数
+- **number**
+  - doc: 依照 `godoc` 规则增加示例代码以及文档优化
+
+- **xsql**
+  - feat: 增加`Xsql` 结构体使其直接由SQL到数据库执行
+  - doc: 增加示例代码，以及文档更新。
+
+
 
 
 
