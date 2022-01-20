@@ -294,6 +294,16 @@ func (cli *CLI) Run(args ...string) {
 	cli.router(cmd)
 }
 
+// RunDefault Run cli app using user defined `args` when os.args is empty,
+// it'll be useful to debug or default define.
+func (cli *CLI) RunDefault(args ...string) {
+	osArgs := os.Args
+	if len(osArgs) > 1 {
+		args = osArgs[1:]
+	}
+	cli.Run(args...)
+}
+
 // CallCmd call the application cmd
 func (cli *CLI) CallCmd(cmd string) {
 	cm := NewCliCmd(cmd)

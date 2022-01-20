@@ -33,9 +33,10 @@
 > 代码修复、以及文档参照 `godoc` 进行优化以及增加示例代码以减少学习/使用成本。
 
 - **bin**
+  - feat:  新增方法`CLI.RunDefault` 使程序调试模型下兼容定义命令的使用
   - pref:  `App.Next` 控制时自动适应当前命令或选项
   - fix: `CliCmd.parseArgs` 参数解析时忽略值 `--key=value`
-
+  
 - **logger**
   - doc: 添加示例代码 `NewLogger`
   - feat: 增加日志驱动支持（`buffer`）以及驱动常量（内置：`stdout/file/buffer`）
