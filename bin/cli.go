@@ -279,6 +279,12 @@ func (cli *CLI) RegisterAny(action interface{}) *CLI {
 	return cli
 }
 
+// RegisterUnmatched old method `Unfind` of alias compatibly use `RegisterAny`
+func (cli *CLI) RegisterUnmatched(callback func(string, *CliCmd)) *CLI {
+	cli.RegisterAny(callback)
+	return cli
+}
+
 // Run the run the application
 func (cli *CLI) Run(args ...string) {
 	if args == nil {
@@ -365,13 +371,13 @@ func (cli *CLI) router(cc *CliCmd) {
 
 		if !isRouterMk {
 			if cc.Command != "" {
-				fmt.Printf(" Fail: the command `%v` not find.\r\n", cc.Command)
+				fmt.Printf(" Fail: the command `%v` not find.\n", cc.Command)
 				fmt.Println()
 			}
-			fmt.Printf("   Power by framework %v, Version: %v/%v.\r\n", uymas.PkgName,
+			fmt.Printf("   Power by framework %v, Version: %v/%v.\n", uymas.PkgName,
 				uymas.Version, uymas.Release)
-			fmt.Printf("   You call register `Unfind` handler for it.\r\n")
-			fmt.Printf("   Welcome to learn more doc from link. https://pkg.go.dev/gitee.com/conero/uymas \r\n")
+			fmt.Printf("   You call register `RegisterAny` handler for it.\n")
+			fmt.Printf("   Welcome to learn more doc from link. https://pkg.go.dev/gitee.com/conero/uymas \n")
 			fmt.Println()
 			isRouterMk = false
 		}

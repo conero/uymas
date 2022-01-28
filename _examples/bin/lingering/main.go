@@ -51,25 +51,23 @@ func newBin()  {
 	}, "clear")
 
 	//empty data.
-	//cli.RegisterFunc(func(cc *bin.CliCmd) {
-	//})
 
-	cli.RegisterUnfind(func(cmd string, cc *bin.CliCmd){
+	cli.RegisterAny(func(cmd string, cc *bin.CliCmd){
 		fmt.Println("  通用命令解析: ")
-		fmt.Printf("    command: %v\r\n", cmd)
+		fmt.Printf("    command: %v\n", cmd)
 		if cc.SubCommand != ""{
-			fmt.Printf("    sub_command: %v\r\n",cc.SubCommand)
+			fmt.Printf("    sub_command: %v\n",cc.SubCommand)
 		}
-		fmt.Printf("    data_raw: %v\r\n", cc.DataRaw)
-		fmt.Printf("    data: %v\r\n", cc.Data)
-		fmt.Printf("    setting: %v\r\n", cc.Setting)
+		fmt.Printf("    data_raw: %v\n", cc.DataRaw)
+		fmt.Printf("    data: %v\n", cc.Data)
+		fmt.Printf("    setting: %v\n", cc.Setting)
 	})
 
 	cli.RegisterFunc(func(cc *bin.CliCmd) {
 		cList := cli.GetCmdList()
 		for _, c := range cList{
 			//打印数据列表
-			fmt.Printf("%v       %v\r\n", c, cli.GetDescribe(c))
+			fmt.Printf("%v       %v\n", c, cli.GetDescribe(c))
 		}
 	}, "list", "ls")
 
@@ -111,45 +109,6 @@ func newLingering(cc *bin.CliCmd, cli *bin.CLI)  {
 		fmt.Print("$ uymas>")
 	}
 }
-
-//the old bin construct
-func oldBin()  {
-	bin.UnfindFunc(func(a *bin.App, cmd string) {
-		fmt.Printf("    command: %v\r\n", cmd)
-		if a.SubCommand != ""{
-			fmt.Printf("    sub_command: %v\r\n", a.SubCommand)
-		}
-		fmt.Printf("    data_raw: %v\r\n", a.DataRaw)
-		fmt.Printf("    data: %v\r\n", a.Data)
-		fmt.Printf("    setting: %v\r\n", a.Setting)
-	})
-	lingering()
-}
-
-//驻留式命令行程序
-func lingering()  {
-	var input = bufio.NewScanner(os.Stdin)
-	fmt.Println("驻留式命令行程序")
-	fmt.Print("$ uymas>")
-
-	for input.Scan() {
-		text := input.Text()
-		text = strings.TrimSpace(text)
-
-		switch text {
-		default:
-			tmpArgs := butil.StringToArgs(text)
-			fmt.Println(tmpArgs)
-			bin.InjectArgs(tmpArgs...)
-			bin.Run()
-		}
-
-		fmt.Println()
-		fmt.Println()
-		fmt.Print("$ uymas>")
-	}
-}
-
 
 // the command of `test`.
 type TestCmd struct {

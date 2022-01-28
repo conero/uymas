@@ -24,7 +24,7 @@ func (c *RegisterAny) Construct() {
 func (c *RegisterAny) Before() {
 	cc := c.Cc
 	fmt.Println(" @Before ")
-	fmt.Printf(" Data -> %v\r\n", cc.DataRaw)
+	fmt.Printf(" Data -> %v\n", cc.DataRaw)
 }
 
 // DefaultUnmatched unmatched
@@ -44,11 +44,11 @@ func (c *RegisterAny) DefaultIndex() {
 func (c *RegisterAny) Test() {
 	cc := c.Cc
 	fmt.Println(" 命令行测试")
-	fmt.Printf("  SubCommand: %v \r\n", cc.SubCommand)
-	fmt.Printf("  Option: %v \r\n", cc.Setting)
-	fmt.Printf("  DataRaw: %v \r\n", cc.DataRaw)
-	fmt.Printf("  Data: %#v \r\n", cc.Data)
-	fmt.Printf("  Input: %#v \r\n", strings.Join(cc.Raw, " "))
+	fmt.Printf("  SubCommand: %v \n", cc.SubCommand)
+	fmt.Printf("  Option: %v \n", cc.Setting)
+	fmt.Printf("  DataRaw: %v \n", cc.DataRaw)
+	fmt.Printf("  Data: %#v \n", cc.Data)
+	fmt.Printf("  Input: %#v \n", strings.Join(cc.Raw, " "))
 	fmt.Println()
 }
 
@@ -75,10 +75,10 @@ func (c *App) DefaultHelp() {
 func (c *App) Test() {
 	cc := c.Cc
 	fmt.Println(" 命令行测试")
-	fmt.Printf("  SubCommand: %v \r\n", cc.SubCommand)
-	fmt.Printf("  Option: %v \r\n", cc.Setting)
-	fmt.Printf("  DataRaw: %v \r\n", cc.DataRaw)
-	fmt.Printf("  Data: %#v \r\n", cc.Data)
-	fmt.Printf("  Input: %#v \r\n", strings.Join(cc.Raw, " "))
+	fmt.Printf("  SubCommand: %v \n", cc.SubCommand)
+	fmt.Printf("  Option: %v \n", cc.Setting)
+	fmt.Printf("  DataRaw: %v \n", cc.DataRaw)
+	fmt.Printf("  Data: %#v \n", cc.Data)
+	fmt.Printf("  Input: %#v \n", strings.Join(cc.Raw, " "))
 	fmt.Println()
 }

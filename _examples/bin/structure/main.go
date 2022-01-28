@@ -24,5 +24,5 @@ func (tc *TypeCommand) Construct()  {
 func (tc *TypeCommand) Debug()  {
 	context := tc.Cc.Context()
 	vList := context.GetCmdList()
-	fmt.Printf("GetCmdList: %#v\r\n", vList)
+	fmt.Printf("GetCmdList: %#v\n", vList)
 }

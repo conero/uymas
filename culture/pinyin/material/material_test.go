@@ -3,11 +3,11 @@ package material
 import "testing"
 
 func TestGetDickRaw(t *testing.T) {
-	t.Logf("Raw: \r\n%v", string(GetDickRaw()))
+	t.Logf("Raw: \n%v", string(GetDickRaw()))
 }
 
 func TestGetCommonRaw(t *testing.T) {
-	t.Logf("Raw: \r\n%v", string(GetCommonRaw()))
+	t.Logf("Raw: \n%v", string(GetCommonRaw()))
 }
 
 func TestNewPinyin(t *testing.T) {
