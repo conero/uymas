@@ -110,17 +110,17 @@ func newLingering(cc *bin.CliCmd, cli *bin.CLI)  {
 	}
 }
 
-// the command of `test`.
+// TestCmd the command of `test`.
 type TestCmd struct {
 	bin.CliApp
 }
 
-// need the construct
+// Construct need the construct
 func (tc *TestCmd) Construct()  {
 	//tc.DoRouter()
 }
 
-//cmd `test verify`.
+// Verify cmd `test verify`.
 func (tc *TestCmd) Verify()  {
 	cc := tc.Cc
 	fmt.Println(cc.Command)

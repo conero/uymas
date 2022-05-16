@@ -153,7 +153,9 @@ func NewLogger(cfgs ...Config) *Logger {
 				if output == "" {
 					output = butil.GetPathDir("/.runtime")
 				} else {
-					output = butil.GetPathDir(output)
+					if !fs.ExistPath(output) {
+						output = butil.GetPathDir(output)
+					}
 				}
 				now := time.Now()
 				output = fs.CheckDir(fmt.Sprintf("%v/%v", output, now.Format("2006/01")))
