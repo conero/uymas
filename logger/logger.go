@@ -57,12 +57,12 @@ type Logger struct {
 	Level     Level
 }
 
-func (l Logger) Format(prefix, message string, args ...interface{}) {
+func (l *Logger) Format(prefix, message string, args ...interface{}) {
 	l.logger.Printf("[%v] %v", prefix, fmt.Sprintf(message, args...))
 }
 
 // format logging by level, logging creator
-func (l Logger) formatLevel(level Level, message string, args ...interface{}) {
+func (l *Logger) formatLevel(level Level, message string, args ...interface{}) {
 	if l.Level > level {
 		return
 	}
@@ -70,66 +70,61 @@ func (l Logger) formatLevel(level Level, message string, args ...interface{}) {
 }
 
 // output logging with callback, logging creator
-func (l Logger) outputFunc(level Level, callback func() string) {
+func (l *Logger) outputFunc(level Level, callback func() string) {
 	if l.Level > level {
 		return
 	}
 	l.formatLevel(level, callback())
 }
 
-func (l Logger) Debugf(message string, args ...interface{}) {
+func (l *Logger) Debugf(message string, args ...interface{}) {
 	l.formatLevel(LogDebug, message, args...)
 }
 
-func (l Logger) DebugFunc(callback func() string) {
+func (l *Logger) DebugFunc(callback func() string) {
 	l.outputFunc(LogDebug, callback)
 }
 
-func (l Logger) Infof(message string, args ...interface{}) {
+func (l *Logger) Infof(message string, args ...interface{}) {
 	l.formatLevel(LogInfo, message, args...)
 }
 
-func (l Logger) InfoFunc(callback func() string) {
+func (l *Logger) InfoFunc(callback func() string) {
 	l.outputFunc(LogInfo, callback)
 }
 
-func (l Logger) Warnf(message string, args ...interface{}) {
+func (l *Logger) Warnf(message string, args ...interface{}) {
 	l.formatLevel(LogWarn, message, args...)
 }
 
-func (l Logger) WarnFunc(callback func() string) {
+func (l *Logger) WarnFunc(callback func() string) {
 	l.outputFunc(LogWarn, callback)
 }
 
-func (l Logger) Errorf(message string, args ...interface{}) {
+func (l *Logger) Errorf(message string, args ...interface{}) {
 	l.formatLevel(LogError, message, args...)
 }
 
-func (l Logger) ErrorFunc(callback func() string) {
+func (l *Logger) ErrorFunc(callback func() string) {
 	l.outputFunc(LogError, callback)
 }
 
 // Log get embed go lib log when you need the instance.
-func (l Logger) Log() *log.Logger {
+func (l *Logger) Log() *log.Logger {
 	return l.logger
 }
 
-func (l Logger) Buffer() *bytes.Buffer {
+func (l *Logger) Buffer() *bytes.Buffer {
 	return l.bufDriver
 }
 
-// NewLogger build a simple logger user it.
-func NewLogger(cfgs ...Config) *Logger {
-	var cfg Config
-	if len(cfgs) > 0 {
-		cfg = cfgs[0]
-	} else {
-		cfg = DefaultConfig
+// CoverLevel cover input string level into `Level`
+func CoverLevel(lvl string, defLevel Level) Level {
+	lv := defLevel
+	if lvl == "" { // empty input use default Level
+		return lv
 	}
-	logging := &Logger{}
-	// default base log level is `Warn`
-	lv := LogWarn
-	switch strings.ToLower(cfg.Level) {
+	switch strings.ToLower(lvl) {
 	case "all":
 		lv = LogAll
 	case "error", "err":
@@ -145,7 +140,20 @@ func NewLogger(cfgs ...Config) *Logger {
 	default:
 		panic(fmt.Sprintf("invalid level param, reference value: all, error, warn, info, debug, none"))
 	}
+	return lv
+}
 
+// NewLogger build a simple logger user it.
+func NewLogger(cfgs ...Config) *Logger {
+	var cfg Config
+	if len(cfgs) > 0 {
+		cfg = cfgs[0]
+	} else {
+		cfg = DefaultConfig
+	}
+	logging := &Logger{}
+	// default base log level is `Warn`
+	lv := CoverLevel(cfg.Level, LogWarn)
 	if cfg.Log == nil { // 默认日志
 		if lv != LogNone {
 			if cfg.Driver == DriverFile {
