@@ -143,6 +143,33 @@ func CoverLevel(lvl string, defLevel Level) Level {
 	return lv
 }
 
+// ShortCover short level string cover to matched level string.
+// rule:
+//	`a/A -> all`
+//	`e/E -> error`
+//	`w/W -> warning`
+//	`i/I -> info`
+//	`d/D -> debug`
+//	`n/N -> none`
+func ShortCover(short string) (lvlStr string) {
+	lvlStr = short
+	switch strings.ToLower(short) {
+	case "a":
+		lvlStr = "all"
+	case "e":
+		lvlStr = "error"
+	case "w":
+		lvlStr = "warning"
+	case "i":
+		lvlStr = "info"
+	case "d":
+		lvlStr = "debug"
+	case "n":
+		lvlStr = "none"
+	}
+	return
+}
+
 // NewLogger build a simple logger user it.
 func NewLogger(cfgs ...Config) *Logger {
 	var cfg Config
