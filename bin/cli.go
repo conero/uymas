@@ -166,6 +166,23 @@ func (cli *CLI) RegisterFunc(todo func(*CliCmd), cmds ...string) *CLI {
 	return cli
 }
 
+// register command by function or struct
+func (cli *CLI) register(rgst interface{}, cmds ...string) {
+	if len(cmds) > 0 {
+		cmd := cmds[0]
+		if len(cmds) > 1 {
+			cli.cmdMap[cmd] = cmds[1]
+		}
+		// make the function map th struct
+		cli.commands[cmd] = Cmd{
+			Command: cmd,
+			Alias:   cli.cmdMap[cmd],
+		}
+		// register feedback
+		cli.cmds[cmd] = rgst
+	}
+}
+
 func (cli *CLI) registerFunc(todo func(*CliCmd), cmds ...string) {
 	cli.tempLastCommand = ""
 	if len(cmds) > 0 {
@@ -391,12 +408,21 @@ func (cli *CLI) routerCommand(cc *CliCmd) bool {
 	if value != nil {
 		switch value.(type) {
 		// call the FuncCmd
+		case func():
+			value.(func())()
+			routerValidMk = true
+		case func(cmd CliCmd):
+			value.(func(CliCmd))(*cc)
+			routerValidMk = true
 		case func(*CliCmd):
 			value.(func(*CliCmd))(cc)
 			routerValidMk = true
 		default:
 			// call the AppCmd
-			v := reflect.ValueOf(value).Elem()
+			v := reflect.ValueOf(value)
+			if v.Kind() == reflect.Ptr {
+				v = v.Elem()
+			}
 			// set `Cc` that is struct of field.
 			if cCField := v.FieldByName(appCliFieldCliCmd); cCField.IsValid() {
 				cc.cmdType = int(CmdApp)

@@ -44,7 +44,7 @@ nestling --> develop -->master
 
 ```ini
 # github
-$ go get -u  gitee.com/conero/uymas
+$ go get -u gitee.com/conero/uymas
 
 ```
 
