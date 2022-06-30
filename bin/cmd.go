@@ -1,13 +1,21 @@
 package bin
 
 import (
+	"errors"
 	"fmt"
+	"gitee.com/conero/uymas/str"
 	"reflect"
 	"strings"
 )
 
 const (
-	AppTagName = "cmd"
+	AppTagName            = "cmd"
+	OptValidationRequire  = "required" // 必须
+	OptValidationOptional = "optional" // 可选
+)
+
+const (
+	tagSplitDelimiter = ";"
 )
 
 type appRegisterData struct {
@@ -75,6 +83,7 @@ func (c *App) Run(args ...string) {
 	c.getCli().Run(args...)
 }
 
+// get string value judge default value
 func defString(v, def string) string {
 	v = strings.TrimSpace(v)
 	if v == "" {
@@ -124,10 +133,142 @@ type AppCmd struct {
 	Register interface{} // register name
 }
 
+// AppOptionGroup the group of many of AppOption.
+type AppOptionGroup struct {
+	lastCmd    *CliCmd
+	optionDick map[string]*AppOption
+}
+
+func (c *AppOptionGroup) ParseEach(v interface{}, each func(*AppOption)) error {
+	vf := reflect.ValueOf(v)
+	isStruct := false
+
+	vKind := vf.Kind()
+	if vKind == reflect.Struct {
+		isStruct = true
+	} else if vKind == reflect.Ptr {
+		isStruct = vf.Elem().Kind() == reflect.Struct
+	}
+
+	if !isStruct {
+		return errors.New(fmt.Sprintf("the param v is not (ptr) struct type."))
+	}
+
+	optDick := map[string]*AppOption{}
+	vt := reflect.TypeOf(v)
+	if vt.Kind() == reflect.Ptr {
+		vt = vt.Elem()
+	}
+	for i := 0; i < vt.NumField(); i++ {
+		field := vt.Field(i)
+		tagStr := field.Tag.Get(AppTagName)
+		var opt *AppOption
+		if tagStr != "" {
+			opt = ParseOptionTag(tagStr)
+			if each != nil {
+				each(opt)
+			}
+		} else {
+			opt = &AppOption{
+				Name: strings.ToLower(field.Name),
+			}
+		}
+
+		if opt != nil {
+			optDick[opt.Name] = opt
+		}
+	}
+
+	c.optionDick = optDick
+	return nil
+}
+
+func (c *AppOptionGroup) Unmarshal(cmd *CliCmd, v interface{}) error {
+	c.lastCmd = cmd
+	err := c.ParseEach(v, func(opt *AppOption) {
+	})
+	return err
+}
+
+func ParseOptionGroup(v interface{}) *AppOptionGroup {
+	aog := &AppOptionGroup{}
+	err := aog.ParseEach(v, nil)
+	if err != nil {
+		return nil
+	}
+	return aog
+}
+
+// Option get option by name
+func (c *AppOptionGroup) Option(name string) *AppOption {
+	if c.optionDick != nil {
+		opt, exist := c.optionDick[name]
+		if exist {
+			return opt
+		}
+		return c.OptionSearchAlias(name)
+	}
+	return nil
+}
+
+func (c *AppOptionGroup) OptionSearchAlias(name string) *AppOption {
+	if c.optionDick != nil {
+		for k, opt := range c.optionDick {
+			if k == name {
+				return opt
+			}
+			if str.InQue(name, opt.Alias) > -1 {
+				return opt
+			}
+		}
+	}
+	return nil
+}
+
 // AppOption parse struct tag syntax
 // `cmd: "tagName;"`
 // data valid: required, optional(default)
 // name: "name,n,N"
 // example help: `help,h; optional`
-type AppOption interface {
+type AppOption struct {
+	Validation string // validation item like: required, optional(default)
+	Name       string
+	Alias      []string
+	raw        string // the raw of tag string
+	IsSet      bool   // option is set
+}
+
+// parse tag string
+func (c *AppOption) parse() {
+	queue := strings.Split(c.raw, tagSplitDelimiter)
+	for i, s := range queue {
+		s = strings.TrimSpace(s)
+		if s == "" {
+			continue
+		}
+		// Parse tag item: `name`
+		if i == 0 { // example: "`cmd: name,n,N;`"
+			s = strings.TrimSpace(s)
+			var alias []string
+			for j, vName := range strings.Split(s, ",") {
+				if j == 0 {
+					c.Name = strings.TrimSpace(vName)
+				} else {
+					alias = append(alias, strings.TrimSpace(vName))
+				}
+			}
+			c.Alias = alias
+		} else if s == OptValidationRequire || s == OptValidationOptional { // parse value of OptValidation.
+			c.Validation = s
+		}
+	}
+}
+
+func ParseOptionTag(tag string) *AppOption {
+	ap := &AppOption{
+		Validation: OptValidationOptional,
+		raw:        tag,
+	}
+	ap.parse()
+	return ap
 }

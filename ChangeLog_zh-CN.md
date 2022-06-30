@@ -27,7 +27,7 @@
 > 兼容旧版本的前提下，新增申明式命令行城市。
 
 - **bin**
-  - feat: 新增结构体 `App`/`AppCmd`/`AppOption` 用于实现 App 到应用的映射，并自动生成帮助文档的。
+  - feat: 新增结构体 `App`/`AppCmd`/`AppOptionGroup/AppOption` 用于实现 App 到应用的映射，并自动生成帮助文档的。
 - **logger**
   - feat: `CoverLevel` 新增方法用于实现字符串转为为配置所需的日志级别
 
