@@ -28,6 +28,7 @@
 
 - **bin**
   - feat: 新增结构体 `App`/`AppCmd`/`AppOptionGroup/AppOption` 用于实现 App 到应用的映射，并自动生成帮助文档的。
+  - pref: 函数 NewCliCmd，args 为空时使用 `os.Args` 替代。使其可独立使用
 - **logger**
   - feat: `CoverLevel` 新增方法用于实现字符串转为为配置所需的日志级别
 

@@ -9,10 +9,12 @@ import (
 )
 
 // reference the resource from the link: https://github.com/mozillazg/pinyin-data
+//
 //go:embed mt_pinyin.txt
 var pinyinDick []byte
 
 // the common list word, resource link: https://www.zdic.net/zd/zb/ty/
+//
 //go:embed mt_common_list.ini
 var commonList []byte
 

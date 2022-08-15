@@ -13,7 +13,7 @@ const (
 )
 
 // Builder need to do.
-//the sql builder
+// the sql builder
 type Builder struct {
 	table        string
 	alias        string
@@ -275,7 +275,7 @@ func (c *Builder) GetSQL() (string, []interface{}) {
 }
 
 // Table Table(string/string interface)
-//Table([]string{name, alias})
+// Table([]string{name, alias})
 func Table(table interface{}, alias ...string) *Builder {
 	if table == nil {
 		panic("if params of Table is invalid, `table == nil`")

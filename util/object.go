@@ -10,6 +10,7 @@ type Object struct {
 }
 
 // Assign @todo
+//
 //	Base of `reflect` to come true like javascript `Object.Assign`, target should be pointer best.
 //	It can be Multiple, only for `reflect.Map`.
 func (obj Object) Assign(target interface{}, source interface{}) interface{} {

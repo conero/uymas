@@ -4,7 +4,7 @@ package bin
 
 // CMD
 // the struct to be a map for cli application
-//@todo need to do
+// @todo need to do
 type CMD struct {
 	Title   string //the title of `CMD`
 	Command string

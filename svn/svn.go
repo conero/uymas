@@ -1,4 +1,4 @@
-//Package svn command parser.
+// Package svn command parser.
 package svn
 
 import (

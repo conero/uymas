@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-//App 版本测试
+// App 版本测试
 type App struct {
 	bin.CliApp
 }

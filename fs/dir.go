@@ -99,7 +99,7 @@ func (ds *DirScanner) Scan() error {
 	return err
 }
 
-//recursion to scan dir, return the children count size.
+// recursion to scan dir, return the children count size.
 func (ds *DirScanner) scanRecursion(vDir string, depth int) int64 {
 	files, err := ioutil.ReadDir(vDir)
 	if err != nil {
@@ -200,7 +200,7 @@ func (ds *DirScanner) ScanParallel() error {
 	return err
 }
 
-//recursion to scan dir, return the children count size.[Experimental]
+// recursion to scan dir, return the children count size.[Experimental]
 func (ds *DirScanner) scanRecursionParallel(vDir string, depth int) int64 {
 	files, err := ioutil.ReadDir(vDir)
 	if err != nil {
@@ -264,7 +264,7 @@ func (ds *DirScanner) scanRecursionParallel(vDir string, depth int) int64 {
 	return currentSize
 }
 
-//ignore scan target name
+// ignore scan target name
 func (ds *DirScanner) ignoreScan(name string) bool {
 	ignore := false
 	allExp := "*"

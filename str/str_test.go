@@ -152,8 +152,8 @@ func TestLowerStyle(t *testing.T) {
 	}
 }
 
-//	`first_name` 			-> `FirstName`,
-//	`get_height_width_rate` 	-> `GetHeightWidthRate`
+// `first_name` 			-> `FirstName`,
+// `get_height_width_rate` 	-> `GetHeightWidthRate`
 func TestCamelCase(t *testing.T) {
 	// Case 1
 	vStr := "first_name"

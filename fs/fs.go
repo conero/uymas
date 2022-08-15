@@ -1,4 +1,4 @@
-//Package fs support facilitate for handler file and direction.
+// Package fs support facilitate for handler file and direction.
 package fs
 
 import (

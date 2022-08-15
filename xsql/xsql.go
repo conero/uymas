@@ -1,5 +1,5 @@
 // Package xsql extends for the sql package.
-//power by <Joshua Conero>(2020)
+// power by <Joshua Conero>(2020)
 package xsql
 
 import (

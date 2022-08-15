@@ -63,8 +63,8 @@ func NewPinyin(filename string) *Pinyin {
 	return pyt
 }
 
-//支持：https://github.com/mozillazg/pinyin-data/blob/master/pinyin.txt 文本格式
-//数据加载
+// 支持：https://github.com/mozillazg/pinyin-data/blob/master/pinyin.txt 文本格式
+// 数据加载
 func (pyt *Pinyin) loadData() {
 	lines := GetLinesFromFile(pyt.filename)
 	pyt.LineToDick(lines)
@@ -182,7 +182,7 @@ func (pyt *Pinyin) GetPyToneFunc(chinese string, call func(string) string) strin
 	return chinese
 }
 
-//多音字中获取其一
+// 多音字中获取其一
 func (pyt *Pinyin) checkOneMultipleWords(word string) string {
 	if word != "" {
 		queue := strings.Split(word, ",")

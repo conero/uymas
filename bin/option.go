@@ -41,7 +41,7 @@ func (c *Option) Unmarshal(v interface{}) {
 	}
 }
 
-//parse arg string.
+// parse arg string.
 func (c Option) argParse(tag string) []string {
 	pattern := `\s`
 	reg, er := regexp.Compile(pattern)

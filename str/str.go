@@ -1,4 +1,4 @@
-//Package str string handler method.
+// Package str string handler method.
 package str
 
 import (
@@ -45,6 +45,7 @@ func IsLatinAlpha(alpha string) bool {
 
 // LowerStyle camelcase --> snake case
 // covert string to be lower style, like:
+//
 //	`FirstName` 			-> `first_name`,
 //	`getHeightWidthRate` 	-> `get_height_width_rate`
 func LowerStyle(vStr string) string {
@@ -84,8 +85,10 @@ func LowerStyle(vStr string) string {
 
 // CamelCase camelcase --> snake case
 // covert string to be lower style, like:
+//
 //	`first_name` 			-> `FirstName`,
 //	`get_height_width_rate` 	-> `GetHeightWidthRate`
+//
 // snake case --> camelcase
 func CamelCase(vStr string) string {
 	if vLen := len(vStr); vLen > 0 {

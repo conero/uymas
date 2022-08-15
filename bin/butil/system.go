@@ -8,7 +8,7 @@ import (
 )
 
 // Clear @experimental it's a try
-//clear the cli app
+// clear the cli app
 func Clear() error {
 	osName := runtime.GOOS
 	var cmd *exec.Cmd

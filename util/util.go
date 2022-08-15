@@ -1,4 +1,4 @@
-//Package util implements other tool more, like type cover, type value check.
+// Package util implements other tool more, like type cover, type value check.
 package util
 
 import (

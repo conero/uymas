@@ -1,5 +1,5 @@
 // Package xsql extends for the sql package.
-//power by <Joshua Conero>(2020)
+// power by <Joshua Conero>(2020)
 package xsql
 
 import (
@@ -24,13 +24,14 @@ func (c *Query) Select(query string, args ...interface{}) ([]map[string]interfac
 }
 
 // RowsDick reference link: https://blog.csdn.net/weimingjue/article/details/91042649
-//get the rows dick
-//database map to golang type:
-//		INT    							int64
-//		SMALLINT,TINYINT    			int
-//		DECIMAL    						float64
-//		DATETIME,DATE    				time.Time; <!temp make to string>
-//		VARCHAR,CHAR,TEXT				string
+// get the rows dick
+// database map to golang type:
+//
+//	INT    							int64
+//	SMALLINT,TINYINT    			int
+//	DECIMAL    						float64
+//	DATETIME,DATE    				time.Time; <!temp make to string>
+//	VARCHAR,CHAR,TEXT				string
 func (c *Query) RowsDick(rows *sql.Rows) ([]map[string]interface{}, error) {
 	defer rows.Close()
 

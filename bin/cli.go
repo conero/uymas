@@ -107,8 +107,15 @@ func NewCLI() *CLI {
 	return cli
 }
 
-// NewCliCmd the construct of `CliCmd`
+// NewCliCmd the construct of `CliCmd`, args default set os.Args if no function arguments
 func NewCliCmd(args ...string) *CliCmd {
+	if args == nil {
+		// if the args is empty then use the `os.Args`
+		osArgs := os.Args
+		if len(osArgs) > 1 {
+			args = osArgs[1:]
+		}
+	}
 	c := &CliCmd{
 		Raw:     args,
 		Setting: []string{},
@@ -121,7 +128,8 @@ func NewCliCmd(args ...string) *CliCmd {
 }
 
 // NewCliCmdByString construction of `CliCmd` by string
-//  @todo notice: `--test-string="Joshua 存在空格的字符串 Conero"` 解析失败
+//
+//	@todo notice: `--test-string="Joshua 存在空格的字符串 Conero"` 解析失败
 func NewCliCmdByString(ss string) *CliCmd {
 	return NewCliCmd(butil.StringToArgs(ss)...)
 }
@@ -149,7 +157,8 @@ func (cli *CLI) GetCmdList() []string {
 }
 
 // RegisterFunc register functional command, the format like
-//  `RegisterFunc(todo func(cc *CliCmd), cmd string)` or `RegisterFunc(todo func(), cmd, alias string)`
+//
+//	`RegisterFunc(todo func(cc *CliCmd), cmd string)` or `RegisterFunc(todo func(), cmd, alias string)`
 func (cli *CLI) RegisterFunc(todo func(*CliCmd), cmds ...string) *CLI {
 	if len(cmds) > 0 {
 		cmd := cmds[0]
@@ -269,14 +278,14 @@ func (cli *CLI) RegisterApps(aps map[string]interface{}) *CLI {
 }
 
 // RegisterEmpty when the cmd is empty then callback the function, action only be
-//   1. function `func(cc *CliCmd)`/`func()` or struct.
+//  1. function `func(cc *CliCmd)`/`func()` or struct.
 func (cli *CLI) RegisterEmpty(action interface{}) *CLI {
 	cli.actionEmptyRegister = action
 	return cli
 }
 
 // RegisterAny when command input not handler will callback the register, the format like:
-//   1. function `func(cmd string, cc *CliCmd)`/`func(cmd string)`/`func(cc *CliCmd)`/CliApp/Base Struct
+//  1. function `func(cmd string, cc *CliCmd)`/`func(cmd string)`/`func(cc *CliCmd)`/CliApp/Base Struct
 func (cli *CLI) RegisterAny(action interface{}) *CLI {
 	cli.actionAnyRegister = action
 	// check if cmd dist
@@ -302,15 +311,8 @@ func (cli *CLI) RegisterUnmatched(callback func(string, *CliCmd)) *CLI {
 	return cli
 }
 
-// Run the run the application
+// Run the application
 func (cli *CLI) Run(args ...string) {
-	if args == nil {
-		// if the args is empty then use the `os.Args`
-		osArgs := os.Args
-		if len(osArgs) > 1 {
-			args = osArgs[1:]
-		}
-	}
 	// construct of `CliCmd`
 	cmd := NewCliCmd(args...)
 	// start router by register.
@@ -944,16 +946,18 @@ func (app *CliCmd) AppendData(vMap map[string]interface{}) *CliCmd {
 // the application parse raw args inner.
 //
 // the command format like that:
-// 		1. `$ [command] [option]`
-// 		2. `$ [command] [sub_command]`
-// 		3. `$ [option]`
+//  1. `$ [command] [option]`
+//  2. `$ [command] [sub_command]`
+//  3. `$ [option]`
 //
 // the option format example:
-//		`[command] -xyz` same like `[command] -x -y -z`
-//		`[command] --version --name 'Joshua Conero'`
-//		`[command] --list A B C D -L A B C D`
-//		`[command] --name='Joshua Conero'`
-//@todo app.Data --> 类型解析太简陋；支持类型与 Readme.md 不统一
+//
+//	`[command] -xyz` same like `[command] -x -y -z`
+//	`[command] --version --name 'Joshua Conero'`
+//	`[command] --list A B C D -L A B C D`
+//	`[command] --name='Joshua Conero'`
+//
+// @todo app.Data --> 类型解析太简陋；支持类型与 Readme.md 不统一
 func (app *CliCmd) parseArgs() {
 	if app.Raw != nil {
 		optKey := ""
@@ -1109,6 +1113,7 @@ func isVaildCmd(c string) bool {
 }
 
 // CleanoutString clear out the raw input string like:
+//
 //	`"string"`		=> `string`
 //	`"'string'"`	=> `'string'`
 //	`'string'`		=> `string`

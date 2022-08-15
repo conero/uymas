@@ -15,9 +15,10 @@ var Transferred map[string]string = map[string]string{
 }
 
 // NewParser cli command 解析器
-//解析规则：
-//		单行以“;"分割
-//		多行以“行\n分割"分割
+// 解析规则：
+//
+//	单行以“;"分割
+//	多行以“行\n分割"分割
 func NewParser(script string) [][]string {
 	var cmds [][]string
 	var reg = regexp.MustCompile(`[\n;]`)        //分行
@@ -53,7 +54,8 @@ func NewParser(script string) [][]string {
 }
 
 // NewScriptFile parse the script file, the syntax like shell.
-//		"#"   comment line
+//
+//	"#"   comment line
 func NewScriptFile(filename string) []string {
 	var cmds []string
 	if fl, er := os.Open(filename); er == nil {

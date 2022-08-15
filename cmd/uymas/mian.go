@@ -25,7 +25,7 @@ var (
 	gSpendMem   func() number.BitSize
 )
 
-//the cli app tools
+// the cli app tools
 func application() {
 	cli = bin.NewCLI()
 	//app App 应用
@@ -41,12 +41,12 @@ func getPinyin() *pinyin.Pinyin {
 	return pinyinCache
 }
 
-//the uymas cmd message
+// the uymas cmd message
 func main() {
 	application()
 }
 
-//获取的缓存
+// 获取的缓存
 func getCache(key, value string) (bool, storage.Any) {
 	var namespace string
 	var nsSplit = "@"
@@ -70,7 +70,7 @@ func getCache(key, value string) (bool, storage.Any) {
 	}
 }
 
-//消耗时间、内存等计算
+// 消耗时间、内存等计算
 func getSpendStr() string {
 	return fmt.Sprintf("时间和内存消耗，用时 %v, 内存消耗 %v", gSpendTm(), gSpendMem())
 }

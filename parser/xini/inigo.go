@@ -1,4 +1,4 @@
-//Package xini parse ini config files and utils.
+// Package xini parse ini config files and utils.
 package xini
 
 import (
@@ -13,8 +13,10 @@ import (
 
 // NewParser instantiate the Parser
 // param format(single param)
-// 		opts map[string]string{}|string
-//			driver SupportNameRong SupportNameIni
+//
+//	opts map[string]string{}|string
+//		driver SupportNameRong SupportNameIni
+//
 // default BaseParser
 func NewParser(params ...interface{}) Parser {
 	var driver string
@@ -52,11 +54,12 @@ func NewParser(params ...interface{}) Parser {
 }
 
 // ParseValue parse the data value, the format like
-// 		bool:   true/false/TRUE/FALSE
-// 		string: '字符串', "字符串" 以及无法解析的参数
-// 		int64: 47, 52, -49552
-// 		float64: 3.14, -0.24552
-// 		null: nil     空值时，默认为 nil
+//
+//	bool:   true/false/TRUE/FALSE
+//	string: '字符串', "字符串" 以及无法解析的参数
+//	int64: 47, 52, -49552
+//	float64: 3.14, -0.24552
+//	null: nil     空值时，默认为 nil
 func ParseValue(v string) interface{} {
 	var value interface{} = nil
 	v = strings.TrimSpace(v)

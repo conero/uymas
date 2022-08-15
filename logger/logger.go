@@ -16,7 +16,6 @@ import (
 type Level int8
 
 // logging Level constant
-//
 const (
 	LogAll Level = iota
 	LogDebug
@@ -27,7 +26,6 @@ const (
 )
 
 // DriverStdout logging driver support builtin
-//
 const (
 	DriverStdout = "stdout"
 	DriverFile   = "file"
@@ -145,6 +143,7 @@ func CoverLevel(lvl string, defLevel Level) Level {
 
 // ShortCover short level string cover to matched level string.
 // rule:
+//
 //	`a/A -> all`
 //	`e/E -> error`
 //	`w/W -> warning`

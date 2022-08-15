@@ -19,7 +19,7 @@ const (
 
 type initIota int
 
-//the Cmd of type
+// the Cmd of type
 const (
 	CmdApp initIota = iota
 	CmdFunc
@@ -27,8 +27,9 @@ const (
 
 // Cmd2StringMap command string turn to map string, for standard go method name.
 // like:
-// 		`get-videos` -> `GetVideos`
-// 		`get_videos` -> `GetVideos`
+//
+//	`get-videos` -> `GetVideos`
+//	`get_videos` -> `GetVideos`
 func Cmd2StringMap(c string) string {
 	reg := regexp.MustCompile(`([-_]+)|(\s{2,})`)
 	c = reg.ReplaceAllString(c, " ")
