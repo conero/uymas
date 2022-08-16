@@ -25,6 +25,8 @@
 ### v1.2.0/dev
 
 > 兼容旧版本的前提下，新增申明式命令行程序。使用 go1.19 gofmt格式化程序
+>
+> 更改更新值 v1.1.2
 
 - **bin**
   - feat: 新增结构体 `App`/`AppCmd`/`AppOptionGroup/AppOption` 用于实现 App 到应用的映射，并自动生成帮助文档的。
@@ -34,11 +36,21 @@
 
 
 
-
-
 ## v1.1.x
 
 - [x] 内置文本使用 embed 包重写，如拼音等。
+
+
+
+### v1.1.2/2022-08-16
+
+> 兼容旧版本的前提下，新增申明式命令行程序。使用 go1.19 gofmt格式化程序
+
+- **bin**
+  - feat: 新增结构体 `App`/`AppCmd`/`AppOptionGroup/AppOption` 用于实现 App 到应用的映射，并自动生成帮助文档的。
+  - pref: 函数 NewCliCmd，args 为空时使用 `os.Args` 替代。使其可独立使用
+- **logger**
+  - feat: `CoverLevel` 新增方法用于实现字符串转为为配置所需的日志级别
 
 
 
