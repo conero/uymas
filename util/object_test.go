@@ -1,6 +1,7 @@
 package util
 
 import (
+	"fmt"
 	"math"
 	"testing"
 	"time"
@@ -221,4 +222,61 @@ func BenchmarkStructToMapLStyle(b *testing.B) {
 func TestStructToMapLStyle(t *testing.T) {
 	t.Logf("StructToMapLStyle => %#v", StructToMapLStyle(tom))
 	t.Logf("StructToMapLStyle => %#v", StructToMapLStyle(tom, "CreateTime", "ID", "SubObject"))
+}
+
+func TestObject_Keys(t *testing.T) {
+	// map-case1
+	var v any
+	v = map[string]string{"name": "Joshua", "age": "23", "country": "cn"}
+
+	var obj Object
+	var rf = []string{"name", "age", "country"}
+
+	keys := obj.Keys(v)
+	vmStr := fmt.Sprintf("%#v", keys)
+	rfStr := fmt.Sprintf("%#v", rf)
+	if vmStr != rfStr {
+		t.Errorf("Fail by map[string]string => %v != %v", vmStr, rfStr)
+	}
+
+	// map-case2
+	// delete for map
+	delete(v.(map[string]string), "country")
+	keys = obj.Keys(v)
+	vmStr = fmt.Sprintf("%#v", keys)
+
+	rf = []string{"name", "age"}
+	rfStr = fmt.Sprintf("%#v", rf)
+
+	if vmStr != rfStr {
+		t.Errorf("Fail by map[string]string => %v != %v", vmStr, rfStr)
+	}
+
+	// struct-case2
+	type Ta struct {
+		Name    string
+		Age     int
+		Country string
+	}
+
+	var ta Ta
+	keys = obj.Keys(ta)
+	vmStr = fmt.Sprintf("%#v", keys)
+
+	rf = []string{"Name", "Age", "Country"}
+	rfStr = fmt.Sprintf("%#v", rf)
+	if vmStr != rfStr {
+		t.Errorf("Fail by map[string]string => %v != %v", vmStr, rfStr)
+	}
+
+	// struct-case3
+	var tPtr = &Ta{}
+	keys = obj.Keys(tPtr)
+	vmStr = fmt.Sprintf("%#v", keys)
+
+	rf = []string{"Name", "Age", "Country"}
+	rfStr = fmt.Sprintf("%#v", rf)
+	if vmStr != rfStr {
+		t.Errorf("Fail by map[string]string => %v != %v", vmStr, rfStr)
+	}
 }

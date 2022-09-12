@@ -89,6 +89,42 @@ func (obj Object) AssignMap(targetMap interface{}, srcMapOrStruct interface{}) {
 	}
 }
 
+// Keys get keys from map or struct.
+//
+// Notice: map keys maybe disorder.
+func (obj Object) Keys(value any) []string {
+	rv := reflect.ValueOf(value)
+	var isPtr = false
+	if rv.Kind() == reflect.Ptr {
+		rv = rv.Elem()
+		isPtr = true
+	}
+
+	var keys []string
+	if rv.Kind() == reflect.Map {
+		it := rv.MapRange()
+		for it.Next() {
+			keys = append(keys, it.Key().String())
+		}
+	} else if rv.Kind() == reflect.Struct {
+		rt := reflect.TypeOf(value)
+		if isPtr {
+			rt = rt.Elem()
+		}
+		vn := rv.NumField()
+		for i := 0; i < vn; i++ {
+			field := rt.Field(i)
+			// Get the tag JSON parameter first
+			key := field.Tag.Get("json")
+			if key == "" {
+				key = field.Name
+			}
+			keys = append(keys, key)
+		}
+	}
+	return keys
+}
+
 // StructToMap convert Struct field to by Map, support the Ptr
 func StructToMap(value interface{}, ignoreKeys ...string) map[string]interface{} {
 	rv := reflect.ValueOf(value)
