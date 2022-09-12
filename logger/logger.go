@@ -4,6 +4,7 @@ package logger
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"gitee.com/conero/uymas/bin/butil"
 	"gitee.com/conero/uymas/fs"
@@ -117,11 +118,28 @@ func (l *Logger) Buffer() *bytes.Buffer {
 }
 
 // CoverLevel cover input string level into `Level`
+// Deprecated: replace by the func `ToLevel`
 func CoverLevel(lvl string, defLevel Level) Level {
-	lv := defLevel
-	if lvl == "" { // empty input use default Level
-		return lv
+	lv, er := ToLevel(lvl, defLevel)
+	if er != nil {
+		panic(er)
 	}
+	return lv
+}
+
+// ToLevel turn string to level
+func ToLevel(lvl string, args ...Level) (Level, error) {
+	var (
+		lv Level
+		er error
+	)
+	if len(args) > 0 {
+		lv = args[0]
+	}
+	if lvl == "" { // empty input use default Level
+		return lv, nil
+	}
+	lvl = ShortCover(lvl)
 	switch strings.ToLower(lvl) {
 	case "all":
 		lv = LogAll
@@ -136,9 +154,9 @@ func CoverLevel(lvl string, defLevel Level) Level {
 	case "none", "no", "mute", "quiet":
 		lv = LogNone
 	default:
-		panic(fmt.Sprintf("invalid level param, reference value: all, error, warn, info, debug, none"))
+		er = errors.New(fmt.Sprintf("%v: invalid level param, reference value all, error, warn, info, debug, none", lvl))
 	}
-	return lv
+	return lv, er
 }
 
 // ShortCover short level string cover to matched level string.
@@ -179,7 +197,10 @@ func NewLogger(cfgs ...Config) *Logger {
 	}
 	logging := &Logger{}
 	// default base log level is `Warn`
-	lv := CoverLevel(cfg.Level, LogWarn)
+	lv, er := ToLevel(cfg.Level, LogWarn)
+	if er != nil {
+		panic(er)
+	}
 	if cfg.Log == nil { // 默认日志
 		if lv != LogNone {
 			if cfg.Driver == DriverFile {
