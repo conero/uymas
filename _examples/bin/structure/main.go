@@ -12,16 +12,14 @@ func main() {
 	cli.Run()
 }
 
-
 type TypeCommand struct {
 	bin.CliApp
 }
 
-func (tc *TypeCommand) Construct()  {
+func (tc *TypeCommand) Construct() {
 }
 
-//
-func (tc *TypeCommand) Debug()  {
+func (tc *TypeCommand) Debug() {
 	context := tc.Cc.Context()
 	vList := context.GetCmdList()
 	fmt.Printf("GetCmdList: %#v\n", vList)

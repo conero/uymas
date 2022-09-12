@@ -21,7 +21,7 @@ const (
 type appRegisterData struct {
 	name     string
 	alias    []string
-	register interface{}
+	register any
 }
 
 type App struct {
@@ -129,8 +129,8 @@ type AppCmd struct {
 	Alias    []string // the alias list of cmd
 	Name     string   // cmd name default by `AppCmd` struct
 	Title    string   // the description of cmd
-	Option   []interface{}
-	Register interface{} // register name
+	Option   []any
+	Register any // register name
 }
 
 // AppOptionGroup the group of many of AppOption.
@@ -139,7 +139,7 @@ type AppOptionGroup struct {
 	optionDick map[string]*AppOption
 }
 
-func (c *AppOptionGroup) ParseEach(v interface{}, each func(*AppOption)) error {
+func (c *AppOptionGroup) ParseEach(v any, each func(*AppOption)) error {
 	vf := reflect.ValueOf(v)
 	isStruct := false
 
@@ -183,14 +183,14 @@ func (c *AppOptionGroup) ParseEach(v interface{}, each func(*AppOption)) error {
 	return nil
 }
 
-func (c *AppOptionGroup) Unmarshal(cmd *CliCmd, v interface{}) error {
+func (c *AppOptionGroup) Unmarshal(cmd *CliCmd, v any) error {
 	c.lastCmd = cmd
 	err := c.ParseEach(v, func(opt *AppOption) {
 	})
 	return err
 }
 
-func ParseOptionGroup(v interface{}) *AppOptionGroup {
+func ParseOptionGroup(v any) *AppOptionGroup {
 	aog := &AppOptionGroup{}
 	err := aog.ParseEach(v, nil)
 	if err != nil {

@@ -7,10 +7,10 @@ import "testing"
 // @Name:    数据测试
 
 func TestSumQueue(t *testing.T) {
-	var axp, out interface{}
-	var in []interface{}
+	var axp, out any
+	var in []any
 	// int
-	in = []interface{}{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
+	in = []any{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}
 	axp = 55
 	out = SumQueue(in)
 	if axp != out {
@@ -18,7 +18,7 @@ func TestSumQueue(t *testing.T) {
 	}
 
 	// float 32
-	in = []interface{}{1.2, 2.3, 3.4, 4.5, 5.6, 6.7, 7.8, 8.9, 9.1, 10.11}
+	in = []any{1.2, 2.3, 3.4, 4.5, 5.6, 6.7, 7.8, 8.9, 9.1, 10.11}
 	axp = 59.61
 	out = SumQueue(in)
 	if axp != out {

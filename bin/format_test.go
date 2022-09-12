@@ -6,7 +6,7 @@ import (
 )
 
 func TestFormatKv(t *testing.T) {
-	tdd := map[string]interface{}{
+	tdd := map[string]any{
 		"author":                   "Joshua Conero",
 		"email":                    "conero@163",
 		"a":                        "TestFormatKv for beautify string.",
@@ -17,7 +17,7 @@ func TestFormatKv(t *testing.T) {
 	t.Log("\n" + FormatKv(tdd, ". ", "*"))
 
 	// support more type.
-	tdd2 := map[interface{}]interface{}{
+	tdd2 := map[any]any{
 		"author":                   "Joshua Conero",
 		210609:                     "conero@163",
 		true:                       "TestFormatKv for beautify string.",
@@ -45,7 +45,7 @@ func TestFormatKv(t *testing.T) {
 }
 
 func TestFormatKvSort(t *testing.T) {
-	tdd := map[string]interface{}{
+	tdd := map[string]any{
 		"author":                   "Joshua Conero",
 		"email":                    "conero@163",
 		"a":                        "TestFormatKv for beautify string.",
@@ -56,7 +56,7 @@ func TestFormatKvSort(t *testing.T) {
 	t.Log("\n" + FormatKvSort(tdd, ". ", "*"))
 
 	// support more type.
-	tdd2 := map[interface{}]interface{}{
+	tdd2 := map[any]any{
 		"author":                   "Joshua Conero",
 		210609:                     "conero@163",
 		true:                       "TestFormatKv for beautify string.",
@@ -88,9 +88,9 @@ func TestFormatQue(t *testing.T) {
 	// 实际测试时将会忽略信息
 	//t.Skip()
 
-	var data []interface{}
+	var data []any
 	//CASE1
-	data = []interface{}{
+	data = []any{
 		"中文", "letter", "letter", "letter", "letter", "letter", "letter",
 		"中文", "letter", "letter", "letter", "letter", "letter", "letter",
 	}
@@ -98,7 +98,7 @@ func TestFormatQue(t *testing.T) {
 	t.Logf("字符串：\n%v", FormatQue(data, " .", "-"))
 
 	//CASE2
-	data = []interface{}{
+	data = []any{
 		"My name is JC", 1992, nil, "SomeMore", 3.14,
 	}
 	t.Logf("interface：\n%v", FormatQue(data))
@@ -113,13 +113,13 @@ func TestFormatTable(t *testing.T) {
 	// 实际测试时将会忽略信息
 	//t.Skip()
 
-	data := [][]interface{}{
-		[]interface{}{"1", 2, "eree", "dsdsdsd", 8},
+	data := [][]any{
+		[]any{"1", 2, "eree", "dsdsdsd", 8},
 		// TODO [BUG-20181220]中文无效
 		//[]interface{}{"中国", "贵州", "贵阳", "经开", ".."},
-		[]interface{}{"xx", "yyy", "a", "abc", "success"},
-		[]interface{}{"a", "bb", "cccccccc", "f", "Joshua"},
-		[]interface{}{nil, "I-Heart-Mira", 3.4512, true, 210702},
+		[]any{"xx", "yyy", "a", "abc", "success"},
+		[]any{"a", "bb", "cccccccc", "f", "Joshua"},
+		[]any{nil, "I-Heart-Mira", 3.4512, true, 210702},
 	}
 	t.Logf("\r\n%v", FormatTable(data))
 	t.Logf("\r\n%v", FormatTable(data, false))
@@ -131,12 +131,12 @@ func BenchmarkFormatTable(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		//xy = 10*10
-		data := [][]interface{}{
-			[]interface{}{"1", 2, "eree", "dsdsdsd", 8, 1992, false, math.Pi, math.Phi, 1300_000},
-			[]interface{}{"1", 2, "eree", "dsdsdsd", 8, 1992, false, math.Pi, math.Phi, 1300_000},
-			[]interface{}{"1", 2, "eree", "dsdsdsd", 8, 1992, false, math.Pi, math.Phi, 1300_000},
-			[]interface{}{"1", 2, "eree", "dsdsdsd", 8, 1992, false, math.Pi, math.Phi, 1300_000},
-			[]interface{}{"1", 2, "eree", "dsdsdsd", 8, 1992, false, math.Pi, math.Phi, 1300_000},
+		data := [][]any{
+			[]any{"1", 2, "eree", "dsdsdsd", 8, 1992, false, math.Pi, math.Phi, 1300_000},
+			[]any{"1", 2, "eree", "dsdsdsd", 8, 1992, false, math.Pi, math.Phi, 1300_000},
+			[]any{"1", 2, "eree", "dsdsdsd", 8, 1992, false, math.Pi, math.Phi, 1300_000},
+			[]any{"1", 2, "eree", "dsdsdsd", 8, 1992, false, math.Pi, math.Phi, 1300_000},
+			[]any{"1", 2, "eree", "dsdsdsd", 8, 1992, false, math.Pi, math.Phi, 1300_000},
 			// TODO [BUG-20181220]中文无效
 			//[]interface{}{"中国", "贵州", "贵阳", "经开", ".."},
 			{"xx", "yyy", "a", "abc", "success"},

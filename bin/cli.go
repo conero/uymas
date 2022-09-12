@@ -29,17 +29,17 @@ const (
 
 // CLI the cli application
 type CLI struct {
-	cmds map[string]interface{} // the register of commands.
+	cmds map[string]any // the register of commands.
 
 	// the map the cmd, support many alias cmd about the cmd
 	// the data struct like: {cmd => alias} or {cmd => [alias1, alias2, alias3...]}
-	cmdMap              map[string]interface{}
-	actionEmptyRegister interface{} // the register callback by empty action.
-	actionAnyRegister   interface{} // the register callback by command not handler
+	cmdMap              map[string]any
+	actionEmptyRegister any // the register callback by empty action.
+	actionAnyRegister   any // the register callback by command not handler
 	commands            map[string]Cmd
-	tempLastCommand     string                 // command Cache
-	injectionData       map[string]interface{} //reject data from outside like chan control
-	registerCmdList     []string               // register name list
+	tempLastCommand     string         // command Cache
+	injectionData       map[string]any //reject data from outside like chan control
+	registerCmdList     []string       // register name list
 
 	//external fields
 	UnLoadDataSyntax   bool   //not support load data syntax, like json/url.
@@ -50,12 +50,12 @@ type CLI struct {
 
 // CliCmd the command of the cli application.
 type CliCmd struct {
-	Data            map[string]interface{} // the data from the `DataRaw` by parse for type
-	DataRaw         map[string]string      // the cli application apply the data
-	Command         string                 // the current command
-	SubCommand      string                 // the sub command
-	Setting         []string               // the setting of command
-	Raw             []string               // the raw args
+	Data            map[string]any    // the data from the `DataRaw` by parse for type
+	DataRaw         map[string]string // the cli application apply the data
+	Command         string            // the current command
+	SubCommand      string            // the sub command
+	Setting         []string          // the setting of command
+	Raw             []string          // the raw args
 	context         CLI
 	cmdType         int                 //the command type enumeration
 	commandAlias    map[string][]string // the alias of command, using for App-style and runtime state
@@ -84,14 +84,14 @@ type CliAppCompleteInterface interface {
 
 type CmdOptions struct {
 	Option   string
-	Alias    interface{}
+	Alias    any
 	Describe string
 }
 
 // Cmd define the struct command
 type Cmd struct {
 	Command  string
-	Alias    interface{}           //string, []string. the alias of the command
+	Alias    any                   //string, []string. the alias of the command
 	Describe string                //describe the command
 	Handler  func(cc *CliCmd)      //when command call then handler the request
 	Options  map[string]CmdOptions // the command option
@@ -100,8 +100,8 @@ type Cmd struct {
 // NewCLI the construct of `CLI`
 func NewCLI() *CLI {
 	cli := &CLI{
-		cmds:     map[string]interface{}{},
-		cmdMap:   map[string]interface{}{},
+		cmds:     map[string]any{},
+		cmdMap:   map[string]any{},
 		commands: map[string]Cmd{},
 	}
 	return cli
@@ -120,7 +120,7 @@ func NewCliCmd(args ...string) *CliCmd {
 		Raw:     args,
 		Setting: []string{},
 		DataRaw: map[string]string{},
-		Data:    map[string]interface{}{},
+		Data:    map[string]any{},
 	}
 	// parse the args
 	c.parseArgs()
@@ -176,7 +176,7 @@ func (cli *CLI) RegisterFunc(todo func(*CliCmd), cmds ...string) *CLI {
 }
 
 // register command by function or struct
-func (cli *CLI) register(rgst interface{}, cmds ...string) {
+func (cli *CLI) register(rgst any, cmds ...string) {
 	if len(cmds) > 0 {
 		cmd := cmds[0]
 		if len(cmds) > 1 {
@@ -258,7 +258,7 @@ func (cli *CLI) RegisterCommand(c Cmd) *CLI {
 }
 
 // RegisterApp register the struct app, the format same as RegisterFunc. cmds any be `cmd string` or `cmd, alias string`
-func (cli *CLI) RegisterApp(ap interface{}, cmds ...string) *CLI {
+func (cli *CLI) RegisterApp(ap any, cmds ...string) *CLI {
 	if cmds != nil && len(cmds) > 0 {
 		cmd := cmds[0]
 		cli.cmds[cmd] = ap
@@ -270,7 +270,7 @@ func (cli *CLI) RegisterApp(ap interface{}, cmds ...string) *CLI {
 }
 
 // RegisterApps Register many apps once.
-func (cli *CLI) RegisterApps(aps map[string]interface{}) *CLI {
+func (cli *CLI) RegisterApps(aps map[string]any) *CLI {
 	for c, ap := range aps {
 		cli.RegisterApp(ap, c)
 	}
@@ -279,14 +279,14 @@ func (cli *CLI) RegisterApps(aps map[string]interface{}) *CLI {
 
 // RegisterEmpty when the cmd is empty then callback the function, action only be
 //  1. function `func(cc *CliCmd)`/`func()` or struct.
-func (cli *CLI) RegisterEmpty(action interface{}) *CLI {
+func (cli *CLI) RegisterEmpty(action any) *CLI {
 	cli.actionEmptyRegister = action
 	return cli
 }
 
 // RegisterAny when command input not handler will callback the register, the format like:
 //  1. function `func(cmd string, cc *CliCmd)`/`func(cmd string)`/`func(cc *CliCmd)`/CliApp/Base Struct
-func (cli *CLI) RegisterAny(action interface{}) *CLI {
+func (cli *CLI) RegisterAny(action any) *CLI {
 	cli.actionAnyRegister = action
 	// check if cmd dist
 	rv := reflect.ValueOf(action)
@@ -498,7 +498,7 @@ func (cli *CLI) routerCommand(cc *CliCmd) bool {
 // router when `command` is empty.
 func (cli *CLI) routerEmpty(cc *CliCmd) bool {
 	routerValidMk := false
-	runFunc := func(vFunc interface{}) {
+	runFunc := func(vFunc any) {
 		switch vFunc.(type) {
 		case func(*CliCmd):
 			vFunc.(func(*CliCmd))(cc)
@@ -695,8 +695,8 @@ func (cli *CLI) loadScriptSyntax(cc *CliCmd) {
 }
 
 // find the register value by command.
-func (cli *CLI) findRegisterValueByCommand(c string) interface{} {
-	var value interface{} = nil
+func (cli *CLI) findRegisterValueByCommand(c string) any {
+	var value any = nil
 	cmds := cli.cmds
 	if v, has := cmds[c]; has {
 		value = v
@@ -731,16 +731,16 @@ func (cli *CLI) findRegisterValueByCommand(c string) interface{} {
 }
 
 // Inject inject for data from outside.
-func (cli *CLI) Inject(key string, value interface{}) *CLI {
+func (cli *CLI) Inject(key string, value any) *CLI {
 	if cli.injectionData == nil {
-		cli.injectionData = map[string]interface{}{}
+		cli.injectionData = map[string]any{}
 	}
 	cli.injectionData[key] = value
 	return cli
 }
 
 // GetInjection get Injection data
-func (cli *CLI) GetInjection(key string) interface{} {
+func (cli *CLI) GetInjection(key string) any {
 	if cli.injectionData == nil {
 		return nil
 	}
@@ -879,8 +879,8 @@ func (app *CliCmd) ArgRawDefault(key, def string) string {
 }
 
 // Arg get arg after parsed the raw data
-func (app *CliCmd) Arg(keys ...string) interface{} {
-	var value interface{} = nil
+func (app *CliCmd) Arg(keys ...string) any {
+	var value any = nil
 	for _, key := range keys {
 		if v, b := app.Data[key]; b {
 			value = v
@@ -891,7 +891,7 @@ func (app *CliCmd) Arg(keys ...string) interface{} {
 }
 
 // ArgDefault can default value to get the arg
-func (app *CliCmd) ArgDefault(key string, def interface{}) interface{} {
+func (app *CliCmd) ArgDefault(key string, def any) any {
 	var value = def
 	if v, b := app.Data[key]; b {
 		value = v
@@ -923,10 +923,10 @@ func (app *CliCmd) CmdType() int {
 }
 
 // AppendData append the Data
-func (app *CliCmd) AppendData(vMap map[string]interface{}) *CliCmd {
+func (app *CliCmd) AppendData(vMap map[string]any) *CliCmd {
 	if len(vMap) > 0 {
 		if app.Data == nil {
-			app.Data = map[string]interface{}{}
+			app.Data = map[string]any{}
 		}
 		if app.DataRaw == nil {
 			app.DataRaw = map[string]string{}
@@ -1131,7 +1131,7 @@ func CleanoutString(ss string) string {
 }
 
 // ParseValueByStr parse the command value to really type by format.
-func ParseValueByStr(ss string) interface{} {
+func ParseValueByStr(ss string) any {
 	ss = strings.TrimSpace(ss)
 	ssLow := strings.ToLower(ss)
 

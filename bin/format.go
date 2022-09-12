@@ -18,7 +18,7 @@ import (
 // FormatKv(kv map[string]interface{}, pref string)				 provide pref param form FormatKv.
 // FormatKv(kv map[string]interface{}, pref string, md string)	     provide pref and middle param form FormatK.
 // the `Kv` support map/struct, but not ptr(pointer)
-func FormatKv(kv interface{}, params ...string) string {
+func FormatKv(kv any, params ...string) string {
 	var vf = reflect.ValueOf(kv)
 	if vf.Kind() != reflect.Map {
 		kv = util.StructToMap(kv)
@@ -68,7 +68,7 @@ func FormatKv(kv interface{}, params ...string) string {
 // FormatKvSort The `k-v` data format to beautiful str.
 // FormatKvSort(kv map[string]interface{}, pref string)				 provide pref param form FormatKv.
 // FormatKvSort(kv map[string]interface{}, pref string, md string)	     provide pref and middle param form FormatK.
-func FormatKvSort(kv interface{}, params ...string) string {
+func FormatKvSort(kv any, params ...string) string {
 	var vf = reflect.ValueOf(kv)
 	if vf.Kind() != reflect.Map {
 		kv = util.StructToMap(kv)
@@ -121,7 +121,7 @@ func FormatKvSort(kv interface{}, params ...string) string {
 
 // FormatQue format the string array, using for cli output pretty.
 // where prefs is empty default use the array index
-func FormatQue(que interface{}, prefs ...string) string {
+func FormatQue(que any, prefs ...string) string {
 	pref := ""  // 开头符号
 	dter := " " // 空格
 	if prefs != nil && len(prefs) > 0 {
@@ -158,7 +158,7 @@ func FormatQue(que interface{}, prefs ...string) string {
 //	(table, bool) if is use the idx, table is 2 dimensional array.
 //
 // Bug(FormatQue): chinese text cannot alignment
-func FormatTable(table interface{}, args ...interface{}) string {
+func FormatTable(table any, args ...any) string {
 	useIdxMk := true
 	if args != nil {
 		if v, isBool := args[0].(bool); isBool {

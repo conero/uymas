@@ -13,7 +13,7 @@ import (
 // data [][]string{expected, input, output}
 // bool 表通过与否； string 错误消息
 // args[0]  = "{expected} {input}, {output}  "
-func StrSingLine(data [][]string, args ...string) interface{} {
+func StrSingLine(data [][]string, args ...string) any {
 	for _, ts := range data {
 		expected := ts[0]
 		input := ts[1]

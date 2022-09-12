@@ -17,5 +17,5 @@ type CMD struct {
 
 	//the action by the Func
 	Todo    func(*CliCmd) //cli callback
-	TodoApp interface{}   //bind from App struct
+	TodoApp any           //bind from App struct
 }

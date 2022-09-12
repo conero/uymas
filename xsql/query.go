@@ -14,7 +14,7 @@ type Query struct {
 	RowCount int //the count query result lines.
 }
 
-func (c *Query) Select(query string, args ...interface{}) ([]map[string]interface{}, error) {
+func (c *Query) Select(query string, args ...any) ([]map[string]any, error) {
 	db := c.DB
 	rows, err := db.Query(query, args...)
 	if err != nil {
@@ -32,7 +32,7 @@ func (c *Query) Select(query string, args ...interface{}) ([]map[string]interfac
 //	DECIMAL    						float64
 //	DATETIME,DATE    				time.Time; <!temp make to string>
 //	VARCHAR,CHAR,TEXT				string
-func (c *Query) RowsDick(rows *sql.Rows) ([]map[string]interface{}, error) {
+func (c *Query) RowsDick(rows *sql.Rows) ([]map[string]any, error) {
 	defer rows.Close()
 
 	columns, err := rows.Columns()
@@ -45,7 +45,7 @@ func (c *Query) RowsDick(rows *sql.Rows) ([]map[string]interface{}, error) {
 		return nil, err
 	}
 
-	receive := make([]interface{}, len(columns))
+	receive := make([]any, len(columns))
 	for index, _ := range receive {
 		cType := cTypes[index]
 
@@ -67,19 +67,19 @@ func (c *Query) RowsDick(rows *sql.Rows) ([]map[string]interface{}, error) {
 			var a sql.NullFloat64
 			receive[index] = &a
 		default:
-			var a interface{}
+			var a any
 			receive[index] = &a
 		}
 	}
 
-	var dataList []map[string]interface{}
+	var dataList []map[string]any
 	var counter = 0
 	for rows.Next() {
 		if err := rows.Scan(receive...); err != nil {
 			log.Fatal(err)
 		}
 
-		item := make(map[string]interface{})
+		item := make(map[string]any)
 		//get the true value
 		for index, v := range receive {
 			cType := cTypes[index]
@@ -96,7 +96,7 @@ func (c *Query) RowsDick(rows *sql.Rows) ([]map[string]interface{}, error) {
 					item[col] = nil
 				}
 			case "DATETIME", "DATE", "TIME", "TIMESTAMP":
-				tmpValue := *v.(*interface{})
+				tmpValue := *v.(*any)
 				var timeStr string
 				if tmpValue != nil {
 					timeStr = fmt.Sprintf("%s", tmpValue)
@@ -118,7 +118,7 @@ func (c *Query) RowsDick(rows *sql.Rows) ([]map[string]interface{}, error) {
 					item[col] = nil
 				}
 			default:
-				item[col] = *v.(*interface{})
+				item[col] = *v.(*any)
 			}
 
 		}

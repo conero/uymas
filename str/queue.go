@@ -48,8 +48,8 @@ func DelQue(que []string, ss ...string) []string {
 }
 
 // StrQueueToAny string slice convert to nany slice
-func StrQueueToAny(args []string) []interface{} {
-	var anyQueue []interface{}
+func StrQueueToAny(args []string) []any {
+	var anyQueue []any
 	for _, s := range args {
 		anyQueue = append(anyQueue, s)
 	}

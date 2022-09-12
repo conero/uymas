@@ -13,7 +13,7 @@ type Object struct {
 //
 //	Base of `reflect` to come true like javascript `Object.Assign`, target should be pointer best.
 //	It can be Multiple, only for `reflect.Map`.
-func (obj Object) Assign(target interface{}, source interface{}) interface{} {
+func (obj Object) Assign(target any, source any) any {
 	var m = target
 	tReft := reflect.TypeOf(target)
 	if tReft.Kind() == reflect.Ptr {
@@ -58,7 +58,7 @@ func (obj Object) Assign(target interface{}, source interface{}) interface{} {
 }
 
 // AssignMap Assign Map/Struct to map
-func (obj Object) AssignMap(targetMap interface{}, srcMapOrStruct interface{}) {
+func (obj Object) AssignMap(targetMap any, srcMapOrStruct any) {
 	tVal := reflect.ValueOf(targetMap)
 	sVal := reflect.ValueOf(srcMapOrStruct)
 	tKind := tVal.Kind()
@@ -126,7 +126,7 @@ func (obj Object) Keys(value any) []string {
 }
 
 // StructToMap convert Struct field to by Map, support the Ptr
-func StructToMap(value interface{}, ignoreKeys ...string) map[string]interface{} {
+func StructToMap(value any, ignoreKeys ...string) map[string]any {
 	rv := reflect.ValueOf(value)
 	var rt reflect.Type
 	if rv.Kind() == reflect.Ptr {
@@ -137,7 +137,7 @@ func StructToMap(value interface{}, ignoreKeys ...string) map[string]interface{}
 		if rt == nil {
 			rt = reflect.TypeOf(value)
 		}
-		vMap := map[string]interface{}{}
+		vMap := map[string]any{}
 		for i := 0; i < rv.NumField(); i++ {
 			field := rv.Field(i)
 			if !field.IsValid() {
@@ -160,7 +160,7 @@ func StructToMap(value interface{}, ignoreKeys ...string) map[string]interface{}
 
 // StructToMapLStyle convert Struct field to by Map and key is Lower style, key support `JSON.TAG`.
 // Notice: reflect field num not contain inherit struct.
-func StructToMapLStyle(value interface{}, ignoreKeys ...string) map[string]interface{} {
+func StructToMapLStyle(value any, ignoreKeys ...string) map[string]any {
 	rv := reflect.ValueOf(value)
 	var rt reflect.Type
 	if rv.Kind() == reflect.Ptr {
@@ -171,7 +171,7 @@ func StructToMapLStyle(value interface{}, ignoreKeys ...string) map[string]inter
 		if rt == nil {
 			rt = reflect.TypeOf(value)
 		}
-		vMap := map[string]interface{}{}
+		vMap := map[string]any{}
 		for i := 0; i < rv.NumField(); i++ {
 			field := rv.Field(i)
 			if !field.IsValid() {
@@ -202,7 +202,7 @@ func StructToMapLStyle(value interface{}, ignoreKeys ...string) map[string]inter
 
 // ToMapLStyleIgnoreEmpty convert Struct field to by Map and key is Lower style and ignore empty.
 // StructToMapViaJson is slower than StructToMapLStyle by Benchmark
-func ToMapLStyleIgnoreEmpty(value interface{}, ignoreKeys ...string) map[string]interface{} {
+func ToMapLStyleIgnoreEmpty(value any, ignoreKeys ...string) map[string]any {
 	rv := reflect.ValueOf(value)
 	var rt reflect.Type
 	if rv.Kind() == reflect.Ptr {
@@ -213,7 +213,7 @@ func ToMapLStyleIgnoreEmpty(value interface{}, ignoreKeys ...string) map[string]
 		if rt == nil {
 			rt = reflect.TypeOf(value)
 		}
-		vMap := map[string]interface{}{}
+		vMap := map[string]any{}
 		for i := 0; i < rv.NumField(); i++ {
 			field := rv.Field(i)
 			if !field.IsValid() {
@@ -247,8 +247,8 @@ func ToMapLStyleIgnoreEmpty(value interface{}, ignoreKeys ...string) map[string]
 
 // StructToMapViaJson convert map via json Marshal/Unmarshal
 // StructToMapViaJson is slower than StructToMapLStyle by Benchmark
-func StructToMapViaJson(value interface{}, ignoreKeys ...string) map[string]interface{} {
-	var newVal map[string]interface{}
+func StructToMapViaJson(value any, ignoreKeys ...string) map[string]any {
+	var newVal map[string]any
 	marshal, err := json.Marshal(value)
 	if err != nil {
 		return nil

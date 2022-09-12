@@ -22,7 +22,7 @@ func (x *Xsql) Name(tb string, alias ...string) *Builder {
 	return Table(fmt.Sprintf("%s%s", x.cfg.TablePrefix, tb), alias...)
 }
 
-func (x *Xsql) SelectFunc(call func(*Builder), tb string, alias ...string) ([]map[string]interface{}, error) {
+func (x *Xsql) SelectFunc(call func(*Builder), tb string, alias ...string) ([]map[string]any, error) {
 	table := x.Name(tb, alias...)
 	if call != nil {
 		call(table)

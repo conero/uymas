@@ -14,7 +14,7 @@ type Option struct {
 }
 
 // Unmarshal parse the struct tag name arg <Name type `arg:"i name"`>
-func (c *Option) Unmarshal(v interface{}) {
+func (c *Option) Unmarshal(v any) {
 	cc := c.cc
 	vt := reflect.TypeOf(v).Elem()
 	vv := reflect.ValueOf(v).Elem()

@@ -4,7 +4,7 @@ import "testing"
 
 func TestTable(t *testing.T) {
 	var vSql string
-	var binds []interface{}
+	var binds []any
 
 	//select
 	var adminUser = Table("admin_user")
@@ -31,7 +31,7 @@ func TestTable(t *testing.T) {
 	}
 
 	//update
-	adminUser.Update(map[string]interface{}{"allow_login": true, "test_mk": "test u value", "ability": 33.5}).
+	adminUser.Update(map[string]any{"allow_login": true, "test_mk": "test u value", "ability": 33.5}).
 		ResetWhere("id = ?", 1103).Where("gender = ?", 1)
 	vSql, binds = adminUser.ToSQL()
 	t.Log(vSql, binds)
@@ -42,7 +42,7 @@ func TestTable(t *testing.T) {
 	t.Log(vSql, binds)
 
 	//insert
-	adminUser.Insert(map[string]interface{}{"allow_login": true, "test_mk": ".test u value.", "ability": 33.5})
+	adminUser.Insert(map[string]any{"allow_login": true, "test_mk": ".test u value.", "ability": 33.5})
 	vSql, binds = adminUser.ToSQL()
 	t.Log(vSql, binds)
 }

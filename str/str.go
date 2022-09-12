@@ -126,7 +126,7 @@ func ClearSpace(s string) string {
 
 // Render 根据 go template 模板编译后返回数据
 // 支持 template 模板语法
-func Render(tpl string, data interface{}) (string, error) {
+func Render(tpl string, data any) (string, error) {
 	var value string
 	temp, err := template.New("Render").Parse(tpl)
 	if err != nil {

@@ -12,24 +12,24 @@ import (
 // FileParser File parser
 type FileParser interface {
 	Line() int // 获取总行数
-	GetData() map[interface{}]interface{}
+	GetData() map[any]any
 }
 
 // base 文件解析
 type baseFileParse struct {
-	line    int                         // 总行数
-	comment int                         // 注释行
-	equal   int                         // 等式行
-	data    map[interface{}]interface{} // 解析以后的数据
-	rawData map[string]string           // 原始数据
-	section []string                    // 节
-	err     error                       // 错误信息
+	line    int               // 总行数
+	comment int               // 注释行
+	equal   int               // 等式行
+	data    map[any]any       // 解析以后的数据
+	rawData map[string]string // 原始数据
+	section []string          // 节
+	err     error             // 错误信息
 }
 
 // 文件读取
 func (p *baseFileParse) read(filename string) *baseFileParse {
 	if p.data == nil {
-		p.data = map[interface{}]interface{}{}
+		p.data = map[any]any{}
 	}
 
 	if p.rawData == nil {
@@ -41,7 +41,7 @@ func (p *baseFileParse) read(filename string) *baseFileParse {
 	}
 	ln := NewLnRer(filename)
 	// 行扫描
-	secTmpDd := map[interface{}]interface{}{}
+	secTmpDd := map[any]any{}
 	isSecMk := false
 	var section string
 	ln.Scan(func(line string) {
@@ -64,7 +64,7 @@ func (p *baseFileParse) read(filename string) *baseFileParse {
 			}
 
 			// 值重置
-			secTmpDd = map[interface{}]interface{}{}
+			secTmpDd = map[any]any{}
 			isSecMk = true
 			section = str[1 : len(str)-1]
 			p.section = append(p.section, section)
@@ -75,7 +75,7 @@ func (p *baseFileParse) read(filename string) *baseFileParse {
 		idx := strings.Index(str, baseEqualToken)
 		key := strings.TrimSpace(str[:idx])
 		value := strings.TrimSpace(str[idx+1:])
-		var dd interface{}
+		var dd any
 		switch value {
 		case "true":
 			dd = true
@@ -110,6 +110,6 @@ func (p *baseFileParse) Line() int {
 }
 
 // GetData get all data by parse file.
-func (p *baseFileParse) GetData() map[interface{}]interface{} {
+func (p *baseFileParse) GetData() map[any]any {
 	return p.data
 }

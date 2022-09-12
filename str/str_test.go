@@ -70,7 +70,7 @@ func TestSplitSafe(t *testing.T) {
 }
 
 func TestRender(t *testing.T) {
-	fn := func(dd, real string, data interface{}) {
+	fn := func(dd, real string, data any) {
 		if !compareStrFunc(func() string {
 			c, _ := Render(dd, data)
 			return c

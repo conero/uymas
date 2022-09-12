@@ -10,7 +10,7 @@ import (
 )
 
 // Any the any type of the data
-type Any interface{}
+type Any any
 
 // Kv the Kv style data
 type Kv map[Any]Any

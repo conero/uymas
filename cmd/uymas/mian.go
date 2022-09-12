@@ -226,9 +226,9 @@ func (c *defaultApp) Scan() {
 	}
 
 	if er == nil {
-		var table = [][]interface{}{{"Path", "Size", "Depth"}}
+		var table = [][]any{{"Path", "Size", "Depth"}}
 		for key, tcd := range dd.TopChildDick {
-			table = append(table, []interface{}{key, number.Bytes(tcd.Size), tcd.Depth})
+			table = append(table, []any{key, number.Bytes(tcd.Size), tcd.Depth})
 		}
 
 		fmt.Println(bin.FormatTable(table, false))

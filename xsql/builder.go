@@ -18,16 +18,16 @@ type Builder struct {
 	table        string
 	alias        string
 	vSql         string
-	binds        []interface{}
+	binds        []any
 	columns      []string
-	keyword      string                 // like: select, update, delete
-	wheres       [][]string             // [][link-word, string]/[][string]
-	condLimit    string                 // limit condition
-	condOrderBys []string               //order-by
-	condGroupBys []string               //group-by
-	pageSize     int                    // default the pageSize to 20
-	data         map[string]interface{} //the data to update or insert
-	joins        [][]string             //json table list, [table alias, cond, type]
+	keyword      string         // like: select, update, delete
+	wheres       [][]string     // [][link-word, string]/[][string]
+	condLimit    string         // limit condition
+	condOrderBys []string       //order-by
+	condGroupBys []string       //group-by
+	pageSize     int            // default the pageSize to 20
+	data         map[string]any //the data to update or insert
+	joins        [][]string     //json table list, [table alias, cond, type]
 }
 
 func (c *Builder) Join(table, cond, vtype string) *Builder {
@@ -68,7 +68,7 @@ func (c *Builder) GetTableString() string {
 	return table
 }
 
-func (c *Builder) Insert(data map[string]interface{}) *Builder {
+func (c *Builder) Insert(data map[string]any) *Builder {
 	c.keyword = builderInsert
 	c.data = data
 	return c
@@ -79,7 +79,7 @@ func (c *Builder) Delete() *Builder {
 	return c
 }
 
-func (c *Builder) Update(data map[string]interface{}) *Builder {
+func (c *Builder) Update(data map[string]any) *Builder {
 	c.keyword = builderUpdate
 	c.data = data
 	return c
@@ -95,7 +95,7 @@ func (c *Builder) Columns(columns ...string) *Builder {
 	return c
 }
 
-func (c *Builder) Where(where string, binds ...interface{}) *Builder {
+func (c *Builder) Where(where string, binds ...any) *Builder {
 	where = strings.TrimSpace(where)
 	if where != "" {
 		c.wheres = append(c.wheres, []string{where})
@@ -105,15 +105,15 @@ func (c *Builder) Where(where string, binds ...interface{}) *Builder {
 	return c
 }
 
-func (c *Builder) ResetWhere(where string, binds ...interface{}) *Builder {
-	c.binds = []interface{}{}
+func (c *Builder) ResetWhere(where string, binds ...any) *Builder {
+	c.binds = []any{}
 	c.wheres = [][]string{}
 	c.Where(where, binds...)
 	return c
 }
 
 func (c *Builder) ResetBinds() *Builder {
-	c.binds = []interface{}{}
+	c.binds = []any{}
 	return c
 }
 
@@ -178,7 +178,7 @@ func (c *Builder) parseWhere() string {
 func (c *Builder) createInsertSql() {
 	var columns []string
 	var valueRepls []string
-	var binds []interface{}
+	var binds []any
 	for k, v := range c.data {
 		columns = append(columns, k)
 		valueRepls = append(valueRepls, "?")
@@ -200,7 +200,7 @@ func (c *Builder) createDeleteSql() {
 func (c *Builder) createUpdateSql() {
 	var oBinds = c.binds
 	var columnsKv []string
-	var binds []interface{}
+	var binds []any
 	for k, v := range c.data {
 		columnsKv = append(columnsKv, fmt.Sprintf("%v = ?", k))
 		binds = append(binds, v)
@@ -247,7 +247,7 @@ func (c *Builder) createSelectSql() {
 }
 
 // ToSQL build SQL every time
-func (c *Builder) ToSQL() (string, []interface{}) {
+func (c *Builder) ToSQL() (string, []any) {
 	keyword := c.keyword
 	if keyword == "" {
 		keyword = builderSelect
@@ -267,7 +267,7 @@ func (c *Builder) ToSQL() (string, []interface{}) {
 }
 
 // GetSQL only get SQL where exist sql if not will call SQL builder
-func (c *Builder) GetSQL() (string, []interface{}) {
+func (c *Builder) GetSQL() (string, []any) {
 	if c.vSql == "" {
 		c.ToSQL()
 	}
@@ -276,7 +276,7 @@ func (c *Builder) GetSQL() (string, []interface{}) {
 
 // Table Table(string/string interface)
 // Table([]string{name, alias})
-func Table(table interface{}, alias ...string) *Builder {
+func Table(table any, alias ...string) *Builder {
 	if table == nil {
 		panic("if params of Table is invalid, `table == nil`")
 	}

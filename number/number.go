@@ -14,8 +14,8 @@ import (
 // support type: int, int8, int16, int32, int64
 // support type: uint, uint8, uint16, uint32, uint64
 // support type: float32, float64
-func SumQueue(data []interface{}) interface{} {
-	var a interface{} = nil
+func SumQueue(data []any) any {
+	var a any = nil
 	for _, d := range data {
 		switch d.(type) {
 		case int:
@@ -101,7 +101,7 @@ func SumQInt(data []int) int {
 	return a
 }
 
-func AnyInt64(v interface{}) int64 {
+func AnyInt64(v any) int64 {
 	var i64 int64
 	if v != nil {
 		switch v.(type) {

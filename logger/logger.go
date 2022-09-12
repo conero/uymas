@@ -56,12 +56,12 @@ type Logger struct {
 	Level     Level
 }
 
-func (l *Logger) Format(prefix, message string, args ...interface{}) {
+func (l *Logger) Format(prefix, message string, args ...any) {
 	l.logger.Printf("[%v] %v", prefix, fmt.Sprintf(message, args...))
 }
 
 // format logging by level, logging creator
-func (l *Logger) formatLevel(level Level, message string, args ...interface{}) {
+func (l *Logger) formatLevel(level Level, message string, args ...any) {
 	if l.Level > level {
 		return
 	}
@@ -76,7 +76,7 @@ func (l *Logger) outputFunc(level Level, callback func() string) {
 	l.formatLevel(level, callback())
 }
 
-func (l *Logger) Debugf(message string, args ...interface{}) {
+func (l *Logger) Debugf(message string, args ...any) {
 	l.formatLevel(LogDebug, message, args...)
 }
 
@@ -84,7 +84,7 @@ func (l *Logger) DebugFunc(callback func() string) {
 	l.outputFunc(LogDebug, callback)
 }
 
-func (l *Logger) Infof(message string, args ...interface{}) {
+func (l *Logger) Infof(message string, args ...any) {
 	l.formatLevel(LogInfo, message, args...)
 }
 
@@ -92,7 +92,7 @@ func (l *Logger) InfoFunc(callback func() string) {
 	l.outputFunc(LogInfo, callback)
 }
 
-func (l *Logger) Warnf(message string, args ...interface{}) {
+func (l *Logger) Warnf(message string, args ...any) {
 	l.formatLevel(LogWarn, message, args...)
 }
 
@@ -100,7 +100,7 @@ func (l *Logger) WarnFunc(callback func() string) {
 	l.outputFunc(LogWarn, callback)
 }
 
-func (l *Logger) Errorf(message string, args ...interface{}) {
+func (l *Logger) Errorf(message string, args ...any) {
 	l.formatLevel(LogError, message, args...)
 }
 

@@ -12,7 +12,7 @@ import (
 // @Name:    工具栏
 
 // InQue exist value exist in array, if not exists will return -1
-func InQue(val interface{}, que []interface{}) int {
+func InQue(val any, que []any) int {
 	idx := -1
 	if que != nil {
 		for i, v := range que {
@@ -26,7 +26,7 @@ func InQue(val interface{}, que []interface{}) int {
 }
 
 // InQueAny Check keys if exist in Array Or Slice.
-func InQueAny(que interface{}, keys ...interface{}) int {
+func InQueAny(que any, keys ...any) int {
 	idx := -1
 
 	vt := reflect.ValueOf(que)
@@ -85,7 +85,7 @@ func DecT62(num int) string {
 }
 
 // NullDefault null value handler to default.
-func NullDefault(value, def interface{}) interface{} {
+func NullDefault(value, def any) any {
 	if ValueNull(value) {
 		return def
 	}
@@ -93,7 +93,7 @@ func NullDefault(value, def interface{}) interface{} {
 }
 
 // ValueNull to find if is null
-func ValueNull(value interface{}) bool {
+func ValueNull(value any) bool {
 	if nil == value {
 		return true
 	}

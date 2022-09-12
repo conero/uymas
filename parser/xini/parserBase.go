@@ -41,8 +41,8 @@ func (p *BaseParser) GetAllSection() []string {
 	return p.section
 }
 
-func (p *BaseParser) Section(params ...interface{}) interface{} {
-	var value interface{}
+func (p *BaseParser) Section(params ...any) any {
+	var value any
 	var section, key string
 
 	if nil == params {
@@ -60,7 +60,7 @@ func (p *BaseParser) Section(params ...interface{}) interface{} {
 
 	if section != "" && key != "" {
 		if data, hasSection := p.Data[baseSecRegPref+section]; hasSection {
-			dd := data.(map[interface{}]interface{})
+			dd := data.(map[any]any)
 			if v, hasKey := dd[key]; hasKey {
 				value = v
 			}
@@ -69,7 +69,7 @@ func (p *BaseParser) Section(params ...interface{}) interface{} {
 	return value
 }
 
-func (p *BaseParser) Set(key string, value interface{}) Parser {
+func (p *BaseParser) Set(key string, value any) Parser {
 	p.GetData()
 	p.Data[key] = value
 	return p
@@ -79,7 +79,7 @@ func (p *BaseParser) Del(key string) bool {
 	return p.Container.Del(key)
 }
 
-func (p *BaseParser) SetFunc(key string, regFn func() interface{}) Parser {
+func (p *BaseParser) SetFunc(key string, regFn func() any) Parser {
 	p.Container.SetFunc(key, regFn)
 	return p
 }
@@ -139,11 +139,11 @@ func (p *BaseParser) SaveAsFile(filename string) bool {
 
 //---------------------------- 来自 Container 对象的方法重写 -------------------------
 
-func (p *BaseParser) Get(key string) (bool, interface{}) {
+func (p *BaseParser) Get(key string) (bool, any) {
 	return p.Container.Get(key)
 }
 
-func (p *BaseParser) GetDef(key string, def interface{}) interface{} {
+func (p *BaseParser) GetDef(key string, def any) any {
 	return p.Container.GetDef(key, def)
 }
 
@@ -165,7 +165,7 @@ func (p BaseParser) Driver() string {
 
 // BaseStrParse base string to parse using ini syntax
 type BaseStrParse struct {
-	data map[interface{}]interface{}
+	data map[any]any
 	line int
 }
 
@@ -173,12 +173,12 @@ func (p *BaseStrParse) Line() int {
 	return p.line
 }
 
-func (p *BaseStrParse) GetData() map[interface{}]interface{} {
+func (p *BaseStrParse) GetData() map[any]any {
 	return p.data
 }
 
 func (p *BaseStrParse) LoadContent(content string) StrParser {
-	p.data = map[interface{}]interface{}{}
+	p.data = map[any]any{}
 	lineCtt := 0
 	str2lines(content, func(line string) {
 		lineCtt += 1

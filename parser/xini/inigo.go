@@ -18,9 +18,9 @@ import (
 //		driver SupportNameRong SupportNameIni
 //
 // default BaseParser
-func NewParser(params ...interface{}) Parser {
+func NewParser(params ...any) Parser {
 	var driver string
-	var opts map[string]interface{}
+	var opts map[string]any
 	if params == nil {
 		return new(BaseParser)
 	} else {
@@ -29,7 +29,7 @@ func NewParser(params ...interface{}) Parser {
 			driver = driverTmp
 		}
 
-		if optsTmp, isOpt := params[0].(map[string]interface{}); isOpt && driver == "" {
+		if optsTmp, isOpt := params[0].(map[string]any); isOpt && driver == "" {
 			opts = optsTmp
 			if driverTmp, isset := opts["driver"]; isset {
 				driver = driverTmp.(string)
@@ -60,8 +60,8 @@ func NewParser(params ...interface{}) Parser {
 //	int64: 47, 52, -49552
 //	float64: 3.14, -0.24552
 //	null: nil     空值时，默认为 nil
-func ParseValue(v string) interface{} {
-	var value interface{} = nil
+func ParseValue(v string) any {
+	var value any = nil
 	v = strings.TrimSpace(v)
 	isStr := false
 	// 预处理，函数格式化字符

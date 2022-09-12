@@ -28,12 +28,12 @@ const (
 type DataReceiver interface {
 	Name() string
 	Receiver(DataReceiverType, string) DataReceiver
-	GetData() map[string]interface{}
+	GetData() map[string]any
 }
 
 // BaseReceiver the url data receiver
 type BaseReceiver struct {
-	vMap map[string]interface{}
+	vMap map[string]any
 }
 
 // JsonReceiver the data parse grammar, support json/url
@@ -43,14 +43,14 @@ type JsonReceiver struct {
 
 // base json parse
 func (c *JsonReceiver) parseJson(vByte []byte) *JsonReceiver {
-	var jsonData interface{}
+	var jsonData any
 	er := json.Unmarshal(vByte, &jsonData)
 	if er == nil {
 		rv := reflect.ValueOf(jsonData)
 		if rv.Kind() == reflect.Map {
 			mr := rv.MapRange()
 			if c.vMap == nil {
-				c.vMap = map[string]interface{}{}
+				c.vMap = map[string]any{}
 			}
 			for mr.Next() {
 				c.vMap[fmt.Sprintf("%v", mr.Key().Interface())] = mr.Value().Interface()
@@ -100,7 +100,7 @@ func (c *JsonReceiver) Receiver(vType DataReceiverType, content string) DataRece
 }
 
 // GetData get finally data by parse
-func (c *JsonReceiver) GetData() map[string]interface{} {
+func (c *JsonReceiver) GetData() map[string]any {
 	return c.vMap
 }
 
@@ -149,14 +149,14 @@ func (c *UrlReceiver) UrlUrl(vUrl string) *UrlReceiver {
 func (c *UrlReceiver) parse(vStr string) *UrlReceiver {
 	if u, er := url.ParseQuery(vStr); er == nil {
 		if vJson, err := json.Marshal(u); err == nil {
-			var jsonData interface{}
+			var jsonData any
 			er := json.Unmarshal(vJson, &jsonData)
 			if er == nil {
 				rv := reflect.ValueOf(jsonData)
 				if rv.Kind() == reflect.Map {
 					mr := rv.MapRange()
 					if c.vMap == nil {
-						c.vMap = map[string]interface{}{}
+						c.vMap = map[string]any{}
 					}
 					for mr.Next() {
 						c.vMap[fmt.Sprintf("%v", mr.Key().Interface())] = mr.Value().Interface()
@@ -186,7 +186,7 @@ func (c *UrlReceiver) Receiver(vType DataReceiverType, content string) DataRecei
 }
 
 // GetData get finally data by parse
-func (c *UrlReceiver) GetData() map[string]interface{} {
+func (c *UrlReceiver) GetData() map[string]any {
 	return c.vMap
 }
 

@@ -12,7 +12,7 @@ import (
 // StrParser the string parse
 type StrParser interface {
 	Line() int
-	GetData() map[interface{}]interface{}
+	GetData() map[any]any
 	LoadContent(content string) StrParser
 }
 

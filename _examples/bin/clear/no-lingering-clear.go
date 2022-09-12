@@ -6,20 +6,18 @@ import (
 	"gitee.com/conero/uymas/bin/butil"
 )
 
-//the example about clear the clis
+// the example about clear the clis
 func main() {
 	base()
 }
 
-
-
-func base(){
+func base() {
 	cli := bin.NewCLI()
 
 	// clear the cli app
 	cli.RegisterFunc(func(cc *bin.CliCmd) {
 		er := butil.Clear()
-		if er != nil{
+		if er != nil {
 			fmt.Println(er)
 		}
 	}, "clear")

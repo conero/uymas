@@ -147,8 +147,8 @@ func TestObject_AssignMap(t *testing.T) {
 		IsMale   bool
 	}
 
-	var tgt = map[string]interface{}{}
-	srcMap := map[string]interface{}{
+	var tgt = map[string]any{}
+	srcMap := map[string]any{
 		"name":  "Joshua Conero",
 		"age":   18,
 		"score": 89.3,
@@ -158,7 +158,7 @@ func TestObject_AssignMap(t *testing.T) {
 	t.Logf("%#v", tgt)
 
 	//case: map->map
-	srcMap = map[string]interface{}{
+	srcMap = map[string]any{
 		"score": 93.14,
 		"class": "A+",
 	}
@@ -172,7 +172,7 @@ func TestObject_AssignMap(t *testing.T) {
 		Age:      2,
 		IsMale:   true,
 	}
-	tgt = map[string]interface{}{}
+	tgt = map[string]any{}
 	obj.AssignMap(tgt, dg)
 	t.Logf("%#v", tgt)
 
