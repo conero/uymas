@@ -33,10 +33,21 @@
   ```shell 
   gofmt.exe -w -r 'interface{} -> any' ./.. 
   ```
+  
 - **logger**
   - feat: `ToLevel` 新增方法用于实现字符串转为为配置所需的日志级别，标记“CoverLevel”为删除状态
+  
 - **util**
   - feat: `Object.Keys` 新增方法实现 map 和 struct 的键值获取，后者支持json tag。
+  
+- **bin/butil**
+
+  - feat: `InputRequire/InputOptional`   新增方法实现必须或可选从 `stdin` 获取参数
+
+
+
+
+
 
 
 ## v1.1.x
