@@ -22,7 +22,7 @@ func InputRequire(title string, validFunc func(string) bool) string {
 		} else if text != "" {
 			break
 		}
-		fmt.Print("\n" + title)
+		fmt.Print(title)
 	}
 	return text
 }
