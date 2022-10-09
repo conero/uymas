@@ -43,9 +43,11 @@
 - **bin/butil**
 
   - feat: `InputRequire/InputOptional`   新增方法实现必须或可选从 `stdin` 获取参数
+  
+- **bin/tag**
 
-
-
+  - feat: 新包用于实现对struct类型tag到应用的映射
+  - feat: 实现 tag 语法以及其解析
 
 
 
