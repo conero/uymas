@@ -199,7 +199,7 @@ func (cli *CLI) registerFunc(todo func(*CliCmd), cmds ...string) {
 		cli.tempLastCommand = cmd
 		cli.cmds[cmd] = todo
 		if len(cmds) > 1 {
-			cli.cmdMap[cmd] = cmds[1]
+			cli.cmdMap[cmd] = cmds[1:]
 		}
 	} else {
 		// if `cmds` is empty, then set `CLI.RegisterEmpty`

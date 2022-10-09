@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-type RunnerAble interface {
+type Runnable interface {
 	Exec(*bin.CliCmd)
 }
 
