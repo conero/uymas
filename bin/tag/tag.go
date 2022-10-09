@@ -2,6 +2,7 @@
 package tag
 
 import (
+	"gitee.com/conero/uymas/bin"
 	"strings"
 )
 
@@ -19,7 +20,11 @@ const (
 )
 
 const (
-	CmdTypeKey        = "CTY"
+	CmdTypeKey = "CTY"
+	// CmdCommandField the command sets of field
+	CmdCommandField = "Commands"
+	// CmdExecFn let command to be runnable
+	CmdExecFn         = "Exec"
 	CmdTagName        = "cmd"
 	tagSplitLimiter   = " "
 	tagKvEqualLimiter = ":"
@@ -29,14 +34,17 @@ const (
 const (
 	OptRequire = "require"
 	OptShort   = "short"
+	OptAlias   = "alias"
+	OptHelp    = "help"
 )
 
 type Tag struct {
 	// the name is field of struct
-	Name   string
-	Type   uint8
-	Raw    string
-	Values map[string][]string
+	Name     string
+	Type     uint8
+	Raw      string
+	Values   map[string][]string
+	runnable func(*bin.CliCmd)
 }
 
 // CheckOption check if option exist
@@ -60,7 +68,7 @@ func (c *Tag) Value(args ...string) []string {
 	return nil
 }
 
-// ValueString get string value
+// ValueString get string app
 func (c *Tag) ValueString(args ...string) string {
 	values := c.Value(args...)
 	if values != nil {
@@ -102,43 +110,59 @@ func ParseTag(vTag string) *Tag {
 		Values: map[string][]string{},
 	}
 
-	for i, s := range strings.Split(vTag, tagSplitLimiter) {
+	setNameFn := func(as []string) {
+		var name string
+		for _, a := range as {
+			if a != "" {
+				name = a
+				break
+			}
+		}
+
+		// defined name by tag
+		if name != "" {
+			tg.Name = name
+		}
+	}
+
+	for _, s := range strings.Split(vTag, tagSplitLimiter) {
 		s = strings.TrimSpace(s)
 		if s == "" {
 			continue
 		}
 
-		if i == 0 {
-			switch s {
-			case TyAppName:
-				tg.Type = CmdApp
-			case TyCommandName:
-				tg.Type = CmdCommand
-			case TyOptionName:
-				tg.Type = CmdOption
+		idx := strings.Index(s, tagKvEqualLimiter)
+		var key string
+		var value string
+		values, _ := tg.Values[key]
+		if idx > -1 {
+			key = strings.TrimSpace(s[:idx])
+			value = strings.TrimSpace(s[idx+1:])
+			idx = strings.Index(value, tagMultiLimiter)
+			if idx > -1 {
+				value = strings.ReplaceAll(value, tagSplitLimiter, "")
+				values = append(values, strings.Split(value, tagMultiLimiter)...)
+			} else {
+				values = append(values, value)
 			}
 		} else {
-			idx := strings.Index(s, tagKvEqualLimiter)
-			var key string
-			var value string
-			values, _ := tg.Values[key]
-			if idx > -1 {
-				key = strings.TrimSpace(s[:idx])
-				value = strings.TrimSpace(s[idx+1:])
-				idx = strings.Index(value, tagMultiLimiter)
-				if idx > -1 {
-					value = strings.ReplaceAll(value, tagSplitLimiter, "")
-					values = append(values, strings.Split(value, tagMultiLimiter)...)
-				} else {
-					values = append(values, value)
-				}
-			} else {
-				key = s
-			}
-
-			tg.Values[key] = values
+			key = s
 		}
 
+		// default command type
+		switch key {
+		case TyAppName:
+			tg.Type = CmdApp
+			setNameFn(values)
+		case TyCommandName:
+			tg.Type = CmdCommand
+			setNameFn(values)
+		case TyOptionName:
+			tg.Type = CmdOption
+			setNameFn(values)
+		}
+
+		tg.Values[key] = values
 	}
 	return tg
 }

@@ -3,26 +3,32 @@ package main
 import (
 	"fmt"
 	"gitee.com/conero/uymas/bin"
+	"gitee.com/conero/uymas/bin/tag"
 )
 
+// Test 命令
+type Test struct {
+}
+
+func (c *Test) Exec(cc *bin.CliCmd) {
+	fmt.Println("test 命令引用入口！")
+}
+
+// App
+// @todo 实现 struct 到 bin 的映射
+type App struct {
+	CTY  tag.Name `cmd:"app:yang"`
+	Test *Test    `cmd:"command:test alias:tst,t help:测试命令工具"`
+	//Commands []any
+}
+
 func main() {
-	app := &bin.App{
-		Title:       "uymas-struct-map",
-		Description: "结构体映射命令行实例代码",
+	app := &App{
+		Test: &Test{},
+		//Commands: []any{
+		//	&Test{},
+		//},
 	}
-	app.Append(bin.AppCmd{
-		Name:  "test",
-		Title: "命令行测试工具！",
-		Register: func() {
-			fmt.Printf("test 名命令")
-		},
-	})
-	app.Append(bin.AppCmd{
-		Name:  "add",
-		Title: "数值计算！",
-		Register: func(cmd *bin.CliCmd) {
-			fmt.Printf("数值计算！")
-		},
-	})
-	app.Run()
+	parser := tag.NewParser(app)
+	parser.Run()
 }
