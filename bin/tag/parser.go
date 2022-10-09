@@ -13,11 +13,12 @@ type Runnable interface {
 }
 
 type Parser struct {
-	app      any
-	appName  Name
-	Tags     []Tag
-	commands []any // 会议列表
-	cli      *bin.CLI
+	app             any
+	appName         Name
+	Tags            []Tag
+	commandsTagDick map[string][]Tag
+	commands        []any // 会议列表
+	cli             *bin.CLI
 }
 
 // parse the tag of field by struct
@@ -138,6 +139,49 @@ func (c *Parser) parseRunnable(tg *Tag, field reflect.Value) {
 			}
 		}
 	}
+
+	c.parseCommandTags(tg, field)
+}
+
+func (c *Parser) parseCommandTags(tg *Tag, field reflect.Value) {
+	if c.commandsTagDick == nil {
+		c.commandsTagDick = map[string][]Tag{}
+	}
+	tDick, _ := c.commandsTagDick[tg.Name]
+	targetFld := field
+	if field.Kind() == reflect.Ptr {
+		targetFld = targetFld.Elem()
+	}
+	cRt := field.Type().Elem()
+	isUpdMk := false
+	for i := 0; i < targetFld.NumField(); i++ {
+		//cFld := field.Field(i)
+		cSf := cRt.Field(i)
+
+		tag, exist := cSf.Tag.Lookup(CmdTagName)
+		if !exist {
+			continue
+		}
+		cTg := ParseTag(tag)
+		if cTg != nil {
+			if cTg.Name == "" {
+				name := cTg.ValueString(TyOptionName)
+				if name == "" {
+					name = str.Lcfirst(cSf.Name)
+				}
+				cTg.Name = name
+				if cTg.CheckOption(TyOptionName) {
+					cTg.Type = CmdOption
+				}
+			}
+			tDick = append(tDick, *cTg)
+			isUpdMk = true
+		}
+	}
+
+	if isUpdMk {
+		c.commandsTagDick[tg.Name] = tDick
+	}
 }
 
 // NewParser app should be struct app or prt
@@ -173,22 +217,32 @@ func (c *Parser) genCli() {
 
 			cmdsDoc[tg.Name] = help
 			if tg.runnable != nil {
-				cli.RegisterFunc(tg.runnable, cmds...)
+				cli.RegisterFunc(func(cmd *bin.CliCmd) {
+					if !c.validCommand(cmd, tg) {
+						return
+					}
+					tg.runnable(cmd)
+				}, cmds...)
 			} else {
 				cli.RegisterFunc(func(cmd *bin.CliCmd) {
+					if !c.validCommand(cmd, tg) {
+						return
+					}
 					panic("Command doesn't realization exec(*bin.CliCmd) function!")
 				}, cmds...)
 			}
 		}
 	}
 
-	//index
-	cli.RegisterEmpty(func() {
+	helpFn := func() {
 		fmt.Printf("欢饮使用命令行程序，命令格式如下: \n\n$ %v [command] [option]\n", c.appName.Name)
 		if len(cmdsDoc) > 0 {
 			fmt.Printf("\n命令列表:\n%v\n", bin.FormatKv(cmdsDoc))
 		}
-	})
+	}
+
+	//index
+	cli.RegisterEmpty(helpFn)
 	// unfind
 	cli.RegisterUnmatched(func(s string, cmd *bin.CliCmd) {
 		if s != "" {
@@ -197,7 +251,90 @@ func (c *Parser) genCli() {
 		fmt.Printf("Error) %v命令不存在，请键入 help 查看帮助信息！\n\n", s)
 	})
 
+	// the command help
+	cli.RegisterFunc(func(cmd *bin.CliCmd) {
+		subCmd := cmd.SubCommand
+		if subCmd == "" {
+			helpFn()
+			return
+		}
+
+		tag, dick := c.CommandTag(subCmd)
+		if tag == nil {
+			fmt.Printf("%v 命令不存在", subCmd)
+			return
+		}
+
+		help := tag.ValueString(OptHelp)
+		if help == "" {
+			help = "命令"
+		}
+
+		alias := tag.Value(OptAlias)
+		if alias != nil {
+			help += "，别名 " + strings.Join(alias, ",")
+		}
+		fmt.Printf("%v      %v\n", subCmd, help)
+
+		if dick != nil {
+			helpDick := map[string]string{}
+			for _, ct := range dick {
+				name := strings.Join(ct.Names(), ", ")
+				help = "选项参数"
+				if vh := ct.ValueString(OptHelp); vh != "" {
+					help += vh
+				}
+				helpDick[name] = help
+			}
+			if len(helpDick) > 0 {
+				fmt.Printf("选项列表如下：\n%v", bin.FormatKv(helpDick, "  "))
+			}
+		}
+
+	}, "help", "?")
+
 	c.cli = cli
+}
+
+// valid command like option
+func (c *Parser) validCommand(cc *bin.CliCmd, tag Tag) bool {
+	if c.commandsTagDick == nil || len(c.commandsTagDick) == 0 {
+		return true
+	}
+	cTag, exist := c.commandsTagDick[tag.Name]
+	if !exist {
+		return true
+	}
+	for _, ct := range cTag {
+		if ct.Type != CmdOption {
+			continue
+		}
+		sets := []string{ct.Name}
+		alias := ct.Value(OptAlias)
+		if len(alias) > 0 {
+			sets = append(sets, alias...)
+		}
+		if ct.IsRequired() && !cc.CheckSetting(sets...) {
+			fmt.Printf("%v: 选项不可为空", strings.Join(sets, ","))
+			return false
+		}
+	}
+	return true
+}
+
+// CommandTag get tag sub command
+func (c *Parser) CommandTag(name string) (tag *Tag, option []Tag) {
+	for _, vtg := range c.Tags {
+		if vtg.Own(name) {
+			tag = &vtg
+			break
+		}
+	}
+
+	if tag != nil && c.commandsTagDick != nil {
+		option, _ = c.commandsTagDick[tag.Name]
+	}
+	return
 }
 
 func (c *Parser) Run() {

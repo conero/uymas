@@ -3,6 +3,7 @@ package tag
 
 import (
 	"gitee.com/conero/uymas/bin"
+	"gitee.com/conero/uymas/str"
 	"strings"
 )
 
@@ -165,4 +166,28 @@ func ParseTag(vTag string) *Tag {
 		tg.Values[key] = values
 	}
 	return tg
+}
+
+// Own check name is own be tag by name or alias
+func (c *Tag) Own(name string) bool {
+	if c.Name == name {
+		return true
+	}
+	alias := c.Value(OptAlias)
+	if str.InQue(name, alias) > -1 {
+		return true
+	}
+	return false
+}
+
+func (c *Tag) Names() []string {
+	var names []string
+	if c.Name != "" {
+		names = append(names, c.Name)
+	}
+	alias := c.Value(OptAlias)
+	if len(alias) > 0 {
+		names = append(names, alias...)
+	}
+	return names
 }
