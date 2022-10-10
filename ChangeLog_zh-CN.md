@@ -34,22 +34,26 @@
   gofmt.exe -w -r 'interface{} -> any' ./.. 
   ```
   
+  - pref!: 移除`1.16`版本找中标记删除的`io/ioutil` 包
+  
 - **logger**
+
   - feat: `ToLevel` 新增方法用于实现字符串转为为配置所需的日志级别，标记“CoverLevel”为删除状态
-  
+
 - **util**
-  
+
   - feat: `Object.Keys` 新增方法实现 map 和 struct 的键值获取，后者支持json tag。
-  
+
 - **bin/butil**
 
   - feat: `InputRequire/InputOptional`   新增方法实现必须或可选从 `stdin` 获取参数
-  
+
 - **bin/tag**
 
   - feat: 新包用于实现对struct类型tag到应用的映射
   - feat: 实现 tag 语法以及其解析
   - feat: 新增Name类，并可根据此自动查询可执行方法并在命令调用它时执行方法
+  - feat: 系统帮助信息生成实现
 
 - **bin**
 

@@ -2,7 +2,7 @@ package xini
 
 import (
 	"fmt"
-	"io/ioutil"
+	"os"
 	"strings"
 	"time"
 )
@@ -129,7 +129,7 @@ func (p *BaseParser) SaveAsFile(filename string) bool {
 	}
 	// 0644 Append
 	// 0755
-	err := ioutil.WriteFile(filename, []byte(iniTxt), 0755)
+	err := os.WriteFile(filename, []byte(iniTxt), 0755)
 	if err != nil {
 		fmt.Println(err.Error())
 		successMk = false

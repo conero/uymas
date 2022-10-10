@@ -4,7 +4,6 @@ package netutil
 import (
 	"bytes"
 	"io"
-	"io/ioutil"
 	"mime/multipart"
 	"net/http"
 	"os"
@@ -59,7 +58,7 @@ func (hu HttpUtil) PostForm(rUrl string, files map[string]string, data map[strin
 
 	//头部类型
 	req.Header.Set("Content-Type", contentType)
-	req.Body = ioutil.NopCloser(buf)
+	req.Body = io.NopCloser(buf)
 
 	res, er := client.Do(req)
 	return res, er
@@ -69,7 +68,7 @@ func (hu HttpUtil) PostForm(rUrl string, files map[string]string, data map[strin
 func (hu HttpUtil) PostFormString(rUrl string, files map[string]string, data map[string]string) string {
 	res, er := hu.PostForm(rUrl, files, data)
 
-	cttBys, er := ioutil.ReadAll(res.Body)
+	cttBys, er := io.ReadAll(res.Body)
 	if er != nil {
 		panic(er)
 	}

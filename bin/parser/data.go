@@ -4,9 +4,10 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
+	"os"
 	"reflect"
 	"strings"
 )
@@ -67,7 +68,7 @@ func (c *JsonReceiver) JsonStr(vStr string) *JsonReceiver {
 
 // JsonFile parse json from json-file
 func (c *JsonReceiver) JsonFile(filename string) *JsonReceiver {
-	bys, er := ioutil.ReadFile(filename)
+	bys, er := os.ReadFile(filename)
 	if er == nil {
 		return c.parseJson(bys)
 	}
@@ -109,7 +110,7 @@ func GetUrlContent(vUrl string) []byte {
 	resp, er := http.Get(vUrl)
 	if er == nil {
 		if resp.StatusCode == http.StatusOK {
-			bys, err := ioutil.ReadAll(resp.Body)
+			bys, err := io.ReadAll(resp.Body)
 			if err == nil {
 				return bys
 			}
@@ -130,7 +131,7 @@ func (c *UrlReceiver) UrlStr(vStr string) *UrlReceiver {
 
 // UrlFile parse json from json-file
 func (c *UrlReceiver) UrlFile(filename string) *UrlReceiver {
-	bys, er := ioutil.ReadFile(filename)
+	bys, er := os.ReadFile(filename)
 	if er == nil {
 		return c.parse(string(bys))
 	}

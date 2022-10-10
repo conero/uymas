@@ -3,7 +3,7 @@ package fs
 import (
 	"errors"
 	"fmt"
-	"io/ioutil"
+	"os"
 	"regexp"
 	"strings"
 	"sync"
@@ -101,7 +101,7 @@ func (ds *DirScanner) Scan() error {
 
 // recursion to scan dir, return the children count size.
 func (ds *DirScanner) scanRecursion(vDir string, depth int) int64 {
-	files, err := ioutil.ReadDir(vDir)
+	dirEntries, err := os.ReadDir(vDir)
 	if err != nil {
 		fmt.Println(err)
 		return 0
@@ -112,11 +112,11 @@ func (ds *DirScanner) scanRecursion(vDir string, depth int) int64 {
 		isTopClass = true
 	}
 	var currentSize int64 = 0
-	for _, fl := range files {
-		name := fl.Name()
+	for _, entry := range dirEntries {
+		name := entry.Name()
 		vPath := StdPathName(fmt.Sprintf("%v/%v", vDir, name))
 		var size int64
-		if fl.IsDir() {
+		if entry.IsDir() {
 			ds.AllDirItem += 1
 			depth += 1
 			size = ds.scanRecursion(vPath, depth)
@@ -125,9 +125,11 @@ func (ds *DirScanner) scanRecursion(vDir string, depth int) int64 {
 			if ds.ignoreScan(name) {
 				continue
 			}
-			size = fl.Size()
+			if fi, fErr := entry.Info(); fErr == nil {
+				size = fi.Size()
+				ds.AllSize += fi.Size()
+			}
 			currentSize += size
-			ds.AllSize += fl.Size()
 			ds.AllFileItem += 1
 		}
 		if isTopClass {
@@ -138,7 +140,7 @@ func (ds *DirScanner) scanRecursion(vDir string, depth int) int64 {
 			ds.TopChildDick[name] = ChildDirData{
 				Name:  name,
 				Size:  size,
-				IsDir: fl.IsDir(),
+				IsDir: entry.IsDir(),
 				Depth: depth,
 			}
 		}
@@ -202,7 +204,7 @@ func (ds *DirScanner) ScanParallel() error {
 
 // recursion to scan dir, return the children count size.[Experimental]
 func (ds *DirScanner) scanRecursionParallel(vDir string, depth int) int64 {
-	files, err := ioutil.ReadDir(vDir)
+	dirEntries, err := os.ReadDir(vDir)
 	if err != nil {
 		fmt.Println(err)
 		return 0
@@ -213,11 +215,11 @@ func (ds *DirScanner) scanRecursionParallel(vDir string, depth int) int64 {
 		isTopClass = true
 	}
 	var currentSize int64 = 0
-	for _, fl := range files {
-		name := fl.Name()
+	for _, entry := range dirEntries {
+		name := entry.Name()
 		vPath := StdPathName(fmt.Sprintf("%v/%v", vDir, name))
 		var size int64
-		if fl.IsDir() {
+		if entry.IsDir() {
 			ds.AllDirItem += 1
 			depth += 1
 			// if goroutine is bigger than `ds.CddChanMax` will stop to distributive it.
@@ -243,9 +245,13 @@ func (ds *DirScanner) scanRecursionParallel(vDir string, depth int) int64 {
 			if ds.ignoreScan(name) {
 				continue
 			}
-			size = fl.Size()
+
+			if fi, fEr := entry.Info(); fEr == nil {
+				size = fi.Size()
+				ds.AllSize += fi.Size()
+			}
+
 			currentSize += size
-			ds.AllSize += fl.Size()
 			ds.AllFileItem += 1
 		}
 		if isTopClass {
@@ -256,7 +262,7 @@ func (ds *DirScanner) scanRecursionParallel(vDir string, depth int) int64 {
 			ds.TopChildDick[name] = ChildDirData{
 				Name:  name,
 				Size:  size,
-				IsDir: fl.IsDir(),
+				IsDir: entry.IsDir(),
 				Depth: depth,
 			}
 		}

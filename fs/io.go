@@ -2,7 +2,6 @@ package fs
 
 import (
 	"io"
-	"io/ioutil"
 	"os"
 	"regexp"
 	"strings"
@@ -24,7 +23,7 @@ func (f *FsReaderWriter) Read(p []byte) (n int, err error) {
 	if f.content != nil {
 		return len(f.content), nil
 	} else if f.srcFile != "" {
-		content, err := ioutil.ReadFile(f.srcFile)
+		content, err := os.ReadFile(f.srcFile)
 		f.content = content
 		return len(content), err
 	}
@@ -34,7 +33,7 @@ func (f *FsReaderWriter) Read(p []byte) (n int, err error) {
 func (f *FsReaderWriter) Write(p []byte) (n int, err error) {
 	if f.content != nil {
 		if f.dstFile != "" {
-			err := ioutil.WriteFile(f.dstFile, f.content, 0755)
+			err := os.WriteFile(f.dstFile, f.content, 0755)
 			return len(f.content), err
 		} else {
 			f.errorMsg = "未设置目标文件，文件写入失败！"
@@ -63,12 +62,12 @@ func copyBaseDiy(dstFile, srcFile string) (bool, error) {
 // Copy copy file by io
 func Copy(dstFile, srcFile string) (bool, error) {
 	// 获取源文件
-	content, err := ioutil.ReadFile(srcFile)
+	content, err := os.ReadFile(srcFile)
 	if err != nil {
 		return false, err
 	}
 	// 覆盖新的文件
-	err = ioutil.WriteFile(dstFile, content, 0755)
+	err = os.WriteFile(dstFile, content, 0755)
 	if err != nil {
 		return false, err
 	}
@@ -79,7 +78,7 @@ func Copy(dstFile, srcFile string) (bool, error) {
 func CopyDir(dst, src string) {
 	dst = StdDir(dst)
 	src = StdDir(src)
-	if files, err := ioutil.ReadDir(src); err == nil {
+	if files, err := os.ReadDir(src); err == nil {
 		CheckDir(dst)
 		for _, fl := range files {
 			d1 := dst + fl.Name()
