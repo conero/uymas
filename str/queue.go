@@ -7,6 +7,8 @@ import "strings"
 // @Name:    字符互队列
 
 // InQue checkout substring exist in array
+//
+// Deprecated: As of Go 1.16, this function simply calls util.ListIndex.
 func InQue(s string, que []string) int {
 	idx := -1
 	for i, v := range que {
