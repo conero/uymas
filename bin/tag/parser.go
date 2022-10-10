@@ -106,6 +106,8 @@ func (c *Parser) parse() bool {
 				c.parseRunnable(tg, field)
 				//fmt.Printf("%v:%#v\n", tg.Name, *tg)
 			}
+			tg.carrier = rv
+			tg.carrierKey = sf.Name
 			c.Tags = append(c.Tags, *tg)
 			setNameFieldFn(fv, field, sf, tg)
 		} else {
@@ -116,6 +118,7 @@ func (c *Parser) parse() bool {
 	return true
 }
 
+// parse struct that let command to be runnable
 func (c *Parser) parseRunnable(tg *Tag, field reflect.Value) {
 	if tg == nil {
 		return
@@ -143,6 +146,7 @@ func (c *Parser) parseRunnable(tg *Tag, field reflect.Value) {
 	c.parseCommandTags(tg, field)
 }
 
+// parse commands of app option tags
 func (c *Parser) parseCommandTags(tg *Tag, field reflect.Value) {
 	if c.commandsTagDick == nil {
 		c.commandsTagDick = map[string][]Tag{}
@@ -174,6 +178,8 @@ func (c *Parser) parseCommandTags(tg *Tag, field reflect.Value) {
 					cTg.Type = CmdOption
 				}
 			}
+			cTg.carrierKey = cSf.Name
+			cTg.carrier = field
 			tDick = append(tDick, *cTg)
 			isUpdMk = true
 		}
@@ -309,15 +315,12 @@ func (c *Parser) validCommand(cc *bin.CliCmd, tag Tag) bool {
 		if ct.Type != CmdOption {
 			continue
 		}
-		sets := []string{ct.Name}
-		alias := ct.Value(OptAlias)
-		if len(alias) > 0 {
-			sets = append(sets, alias...)
-		}
+		sets := ct.Names()
 		if ct.IsRequired() && !cc.CheckSetting(sets...) {
 			fmt.Printf("%v: 选项不可为空", strings.Join(sets, ","))
 			return false
 		}
+		ct.setCarrier(cc.ArgRaw(sets...))
 	}
 	return true
 }

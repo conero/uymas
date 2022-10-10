@@ -195,3 +195,38 @@ func (c *Tag) Names() []string {
 	}
 	return names
 }
+
+// set the value of carrier.
+func (c *Tag) setCarrier(v string) bool {
+	if c.carrierKey == "" {
+		return false
+	}
+	if c.carrier.IsNil() || c.carrier.IsZero() || !c.carrier.IsValid() {
+		return false
+	}
+
+	valid := c.carrier
+	if valid.Kind() == reflect.Ptr {
+		valid = valid.Elem()
+	}
+
+	if valid.Kind() != reflect.Struct {
+		return false
+	}
+
+	field := valid.FieldByName(c.carrierKey)
+	if !field.IsValid() {
+		return false
+	}
+
+	//@todo Currently, string types are supported temporarily. Later, generic types are used to support more types
+	// set value
+	isSet := false
+	switch field.Kind() {
+	case reflect.String:
+		val := reflect.ValueOf(v)
+		field.Set(val)
+		isSet = true
+	}
+	return isSet
+}
