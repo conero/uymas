@@ -4,6 +4,7 @@ package tag
 import (
 	"gitee.com/conero/uymas/bin"
 	"gitee.com/conero/uymas/str"
+	"reflect"
 	"strings"
 )
 
@@ -41,11 +42,13 @@ const (
 
 type Tag struct {
 	// the name is field of struct
-	Name     string
-	Type     uint8
-	Raw      string
-	Values   map[string][]string
-	runnable func(*bin.CliCmd)
+	Name       string
+	Type       uint8
+	Raw        string
+	Values     map[string][]string
+	runnable   func(*bin.CliCmd)
+	carrier    reflect.Value
+	carrierKey string
 }
 
 // CheckOption check if option exist
@@ -111,6 +114,7 @@ func ParseTag(vTag string) *Tag {
 		Values: map[string][]string{},
 	}
 
+	// to set `Tag.Name` by function
 	setNameFn := func(as []string) {
 		var name string
 		for _, a := range as {
