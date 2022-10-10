@@ -21,5 +21,13 @@ type Equable interface {
 	Integer | Float | ~string | ~bool | ~rune
 	// @tip: error is fail
 	//Integer | Float | ~string | ~bool | error
+}
 
+type KeyIterable interface {
+	Integer | Float | ~string
+}
+
+// ValueIterable support basic types and composite lists
+type ValueIterable interface {
+	any
 }

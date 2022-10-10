@@ -9,9 +9,9 @@ import (
 // @Author:  Joshua Conero
 // @Name:    10 进制处理
 const (
-	// 9+26+26+3
+	// NumberStr 9+26+26+3
 	NumberStr = "0123456789abcdefghijklmnopkrstuvwxyzABCDEFGHIJKLMNOPKRSTUVWXYZ+-="
-	//进制类型
+	// N2 进制类型
 	N2  = 2
 	N8  = 8
 	N16 = 16
@@ -27,7 +27,7 @@ type Decimal struct {
 // ToN convert to n-ary
 func (d *Decimal) ToN(base int) string {
 	num := d.dec
-	bits := []int{}
+	var bits []int
 	for {
 		if num < base {
 			bits = append(bits, num)
@@ -41,7 +41,7 @@ func (d *Decimal) ToN(base int) string {
 	var value string
 	if base <= maxLen {
 		nRefBits := strings.Split(NumberStr[:base], "")
-		nBits := []string{}
+		var nBits []string
 		for _, n := range bits {
 			nBits = append(nBits, nRefBits[n])
 		}
