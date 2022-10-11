@@ -3,7 +3,6 @@ package bin
 import (
 	"fmt"
 	"gitee.com/conero/uymas"
-	"gitee.com/conero/uymas/bin/butil"
 	"gitee.com/conero/uymas/bin/parser"
 	"gitee.com/conero/uymas/str"
 	"log"
@@ -48,23 +47,9 @@ type CLI struct {
 	ScriptFileOption   string // default: --file,-f
 }
 
-// CliCmd the command of the cli application.
-type CliCmd struct {
-	Data            map[string]any    // the data from the `DataRaw` by parse for type
-	DataRaw         map[string]string // the cli application apply the data
-	Command         string            // the current command
-	SubCommand      string            // the sub command
-	Setting         []string          // the setting of command
-	Raw             []string          // the raw args
-	context         CLI
-	cmdType         int                 //the command type enumeration
-	commandAlias    map[string][]string // the alias of command, using for App-style and runtime state
-	subCommandAlias map[string][]string // the alias of command, using for App-style and runtime state
-}
-
 // CliApp the cli app.
 type CliApp struct {
-	Cc *CliCmd
+	Cc *Arg
 }
 
 // CliAppInterface the interface of CliApp
@@ -73,7 +58,7 @@ type CliAppInterface interface {
 }
 
 // CliAppCompleteInterface the complete CliApp show hand method
-// should have a field name like `Cc *CliCmd`
+// should have a field name like `Cc` *Arg
 // the method call order by `construct > command > help > index > unmatched`
 type CliAppCompleteInterface interface {
 	CliAppInterface
@@ -93,7 +78,7 @@ type Cmd struct {
 	Command  string
 	Alias    any                   //string, []string. the alias of the command
 	Describe string                //describe the command
-	Handler  func(cc *CliCmd)      //when command call then handler the request
+	Handler  func(cc *Arg)         //when command call then handler the request
 	Options  map[string]CmdOptions // the command option
 }
 
@@ -105,33 +90,6 @@ func NewCLI() *CLI {
 		commands: map[string]Cmd{},
 	}
 	return cli
-}
-
-// NewCliCmd the construct of `CliCmd`, args default set os.Args if no function arguments
-func NewCliCmd(args ...string) *CliCmd {
-	if args == nil {
-		// if the args is empty then use the `os.Args`
-		osArgs := os.Args
-		if len(osArgs) > 1 {
-			args = osArgs[1:]
-		}
-	}
-	c := &CliCmd{
-		Raw:     args,
-		Setting: []string{},
-		DataRaw: map[string]string{},
-		Data:    map[string]any{},
-	}
-	// parse the args
-	c.parseArgs()
-	return c
-}
-
-// NewCliCmdByString construction of `CliCmd` by string
-//
-//	@todo notice: `--test-string="Joshua 存在空格的字符串 Conero"` 解析失败
-func NewCliCmdByString(ss string) *CliCmd {
-	return NewCliCmd(butil.StringToArgs(ss)...)
 }
 
 // GetCmdList get the list cmd of application
@@ -158,8 +116,8 @@ func (cli *CLI) GetCmdList() []string {
 
 // RegisterFunc register functional command, the format like
 //
-//	`RegisterFunc(todo func(cc *CliCmd), cmd string)` or `RegisterFunc(todo func(), cmd, alias string)`
-func (cli *CLI) RegisterFunc(todo func(*CliCmd), cmds ...string) *CLI {
+//	`RegisterFunc(todo func(cc *Arg), cmd string)` or `RegisterFunc(todo func(), cmd, alias string)`
+func (cli *CLI) RegisterFunc(todo func(*Arg), cmds ...string) *CLI {
 	if len(cmds) > 0 {
 		cmd := cmds[0]
 		if len(cmds) > 1 {
@@ -192,7 +150,7 @@ func (cli *CLI) register(rgst any, cmds ...string) {
 	}
 }
 
-func (cli *CLI) registerFunc(todo func(*CliCmd), cmds ...string) {
+func (cli *CLI) registerFunc(todo func(*Arg), cmds ...string) {
 	cli.tempLastCommand = ""
 	if len(cmds) > 0 {
 		cmd := cmds[0]
@@ -278,14 +236,14 @@ func (cli *CLI) RegisterApps(aps map[string]any) *CLI {
 }
 
 // RegisterEmpty when the cmd is empty then callback the function, action only be
-//  1. function `func(cc *CliCmd)`/`func()` or struct.
+//  1. function `func(cc *Arg)`/`func()` or struct.
 func (cli *CLI) RegisterEmpty(action any) *CLI {
 	cli.actionEmptyRegister = action
 	return cli
 }
 
 // RegisterAny when command input not handler will callback the register, the format like:
-//  1. function `func(cmd string, cc *CliCmd)`/`func(cmd string)`/`func(cc *CliCmd)`/CliApp/Base Struct
+//  1. function `func(cmd string, cc *Arg)`/`func(cmd string)`/`func(cc *Arg)`/CliApp/Base Struct
 func (cli *CLI) RegisterAny(action any) *CLI {
 	cli.actionAnyRegister = action
 	// check if cmd dist
@@ -306,14 +264,14 @@ func (cli *CLI) RegisterAny(action any) *CLI {
 }
 
 // RegisterUnmatched old method `Unfind` of alias compatibly use `RegisterAny`
-func (cli *CLI) RegisterUnmatched(callback func(string, *CliCmd)) *CLI {
+func (cli *CLI) RegisterUnmatched(callback func(string, *Arg)) *CLI {
 	cli.RegisterAny(callback)
 	return cli
 }
 
 // Run the application
 func (cli *CLI) Run(args ...string) {
-	// construct of `CliCmd`
+	// construct of `Arg`
 	cmd := NewCliCmd(args...)
 	// start router by register.
 	cli.router(cmd)
@@ -367,8 +325,8 @@ func (cli *CLI) CmdExist(cmds ...string) bool {
 
 // @todo never stop to optimize the method.
 // to star `router`
-func (cli *CLI) router(cc *CliCmd) {
-	//set the last `*CLI` as context of `CliCmd`.
+func (cli *CLI) router(cc *Arg) {
+	//set the last `*CLI` as context of Arg.
 	cc.context = *cli
 	cc.cmdType = int(CmdFunc)
 	// call the `before-call-hook`
@@ -404,7 +362,7 @@ func (cli *CLI) router(cc *CliCmd) {
 }
 
 // router when `command` is not empty.
-func (cli *CLI) routerCommand(cc *CliCmd) bool {
+func (cli *CLI) routerCommand(cc *Arg) bool {
 	routerValidMk := false
 	value := cli.findRegisterValueByCommand(cc.Command)
 	if value != nil {
@@ -413,11 +371,11 @@ func (cli *CLI) routerCommand(cc *CliCmd) bool {
 		case func():
 			value.(func())()
 			routerValidMk = true
-		case func(cmd CliCmd):
-			value.(func(CliCmd))(*cc)
+		case func(cmd Arg):
+			value.(func(Arg))(*cc)
 			routerValidMk = true
-		case func(*CliCmd):
-			value.(func(*CliCmd))(cc)
+		case func(*Arg):
+			value.(func(*Arg))(cc)
 			routerValidMk = true
 		default:
 			// call the AppCmd
@@ -429,7 +387,7 @@ func (cli *CLI) routerCommand(cc *CliCmd) bool {
 			if cCField := v.FieldByName(appCliFieldCliCmd); cCField.IsValid() {
 				cc.cmdType = int(CmdApp)
 				switch cCField.Interface().(type) {
-				case *CliCmd:
+				case *Arg:
 					v.FieldByName(appCliFieldCliCmd).Set(reflect.ValueOf(cc))
 				}
 			} else {
@@ -449,7 +407,7 @@ func (cli *CLI) routerCommand(cc *CliCmd) bool {
 			callFunc := func(vMethod string) {
 				if vMth := v.MethodByName(vMethod); vMth.IsValid() {
 					switch vMth.Interface().(type) {
-					case func(*CliCmd):
+					case func(*Arg):
 						routerValidMk = true
 						vMth.Call([]reflect.Value{reflect.ValueOf(cc)})
 					case func():
@@ -496,12 +454,12 @@ func (cli *CLI) routerCommand(cc *CliCmd) bool {
 }
 
 // router when `command` is empty.
-func (cli *CLI) routerEmpty(cc *CliCmd) bool {
+func (cli *CLI) routerEmpty(cc *Arg) bool {
 	routerValidMk := false
 	runFunc := func(vFunc any) {
 		switch vFunc.(type) {
-		case func(*CliCmd):
-			vFunc.(func(*CliCmd))(cc)
+		case func(*Arg):
+			vFunc.(func(*Arg))(cc)
 			routerValidMk = true
 		case func():
 			vFunc.(func())()
@@ -517,30 +475,30 @@ func (cli *CLI) routerEmpty(cc *CliCmd) bool {
 }
 
 // router for any call
-func (cli *CLI) routerAny(cc *CliCmd) bool {
+func (cli *CLI) routerAny(cc *Arg) bool {
 	isRouterMk := false
 	aur := cli.actionAnyRegister
 	switch aur.(type) {
-	case func(string, *CliCmd):
-		aur.(func(string, *CliCmd))(cc.Command, cc)
+	case func(string, *Arg):
+		aur.(func(string, *Arg))(cc.Command, cc)
 		isRouterMk = true
 	case func(string):
 		aur.(func(string))(cc.Command)
 		isRouterMk = true
-	case func(*CliCmd):
-		aur.(func(*CliCmd))(cc)
+	case func(*Arg):
+		aur.(func(*Arg))(cc)
 		isRouterMk = true
 	default:
 		// actionAnyRegister support the like `CliApp` any struct
 		rv := reflect.ValueOf(aur)
 		if rv.Kind() == reflect.Ptr && rv.Elem().Kind() == reflect.Struct {
 			rvEl := rv.Elem()
-			// CliCmd field
+			// Arg field
 			if cCField := rvEl.FieldByName(appCliFieldCliCmd); cCField.IsValid() {
 				switch cCField.Interface().(type) {
-				case *CliCmd:
+				case *Arg:
 					rvEl.FieldByName(appCliFieldCliCmd).Set(reflect.ValueOf(cc))
-				case CliCmd:
+				case Arg:
 					rvEl.FieldByName(appCliFieldCliCmd).Set(reflect.ValueOf(cc).Elem())
 				}
 			}
@@ -552,7 +510,7 @@ func (cli *CLI) routerAny(cc *CliCmd) bool {
 			callFunc := func(vMethod string) {
 				if vMth := rv.MethodByName(vMethod); vMth.IsValid() {
 					switch vMth.Interface().(type) {
-					case func(*CliCmd):
+					case func(*Arg):
 						isRouterMk = true
 						vMth.Call([]reflect.Value{reflect.ValueOf(cc)})
 					case func():
@@ -602,7 +560,7 @@ func (cli *CLI) routerAny(cc *CliCmd) bool {
 }
 
 // the hook before call the func
-func (cli *CLI) hookBeforeCall(cc *CliCmd) {
+func (cli *CLI) hookBeforeCall(cc *Arg) {
 	cli.loadDataSyntax(cc)
 	cli.loadScriptSyntax(cc)
 }
@@ -613,7 +571,7 @@ func (cli *CLI) hookInterruptExit() {
 }
 
 // to do load data by setting syntax
-func (cli *CLI) loadDataSyntax(cc *CliCmd) {
+func (cli *CLI) loadDataSyntax(cc *Arg) {
 	raw := cc.DataRaw
 	if !cli.UnLoadDataSyntax && len(raw) > 0 {
 		allowLoads := []string{
@@ -658,7 +616,7 @@ func (cli *CLI) loadDataSyntax(cc *CliCmd) {
 }
 
 // to checkout if load script file, script mutil lines
-func (cli *CLI) loadScriptSyntax(cc *CliCmd) {
+func (cli *CLI) loadScriptSyntax(cc *Arg) {
 	if cli.UnLoadScriptSyntax {
 		return
 	}
@@ -749,359 +707,6 @@ func (cli *CLI) GetInjection(key string) any {
 		return value
 	}
 	return nil
-}
-
-// CheckSetting to checkout if the set exist in `CliCmd` sets and support multi.
-func (app *CliCmd) CheckSetting(sets ...string) bool {
-	has := false
-	for _, set := range sets {
-		if idx := str.InQue(set, app.Setting); idx > -1 {
-			has = true
-			break
-		}
-	}
-	return has
-}
-
-// CheckMustKey check the data key must in the sets and support multi
-func (app *CliCmd) CheckMustKey(keys ...string) bool {
-	check := true
-	for _, k := range keys {
-		if v, has := app.DataRaw[k]; !has || v == "" {
-			check = false
-			break
-		}
-	}
-	return check
-}
-
-// Cwd get the application current word dir.
-func (app *CliCmd) Cwd() string {
-	return butil.GetBasedir()
-}
-
-// QueueNext get next key from order left to right
-func (app *CliCmd) QueueNext(key string) string {
-	idx := -1
-	qLen := len(app.Raw)
-	var value string
-	for i := 0; i < qLen; i++ {
-		if idx == i {
-			value = app.Raw[i]
-			break
-		}
-		if key == app.Raw[i] {
-			idx = i + 1
-		}
-	}
-	return value
-}
-
-// Next Get key values from multiple key values
-func (app *CliCmd) Next(keys ...string) string {
-	var value string
-	var vLen = len(keys)
-	//when keys is empty default use the current Next value that next of `app.Command` or `queue index-2`
-	if vLen == 0 {
-		if app.Command != "" {
-			return app.Next(app.Command)
-		} else if len(app.Raw) > 1 {
-			return app.Raw[1]
-		}
-		return ""
-	}
-	for _, k := range keys {
-		value = app.QueueNext(k)
-		if value != "" {
-			break
-		}
-	}
-	return value
-}
-
-// ArgRaw get raw args data, because some args has alias list.
-func (app *CliCmd) ArgRaw(keys ...string) string {
-	var value string
-	for _, key := range keys {
-		if v, b := app.DataRaw[key]; b {
-			value = v
-			break
-		}
-	}
-
-	return value
-}
-
-// ArgInt get args data see as int
-func (app *CliCmd) ArgInt(keys ...string) int {
-	value := app.ArgRaw(keys...)
-	if "" == value {
-		return 0
-	}
-	if num, err := strconv.Atoi(value); err == nil {
-		return num
-	}
-	return 0
-}
-
-// ArgStringSlice get string-slice param args
-func (app *CliCmd) ArgStringSlice(keys ...string) []string {
-	value := app.Arg(keys...)
-	if value != nil {
-		switch value.(type) {
-		case []string:
-			return value.([]string)
-		case string:
-			return []string{value.(string)}
-		default:
-			var vSlice []string
-			vr := reflect.ValueOf(value)
-			if vr.Kind() == reflect.Array || vr.Kind() == reflect.Slice {
-				for i := 0; i < vr.Len(); i++ {
-					vSlice = append(vSlice, fmt.Sprintf("%v", vr.Index(i).Interface()))
-				}
-			} else {
-				vSlice = append(vSlice, fmt.Sprintf("%v", keys))
-			}
-			return vSlice
-		}
-	}
-	return nil
-}
-
-// ArgRawDefault get raw arg has default
-func (app *CliCmd) ArgRawDefault(key, def string) string {
-	var value = def
-	if v, b := app.DataRaw[key]; b {
-		value = v
-	}
-	return value
-}
-
-// Arg get arg after parsed the raw data
-func (app *CliCmd) Arg(keys ...string) any {
-	var value any = nil
-	for _, key := range keys {
-		if v, b := app.Data[key]; b {
-			value = v
-			break
-		}
-	}
-	return value
-}
-
-// ArgDefault can default value to get the arg
-func (app *CliCmd) ArgDefault(key string, def any) any {
-	var value = def
-	if v, b := app.Data[key]; b {
-		value = v
-	}
-	return value
-}
-
-// ArgRawLine get the raw line input.
-func (app *CliCmd) ArgRawLine() string {
-	return strings.Join(app.Raw, " ")
-}
-
-// CallCmd call cmd
-func (app *CliCmd) CallCmd(cmd string) {
-	context := app.context
-	if context.CmdExist(cmd) && app.Command != cmd {
-		app.Command = cmd
-		context.router(app)
-	}
-}
-
-// Context get the context of `CLI`, in case `AppCmd` not `FunctionCmd`
-func (app *CliCmd) Context() CLI {
-	return app.context
-}
-
-func (app *CliCmd) CmdType() int {
-	return app.cmdType
-}
-
-// AppendData append the Data
-func (app *CliCmd) AppendData(vMap map[string]any) *CliCmd {
-	if len(vMap) > 0 {
-		if app.Data == nil {
-			app.Data = map[string]any{}
-		}
-		if app.DataRaw == nil {
-			app.DataRaw = map[string]string{}
-		}
-		for k, v := range vMap {
-			var value string
-			if v != nil {
-				value = fmt.Sprintf("%v", v)
-			}
-			app.Data[k] = v
-			app.DataRaw[k] = value
-		}
-	}
-	return app
-}
-
-// the application parse raw args inner.
-//
-// the command format like that:
-//  1. `$ [command] [option]`
-//  2. `$ [command] [sub_command]`
-//  3. `$ [option]`
-//
-// the option format example:
-//
-//	`[command] -xyz` same like `[command] -x -y -z`
-//	`[command] --version --name 'Joshua Conero'`
-//	`[command] --list A B C D -L A B C D`
-//	`[command] --name='Joshua Conero'`
-//
-// @todo app.Data --> 类型解析太简陋；支持类型与 Readme.md 不统一
-func (app *CliCmd) parseArgs() {
-	if app.Raw != nil {
-		optKey := ""
-		for i, arg := range app.Raw {
-			if i == 0 && isVaildCmd(arg) {
-				app.Command = arg
-			} else if i == 1 && app.Command != "" && isVaildCmd(arg) {
-				app.SubCommand = arg
-			} else {
-				strLen := len(arg)
-				markKeySuccess := false
-				if strLen > 1 {
-					if strLen > 1 && "--" == arg[0:2] {
-						arg = arg[2:]
-						idx := strings.Index(arg, "=")
-						if idx == -1 { // --key
-							optKey = arg
-							app.Setting = append(app.Setting, arg)
-						} else { // --key=value
-							optKey = ""
-							k, v := arg[0:idx], arg[idx+1:]
-							app.saveOptionDick(k, v)
-							if str.InQue(k, app.Setting) == -1 {
-								app.Setting = append(app.Setting, k)
-							}
-						}
-						markKeySuccess = true
-					} else if "-" == arg[0:1] {
-						arg = arg[1:]
-						// -x
-						if len(arg) == 1 {
-							optKey = arg
-							app.Setting = append(app.Setting, arg)
-						} else { // -xyz => -x -y -z
-							tmpArr := strings.Split(arg, "")
-							optKey = ""
-							for _, vs := range tmpArr {
-								app.Setting = append(app.Setting, vs)
-							}
-							tmpArrLen := len(tmpArr)
-							if tmpArrLen > 0 {
-								optKey = tmpArr[tmpArrLen-1]
-							}
-						}
-						markKeySuccess = true
-					}
-				}
-
-				if !markKeySuccess && optKey != "" {
-					app.saveOptionDick(optKey, CleanoutString(arg))
-				}
-			}
-		}
-	}
-}
-
-// merge data when parse options, Synchronous write Data and RawData.
-func (app *CliCmd) saveOptionDick(key string, value string) {
-	vRaw := value
-	if oV, hasOv := app.DataRaw[key]; hasOv {
-		vRaw = fmt.Sprintf("%v %v", oV, value)
-		if cData, hasData := app.Data[key]; hasData {
-			switch cData.(type) {
-			case string:
-				oldSs := app.Data[key].(string)
-				app.Data[key] = []string{oldSs, value}
-			case []string:
-				oldVar := app.Data[key].([]string)
-				oldVar = append(oldVar, value)
-				app.Data[key] = oldVar
-			}
-		}
-	} else {
-		app.Data[key] = value
-	}
-	app.DataRaw[key] = vRaw
-}
-
-func (app *CliCmd) addAlias(value map[string][]string, key string, alias ...string) map[string][]string {
-	if value == nil {
-		value = map[string][]string{}
-	}
-	que, hasKey := value[key]
-	if hasKey {
-		que = append(que, alias...)
-	} else {
-		que = alias
-	}
-
-	value[key] = que
-	return value
-}
-
-func (app *CliCmd) addAliasAll(value map[string][]string, alias map[string][]string) map[string][]string {
-	if value == nil {
-		value = alias
-	} else {
-		for key, vm := range alias {
-			oAlias, has := value[key]
-			if has {
-				oAlias = append(oAlias, vm...)
-			} else {
-				oAlias = vm
-			}
-			value[key] = oAlias
-		}
-	}
-	return value
-}
-
-func (app *CliCmd) getAlias(value map[string][]string, c string) string {
-	for key, alias := range value {
-		if key == c {
-			return key
-		}
-		for _, a := range alias {
-			if a == c {
-				return key
-			}
-		}
-	}
-
-	return c
-}
-
-// CommandAlias Tip: in the future will merge method like CommandAlias And CommandAliasAll, chose one from twos.
-func (app *CliCmd) CommandAlias(key string, alias ...string) *CliCmd {
-	app.commandAlias = app.addAlias(app.commandAlias, key, alias...)
-	return app
-}
-
-func (app *CliCmd) CommandAliasAll(alias map[string][]string) *CliCmd {
-	app.commandAlias = app.addAliasAll(app.commandAlias, alias)
-	return app
-}
-
-func (app *CliCmd) SubCommandAlias(key string, alias ...string) *CliCmd {
-	app.subCommandAlias = app.addAlias(app.subCommandAlias, key, alias...)
-	return app
-}
-
-func (app *CliCmd) SubCommandAliasAll(alias map[string][]string) *CliCmd {
-	app.subCommandAlias = app.addAliasAll(app.subCommandAlias, alias)
-	return app
 }
 
 // check the cmd of validation
