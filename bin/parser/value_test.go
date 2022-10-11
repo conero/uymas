@@ -57,6 +57,38 @@ func TestConvI64(t *testing.T) {
 	}
 }
 
+func TestConvInt(t *testing.T) {
+	raw := "1949"
+	if 1949 != ConvInt(raw) {
+		t.Errorf("%v: 字符串解析为 int64 失败", raw)
+	}
+
+	// case
+	raw = "+1949"
+	if 1949 != ConvInt(raw) {
+		t.Errorf("%v: 字符串解析为 int64 失败", raw)
+	}
+
+	// case
+	raw = "-1949"
+	if -1949 != ConvInt(raw) {
+		t.Errorf("%v: 字符串解析为 int64 失败", raw)
+	}
+
+	// case
+	raw = "-1949.01"
+	rf := ConvInt(raw)
+	if -1949 != rf {
+		t.Errorf("%v: 字符串解析为 int64 失败 => %v", raw, rf)
+	}
+
+	// case
+	raw = "yang"
+	if 0 != ConvInt(raw) {
+		t.Errorf("%v: 字符串解析为 int64 失败", raw)
+	}
+}
+
 func TestConvF64(t *testing.T) {
 	raw := "1949"
 	if 1949 != ConvF64(raw) {

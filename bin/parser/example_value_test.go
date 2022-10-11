@@ -102,8 +102,45 @@ func ExampleConvF64() {
 	//ConvI64:vaild => 0
 }
 
+func ExampleConvInt() {
+	var raw = "1949"
+	var cv int
+
+	// case
+	cv = ConvInt(raw)
+	fmt.Printf("ConvInt:%v => %v\n", raw, cv)
+
+	// case
+	raw = "+1949"
+	cv = ConvInt(raw)
+	fmt.Printf("ConvInt:%v => %v\n", raw, cv)
+
+	// case
+	raw = "-1949.1001"
+	cv = ConvInt(raw)
+	fmt.Printf("ConvInt:%v => %v\n", raw, cv)
+
+	// case
+	raw = "-2022"
+	cv = ConvInt(raw)
+	fmt.Printf("ConvInt:%v => %v\n", raw, cv)
+
+	// case
+	raw = "vaild"
+	cv = ConvInt(raw)
+	fmt.Printf("ConvInt:%v => %v\n", raw, cv)
+
+	//Output:
+	//ConvInt:1949 => 1949
+	//ConvInt:+1949 => 1949
+	//ConvInt:-1949.1001 => -1949
+	//ConvInt:-2022 => -2022
+	//ConvInt:vaild => 0
+}
+
 // 用于任意测试
-func TestConvInt(t *testing.T) {
+func TestConvInt_base(t *testing.T) {
 	//ExampleConvI64()
 	//ExampleConvF64()
+	ExampleConvInt()
 }

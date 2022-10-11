@@ -49,7 +49,13 @@ func ConvI64(raw string) (value int64) {
 
 // ConvInt convert string to int
 func ConvInt(raw string) (value int) {
-	value = int(ConvI64(raw))
+	if raw != "" {
+		var err error
+		value, err = strconv.Atoi(raw)
+		if err != nil {
+			value = int(ConvI64(raw))
+		}
+	}
 	return
 }
 
