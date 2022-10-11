@@ -56,6 +56,10 @@
   - feat: 新增Name类，并可根据此自动查询可执行方法并在命令调用它时执行方法
   - feat: 系统帮助信息生成实现
 
+- **bin/parser**
+
+  - feat: 新增方法 `ConvBool/ConvI64/ConvInt/ConvF64`  实现字符串到基本类型数值的转换
+
 - **bin**
 
   - fix: `RegisterFunc` 注册超过2个别名时之后的别名失效

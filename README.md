@@ -8,7 +8,7 @@ Golang 常用包，快速实现命令行程序开发、struct合并、随机数�
 
 **代码仓库介绍**
 
-- [~~github~~](https://github.com/conero/uymas) 由于网络原因取消改站点
+- [~~github~~](https://github.com/conero/uymas) 由于网络原因取消该站点
 - [gitee](https://gitee.com/conero/uymas)
 
 
