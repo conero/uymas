@@ -3,7 +3,7 @@ package tag
 
 import (
 	"gitee.com/conero/uymas/bin"
-	"gitee.com/conero/uymas/str"
+	"gitee.com/conero/uymas/util"
 	"reflect"
 	"strings"
 )
@@ -178,7 +178,7 @@ func (c *Tag) Own(name string) bool {
 		return true
 	}
 	alias := c.Value(OptAlias)
-	if str.InQue(name, alias) > -1 {
+	if util.ListIndex(alias, name) > -1 {
 		return true
 	}
 	return false

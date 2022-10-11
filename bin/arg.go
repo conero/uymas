@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"gitee.com/conero/uymas/bin/butil"
 	"gitee.com/conero/uymas/bin/parser"
-	"gitee.com/conero/uymas/str"
+	"gitee.com/conero/uymas/util"
 	"os"
 	"reflect"
 	"strings"
@@ -28,7 +28,7 @@ type Arg struct {
 func (app *Arg) CheckSetting(sets ...string) bool {
 	has := false
 	for _, set := range sets {
-		if idx := str.InQue(set, app.Setting); idx > -1 {
+		if idx := util.ListIndex(app.Setting, set); idx > -1 {
 			has = true
 			break
 		}
@@ -259,7 +259,7 @@ func (app *Arg) parseArgs() {
 							optKey = ""
 							k, v := arg[0:idx], arg[idx+1:]
 							app.saveOptionDick(k, v)
-							if str.InQue(k, app.Setting) == -1 {
+							if util.ListIndex(app.Setting, k) == -1 {
 								app.Setting = append(app.Setting, k)
 							}
 						}

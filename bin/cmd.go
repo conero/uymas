@@ -3,7 +3,7 @@ package bin
 import (
 	"errors"
 	"fmt"
-	"gitee.com/conero/uymas/str"
+	"gitee.com/conero/uymas/util"
 	"reflect"
 	"strings"
 )
@@ -183,7 +183,7 @@ func (c *AppOptionGroup) ParseEach(v any, each func(*AppOption)) error {
 	return nil
 }
 
-func (c *AppOptionGroup) Unmarshal(cmd *CliCmd, v any) error {
+func (c *AppOptionGroup) Unmarshal(cmd *Arg, v any) error {
 	c.lastCmd = cmd
 	err := c.ParseEach(v, func(opt *AppOption) {
 	})
@@ -217,7 +217,7 @@ func (c *AppOptionGroup) OptionSearchAlias(name string) *AppOption {
 			if k == name {
 				return opt
 			}
-			if str.InQue(name, opt.Alias) > -1 {
+			if util.ListIndex(opt.Alias, name) > -1 {
 				return opt
 			}
 		}
