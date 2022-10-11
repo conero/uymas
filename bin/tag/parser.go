@@ -9,7 +9,7 @@ import (
 )
 
 type Runnable interface {
-	Exec(*bin.CliCmd)
+	Exec(arg *bin.Arg)
 }
 
 type Parser struct {
@@ -135,7 +135,7 @@ func (c *Parser) parseRunnable(tg *Tag, field reflect.Value) {
 		mth := field.Method(i)
 		if mth.IsValid() {
 			v := mth.Interface()
-			rMth, matched := v.(func(cmd *bin.CliCmd))
+			rMth, matched := v.(func(cmd *bin.Arg))
 			if matched {
 				tg.runnable = rMth
 				break
@@ -223,18 +223,18 @@ func (c *Parser) genCli() {
 
 			cmdsDoc[tg.Name] = help
 			if tg.runnable != nil {
-				cli.RegisterFunc(func(cmd *bin.CliCmd) {
+				cli.RegisterFunc(func(cmd *bin.Arg) {
 					if !c.validCommand(cmd, tg) {
 						return
 					}
 					tg.runnable(cmd)
 				}, cmds...)
 			} else {
-				cli.RegisterFunc(func(cmd *bin.CliCmd) {
+				cli.RegisterFunc(func(cmd *bin.Arg) {
 					if !c.validCommand(cmd, tg) {
 						return
 					}
-					panic("Command doesn't realization exec(*bin.CliCmd) function!")
+					panic("Command doesn't realization exec(*bin.Arg) function!")
 				}, cmds...)
 			}
 		}
@@ -250,7 +250,7 @@ func (c *Parser) genCli() {
 	//index
 	cli.RegisterEmpty(helpFn)
 	// unfind
-	cli.RegisterUnmatched(func(s string, cmd *bin.CliCmd) {
+	cli.RegisterUnmatched(func(s string, cmd *bin.Arg) {
 		if s != "" {
 			s += " "
 		}
@@ -258,7 +258,7 @@ func (c *Parser) genCli() {
 	})
 
 	// the command help
-	cli.RegisterFunc(func(cmd *bin.CliCmd) {
+	cli.RegisterFunc(func(cmd *bin.Arg) {
 		subCmd := cmd.SubCommand
 		if subCmd == "" {
 			helpFn()
@@ -303,7 +303,7 @@ func (c *Parser) genCli() {
 }
 
 // valid command like option
-func (c *Parser) validCommand(cc *bin.CliCmd, tag Tag) bool {
+func (c *Parser) validCommand(cc *bin.Arg, tag Tag) bool {
 	if c.commandsTagDick == nil || len(c.commandsTagDick) == 0 {
 		return true
 	}

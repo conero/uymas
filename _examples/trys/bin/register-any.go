@@ -14,7 +14,7 @@ func main() {
 }
 
 type RegisterAny struct {
-	Cc bin.CliCmd
+	Cc bin.Arg
 }
 
 func (c *RegisterAny) Construct() {

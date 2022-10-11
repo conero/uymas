@@ -44,7 +44,7 @@ func (c *App) getCli() *CLI {
 		c.parseDoc()
 		c.cli = NewCLI()
 		// register <help>
-		c.cli.RegisterFunc(func(cmd *CliCmd) {
+		c.cli.RegisterFunc(func(arg *Arg) {
 			fmt.Println(c.GetDoc() + "\n")
 		}, "help")
 
@@ -57,7 +57,7 @@ func (c *App) getCli() *CLI {
 			if rgst.register != nil {
 				allow := false
 				switch rgst.register.(type) {
-				case func(), func(cmd *CliCmd), func(cmd CliCmd):
+				case func(), func(cmd *Arg), func(cmd Arg):
 					allow = true
 				default:
 					rv := reflect.ValueOf(rgst.register)
@@ -135,7 +135,7 @@ type AppCmd struct {
 
 // AppOptionGroup the group of many of AppOption.
 type AppOptionGroup struct {
-	lastCmd    *CliCmd
+	lastCmd    *Arg
 	optionDick map[string]*AppOption
 }
 

@@ -46,7 +46,7 @@ type Tag struct {
 	Type       uint8
 	Raw        string
 	Values     map[string][]string
-	runnable   func(*bin.CliCmd)
+	runnable   func(*bin.Arg)
 	carrier    reflect.Value
 	carrierKey string
 }

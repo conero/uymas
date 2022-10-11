@@ -20,20 +20,20 @@ func main() {
 func newBin() {
 	cli := bin.NewCLI()
 
-	cli.RegisterFunc(func(cmd *bin.CliCmd) {
+	cli.RegisterFunc(func(cmd *bin.Arg) {
 		fmt.Println("this is help command.")
 	}, "help", "?")
 
-	cli.RegisterFunc(func(cmd *bin.CliCmd) {
+	cli.RegisterFunc(func(cmd *bin.Arg) {
 		fmt.Println(uymas.Version + "/" + uymas.Release)
 	}, "version")
 
 	//empty data.
-	cli.RegisterFunc(func(cc *bin.CliCmd) {
+	cli.RegisterFunc(func(cc *bin.Arg) {
 	})
 
 	//the empty data
-	cli.RegisterEmpty(func(cmd *bin.CliCmd) {
+	cli.RegisterEmpty(func(cmd *bin.Arg) {
 		fmt.Println("welcome the new BIN.")
 		newLingering(cmd, cli)
 		//fmt.Println(cmd.Raw)
@@ -43,7 +43,7 @@ func newBin() {
 	})
 
 	//clear the system
-	cli.RegisterFunc(func(cmd *bin.CliCmd) {
+	cli.RegisterFunc(func(cmd *bin.Arg) {
 		er := butil.Clear()
 		if er != nil {
 			fmt.Printf(" ERROR: %v", er)
@@ -52,7 +52,7 @@ func newBin() {
 
 	//empty data.
 
-	cli.RegisterAny(func(cmd string, cc *bin.CliCmd) {
+	cli.RegisterAny(func(cmd string, cc *bin.Arg) {
 		fmt.Println("  通用命令解析: ")
 		fmt.Printf("    command: %v\n", cmd)
 		if cc.SubCommand != "" {
@@ -63,7 +63,7 @@ func newBin() {
 		fmt.Printf("    setting: %v\n", cc.Setting)
 	})
 
-	cli.RegisterFunc(func(cc *bin.CliCmd) {
+	cli.RegisterFunc(func(cc *bin.Arg) {
 		cList := cli.GetCmdList()
 		for _, c := range cList {
 			//打印数据列表
@@ -75,7 +75,7 @@ func newBin() {
 		Command:  "author",
 		Alias:    nil,
 		Describe: "print the person who build the project.",
-		Handler: func(cc *bin.CliCmd) {
+		Handler: func(cc *bin.Arg) {
 			fmt.Println("I am Joshua Conero.")
 		},
 		Options: nil,
@@ -86,7 +86,7 @@ func newBin() {
 	cli.Run("-xyz", "--name", "'Joshua Conero'", "--first=emma", "--list", "A", "B", "c", "table.name")
 }
 
-func newLingering(cc *bin.CliCmd, cli *bin.CLI) {
+func newLingering(cc *bin.Arg, cli *bin.CLI) {
 	var input = bufio.NewScanner(os.Stdin)
 	fmt.Println("驻留式命令行程序")
 	fmt.Print("$ uymas>")

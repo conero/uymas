@@ -6,7 +6,7 @@ func TestNewCliCmd(t *testing.T) {
 	command, subcommand := "git", "clone"
 	var args []string
 	var testKey []string
-	var cc *CliCmd
+	var cc *Arg
 
 	cc = NewCliCmd(command, subcommand, "https://gitee.com/conero/uymas.git")
 	// case: `git clone https://gitee.com/conero/uymas.git`

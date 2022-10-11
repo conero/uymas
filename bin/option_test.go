@@ -12,7 +12,7 @@ func TestOption_Unmarshal(t *testing.T) {
 	}
 
 	cli := NewCLI()
-	cli.RegisterEmpty(func(cc *CliCmd) {
+	cli.RegisterEmpty(func(cc *Arg) {
 		opt := &Option{cc}
 		var bv base
 		opt.Unmarshal(&bv)

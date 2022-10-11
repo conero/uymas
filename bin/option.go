@@ -10,7 +10,7 @@ const OptionTagName = "arg"
 
 // Option the command of options parse.
 type Option struct {
-	cc *CliCmd
+	cc *Arg
 }
 
 // Unmarshal parse the struct tag name arg <Name type `arg:"i name"`>

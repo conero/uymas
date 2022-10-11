@@ -12,10 +12,10 @@ type CMD struct {
 
 	//help information
 	Describe    string
-	HelpMessage string        //help message
-	HelpCall    func(*CliCmd) //help message by `Func`
+	HelpMessage string     //help message
+	HelpCall    func(*Arg) //help message by `Func`
 
 	//the action by the Func
-	Todo    func(*CliCmd) //cli callback
-	TodoApp any           //bind from App struct
+	Todo    func(*Arg) //cli callback
+	TodoApp any        //bind from App struct
 }

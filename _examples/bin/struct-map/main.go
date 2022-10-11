@@ -12,7 +12,7 @@ type Test struct {
 	Test string `cmd:"option:test help:输入test 表达式"`
 }
 
-func (c *Test) Exec(cc *bin.CliCmd) {
+func (c *Test) Exec(cc *bin.Arg) {
 	fmt.Println("test 命令引用入口！")
 	fmt.Printf("name: %v\n", c.Name)
 }
