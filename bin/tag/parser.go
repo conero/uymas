@@ -12,6 +12,13 @@ type Runnable interface {
 	Exec(arg *bin.Arg)
 }
 
+// RunnableCommand runnable comand struct template
+type RunnableCommand struct {
+	Arg *bin.Arg
+}
+
+func (c *RunnableCommand) Exec(arg *bin.Arg) {}
+
 type Parser struct {
 	app             any
 	appName         Name
@@ -207,6 +214,7 @@ func (c *Parser) genCli() {
 
 	// 命令注册
 	for _, tg := range c.Tags {
+		// to handler command call
 		if tg.Type == CmdCommand {
 			cmds := []string{tg.Name}
 
@@ -320,7 +328,7 @@ func (c *Parser) validCommand(cc *bin.Arg, tag Tag) bool {
 			fmt.Printf("%v: 选项不可为空", strings.Join(sets, ","))
 			return false
 		}
-		ct.setCarrier(cc.ArgRaw(sets...))
+		ct.setCarrier(sets, cc)
 	}
 	return true
 }

@@ -51,7 +51,7 @@
 
 - **bin/tag**
 
-  - feat: 新包用于实现对struct类型tag到应用的映射
+  - feat: 新包用于实现对 `struct` 类型tag到应用的映射，支持 `string,bool,int/float64`类型
   - feat: 实现 tag 语法以及其解析
   - feat: 新增Name类，并可根据此自动查询可执行方法并在命令调用它时执行方法
   - feat: 系统帮助信息生成实现

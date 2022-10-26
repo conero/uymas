@@ -3,6 +3,7 @@ package tag
 
 import (
 	"gitee.com/conero/uymas/bin"
+	"gitee.com/conero/uymas/bin/parser"
 	"gitee.com/conero/uymas/util"
 	"reflect"
 	"strings"
@@ -28,6 +29,7 @@ const (
 	// CmdExecFn let command to be runnable
 	CmdExecFn         = "Exec"
 	CmdTagName        = "cmd"
+	CmdFieldArg       = "Arg"
 	tagSplitLimiter   = " "
 	tagKvEqualLimiter = ":"
 	tagMultiLimiter   = ","
@@ -172,7 +174,7 @@ func ParseTag(vTag string) *Tag {
 	return tg
 }
 
-// Own check name is own be tag by name or alias
+// Own check name its own be tag by name or alias
 func (c *Tag) Own(name string) bool {
 	if c.Name == name {
 		return true
@@ -196,15 +198,35 @@ func (c *Tag) Names() []string {
 	return names
 }
 
+func (c *Tag) setArgsCarrier(cc *bin.Arg) {
+	carrier := c.carrier
+	if carrier.IsNil() || carrier.IsZero() || !carrier.IsValid() {
+		return
+	}
+	if carrier.Kind() == reflect.Ptr {
+		carrier = carrier.Elem()
+	}
+	value := carrier.FieldByName(CmdFieldArg)
+	if value.IsValid() {
+		if value.IsNil() || value.IsZero() {
+			switch value.Interface().(type) {
+			case *bin.Arg:
+				value.Set(reflect.ValueOf(cc))
+			}
+		}
+	}
+}
+
 // set the value of carrier.
-func (c *Tag) setCarrier(v string) bool {
+func (c *Tag) setCarrier(names []string, cc *bin.Arg) bool {
 	if c.carrierKey == "" {
 		return false
 	}
 	if c.carrier.IsNil() || c.carrier.IsZero() || !c.carrier.IsValid() {
 		return false
 	}
-
+	// set the field named `Arg`
+	c.setArgsCarrier(cc)
 	valid := c.carrier
 	if valid.Kind() == reflect.Ptr {
 		valid = valid.Elem()
@@ -222,10 +244,38 @@ func (c *Tag) setCarrier(v string) bool {
 	//@todo Currently, string types are supported temporarily. Later, generic types are used to support more types
 	// set value
 	isSet := false
+	rawValue := cc.ArgRaw(names...)
 	switch field.Kind() {
 	case reflect.String:
-		val := reflect.ValueOf(v)
+		val := reflect.ValueOf(rawValue)
 		field.Set(val)
+		isSet = true
+	case reflect.Bool:
+		vBool := false
+		if rawValue != "" {
+			vBool = parser.ConvBool(rawValue)
+		} else {
+			vBool = cc.CheckSetting(names...)
+		}
+		val := reflect.ValueOf(vBool)
+		field.Set(val)
+		isSet = true
+	case reflect.Int:
+		val := reflect.ValueOf(parser.ConvInt(rawValue))
+		field.Set(val)
+		isSet = true
+	case reflect.Int64:
+		val := reflect.ValueOf(parser.ConvI64(rawValue))
+		field.Set(val)
+		isSet = true
+	case reflect.Int8, reflect.Int16, reflect.Int32, reflect.Uint, reflect.Uint8,
+		reflect.Uint16, reflect.Uint32, reflect.Uint64:
+		val := reflect.ValueOf(parser.ConvInt(rawValue))
+		field.Set(val.Convert(field.Type()))
+		isSet = true
+	case reflect.Float64, reflect.Float32:
+		val := reflect.ValueOf(parser.ConvF64(rawValue))
+		field.Set(val.Convert(field.Type()))
 		isSet = true
 	}
 	return isSet

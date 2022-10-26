@@ -8,13 +8,20 @@ import (
 
 // Test 命令
 type Test struct {
-	Name string `cmd:"option:name require help:输入姓名"`
-	Test string `cmd:"option:test help:输入test 表达式"`
+	Name   string `cmd:"option:name require help:输入姓名"`
+	Test   string `cmd:"option:test help:输入test 表达式"`
+	IsList bool   `cmd:"option:list alias:l help:是否列表输出内容"`
+	Num    uint16 `cmd:"option:num alias:n"`
+	Arg    *bin.Arg
 }
 
 func (c *Test) Exec(cc *bin.Arg) {
 	fmt.Println("test 命令引用入口！")
 	fmt.Printf("name: %v\n", c.Name)
+	fmt.Printf("Test: %#v\n", c.Test)
+	fmt.Printf("IsList: %#v\n", c.IsList)
+	fmt.Printf("Num: %#v\n", c.Num)
+	fmt.Printf("Arg: %#v\n", c.Arg)
 }
 
 // App
