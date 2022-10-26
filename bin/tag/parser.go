@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gitee.com/conero/uymas/bin"
 	"gitee.com/conero/uymas/str"
+	"gitee.com/conero/uymas/util"
 	"reflect"
 	"strings"
 )
@@ -319,6 +320,7 @@ func (c *Parser) validCommand(cc *bin.Arg, tag Tag) bool {
 	if !exist {
 		return true
 	}
+	var optionList []string
 	for _, ct := range cTag {
 		if ct.Type != CmdOption {
 			continue
@@ -328,8 +330,18 @@ func (c *Parser) validCommand(cc *bin.Arg, tag Tag) bool {
 			fmt.Printf("%v: 选项不可为空", strings.Join(sets, ","))
 			return false
 		}
+		optionList = append(optionList, sets...)
 		ct.setCarrier(sets, cc)
 	}
+
+	// check not allow setting by register
+	for _, set := range cc.Setting {
+		if util.ListIndex(optionList, set) == -1 {
+			fmt.Printf("%v: 选项非法", set)
+			return false
+		}
+	}
+
 	return true
 }
 
