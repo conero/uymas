@@ -40,6 +40,7 @@
 - **logger**
 
   - feat: `ToLevel` 新增方法用于实现字符串转为为配置所需的日志级别，标记“CoverLevel”为删除状态
+  - feat: `LevelAll` 新增以`Level`开头的字符串级别常量，请用起优化字符串的级别判断
 
 - **util**
 

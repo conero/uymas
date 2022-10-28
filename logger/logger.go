@@ -26,6 +26,16 @@ const (
 	LogNone
 )
 
+// string level values.
+const (
+	LevelAll   = "all"
+	LevelError = "error"
+	LevelWarn  = "warn"
+	LevelInfo  = "info"
+	LevelDebug = "debug"
+	LevelNone  = "none"
+)
+
 // DriverStdout logging driver support builtin
 const (
 	DriverStdout = "stdout"
@@ -141,17 +151,17 @@ func ToLevel(lvl string, args ...Level) (Level, error) {
 	}
 	lvl = ShortCover(lvl)
 	switch strings.ToLower(lvl) {
-	case "all":
+	case LevelAll:
 		lv = LogAll
-	case "error", "err":
+	case LevelError, "err":
 		lv = LogError
-	case "warning", "warn":
+	case LevelWarn, "warning":
 		lv = LogWarn
-	case "info":
+	case LevelInfo:
 		lv = LogInfo
-	case "debug":
+	case LevelDebug:
 		lv = LogDebug
-	case "none", "no", "mute", "quiet":
+	case LevelNone, "no", "mute", "quiet":
 		lv = LogNone
 	default:
 		er = errors.New(fmt.Sprintf("%v: invalid level param, reference value all, error, warn, info, debug, none", lvl))
@@ -172,17 +182,17 @@ func ShortCover(short string) (lvlStr string) {
 	lvlStr = short
 	switch strings.ToLower(short) {
 	case "a":
-		lvlStr = "all"
+		lvlStr = LevelAll
 	case "e":
-		lvlStr = "error"
+		lvlStr = LevelError
 	case "w":
-		lvlStr = "warning"
+		lvlStr = LevelWarn
 	case "i":
-		lvlStr = "info"
+		lvlStr = LevelInfo
 	case "d":
-		lvlStr = "debug"
+		lvlStr = LevelDebug
 	case "n":
-		lvlStr = "none"
+		lvlStr = LevelNone
 	}
 	return
 }
