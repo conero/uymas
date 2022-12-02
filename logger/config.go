@@ -4,7 +4,7 @@ import "log"
 
 // Config builder logging configure.
 type Config struct {
-	Log   *log.Logger
+	Log   *log.Logger `yaml:"-" json:"-"`
 	Level string
 	// driver list: stdout, file, buffer
 	Driver string
