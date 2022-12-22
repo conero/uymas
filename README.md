@@ -14,7 +14,7 @@ Golang 常用包，快速实现命令行程序开发、struct合并、随机数�
 
 
 
-## 项目介绍
+### 项目介绍
 go 语言工具库
 go-version： *v1.11.1*
 
@@ -40,7 +40,7 @@ nestling --> develop -->master
 
 
 
-## 安装
+### 安装
 
 ```ini
 # github
@@ -50,7 +50,7 @@ $ go get -u gitee.com/conero/uymas
 
 
 
-### bin
+#### bin
 
 > 命令行行语法
 >
@@ -73,11 +73,21 @@ $ [command] [<sub-command>] [<options>]
 
 
 
+#### tinygo
+
+`Experimental/Try`  尝试实验性支持 [tinygo](https://github.com/tinygo-org/tinygo)
+
+- [ ] **进行中**（since 2022-12-22）
 
 
 
 
-## 使用
+
+- （`"reflect is not fully implemented"`）That Fprintln appears to be using reflection, which is not well supported under tinygo yet. ([E2935](https://github.com/tinygo-org/tinygo/issues/2935))
+
+
+
+### 使用
 
 ```go
 package main

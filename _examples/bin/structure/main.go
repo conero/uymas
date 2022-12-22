@@ -9,6 +9,9 @@ func main() {
 	cli := bin.NewCLI()
 	cli.RegisterApp(new(TypeCommand), "test")
 	cli.RegisterApp(new(TypeCommand), "type")
+	cli.RegisterEmpty(func() {
+		fmt.Println(" 命令行结构体实例")
+	})
 	cli.Run()
 }
 
