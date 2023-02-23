@@ -1,12 +1,10 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"gitee.com/conero/uymas"
 	"gitee.com/conero/uymas/bin"
 	"gitee.com/conero/uymas/bin/butil"
-	"gitee.com/conero/uymas/bin/parser"
 	"gitee.com/conero/uymas/culture/pinyin"
 	"gitee.com/conero/uymas/fs"
 	"gitee.com/conero/uymas/number"
@@ -122,7 +120,7 @@ func (c *defaultApp) DefaultUnmatched() {
 	fmt.Println()
 }
 
-// Test test 用于命令行解析等测试
+// Test 用于命令行解析等测试
 func (c *defaultApp) Test() {
 	cc := c.Cc
 	pwd, _ := os.Getwd()
@@ -144,28 +142,7 @@ func (c *defaultApp) Test() {
 
 // Repl REPL
 func (c *defaultApp) Repl() {
-	var input = bufio.NewScanner(os.Stdin)
-	fmt.Println("驻留式命令行程序")
-	fmt.Print("$ uymas> ")
-
-	for input.Scan() {
-		text := input.Text()
-		text = strings.TrimSpace(text)
-
-		switch text {
-		case "exit":
-			os.Exit(0)
-		default:
-			var cmdsList = parser.NewParser(text)
-			for _, cmdArgs := range cmdsList {
-				cli.Run(cmdArgs...)
-			}
-		}
-
-		fmt.Println()
-		fmt.Println()
-		fmt.Print("$ uymas> ")
-	}
+	bin.ReplCommand("uymas", cli)
 }
 
 // Pinyin 拼音
@@ -185,7 +162,7 @@ func (c *defaultApp) Uls() {
 	fmt.Println("  " + strings.Join(cli.GetCmdList(), "\n  "))
 }
 
-// Cache cache namespace@key.key setValue
+// Cache namespace@key.key setValue
 func (c *defaultApp) Cache() {
 	cc := c.Cc
 	key := cc.SubCommand

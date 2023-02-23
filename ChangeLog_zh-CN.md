@@ -64,6 +64,7 @@
 
 - **bin**
 
+  - feat: 新增 `Repl` struct 和 `ReplCommand` 实现交互式命令
   - fix: `RegisterFunc` 注册超过2个别名时之后的别名失效
   - pref!: 重命名 `CliCmd` 为 `Arg` 且正式版本发布时可能进行替换（或某个版本后移除）
 
