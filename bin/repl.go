@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"gitee.com/conero/uymas/bin/parser"
+	"gitee.com/conero/uymas/util"
 	"os"
 	"strings"
 )
@@ -18,6 +19,8 @@ type Repl struct {
 	Name        string
 	Title       string
 	HandlerFunc func(string) int
+	BeforeExit  func()   // 退出前回调
+	Exit        []string // 退出列表，默认为 exit
 }
 
 // Run to start repl command
@@ -32,17 +35,28 @@ func (c Repl) Run(cli *CLI) {
 		fmt.Println(c.Title)
 	}
 
-	fmt.Print(tip)
+	// 退出命令
+	toExit := func() {
+		if c.BeforeExit != nil {
+			c.BeforeExit()
+		}
+		os.Exit(0)
+	}
 
+	fmt.Print(tip)
 	for input.Scan() {
 		text := input.Text()
 		text = strings.TrimSpace(text)
 
 		isBreak := false
 		switch text {
-		case "exit":
-			os.Exit(0)
 		default:
+			if c.Exit == nil && text == "exit" {
+				toExit()
+			} else if util.ListIndex(c.Exit, text) > -1 {
+				toExit()
+			}
+
 			if c.HandlerFunc != nil {
 				switch c.HandlerFunc(text) {
 				case ReplBreak:
