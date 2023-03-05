@@ -53,6 +53,13 @@ type CliApp struct {
 	Cc *Arg
 }
 
+// Construct
+// implement method for `CliAppCompleteInterface` interface.
+func (c *CliApp) Construct()        {}
+func (c *CliApp) DefaultHelp()      {}
+func (c *CliApp) DefaultIndex()     {}
+func (c *CliApp) DefaultUnmatched() {}
+
 // CliAppInterface the interface of CliApp
 type CliAppInterface interface {
 	Construct()
