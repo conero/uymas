@@ -1,12 +1,16 @@
 // Package lgr An instance of library `logger`, used for direct output from the command line, etc
 package lgr
 
-import "gitee.com/conero/uymas/logger"
+import (
+	"gitee.com/conero/uymas/logger"
+)
 
 var vLgr *logger.Logger
 
 func init() {
-	vLgr = logger.NewLogger()
+	vLgr = logger.NewLogger(logger.Config{
+		Level: logger.LevelAll,
+	})
 }
 
 func Log() logger.Logger {
