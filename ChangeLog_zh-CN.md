@@ -28,7 +28,15 @@
 
 - **logger/lgr**
   - feat: 新增lgr包用于直接生成日志，快速使用，以及后期对应命令行的定制化输出（颜色状态等）
+  
+- **bin/butil**
 
+  - feat: 新增函数 `AppName` 用于获取当前正在运行的App名称，以及重写`Basedir()` 计算规则
+
+  - pref!: 重名函数`GetBasedir() -> Basedir()`及`GetPathDir()->RootPath()`，原函数标记为“遗弃”状态。（v1.3.x删除）
+
+- **uymas**
+  - pref: 优化默认命令并显示应用的名称
 
 
 

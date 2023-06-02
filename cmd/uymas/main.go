@@ -103,7 +103,10 @@ func (c *defaultApp) DefaultIndex() {
 	}
 
 	fmt.Printf(" wecolme use the <%v>. \n", uymas.Name)
-	fmt.Printf(" %v/%v\n", uymas.Version, uymas.Release)
+	fmt.Println()
+	fmt.Printf(" %v [comand] [option]    执行应用命令\n", butil.AppName())
+	fmt.Println()
+	fmt.Printf(" v%v/%v\n", uymas.Version, uymas.Release)
 	fmt.Printf(" Power by %v.\n", uymas.Author)
 }
 
@@ -132,7 +135,7 @@ func (c *defaultApp) Test() {
 	fmt.Printf("  DataRaw: %#v \n", cc.DataRaw)
 	fmt.Printf("  Data: %#v \n", cc.Data)
 	fmt.Printf("  Input: %#v \n", strings.Join(cc.Raw, " "))
-	fmt.Printf("  Basedir : %v \n", butil.GetBasedir())
+	fmt.Printf("  Basedir : %v \n", butil.Basedir())
 	fmt.Printf("  PWD : %v \n", pwd)
 	fmt.Printf("  Args : %#v \n", os.Args[1:])
 

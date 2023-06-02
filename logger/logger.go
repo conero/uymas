@@ -216,10 +216,10 @@ func NewLogger(cfgs ...Config) *Logger {
 			if cfg.Driver == DriverFile {
 				output := cfg.OutputDir
 				if output == "" {
-					output = butil.GetPathDir("/.runtime")
+					output = butil.RootPath("/.runtime")
 				} else {
 					if !fs.ExistPath(output) {
-						output = butil.GetPathDir(output)
+						output = butil.RootPath(output)
 					}
 				}
 				now := time.Now()

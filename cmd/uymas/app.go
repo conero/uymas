@@ -27,6 +27,6 @@ func (c *App) Test() {
 	fmt.Printf("  Input: %#v \n", strings.Join(cc.Raw, " "))
 	fmt.Printf("  Current next: %#v \n", cc.Next())
 	fmt.Printf("  Is CmdApp : %#v \n", cc.CmdType() == int(bin.CmdApp))
-	fmt.Printf("  Basedir : %v \n", butil.GetBasedir())
+	fmt.Printf("  Basedir : %v \n", butil.Basedir())
 	fmt.Println()
 }

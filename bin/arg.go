@@ -50,7 +50,7 @@ func (app *Arg) CheckMustKey(keys ...string) bool {
 
 // Cwd get the application current word dir.
 func (app *Arg) Cwd() string {
-	return butil.GetBasedir()
+	return butil.Basedir()
 }
 
 // QueueNext get next key from order left to right
