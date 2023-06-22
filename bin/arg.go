@@ -92,6 +92,36 @@ func (app *Arg) Next(keys ...string) string {
 	return value
 }
 
+// NextList get the next list value exclude option.
+func (app *Arg) NextList(keys ...string) []string {
+	var list []string
+
+	keyMatch := false
+	isEmptyKey := len(keys) == 0
+	for i, arg := range app.Raw {
+		if i == 0 {
+			continue
+		}
+
+		if strings.Index(arg, "-") == 0 {
+			break
+		}
+
+		if isEmptyKey {
+			keyMatch = true
+		} else if !keyMatch && util.ListIndex(keys, arg) > -1 {
+			keyMatch = true
+			continue
+		}
+
+		if keyMatch {
+			list = append(list, arg)
+		}
+
+	}
+	return list
+}
+
 // ArgRaw get raw args data, because some args has alias list.
 func (app *Arg) ArgRaw(keys ...string) string {
 	var value string

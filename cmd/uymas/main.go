@@ -137,8 +137,10 @@ func (c *defaultApp) Test() {
 	fmt.Printf("  Input: %#v \n", strings.Join(cc.Raw, " "))
 	fmt.Printf("  Basedir : %v \n", butil.Basedir())
 	fmt.Printf("  PWD : %v \n", pwd)
+	fmt.Printf("  NextLing : %#v \n", cc.NextList())
 	fmt.Printf("  Args : %#v \n", os.Args[1:])
 
+	fmt.Println()
 	fmt.Printf(" %v \n", getSpendStr())
 	fmt.Println()
 }
