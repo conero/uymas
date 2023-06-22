@@ -437,7 +437,12 @@ func (cli *CLI) router(cc *Arg) {
 	// router command is default.
 	if !isRouterMk {
 		if cli.actionAnyRegister != nil {
-			isRouterMk = cli.routerAny(cc)
+			if isMatch, rc := cli.routerAny(cc); isMatch {
+				if rc != nil {
+					rc.callMethod(actionRunEnd, cc)
+				}
+				isRouterMk = isMatch
+			}
 		}
 
 		if !isRouterMk {
@@ -547,16 +552,17 @@ func (cli *CLI) routerEmpty(cc *Arg) bool {
 }
 
 // router for any call
-func (cli *CLI) routerAny(cc *Arg) bool {
+func (cli *CLI) routerAny(cc *Arg) (bool, *registerCommand) {
 	isRouterMk := false
 	aur := cli.actionAnyRegister
+	var rc *registerCommand
 	if aur == nil {
-		return false
+		return false, nil
 	}
 	if runFn(aur, cc) {
 		isRouterMk = true
 	} else {
-		rc := &registerCommand{
+		rc = &registerCommand{
 			refVal: reflect.ValueOf(aur),
 		}
 		// Arg field
@@ -570,10 +576,9 @@ func (cli *CLI) routerAny(cc *Arg) bool {
 			cmdTitle = cc.getAlias(cc.commandAlias, cc.Command)
 			cmdTitle = Cmd2StringMap(cmdTitle)
 			// check `Construct` repeat call(2 times)
-			if cmdTitle != actionRunConstruct {
-				// call method
-				rc.callMethod(cmdTitle, cc)
-				return true
+			if cmdTitle != actionRunConstruct && rc.callMethod(cmdTitle, cc) {
+				rc.isMatch = true
+				return true, rc
 			}
 		}
 
@@ -583,26 +588,30 @@ func (cli *CLI) routerAny(cc *Arg) bool {
 		if cmdTitle == actionRunHelpName || cmdTitle == "?" || (cmdTitle == "" && cc.
 			CheckSetting("help", "h", "?")) {
 			if rc.callMethod(actionRunHelp, cc) {
-				return true
+				rc.isMatch = true
+				return true, rc
 			}
 		}
 		//default empty call be a index action.
 		if cmdTitle == "" && rc.callMethod(actionRunIndex, cc) {
-			return true
+			rc.isMatch = true
+			return true, rc
 		}
 
 		// actionRunUnmatched
 		if rc.callMethod(actionRunUnmatched, cc) {
-			return true
+			rc.isMatch = true
+			return true, rc
 		}
 
 		// finally not match any method will print the tips.
 		if !isRouterMk {
 			log.Printf("[WARNING] the method `RegisterUnfind` of param is valid, please reference the doc.")
 		}
+
 	}
 
-	return isRouterMk
+	return isRouterMk, rc
 }
 
 // the hook before call the func
