@@ -15,6 +15,7 @@ import (
 
 const (
 	actionRunConstruct = "Construct"
+	actionRunEnd       = "DefaultEnd"       // the AppCli match call than latest call
 	actionRunIndex     = "DefaultIndex"     // the AppCli empty Call
 	actionRunUnmatched = "DefaultUnmatched" // the AppCli unmatched router Call
 	actionRunHelp      = "DefaultHelp"      // the AppCli unmatched router Call
@@ -27,6 +28,76 @@ const (
 	scriptOption     = "script,s" // --script,-s <script>
 )
 
+// the part of `CLI` register command runnable
+type registerCommand struct {
+	isMatch  bool
+	isFunc   bool
+	isStruct bool
+	refVal   reflect.Value
+}
+
+func (c *registerCommand) setFiled(filedName string, value any) bool {
+	rv := c.refVal
+	if rv.Kind() == reflect.Ptr {
+		rv = rv.Elem()
+	}
+	if rv.Kind() != reflect.Struct {
+		return false
+	}
+
+	field := rv.FieldByName(filedName)
+	if !field.IsValid() || !field.CanSet() {
+		return false
+	}
+
+	toSetVal := reflect.ValueOf(value)
+	fieldKind := field.Kind()
+
+	if fieldKind == toSetVal.Kind() {
+		field.Set(toSetVal)
+		return true
+	} else if toSetVal.Kind() == reflect.Ptr {
+		tval := toSetVal.Elem()
+		if fieldKind == tval.Kind() {
+			field.Set(tval)
+			return true
+		}
+	}
+
+	return false
+}
+
+func (c *registerCommand) callMethod(method string, cc *Arg) bool {
+	rv := c.refVal
+	isStruct := false
+	if rv.Kind() == reflect.Ptr {
+		isStruct = rv.Elem().Kind() == reflect.Struct
+	}
+
+	if rv.Kind() != reflect.Struct && !isStruct {
+		return false
+	}
+
+	mth := rv.MethodByName(method)
+	if !mth.IsValid() {
+		return false
+	}
+
+	switch mth.Interface().(type) {
+	case func(*Arg):
+		mth.Call([]reflect.Value{reflect.ValueOf(cc)})
+		return true
+	case func(Arg):
+		mth.Call([]reflect.Value{reflect.ValueOf(*cc)})
+		return true
+	case func():
+		mth.Call(nil)
+		return true
+	}
+
+	return false
+}
+
 // CLI the cli application
 type CLI struct {
 	cmds map[string]any // the register of commands.
@@ -35,6 +106,7 @@ type CLI struct {
 	// the data struct like: {cmd => alias} or {cmd => [alias1, alias2, alias3...]}
 	cmdMap              map[string]any
 	actionEmptyRegister any // the register callback by empty action.
+	actionEndRegister   any // the register callback by end action.
 	actionAnyRegister   any // the register callback by command not handler
 	commands            map[string]Cmd
 	tempLastCommand     string         // command Cache
@@ -59,6 +131,7 @@ func (c *CliApp) Construct()        {}
 func (c *CliApp) DefaultHelp()      {}
 func (c *CliApp) DefaultIndex()     {}
 func (c *CliApp) DefaultUnmatched() {}
+func (c *CliApp) DefaultEnd()       {}
 
 // CliAppInterface the interface of CliApp
 type CliAppInterface interface {
@@ -73,6 +146,7 @@ type CliAppCompleteInterface interface {
 	DefaultHelp()
 	DefaultIndex()
 	DefaultUnmatched()
+	DefaultEnd()
 }
 
 type CmdOptions struct {
@@ -250,6 +324,13 @@ func (cli *CLI) RegisterEmpty(action any) *CLI {
 	return cli
 }
 
+// RegisterEnd when the cmd is empty then callback the function, action only be
+//  1. function `func(cc *Arg)`/`func()` or struct.
+func (cli *CLI) RegisterEnd(action any) *CLI {
+	cli.actionEndRegister = action
+	return cli
+}
+
 // RegisterAny when command input not handler will callback the register, the format like:
 //  1. function `func(cmd string, cc *Arg)`/`func(cmd string)`/`func(cc *Arg)`/CliApp/Base Struct
 func (cli *CLI) RegisterAny(action any) *CLI {
@@ -343,7 +424,12 @@ func (cli *CLI) router(cc *Arg) {
 	// router command is not empty, include func or App.
 	isRouterMk := false
 	if cc.Command != "" {
-		isRouterMk = cli.routerCommand(cc)
+		rc := cli.routerCommand(cc)
+		isRouterMk = rc.isMatch
+		if isRouterMk {
+			rc.callMethod(actionRunEnd, cc)
+			return
+		}
 	} else { // router command is empty.
 		isRouterMk = cli.routerEmpty(cc)
 	}
@@ -369,115 +455,93 @@ func (cli *CLI) router(cc *Arg) {
 	}
 }
 
-// router when `command` is not empty.
-func (cli *CLI) routerCommand(cc *Arg) bool {
-	routerValidMk := false
-	value := cli.findRegisterValueByCommand(cc.Command)
+// search register func and call if exits
+func (cli *CLI) findRegisterFuncAndRun(fnName string, cc *Arg) (rc *registerCommand) {
+	rc = &registerCommand{}
+	value := cli.findRegisterValueByCommand(fnName)
 	if value != nil {
-		switch value.(type) {
-		// call the FuncCmd
-		case func():
-			value.(func())()
-			routerValidMk = true
-		case func(cmd Arg):
-			value.(func(Arg))(*cc)
-			routerValidMk = true
-		case func(*Arg):
-			value.(func(*Arg))(cc)
-			routerValidMk = true
-		default:
+		if runFn(value, cc) {
+			rc.isMatch = true
+			rc.isFunc = true
+		} else {
 			// call the AppCmd
-			v := reflect.ValueOf(value)
-			if v.Kind() == reflect.Ptr {
-				v = v.Elem()
-			}
-			// set `Cc` that is struct of field.
-			if cCField := v.FieldByName(appCliFieldCliCmd); cCField.IsValid() {
-				cc.cmdType = int(CmdApp)
-				switch cCField.Interface().(type) {
-				case *Arg:
-					v.FieldByName(appCliFieldCliCmd).Set(reflect.ValueOf(cc))
-				}
-			} else {
-				panic(fmt.Sprintf("%v:the command field of `Cc` is not valid filed.", cc.Command))
-			}
-
-			// any construct to call method need this before.
-			v = reflect.ValueOf(value)
-			// to call the construct action.
-			if v.MethodByName(actionRunConstruct).IsValid() {
-				v.MethodByName(actionRunConstruct).Call(nil)
-			} else {
-				panic(fmt.Sprintf("%v: the command is not vaild.", cc.Command))
-			}
-
-			// many Call-func
-			callFunc := func(vMethod string) {
-				if vMth := v.MethodByName(vMethod); vMth.IsValid() {
-					switch vMth.Interface().(type) {
-					case func(*Arg):
-						routerValidMk = true
-						vMth.Call([]reflect.Value{reflect.ValueOf(cc)})
-					case func():
-						routerValidMk = true
-						vMth.Call(nil)
-					}
-				}
-			}
-
-			//the subCommand string
-			subCmdStr := cc.SubCommand
-			if subCmdStr != "" {
-				subCmdStr = cc.getAlias(cc.subCommandAlias, subCmdStr)
-				subCmdStr = Cmd2StringMap(subCmdStr)
-				callFunc(subCmdStr)
-			}
-
-			// actionRunHelp, support the command/option like:
-			//	command		=> help,?
-			//	option		=> --help,-h,-?
-			if !routerValidMk && (subCmdStr == actionRunHelpName || subCmdStr == "?" || (subCmdStr == "" && cc.
-				CheckSetting("help", "h", "?"))) {
-				callFunc(actionRunHelp)
-			}
-
-			// actionRunIndex
-			if !routerValidMk && subCmdStr == "" {
-				callFunc(actionRunIndex)
-			}
-
-			// actionRunUnmatched
-			if !routerValidMk {
-				callFunc(actionRunUnmatched)
-			}
-
-			if !routerValidMk && subCmdStr != "" {
-				panic(fmt.Sprintf("the method `%s` do not have a handler as `%v`.", cc.SubCommand, subCmdStr))
-			}
-
-			routerValidMk = true
+			rc.refVal = reflect.ValueOf(value)
+			rc.isStruct = true
 		}
 	}
-	return routerValidMk
+	return
+}
+
+// router when `command` is not empty.
+func (cli *CLI) routerCommand(cc *Arg) *registerCommand {
+	rfar := cli.findRegisterFuncAndRun(cc.Command, cc)
+	if rfar.isMatch {
+		return rfar
+	}
+
+	if !rfar.isStruct {
+		return rfar
+	}
+
+	cc.cmdType = int(CmdApp)
+	if !rfar.setFiled(appCliFieldCliCmd, cc) {
+		panic(fmt.Sprintf("%v:the command field of `Cc` is not valid filed.", cc.Command))
+	}
+
+	if !rfar.callMethod(actionRunConstruct, cc) {
+		panic(fmt.Sprintf("%v: the command is not vaild.", cc.Command))
+	}
+	//the subCommand string
+	subCmdStr := cc.SubCommand
+	if subCmdStr != "" {
+		subCmdStr = cc.getAlias(cc.subCommandAlias, subCmdStr)
+		subCmdStr = Cmd2StringMap(subCmdStr)
+		if rfar.callMethod(subCmdStr, cc) {
+			rfar.isMatch = true
+			return rfar
+		}
+	}
+
+	// actionRunHelp, support the command/option like:
+	//	command		=> help,?
+	//	option		=> --help,-h,-?
+	if subCmdStr == actionRunHelpName || subCmdStr == "?" || (subCmdStr == "" && cc.
+		CheckSetting("help", "h", "?")) {
+		if rfar.callMethod(actionRunHelp, cc) {
+			rfar.isMatch = true
+			return rfar
+		}
+	}
+
+	// actionRunIndex
+	if subCmdStr == "" {
+		if rfar.callMethod(actionRunIndex, cc) {
+			rfar.isMatch = true
+			return rfar
+		}
+	}
+
+	// actionRunUnmatched
+	if rfar.callMethod(actionRunUnmatched, cc) {
+		rfar.isMatch = true
+		return rfar
+	}
+
+	if subCmdStr != "" {
+		panic(fmt.Sprintf("the method `%s` do not have a handler as `%v`.", cc.SubCommand, subCmdStr))
+	}
+
+	return rfar
+
 }
 
 // router when `command` is empty.
 func (cli *CLI) routerEmpty(cc *Arg) bool {
 	routerValidMk := false
-	runFunc := func(vFunc any) {
-		switch vFunc.(type) {
-		case func(*Arg):
-			vFunc.(func(*Arg))(cc)
-			routerValidMk = true
-		case func():
-			vFunc.(func())()
-			routerValidMk = true
-		}
-	}
 	if cli.actionEmptyRegister != nil {
-		runFunc(cli.actionEmptyRegister)
+		routerValidMk = runFn(cli.actionEmptyRegister, cc)
 	} else if cli.actionAnyRegister != nil {
-		runFunc(cli.actionAnyRegister)
+		routerValidMk = runFn(cli.actionAnyRegister, cc)
 	}
 	return routerValidMk
 }
@@ -486,84 +550,58 @@ func (cli *CLI) routerEmpty(cc *Arg) bool {
 func (cli *CLI) routerAny(cc *Arg) bool {
 	isRouterMk := false
 	aur := cli.actionAnyRegister
-	switch aur.(type) {
-	case func(string, *Arg):
-		aur.(func(string, *Arg))(cc.Command, cc)
+	if aur == nil {
+		return false
+	}
+	if runFn(aur, cc) {
 		isRouterMk = true
-	case func(string):
-		aur.(func(string))(cc.Command)
-		isRouterMk = true
-	case func(*Arg):
-		aur.(func(*Arg))(cc)
-		isRouterMk = true
-	default:
-		// actionAnyRegister support the like `CliApp` any struct
-		rv := reflect.ValueOf(aur)
-		if rv.Kind() == reflect.Ptr && rv.Elem().Kind() == reflect.Struct {
-			rvEl := rv.Elem()
-			// Arg field
-			if cCField := rvEl.FieldByName(appCliFieldCliCmd); cCField.IsValid() {
-				switch cCField.Interface().(type) {
-				case *Arg:
-					rvEl.FieldByName(appCliFieldCliCmd).Set(reflect.ValueOf(cc))
-				case Arg:
-					rvEl.FieldByName(appCliFieldCliCmd).Set(reflect.ValueOf(cc).Elem())
-				}
-			}
-			// init-method
-			if initMth := rv.MethodByName(actionRunConstruct); initMth.IsValid() {
-				initMth.Call(nil)
-			}
-			// many Call-func
-			callFunc := func(vMethod string) {
-				if vMth := rv.MethodByName(vMethod); vMth.IsValid() {
-					switch vMth.Interface().(type) {
-					case func(*Arg):
-						isRouterMk = true
-						vMth.Call([]reflect.Value{reflect.ValueOf(cc)})
-					case func():
-						isRouterMk = true
-						vMth.Call(nil)
-					}
-				}
-			}
-			var cmdTitle string
-			// try to find `command`
-			if cc.Command != "" {
-				cmdTitle = cc.getAlias(cc.commandAlias, cc.Command)
-				cmdTitle = Cmd2StringMap(cmdTitle)
-				// check `Construct` repeat call(2 times)
-				if cmdTitle != actionRunConstruct {
-					// call method
-					callFunc(cmdTitle)
-				}
-			}
+	} else {
+		rc := &registerCommand{
+			refVal: reflect.ValueOf(aur),
+		}
+		// Arg field
+		rc.setFiled(appCliFieldCliCmd, cc)
+		// init-method
+		rc.callMethod(actionRunConstruct, cc)
 
-			// actionRunHelp, support the command/option like:
-			//	command		=> help,?
-			//	option		=> --help,-h,-?
-			if !isRouterMk && (cmdTitle == actionRunHelpName || cmdTitle == "?" || (cmdTitle == "" && cc.
-				CheckSetting("help", "h", "?"))) {
-				callFunc(actionRunHelp)
-			}
-
-			//default empty call be a index action.
-			if !isRouterMk && cmdTitle == "" {
-				callFunc(actionRunIndex)
-			}
-
-			// actionRunUnmatched
-			if !isRouterMk {
-				callFunc(actionRunUnmatched)
-			}
-
-			// finally not match any method will print the tips.
-			if !isRouterMk {
-				log.Printf("[WARNING] the method `RegisterUnfind` of param is valid, please reference the doc.")
+		var cmdTitle string
+		// try to find `command`
+		if cc.Command != "" {
+			cmdTitle = cc.getAlias(cc.commandAlias, cc.Command)
+			cmdTitle = Cmd2StringMap(cmdTitle)
+			// check `Construct` repeat call(2 times)
+			if cmdTitle != actionRunConstruct {
+				// call method
+				rc.callMethod(cmdTitle, cc)
+				return true
 			}
 		}
 
+		// actionRunHelp, support the command/option like:
+		//	command		=> help,?
+		//	option		=> --help,-h,-?
+		if cmdTitle == actionRunHelpName || cmdTitle == "?" || (cmdTitle == "" && cc.
+			CheckSetting("help", "h", "?")) {
+			if rc.callMethod(actionRunHelp, cc) {
+				return true
+			}
+		}
+		//default empty call be a index action.
+		if cmdTitle == "" && rc.callMethod(actionRunIndex, cc) {
+			return true
+		}
+
+		// actionRunUnmatched
+		if rc.callMethod(actionRunUnmatched, cc) {
+			return true
+		}
+
+		// finally not match any method will print the tips.
+		if !isRouterMk {
+			log.Printf("[WARNING] the method `RegisterUnfind` of param is valid, please reference the doc.")
+		}
 	}
+
 	return isRouterMk
 }
 
@@ -672,7 +710,7 @@ func (cli *CLI) findRegisterValueByCommand(c string) any {
 			switch mV.(type) {
 			case string:
 				if c == mV.(string) {
-					if v, has := cmds[aCmd]; has {
+					if v, has = cmds[aCmd]; has {
 						isBreak = true
 						value = v
 					}
@@ -680,7 +718,7 @@ func (cli *CLI) findRegisterValueByCommand(c string) any {
 			case []string:
 				for _, vs := range mV.([]string) {
 					if c == vs {
-						if v, has := cmds[aCmd]; has {
+						if v, has = cmds[aCmd]; has {
 							isBreak = true
 							value = v
 						}
@@ -768,4 +806,29 @@ func ParseValueByStr(ss string) any {
 	}
 
 	return ss
+}
+
+// try run the call
+func runFn(fn any, cc *Arg) bool {
+	switch fn.(type) {
+	case func(string):
+		fn.(func(string))(cc.Command)
+		return true
+	case func(string, *Arg):
+		fn.(func(string, *Arg))(cc.Command, cc)
+		return true
+	case func(string, Arg):
+		fn.(func(string, Arg))(cc.Command, *cc)
+		return true
+	case func(*Arg):
+		fn.(func(*Arg))(cc)
+		return true
+	case func(Arg):
+		fn.(func(Arg))(*cc)
+		return true
+	case func():
+		fn.(func())()
+		return true
+	}
+	return false
 }

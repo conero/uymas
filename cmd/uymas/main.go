@@ -222,6 +222,10 @@ func (c *defaultApp) Scan() {
 
 }
 
+func (c *defaultApp) DefaultEnd() {
+	fmt.Println()
+}
+
 func init() {
 	//时间统计
 	gSpendMem = gMu.GetSysMemSub()
