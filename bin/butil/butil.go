@@ -61,6 +61,24 @@ func RootPath(vPath string) string {
 	return fmt.Sprintf("%v%v", Basedir(), vPath)
 }
 
+// DetectPath detect path by give relative or absolute path, can correct incorrect paths normally.
+func DetectPath(vPath string) string {
+	vLen := len(vPath)
+	if vLen == 0 {
+		return RootPath(vPath)
+	}
+	if path.IsAbs(vPath) || fs.ExistPath(vPath) {
+		return vPath
+	}
+
+	first := vPath[:2]
+	if vLen > 1 && first == "./" {
+		return vPath
+	}
+
+	return RootPath(vPath)
+}
+
 // StringToArgs make the string to bin/Args, it's used in interactive cli
 func StringToArgs(str string) []string {
 	args := parser.ParseLine(str)

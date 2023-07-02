@@ -35,7 +35,7 @@
   
 - **bin/butil**
   - feat: 新增函数 `AppName` 用于获取当前正在运行的App名称，以及重写`Basedir()` 计算规则
-
+  - feat: 新增函数`DetectPath` 用于兼容绝对地址或相对地址。（*即相对地址根据指二进制所在路径，绝对地址不变自适应*）
   - pref!: 重名函数`GetBasedir() -> Basedir()`及`GetPathDir()->RootPath()`，原函数标记为“遗弃”状态。（v1.3.x删除）
 - **uymas**
   - pref: 优化默认命令并显示应用的名称

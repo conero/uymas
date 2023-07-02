@@ -34,3 +34,29 @@ func TestStringToArgs(t *testing.T) {
 		t.Fatalf("line <%v> parse args is bad\n   --> %#v", line, args)
 	}
 }
+
+func TestDetectPath(t *testing.T) {
+	// case 1
+	ipt, want := "./logs/230702", "./logs/230702"
+	if realStr := DetectPath(ipt); realStr != want {
+		t.Errorf("请求错误, %v != %v", realStr, want)
+	}
+
+	// case 2
+	ipt, want = "logs/230702", RootPath("logs/230702")
+	if realStr := DetectPath(ipt); realStr != want {
+		t.Errorf("请求错误, %v != %v", realStr, want)
+	}
+
+	// case 3
+	ipt, want = "", RootPath("")
+	if realStr := DetectPath(ipt); realStr != want {
+		t.Errorf("请求错误, %v != %v", realStr, want)
+	}
+
+	// case 3
+	ipt, want = ".gitignore", RootPath(".gitignore")
+	if realStr := DetectPath(ipt); realStr != want {
+		t.Errorf("请求错误, %v != %v", realStr, want)
+	}
+}
