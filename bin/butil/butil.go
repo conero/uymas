@@ -67,12 +67,18 @@ func DetectPath(vPath string) string {
 	if vLen == 0 {
 		return RootPath(vPath)
 	}
-	if path.IsAbs(vPath) || fs.ExistPath(vPath) {
-		return vPath
-	}
 
 	first := vPath[:2]
 	if vLen > 1 && first == "./" {
+		return vPath
+	}
+
+	// let path like `p1/px` is base exec bir
+	if vPath[:1] != "/" {
+		return RootPath(vPath)
+	}
+
+	if path.IsAbs(vPath) || fs.ExistPath(vPath) {
 		return vPath
 	}
 
