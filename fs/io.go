@@ -106,11 +106,11 @@ func CheckDir(dir string) string {
 
 // IsDir checkout string path is dir.
 func IsDir(dir string) bool {
-	_, err := os.Open(dir)
-	if err != nil {
-		return false
+	fi, err := os.Stat(dir)
+	if err == nil {
+		return fi.IsDir()
 	}
-	return true
+	return false
 }
 
 // ExistPath checkout the path of file/dir exist.
@@ -119,10 +119,7 @@ func ExistPath(vpath string) bool {
 	if err == nil {
 		return true
 	}
-	if os.IsNotExist(err) {
-		return false
-	}
-	return false
+	return os.IsExist(err)
 }
 
 // StdDir the standard dir format
