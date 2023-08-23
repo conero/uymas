@@ -5,12 +5,16 @@ import (
 	"gitee.com/conero/uymas"
 	"gitee.com/conero/uymas/bin"
 	"gitee.com/conero/uymas/bin/butil"
+	"gitee.com/conero/uymas/culture/digit"
 	"gitee.com/conero/uymas/culture/pinyin"
 	"gitee.com/conero/uymas/fs"
+	"gitee.com/conero/uymas/logger/lgr"
 	"gitee.com/conero/uymas/number"
 	"gitee.com/conero/uymas/storage"
 	"gitee.com/conero/uymas/util"
 	"os"
+	"regexp"
+	"strconv"
 	"strings"
 	"time"
 )
@@ -84,6 +88,7 @@ func (c *defaultApp) Construct() {
 		"scan":   {"sc"},
 		"cache":  {"cc"},
 		"uls":    {"uymas-ls"},
+		"digit":  {"dg"},
 	})
 	/*cc.CommandAlias("pinyin", "py").
 	CommandAlias("scan", "sc").
@@ -221,6 +226,38 @@ func (c *defaultApp) Scan() {
 		fmt.Printf(" 使用时间： %v.\n", dd.Runtime)
 	}
 	fmt.Printf(" 内存消耗：%v\n", memSubCall())
+
+}
+
+// Digit 数字转
+func (c *defaultApp) Digit() {
+	value := c.Cc.SubCommand
+	if value == "" {
+		lgr.Error("请指定阿拉伯数字或中文数字！")
+		return
+	}
+
+	isMatch, _ := regexp.MatchString(`\d+(.?\d+)?`, value)
+	if isMatch {
+		lgr.Info("识别为：阿拉伯数字转中文数字")
+		vNum, err := strconv.ParseFloat(value, 10)
+		if err != nil {
+			lgr.Error("%s 不是有效数字!", value)
+			return
+		}
+
+		var cv = digit.Cover(vNum)
+		if c.Cc.CheckSetting("lower", "l") {
+			lgr.Info("转化中文小写数字成功！\n\n %v", cv.ToChnRoundLower())
+		}
+		if c.Cc.CheckSetting("both", "b") {
+			lgr.Info("转化中文大小写数字成功！\n\n %v\n %v", cv.ToChnRoundUpper(), cv.ToChnRoundLower())
+			return
+		}
+
+		lgr.Info("转化中文大写数成功！\n\n %v", cv.ToChnRoundUpper())
+		return
+	}
 
 }
 
