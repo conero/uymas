@@ -17,25 +17,44 @@ var vUpperMap = map[int8]string{
 	10: "拾",
 }
 
+// UnitUpperS Equivalent data unit 10
+const UnitUpperS = "拾"
+
 // UnitUpperB Equivalent data unit 100
 const UnitUpperB = "佰"
-const UnitUpperBValue = 100
+const UnitSValue = 10
+const UnitBValue = 100
 
 // UnitUpperQ Equivalent data unit 1,000
 const UnitUpperQ = "仟"
-const UnitUpperValue = 1_000
+const UnitQValue = 1_000
 
 // UnitUpperW Equivalent data unit 10,000
 const UnitUpperW = "万"
-const UnitUpperWValue = 10_000
+const UnitWValue = 10_000
 
 // UnitUpperY Equivalent data unit 10,000,000
 const UnitUpperY = "亿"
-const UnitUpperYValue = 100_000_000
+const UnitYValue = 100_000_000
+
+// UnitLowerS Equivalent data unit 10
+const UnitLowerS = "十"
+
+// UnitLowerB Equivalent data unit 100
+const UnitLowerB = "百"
+
+// UnitLowerQ Equivalent data unit 1,000
+const UnitLowerQ = "千"
+
+// UnitLowerW Equivalent data unit 10,000
+const UnitLowerW = "万"
+
+// UnitLowerY Equivalent data unit 10,000,000
+const UnitLowerY = "亿"
 
 // chinese Lowercase Digit Dictionary
 var vLowerMap = map[int8]string{
-	0:  "零",
+	0:  "〇",
 	1:  "一",
 	2:  "二",
 	3:  "三",
