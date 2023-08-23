@@ -120,6 +120,8 @@ func NumberCoverChnDigit(latest float64, isUpperDef ...bool) string {
 	return strings.Join(numbers, "")
 }
 
+// BUG(who): NumberCoverRmb 6.01 -> math.Modf frac is inaccurate.
+
 // NumberCoverRmb Transforming Numbers into People's Digital Writing
 func NumberCoverRmb(amount float64, isUpperDef ...bool) string {
 	isUpper := util.ExtractParam(true, isUpperDef...)
