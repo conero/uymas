@@ -2,6 +2,7 @@ package digit
 
 import (
 	"fmt"
+	"gitee.com/conero/uymas/util"
 	"math"
 	"strings"
 )
@@ -22,12 +23,17 @@ func (c Cover) ToChnRoundLower() string {
 	return NumberCoverChnDigit(float64(c), false)
 }
 
+func (c Cover) ToRmbUpper() string {
+	return NumberCoverRmb(float64(c), true)
+}
+
+func (c Cover) ToRmbLower() string {
+	return NumberCoverRmb(float64(c), false)
+}
+
 // NumberCoverChnDigit Arabic numerals to Chinese numerals, supporting uppercase and lowercase
 func NumberCoverChnDigit(latest float64, isUpperDef ...bool) string {
-	isUpper := true
-	if len(isUpperDef) > 0 {
-		isUpper = isUpperDef[0]
-	}
+	isUpper := util.ExtractParam(true, isUpperDef...)
 	var numbers []string
 	var unitList = []int{UnitYValue, UnitWValue, UnitQValue, UnitBValue, UnitSValue}
 
@@ -112,4 +118,43 @@ func NumberCoverChnDigit(latest float64, isUpperDef ...bool) string {
 		numbers = append(numbers, vMap[int8(latest)])
 	}
 	return strings.Join(numbers, "")
+}
+
+// NumberCoverRmb Transforming Numbers into People's Digital Writing
+func NumberCoverRmb(amount float64, isUpperDef ...bool) string {
+	isUpper := util.ExtractParam(true, isUpperDef...)
+	val, frac := math.Modf(amount)
+	// 仅支持2位
+	fracExtend := int(frac * 100)
+	//fmt.Printf("%f --> %d, %f\n", frac, fracExtend, math.Floor(frac*100))
+	var str string
+	if val > 0 {
+		str = NumberCoverChnDigit(val, isUpper)
+	}
+	if str != "" {
+		str += "元"
+	}
+	if fracExtend == 0 {
+		str += "整"
+	} else if fracExtend >= 10 {
+		latest := fracExtend % 10
+		str += NumberCoverChnDigit(float64(latest), isUpper)
+		str += "角"
+		fenValue := float64(fracExtend - latest)
+		if fenValue > 0 {
+			fen := NumberCoverChnDigit(fenValue, isUpper)
+			if fen != "" {
+				fen += "分"
+				str += fen
+			}
+		}
+
+	} else if fracExtend < 10 {
+		fen := NumberCoverChnDigit(float64(fracExtend), isUpper)
+		if fen != "" {
+			fen += "分"
+			str += fen
+		}
+	}
+	return str
 }

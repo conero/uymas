@@ -245,17 +245,34 @@ func (c *defaultApp) Digit() {
 			lgr.Error("%s 不是有效数字!", value)
 			return
 		}
-
+		isRmb := c.Cc.CheckSetting("rmb", "r")
 		var cv = digit.Cover(vNum)
 		if c.Cc.CheckSetting("lower", "l") {
-			lgr.Info("转化中文小写数字成功！\n\n %v", cv.ToChnRoundLower())
+			var valueStr string
+			if isRmb {
+				valueStr = cv.ToRmbLower()
+			} else {
+				valueStr = cv.ToChnRoundLower()
+			}
+			lgr.Info("转化中文小写数字成功！\n\n %v", valueStr)
 		}
 		if c.Cc.CheckSetting("both", "b") {
+			if isRmb {
+				lgr.Info("转化中文大小写数字成功！\n\n %v\n %v\n %v\n %v",
+					cv.ToChnRoundUpper(), cv.ToChnRoundLower(), cv.ToRmbUpper(), cv.ToRmbLower())
+				return
+			}
 			lgr.Info("转化中文大小写数字成功！\n\n %v\n %v", cv.ToChnRoundUpper(), cv.ToChnRoundLower())
 			return
 		}
 
-		lgr.Info("转化中文大写数成功！\n\n %v", cv.ToChnRoundUpper())
+		var valueStr string
+		if isRmb {
+			valueStr = cv.ToRmbUpper()
+		} else {
+			valueStr = cv.ToChnRoundUpper()
+		}
+		lgr.Info("转化中文大写数成功！\n\n %v", valueStr)
 		return
 	}
 

@@ -38,10 +38,14 @@
   - pref!: 重名函数`GetBasedir() -> Basedir()`及`GetPathDir()->RootPath()`，原函数标记为“遗弃”状态。（v1.3.x删除）
 - **culture/digit**（实验性添加）
   - feat: 新增 *Cover* 结果体并实现阿拉伯数字转中文大小写。（阿拉伯数字转 --> 中文数字）
+  - feat: 新增 *Cover* 结果体并实现阿拉伯数字转中文金额（人民币）。（阿拉伯数字转 --> 人民币）
 
 - **cmd/uymas**
   - pref: 优化默认命令并显示应用的名称
   - feat: 新增命令 "digit/dg" 用于数字与中文大小写数字转换
+- **util**
+  - feat: 新方法 `ExtractParam` 实现不定参数首参数抽取
+
 
 
 

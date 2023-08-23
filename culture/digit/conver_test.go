@@ -127,3 +127,29 @@ func TestCover_ToChnRoundLower(t *testing.T) {
 		t.Fatalf("值 [%v], 转换后 [%v]; 与参考值 [%v] 不符合！", value, actl, ref)
 	}
 }
+
+func TestNumberCoverRmb(t *testing.T) {
+	var ref, atl string
+	var value float64
+
+	value = 1903.089
+	ref = "壹仟玖佰零叁元捌分"
+	atl = NumberCoverRmb(value)
+	if atl != ref {
+		t.Fatalf("TestNumberCoverRmb -> 值 [%v], 转换后 [%v]; 与参考值 [%v] 不符合！", value, atl, ref)
+	}
+
+	value = 13.01
+	ref = "壹拾叁元壹分"
+	atl = NumberCoverRmb(value)
+	if atl != ref {
+		t.Fatalf("TestNumberCoverRmb -> 值 [%v], 转换后 [%v]; 与参考值 [%v] 不符合！", value, atl, ref)
+	}
+
+	value = 13.02
+	ref = "壹拾叁元贰分"
+	atl = NumberCoverRmb(value)
+	if atl != ref {
+		t.Fatalf("TestNumberCoverRmb -> 值 [%v], 转换后 [%v]; 与参考值 [%v] 不符合！", value, atl, ref)
+	}
+}
