@@ -33,8 +33,9 @@ func TestCover_ToChnRoundUpper(t *testing.T) {
 	var ref, actl string
 
 	// case
-	value = 999_999_999_999_999_999
-	t.Logf("cover: %v => %v", value, value.ToChnRoundUpper())
+	//value = 99_999_999_999_999_999 // 溢出
+	value = 8_909_970_069_905_049
+	t.Logf("cover: %f => %v", value, value.ToChnRoundUpper())
 
 	// case
 	value = 9
@@ -72,6 +73,56 @@ func TestCover_ToChnRoundUpper(t *testing.T) {
 	value = 1_387_001
 	ref = "壹佰叁拾捌万柒仟零壹"
 	actl = value.ToChnRoundUpper()
+	if actl != ref {
+		t.Fatalf("值 [%v], 转换后 [%v]; 与参考值 [%v] 不符合！", value, actl, ref)
+	}
+}
+
+// 参考工具： http://daxie.gjcha.com/
+func TestCover_ToChnRoundLower(t *testing.T) {
+	var value Cover
+	var ref, actl string
+
+	// case
+	value = 8_909_970_069_905_049
+	t.Logf("cover: %v => %v", value, value.ToChnRoundLower())
+
+	// case
+	value = 9
+	ref = "九"
+	actl = value.ToChnRoundLower()
+	if actl != ref {
+		t.Fatalf("值 [%v], 转换后 [%v]; 与参考值 [%v] 不符合！", value, actl, ref)
+	}
+
+	// case
+	value = 98
+	ref = "九十八"
+	actl = value.ToChnRoundLower()
+	if actl != ref {
+		t.Fatalf("值 [%v], 转换后 [%v]; 与参考值 [%v] 不符合！", value, actl, ref)
+	}
+
+	// case
+	value = 185
+	ref = "一百八十五"
+	actl = value.ToChnRoundLower()
+	if actl != ref {
+		t.Fatalf("值 [%v], 转换后 [%v]; 与参考值 [%v] 不符合！", value, actl, ref)
+	}
+
+	// 9001
+	value = 9001
+	ref = "九千〇一"
+	actl = value.ToChnRoundLower()
+	if actl != ref {
+		t.Fatalf("值 [%v], 转换后 [%v]; 与参考值 [%v] 不符合！", value, actl, ref)
+	}
+
+	// case
+	value = 1_387_001
+	ref = "一百三十八万七千〇一"
+	actl = value.ToChnRoundLower()
 	if actl != ref {
 		t.Fatalf("值 [%v], 转换后 [%v]; 与参考值 [%v] 不符合！", value, actl, ref)
 	}

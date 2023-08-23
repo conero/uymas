@@ -32,11 +32,13 @@
   - feat: 新增 `CLI.RgisterEnd`  实现用于实现执行后的最后处理事件
   - feat: 新增 `Args.NextList` 方法用于获取队列参数，支持默认参数
   - pref!: 重写CLI命令路由，统一函数式调用
-  
 - **bin/butil**
   - feat: 新增函数 `AppName` 用于获取当前正在运行的App名称，以及重写`Basedir()` 计算规则
   - feat: 新增函数`DetectPath` 用于兼容绝对地址或相对地址。（*即相对地址根据指二进制所在路径，绝对地址不变自适应*）
   - pref!: 重名函数`GetBasedir() -> Basedir()`及`GetPathDir()->RootPath()`，原函数标记为“遗弃”状态。（v1.3.x删除）
+- **culture/digit**（实验性添加）
+  - feat: 新增 *Cover* 结果体并实现阿拉伯数字转中文大小写。（阿拉伯数字转 --> 中文数字）
+
 - **uymas**
   - pref: 优化默认命令并显示应用的名称
 
