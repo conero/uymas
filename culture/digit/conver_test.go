@@ -54,6 +54,21 @@ func TestCover_ToChnRoundUpper(t *testing.T) {
 	}
 
 	// case
+	value = 100
+	ref = "壹佰"
+	actl = value.ToChnRoundUpper()
+	if actl != ref {
+		t.Fatalf("值 [%v], 转换后 [%v]; 与参考值 [%v] 不符合！", value, actl, ref)
+	}
+
+	value = 101
+	ref = "壹佰零壹"
+	actl = value.ToChnRoundUpper()
+	if actl != ref {
+		t.Fatalf("值 [%v], 转换后 [%v]; 与参考值 [%v] 不符合！", value, actl, ref)
+	}
+
+	// case
 	value = 185
 	ref = "壹佰捌拾伍"
 	actl = value.ToChnRoundUpper()
@@ -148,6 +163,20 @@ func TestNumberCoverRmb(t *testing.T) {
 
 	value = 13.02
 	ref = "壹拾叁元贰分"
+	atl = NumberCoverRmb(value)
+	if atl != ref {
+		t.Fatalf("TestNumberCoverRmb -> 值 [%v], 转换后 [%v]; 与参考值 [%v] 不符合！", value, atl, ref)
+	}
+
+	value = 1629.49
+	ref = "壹仟陆佰贰拾玖元肆角玖分"
+	atl = NumberCoverRmb(value)
+	if atl != ref {
+		t.Fatalf("TestNumberCoverRmb -> 值 [%v], 转换后 [%v]; 与参考值 [%v] 不符合！", value, atl, ref)
+	}
+
+	value = 18.3
+	ref = "壹拾捌元叁角"
 	atl = NumberCoverRmb(value)
 	if atl != ref {
 		t.Fatalf("TestNumberCoverRmb -> 值 [%v], 转换后 [%v]; 与参考值 [%v] 不符合！", value, atl, ref)

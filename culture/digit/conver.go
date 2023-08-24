@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gitee.com/conero/uymas/util"
 	"math"
+	"strconv"
 	"strings"
 )
 
@@ -108,7 +109,7 @@ func NumberCoverChnDigit(latest float64, isUpperDef ...bool) string {
 		}
 
 		// zero fill
-		if cvUnit > UnitSValue && (cvUnit/10)-latest > 0 {
+		if cvUnit > UnitSValue && latest > 0 && (cvUnit/10)-latest > 0 {
 			numbers = append(numbers, vMap[0])
 		}
 	}
@@ -120,15 +121,33 @@ func NumberCoverChnDigit(latest float64, isUpperDef ...bool) string {
 	return strings.Join(numbers, "")
 }
 
-// BUG(who): NumberCoverRmb 6.01 -> math.Modf frac is inaccurate.
+// BUG(who): NumberCoverRmb 6.01 -> math.Modf frac is inaccurate.link: https://github.com/golang/go/issues/62232
 
 // NumberCoverRmb Transforming Numbers into People's Digital Writing
 func NumberCoverRmb(amount float64, isUpperDef ...bool) string {
 	isUpper := util.ExtractParam(true, isUpperDef...)
-	val, frac := math.Modf(amount)
-	// 仅支持2位
-	fracExtend := int(frac * 100)
-	//fmt.Printf("%f --> %d, %f\n", frac, fracExtend, math.Floor(frac*100))
+	val, _ := math.Modf(amount)
+
+	// Processing decimals
+	amountStr := fmt.Sprintf("%#v", amount)
+	splitIdx := strings.Index(amountStr, ".")
+	if splitIdx > 0 {
+		endIndex := splitIdx + 3
+		strLen := len(amountStr)
+		if endIndex > strLen {
+			endIndex = strLen
+		}
+		amountStr = amountStr[splitIdx+1 : endIndex]
+	} else {
+		amountStr = "0"
+	}
+
+	strLen := len(amountStr)
+	// Complete the number of pure angular positions (without quantiles) with 0
+	if strLen == 1 {
+		amountStr += "0"
+	}
+	fracInt, _ := strconv.Atoi(amountStr)
 	var str string
 	if val > 0 {
 		str = NumberCoverChnDigit(val, isUpper)
@@ -136,23 +155,22 @@ func NumberCoverRmb(amount float64, isUpperDef ...bool) string {
 	if str != "" {
 		str += "元"
 	}
-	if fracExtend == 0 {
+	if fracInt == 0 {
 		str += "整"
-	} else if fracExtend >= 10 {
-		latest := fracExtend % 10
-		str += NumberCoverChnDigit(float64(latest), isUpper)
+	} else if fracInt >= 10 {
+		jiaoValue := int(float64(fracInt) * 0.1)
+		str += NumberCoverChnDigit(float64(jiaoValue), isUpper)
 		str += "角"
-		fenValue := float64(fracExtend - latest)
+		fenValue := fracInt % 10
 		if fenValue > 0 {
-			fen := NumberCoverChnDigit(fenValue, isUpper)
+			fen := NumberCoverChnDigit(float64(fenValue), isUpper)
 			if fen != "" {
 				fen += "分"
 				str += fen
 			}
 		}
-
-	} else if fracExtend < 10 {
-		fen := NumberCoverChnDigit(float64(fracExtend), isUpper)
+	} else if fracInt < 10 {
+		fen := NumberCoverChnDigit(float64(fracInt%10), isUpper)
 		if fen != "" {
 			fen += "分"
 			str += fen
