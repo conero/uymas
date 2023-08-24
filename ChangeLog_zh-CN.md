@@ -47,6 +47,9 @@
   - feat: 新增命令 "digit/dg" 用于数字与中文大小写数字转换
 - **util**
   - feat: 新方法 `ExtractParam` 实现不定参数首参数抽取
+- **str**
+  - feat: 新增时间字符转转日期格式探测器
+
 
 
 
