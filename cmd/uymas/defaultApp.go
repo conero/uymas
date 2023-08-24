@@ -10,6 +10,7 @@ import (
 	"gitee.com/conero/uymas/fs"
 	"gitee.com/conero/uymas/logger/lgr"
 	"gitee.com/conero/uymas/number"
+	"gitee.com/conero/uymas/str"
 	"os"
 	"regexp"
 	"strconv"
@@ -235,7 +236,7 @@ func (c *defaultApp) Datediff() {
 	endDate := c.Cc.ArgRaw("end", "e")
 
 	// 日期解析
-	tm, err := time.Parse("2006-01-02", date)
+	tm, err := str.TimeParse(date)
 	if err != nil {
 		lgr.Error("日期格式不支持！")
 		return
@@ -243,7 +244,7 @@ func (c *defaultApp) Datediff() {
 
 	now := time.Now()
 	if endDate != "" {
-		tmEnd, err := time.Parse("2006-01-02", endDate)
+		tmEnd, err := str.TimeParse(endDate)
 		if err != nil {
 			lgr.Error("日期格式不支持！")
 			return
