@@ -269,3 +269,32 @@ func (c *defaultApp) Datediff() {
 	lgr.Info("%s 距今(%s)比较：\n 时间总差：%v\n 差别类型：%s\n%s",
 		date, now.Format("2006-01-02"), diff, dittType, cmdLsString)
 }
+
+func (c *defaultApp) Hash() {
+	vPath := c.Cc.SubCommand
+	if vPath == "" {
+		lgr.Error("请指定路径文件或目录")
+		return
+	}
+
+	fh := &FileHash{
+		Vtype: c.Cc.ArgRaw("type", "t"),
+	}
+	list, err := fh.PathList(vPath)
+	if err != nil {
+		lgr.Error("%v", err)
+		return
+	}
+
+	var vMap = map[string]string{}
+	for _, ls := range list {
+		vMap[ls.Filename] = ls.Hash
+	}
+
+	if len(vMap) == 0 {
+		lgr.Info("未发现文件：%s", vPath)
+		return
+	}
+	lgr.Info("文件读取(%s)成功，如列表下：\n%s\n", fh.Vtype, bin.FormatKv(vMap))
+
+}

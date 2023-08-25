@@ -45,6 +45,7 @@
 - **cmd/uymas**
   - pref: 优化默认命令并显示应用的名称
   - feat: 新增命令 "digit/dg" 用于数字与中文大小写数字转换
+  - feat: 新增命令"hash"实现读取文件的hash，用于文件比较
 - **util**
   - feat: 新方法 `ExtractParam` 实现不定参数首参数抽取
 - **str**
