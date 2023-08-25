@@ -286,15 +286,15 @@ func (c *defaultApp) Hash() {
 		return
 	}
 
-	var vMap = map[string]string{}
+	var tableData [][]string
 	for _, ls := range list {
-		vMap[ls.Filename] = ls.Hash
+		tableData = append(tableData, []string{ls.Hash, ls.Filename})
 	}
 
-	if len(vMap) == 0 {
+	if len(tableData) == 0 {
 		lgr.Info("未发现文件：%s", vPath)
 		return
 	}
-	lgr.Info("文件读取(%s)成功，如列表下：\n%s\n", fh.Vtype, bin.FormatKv(vMap))
+	lgr.Info("文件读取(%s)成功，如列表下：\n%s\n", fh.Vtype, bin.FormatTable(tableData))
 
 }
