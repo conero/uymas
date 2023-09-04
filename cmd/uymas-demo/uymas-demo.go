@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"gitee.com/conero/uymas/bin"
 )
 
@@ -11,8 +10,7 @@ func main() {
 	plgCmd.Name = "demo"
 	plgCmd.Descript = "插件式(热插拔)子命令 demo."
 
-	plgCmd.RegisterFunc(func(arg *bin.Arg) {
-		fmt.Printf("demo 子命令")
-	})
+	plgCmd.RegisterAny(new(defaultApp))
+
 	plgCmd.Run()
 }
