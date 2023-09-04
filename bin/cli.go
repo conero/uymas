@@ -436,6 +436,10 @@ func (cli *CLI) router(cc *Arg) {
 		isRouterMk = cli.routerEmpty(cc)
 	}
 
+	if !isRouterMk && !cli.DisPlgCmdDetect {
+		isRouterMk = cli.plgCmdDetect(cc)
+	}
+
 	// router command is default.
 	if !isRouterMk {
 		if cli.actionAnyRegister != nil {
@@ -445,10 +449,6 @@ func (cli *CLI) router(cc *Arg) {
 				}
 				isRouterMk = isMatch
 			}
-		}
-
-		if !isRouterMk && !cli.DisPlgCmdDetect {
-			isRouterMk = cli.plgCmdDetect(cc)
 		}
 
 		if !isRouterMk {
@@ -476,7 +476,13 @@ func (cli *CLI) plgCmdDetect(cc *Arg) bool {
 			raw = raw[1:]
 		}
 
-		plgC.Run(raw...)
+		bys, err := plgC.Run(raw...)
+		if err != nil {
+			fmt.Printf("err: %v\n", err)
+		}
+		if bys != nil {
+			fmt.Printf("%s\n", string(bys))
+		}
 		return true
 	}
 	return false

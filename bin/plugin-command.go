@@ -26,8 +26,8 @@ func (c *PlgCProfile) GetRunCmd(args ...string) (*exec.Cmd, error) {
 		return nil, errors.New("可执行路径为空(ExecName)！")
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-	defer cancel()
+	ctx, _ := context.WithTimeout(context.Background(), 300*time.Second)
+	//defer cancel()
 
 	cmd := exec.CommandContext(ctx, c.ExecName, args...)
 	return cmd, nil
@@ -80,7 +80,7 @@ func plgCmdDetect(cc *Arg) *PlgCProfile {
 	rtBy, err := cmd.CombinedOutput()
 	var plg *PlgCProfile
 	if err == nil {
-		err = json.Unmarshal(rtBy, plg)
+		err = json.Unmarshal(rtBy, &plg)
 		if err == nil {
 			plg.ExecName = pBin
 			return plg
@@ -92,19 +92,7 @@ func plgCmdDetect(cc *Arg) *PlgCProfile {
 	cmd = exec.Command(pBin, PlgCmdGetProfile)
 	rtBy, err = cmd.CombinedOutput()
 	if err == nil {
-		err = json.Unmarshal(rtBy, plg)
-		if err == nil {
-			plg.ExecName = pBin
-			return plg
-		}
-	}
-
-	// plg/$name
-	pBin = butil.RootPath(fmt.Sprintf("plg/%s", name))
-	cmd = exec.Command(pBin, PlgCmdGetProfile)
-	rtBy, err = cmd.CombinedOutput()
-	if err == nil {
-		err = json.Unmarshal(rtBy, plg)
+		err = json.Unmarshal(rtBy, &plg)
 		if err == nil {
 			plg.ExecName = pBin
 			return plg
@@ -118,7 +106,7 @@ func plgCmdDetect(cc *Arg) *PlgCProfile {
 	cmd = exec.Command(pBin, PlgCmdGetProfile)
 	rtBy, err = cmd.CombinedOutput()
 	if err == nil {
-		err = json.Unmarshal(rtBy, plg)
+		err = json.Unmarshal(rtBy, &plg)
 		if err == nil {
 			plg.ExecName = pBin
 			return plg
@@ -130,7 +118,7 @@ func plgCmdDetect(cc *Arg) *PlgCProfile {
 	cmd = exec.Command(pBin, PlgCmdGetProfile)
 	rtBy, err = cmd.CombinedOutput()
 	if err == nil {
-		err = json.Unmarshal(rtBy, plg)
+		err = json.Unmarshal(rtBy, &plg)
 		if err == nil {
 			plg.ExecName = pBin
 			return plg
