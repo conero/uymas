@@ -118,6 +118,8 @@ type CLI struct {
 	UnLoadScriptSyntax bool   // disable allow load script like shell syntax.
 	ScriptOption       string // default: --script,-s
 	ScriptFileOption   string // default: --file,-f
+	// DisPlgCmdDetect Turn off Plugin Command detection
+	DisPlgCmdDetect bool
 }
 
 // CliApp the cli app.
@@ -445,6 +447,10 @@ func (cli *CLI) router(cc *Arg) {
 			}
 		}
 
+		if !isRouterMk && !cli.DisPlgCmdDetect {
+			isRouterMk = cli.plgCmdDetect(cc)
+		}
+
 		if !isRouterMk {
 			if cc.Command != "" {
 				fmt.Printf(" Fail: the command `%v` not find.\n", cc.Command)
@@ -458,6 +464,22 @@ func (cli *CLI) router(cc *Arg) {
 			isRouterMk = false
 		}
 	}
+}
+
+// The later optimization is for the first detection, and caching is performed after success for quick recall next time
+func (cli *CLI) plgCmdDetect(cc *Arg) bool {
+	plgC := plgCmdDetect(cc)
+	if plgC != nil {
+		raw := cc.Raw
+		count := len(raw)
+		if count > 0 {
+			raw = raw[1:]
+		}
+
+		plgC.Run(raw...)
+		return true
+	}
+	return false
 }
 
 // search register func and call if exits

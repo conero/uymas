@@ -8,12 +8,14 @@ import (
 	"gitee.com/conero/uymas/fs"
 	"os"
 	"path"
+	"strings"
 )
 
 // current application by parse binary.
 type application struct {
-	baseDir string
-	name    string
+	baseDir      string
+	name         string
+	nameNoSuffix string
 }
 
 var (
@@ -29,9 +31,15 @@ func parseCurrent(force bool) {
 	rwd := os.Args[0]
 	rwd = fs.StdPathName(rwd)
 	vDir, vFile := path.Split(rwd)
+	var nameNoSuffix string
+	if vFile != "" {
+		nameNoSuffix = strings.ReplaceAll(vFile, path.Ext(vFile), "")
+	}
+
 	current = &application{
-		baseDir: vDir,
-		name:    vFile,
+		baseDir:      vDir,
+		name:         vFile,
+		nameNoSuffix: nameNoSuffix,
 	}
 
 }
@@ -48,6 +56,10 @@ func Basedir() string {
 
 // AppName get current binary application name
 func AppName() string {
+	return current.nameNoSuffix
+}
+
+func AppFilename() string {
 	return current.name
 }
 
