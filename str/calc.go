@@ -10,18 +10,21 @@ import (
 )
 
 // Calc String equality operator, which calculates the result of input string equality
-// support: `**,^,*,/,+,-`
+// support: `**,^,*,/,+,-,%`
 type Calc struct {
-	equality     string
-	handlerEq    string
-	result       float64
-	regBracket   *regexp.Regexp // `()`
-	regBracketSg *regexp.Regexp // `()`
+	equality  string
+	handlerEq string
+	result    float64
+	// `()`
+	regBracket   *regexp.Regexp
+	regBracketSg *regexp.Regexp
 	clearReg     *regexp.Regexp // `space clear`
-	mulDivReg    *regexp.Regexp // `*/`
-	mulDivRegSg  *regexp.Regexp // `*/`
-	addSubReg    *regexp.Regexp
-	addSubRegSg  *regexp.Regexp
+	// `*/%`
+	mulDivReg   *regexp.Regexp
+	mulDivRegSg *regexp.Regexp
+	// `+-`
+	addSubReg   *regexp.Regexp
+	addSubRegSg *regexp.Regexp
 	// x**y 或 x^y
 	powReg      *regexp.Regexp
 	powRegSg    *regexp.Regexp
@@ -79,10 +82,10 @@ func (c *Calc) operNonBrk(eq string) string {
 // multiply and divide
 func (c *Calc) mulDiv(eq string) string {
 	if c.mulDivReg == nil {
-		c.mulDivReg = regexp.MustCompile(`(\d+(\.\d+)?)[*/](\d+(\.\d+)?)`)
+		c.mulDivReg = regexp.MustCompile(`(\d+(\.\d+)?)[*/%](\d+(\.\d+)?)`)
 	}
 	if c.mulDivRegSg == nil {
-		c.mulDivRegSg = regexp.MustCompile(`[*/]`)
+		c.mulDivRegSg = regexp.MustCompile(`[*/%]`)
 	}
 
 	mulDiv := c.mulDivReg.FindAllString(eq, -1)
@@ -93,8 +96,11 @@ func (c *Calc) mulDiv(eq string) string {
 
 		sgList := c.mulDivRegSg.FindAllString(md, -1)
 		var cul float64
-		if sgList[0] == "*" {
+		eqSg := sgList[0]
+		if eqSg == "*" {
 			cul = beg * end
+		} else if eqSg == "%" {
+			cul = math.Mod(beg, end)
 		} else {
 			cul = beg / end
 		}
