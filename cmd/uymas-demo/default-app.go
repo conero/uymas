@@ -18,6 +18,7 @@ func (c *defaultApp) DefaultIndex() {
 
 func (c *defaultApp) DefaultHelp() {
 	fmt.Println("cal [equal]  计算器")
+	fmt.Println("  -V,--verbose     详细显示")
 }
 
 func (c *defaultApp) Cal() {

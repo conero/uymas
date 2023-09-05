@@ -3,13 +3,14 @@ package str
 import (
 	"fmt"
 	"gitee.com/conero/uymas/util/rock"
+	"math"
 	"regexp"
 	"strconv"
 	"strings"
 )
 
 // Calc String equality operator, which calculates the result of input string equality
-// @todo should be completed in v1.3.x
+// support: `**,^,*,/,+,-`
 type Calc struct {
 	equality     string
 	handlerEq    string
@@ -21,8 +22,13 @@ type Calc struct {
 	mulDivRegSg  *regexp.Regexp // `*/`
 	addSubReg    *regexp.Regexp
 	addSubRegSg  *regexp.Regexp
-	Accuracy     int8
-	accuracyStr  string
+	// x**y 或 x^y
+	powReg      *regexp.Regexp
+	powRegSg    *regexp.Regexp
+	Accuracy    int8
+	accuracyStr string
+	simpleReg   *regexp.Regexp
+	simpleRegSg *regexp.Regexp
 }
 
 func NewCalc(equality string) *Calc {
@@ -61,6 +67,8 @@ func (c *Calc) operNonBrk(eq string) string {
 		eq = eq[:len(eq)-1]
 	}
 
+	// x**y or x^y
+	eq = c.pow(eq)
 	// add, subtract, multiply and divide => +-*/
 	eq = c.mulDiv(eq)
 	eq = c.addSub(eq)
@@ -94,6 +102,10 @@ func (c *Calc) mulDiv(eq string) string {
 		eq = strings.ReplaceAll(eq, md, FloatSimple(fmt.Sprintf(c.accuracyStr, cul)))
 	}
 
+	if c.mulDivReg.MatchString(eq) {
+		eq = c.mulDiv(eq)
+	}
+
 	return eq
 }
 
@@ -122,6 +134,64 @@ func (c *Calc) addSub(eq string) string {
 
 		eq = strings.ReplaceAll(eq, as, FloatSimple(fmt.Sprintf(c.accuracyStr, cul)))
 	}
+
+	// Iterative addition and subtraction
+	if c.addSubReg.MatchString(eq) {
+		eq = c.addSub(eq)
+	}
+	return eq
+}
+
+func (c *Calc) pow(eq string) string {
+	if c.powReg == nil {
+		c.powReg = regexp.MustCompile(`(\d+(\.\d+)?)(\*{2}|\^)(\d+(\.\d+)?)`)
+	}
+	if c.powRegSg == nil {
+		c.powRegSg = regexp.MustCompile(`\*{2}|\^`)
+	}
+
+	if c.powReg.MatchString(eq) {
+		powLs := c.powReg.FindAllString(eq, -1)
+		for _, pw := range powLs {
+			split := c.powRegSg.Split(pw, -1)
+			if len(split) != 2 {
+				continue
+			}
+			count := math.Pow(StringAsFloat(split[0]), StringAsFloat(split[1]))
+			eq = strings.ReplaceAll(eq, pw, fmt.Sprintf(c.accuracyStr, count))
+		}
+	}
+
+	if c.powReg.MatchString(eq) {
+		eq = c.pow(eq)
+	}
+
+	return eq
+}
+
+// Clear interfering characters
+func (c *Calc) clearEq(eq string) string {
+	// Clear interfering characters
+	if c.clearReg == nil {
+		c.clearReg = regexp.MustCompile(`\s+`)
+	}
+	eq = c.clearReg.ReplaceAllString(eq, "")
+
+	// clear `100_00` or `100,000`
+	if c.simpleReg == nil {
+		c.simpleReg = regexp.MustCompile(`\d+[_,]\d+`)
+	}
+	// clear `100_00` or `100,000`
+	if c.simpleRegSg == nil {
+		c.simpleRegSg = regexp.MustCompile(`[_,]`)
+	}
+
+	smplLs := c.simpleReg.FindAllString(eq, -1)
+	for _, smp := range smplLs {
+		smpNew := c.simpleRegSg.ReplaceAllString(smp, "")
+		eq = strings.ReplaceAll(eq, smp, smpNew)
+	}
+
 	return eq
 }
 
@@ -131,10 +201,7 @@ func (c *Calc) Count(args ...string) float64 {
 	eq := strings.TrimSpace(equality)
 
 	// Clear interfering characters
-	if c.clearReg == nil {
-		c.clearReg = regexp.MustCompile(`\s+`)
-	}
-	eq = c.clearReg.ReplaceAllString(eq, "")
+	eq = c.clearEq(eq)
 
 	c.handlerEq = eq
 	c.equality = equality

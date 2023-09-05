@@ -47,3 +47,40 @@ func TestFloatSimple(t *testing.T) {
 		t.Errorf("input -> rsl ≠ ref: %s -> %s ≠ %s", ipt, rsl, ref)
 	}
 }
+
+func TestCalc_Count(t *testing.T) {
+	var ipt, ref, rsl string
+
+	// case
+	ipt, ref = "5**3", "125"
+	calc := NewCalc(ipt)
+	calc.Count()
+	rsl = calc.String()
+	if rsl != ref {
+		t.Errorf("input -> rsl ≠ ref: %s -> %s ≠ %s", ipt, rsl, ref)
+	}
+
+	// case
+	ipt, ref = "9^3", "729"
+	calc.Count(ipt)
+	rsl = calc.String()
+	if rsl != ref {
+		t.Errorf("input -> rsl ≠ ref: %s -> %s ≠ %s", ipt, rsl, ref)
+	}
+
+	// case
+	ipt, ref = "(5*20+6*35)*6-11*3", "1827"
+	calc.Count(ipt)
+	rsl = calc.String()
+	if rsl != ref {
+		t.Errorf("input -> rsl ≠ ref: %s -> %s ≠ %s", ipt, rsl, ref)
+	}
+
+	// case
+	ipt, ref = "538,000/15", "35866.6666667"
+	calc.Count(ipt)
+	rsl = calc.String()
+	if rsl != ref {
+		t.Errorf("input -> rsl ≠ ref: %s -> %s ≠ %s", ipt, rsl, ref)
+	}
+}
