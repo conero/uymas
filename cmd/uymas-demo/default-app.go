@@ -43,10 +43,10 @@ func (c *defaultApp) Cal() {
 	//计算
 	regBracketSign := regexp.MustCompile(`^\(.*\)$`)
 	// add, subtract, multiply and divide => +-*/
-	regMd := regexp.MustCompile(`(\d(\.\d)?)[*/](\d(\.\d)?)`)
+	regMd := regexp.MustCompile(`(\d+(\.\d+)?)[*/](\d+(\.\d+)?)`)
 	mdSig := regexp.MustCompile(`[*/]`)
-	regAs := regexp.MustCompile(`(\d(\.\d)?)[+-](\d(\.\d)?)`)
-	asSig := regexp.MustCompile(`[+-]`)
+	regAs := regexp.MustCompile(`(\d+(\.\d+)?)[+-](\d+(\.\d+)?)`)
+	asSig := regexp.MustCompile(`[+\-]`)
 	asmdSig := regexp.MustCompile(`[+\-*/]+`)
 	calFn := func(bkt string) string {
 		bkt = strings.TrimSpace(bkt)
@@ -110,7 +110,7 @@ func (c *defaultApp) Cal() {
 	}
 
 	// 循环
-	regBracket := regexp.MustCompile(`([^()]+)`)
+	regBracket := regexp.MustCompile(`\([^()]+\)`)
 	regEqual := regexp.MustCompile(``)
 	countBad := 0
 	for {

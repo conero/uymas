@@ -1,7 +1,6 @@
 package str
 
 import (
-	"fmt"
 	"gitee.com/conero/uymas/util/rock"
 	"regexp"
 	"strings"
@@ -30,7 +29,6 @@ func (c *Calc) Count(args ...string) float64 {
 func FloatSimple(fv string) string {
 	potSig := "."
 	split := strings.Split(fv, potSig)
-	fmt.Printf("zero: %v\n", fv)
 	if len(split) == 2 {
 		zero := split[1]
 		// 全0
@@ -43,7 +41,7 @@ func FloatSimple(fv string) string {
 		if zeroReg.MatchString(zero) {
 			zeroList := zeroReg.FindAllString(zero, -1)
 			if len(zeroList) > 0 {
-				zero = strings.ReplaceAll(zero, zeroList[0], "")
+				zero = zero[:len(zero)-len(zeroList[0])]
 				return split[0] + "." + zero
 			}
 		}
