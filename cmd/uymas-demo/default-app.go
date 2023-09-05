@@ -42,9 +42,9 @@ func (c *defaultApp) Cal() {
 	//计算
 	regBracketSign := regexp.MustCompile(`^\(.*\)$`)
 	// add, subtract, multiply and divide => +-*/
-	regMd := regexp.MustCompile(`(\d\.?\d)[*/](\d\.?\d)`)
+	regMd := regexp.MustCompile(`(\d(\.\d)?)[*/](\d(\.\d)?)`)
 	mdSig := regexp.MustCompile(`[*/]`)
-	regAs := regexp.MustCompile(`(\d\.?\d)[+-](\d\.?\d)`)
+	regAs := regexp.MustCompile(`(\d(\.\d)?)[+-](\d(\.\d)?)`)
 	asSig := regexp.MustCompile(`[+-]`)
 	asmdSig := regexp.MustCompile(`[+\-*/]+`)
 	calFn := func(bkt string) string {
@@ -76,7 +76,7 @@ func (c *defaultApp) Cal() {
 				mgCtt = str2F64(parts[0]) / str2F64(parts[1])
 			}
 
-			bkt = strings.ReplaceAll(bkt, md, fmt.Sprintf("%.5f", mgCtt))
+			bkt = strings.ReplaceAll(bkt, md, floatCleatZero(fmt.Sprintf("%.5f", mgCtt)))
 
 		}
 
@@ -101,8 +101,8 @@ func (c *defaultApp) Cal() {
 				mgCtt = str2F64(parts[0]) - str2F64(parts[1])
 			}
 
-			bkt = strings.ReplaceAll(bkt, as, fmt.Sprintf("%.5f", mgCtt))
-
+			mgCttStr := fmt.Sprintf("%.5f", mgCtt)
+			bkt = strings.ReplaceAll(bkt, as, floatCleatZero(mgCttStr))
 		}
 
 		return bkt
@@ -146,4 +146,31 @@ func (c *defaultApp) Cal() {
 		countBad += 1
 	}
 	lgr.Info("输入等式：%s\n    => %s", c.Cc.SubCommand, equal)
+}
+
+// 浮点数清零，小数点后多余的零
+func floatCleatZero(fv string) string {
+	potSig := "."
+	split := strings.Split(fv, potSig)
+	fmt.Printf("zero: %v\n", fv)
+	if len(split) == 2 {
+		zero := split[1]
+		// 全0
+		isMatched, _ := regexp.MatchString(`^0+$`, zero)
+		if isMatched {
+			return strings.ReplaceAll(fv, "."+zero, "")
+		}
+
+		zeroReg := regexp.MustCompile(`0+$`)
+		if zeroReg.MatchString(zero) {
+			zeroList := zeroReg.FindAllString(zero, -1)
+			if len(zeroList) > 0 {
+				zero = strings.ReplaceAll(zero, zeroList[0], "")
+				return split[0] + "." + zero
+			}
+		}
+
+	}
+
+	return fv
 }
