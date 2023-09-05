@@ -32,6 +32,7 @@ type Calc struct {
 	accuracyStr string
 	simpleReg   *regexp.Regexp
 	simpleRegSg *regexp.Regexp
+	expReg      *regexp.Regexp
 }
 
 func NewCalc(equality string) *Calc {
@@ -175,6 +176,50 @@ func (c *Calc) pow(eq string) string {
 	return eq
 }
 
+// Exp support functional expression eg.
+// sprt,log
+// Notice: Attempt to expose it to external interfaces
+func (c *Calc) Exp(eq string) string {
+	if c.expReg == nil {
+		c.expReg = regexp.MustCompile(`(?i)(sqrt|log|sin|cos|tan)\(.*\)`)
+	}
+
+	expSg := "("
+	expLs := c.expReg.FindAllString(eq, -1)
+	for _, exp := range expLs {
+		idx := strings.Index(exp, expSg)
+		if idx == -1 {
+			continue
+		}
+
+		name := strings.ToLower(exp[:idx])
+		subExp := exp[idx+1:]
+		subExp = subExp[:len(subExp)-1]
+		subValue := StringAsFloat(c.operNonBrk(subExp))
+
+		switch name {
+		case "sqrt":
+			subValue = math.Sqrt(subValue)
+		case "log":
+			subValue = math.Log(subValue)
+		case "sin":
+			subValue = math.Asin(subValue)
+		case "cos":
+			subValue = math.Acos(subValue)
+		case "tan":
+			subValue = math.Atan(subValue)
+		}
+
+		eq = strings.ReplaceAll(eq, exp, FloatSimple(fmt.Sprintf(c.accuracyStr, subValue)))
+	}
+
+	if c.expReg.MatchString(eq) {
+		eq = c.Exp(eq)
+	}
+
+	return eq
+}
+
 // Clear interfering characters
 func (c *Calc) clearEq(eq string) string {
 	// Clear interfering characters
@@ -212,6 +257,7 @@ func (c *Calc) Count(args ...string) float64 {
 	c.handlerEq = eq
 	c.equality = equality
 
+	c.handlerEq = c.Exp(c.handlerEq)
 	c.deBracket()
 	c.handlerEq = c.operNonBrk(c.handlerEq)
 	c.result = StringAsFloat(c.handlerEq)

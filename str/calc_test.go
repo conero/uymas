@@ -91,4 +91,12 @@ func TestCalc_Count(t *testing.T) {
 	if rsl != ref {
 		t.Errorf("input -> rsl ≠ ref: %s -> %s ≠ %s", ipt, rsl, ref)
 	}
+
+	// case
+	ipt, ref = "sqrt(3**2+4**2)", "5"
+	calc.Count(ipt)
+	rsl = calc.String()
+	if rsl != ref {
+		t.Errorf("input -> rsl ≠ ref: %s -> %s ≠ %s", ipt, rsl, ref)
+	}
 }
