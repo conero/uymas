@@ -181,7 +181,7 @@ func (c *Calc) pow(eq string) string {
 // Notice: Attempt to expose it to external interfaces
 func (c *Calc) Exp(eq string) string {
 	if c.expReg == nil {
-		c.expReg = regexp.MustCompile(`(?i)(sqrt|log|sin|cos|tan)\(.*\)`)
+		c.expReg = regexp.MustCompile(`(?i)(?:sqrt|log|sin|cos|tan)\(.*\)`)
 	}
 
 	expSg := "("
@@ -195,6 +195,10 @@ func (c *Calc) Exp(eq string) string {
 		name := strings.ToLower(exp[:idx])
 		subExp := exp[idx+1:]
 		subExp = subExp[:len(subExp)-1]
+		// Internally nested representation processing
+		if c.expReg.MatchString(subExp) {
+			subExp = c.Exp(subExp)
+		}
 		subValue := StringAsFloat(c.operNonBrk(subExp))
 
 		switch name {

@@ -41,3 +41,7 @@ func (c *defaultApp) Cal() {
 	}
 	fmt.Println(calc)
 }
+
+func (c *defaultApp) DefaultUnmatched() {
+	lgr.Error("命令 %v 不存在", c.Cc.Command)
+}
