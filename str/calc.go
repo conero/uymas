@@ -43,20 +43,23 @@ func NewCalc(equality string) *Calc {
 }
 
 // Bracket decomposition, clear `()`
-func (c *Calc) deBracket() {
+func (c *Calc) deBracket(eq string) string {
 	if c.regBracket == nil {
 		c.regBracket = regexp.MustCompile(`\([^()]+\)`)
+		//@todo Verification and comparison required
+		//c.regBracket = regexp.MustCompile(`[[:^alpha:]]*\([^()]+\)`)
 	}
 
-	bracket := c.regBracket.FindAllString(c.handlerEq, -1)
+	bracket := c.regBracket.FindAllString(eq, -1)
 	for _, brk := range bracket {
 		rslt := c.operNonBrk(brk)
-		c.handlerEq = strings.ReplaceAll(c.handlerEq, brk, rslt)
+		eq = strings.ReplaceAll(eq, brk, rslt)
 	}
 
-	if c.regBracket.MatchString(c.handlerEq) {
-		c.deBracket()
+	if c.regBracket.MatchString(eq) {
+		eq = c.deBracket(eq)
 	}
+	return eq
 }
 
 // Operation without parentheses
@@ -262,7 +265,7 @@ func (c *Calc) Count(args ...string) float64 {
 	c.equality = equality
 
 	c.handlerEq = c.Exp(c.handlerEq)
-	c.deBracket()
+	c.handlerEq = c.deBracket(c.handlerEq)
 	c.handlerEq = c.operNonBrk(c.handlerEq)
 	c.result = StringAsFloat(c.handlerEq)
 	return c.result
