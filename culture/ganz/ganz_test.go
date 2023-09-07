@@ -3,6 +3,7 @@ package ganz
 import (
 	"fmt"
 	"testing"
+	"time"
 )
 
 func TestZodiacList(t *testing.T) {
@@ -125,6 +126,14 @@ func TestCountGzAndZodiac(t *testing.T) {
 	if rslGz != refGz || rslSx != refSx {
 		t.Errorf("input -> rsl ≠ ref: %d -> (%s, %s) ≠ (%s, %s)", ipt, rslGz, rslSx, refGz, refSx)
 	}
+
+	// case
+	ipt = 2023
+	refGz, refSx = "癸卯", "兔"
+	rslGz, rslSx = CountGzAndZodiac(ipt)
+	if rslGz != refGz || rslSx != refSx {
+		t.Errorf("input -> rsl ≠ ref: %d -> (%s, %s) ≠ (%s, %s)", ipt, rslGz, rslSx, refGz, refSx)
+	}
 }
 
 func TestDzTimeList(t *testing.T) {
@@ -149,4 +158,8 @@ func TestDzTimeList(t *testing.T) {
 	}
 
 	t.Logf("DzTimeList: %#v\n", dtd)
+}
+
+func TestTimeParse(t *testing.T) {
+	TimeParse(time.Now())
 }

@@ -7,6 +7,7 @@ import (
 	"gitee.com/conero/uymas/bin/butil"
 	"gitee.com/conero/uymas/bin/data"
 	"gitee.com/conero/uymas/culture/digit"
+	"gitee.com/conero/uymas/culture/ganz"
 	"gitee.com/conero/uymas/fs"
 	"gitee.com/conero/uymas/logger/lgr"
 	"gitee.com/conero/uymas/number"
@@ -297,4 +298,21 @@ func (c *defaultApp) Hash() {
 	}
 	lgr.Info("文件读取(%s)成功，如列表下：\n%s\n", fh.Vtype, bin.FormatTable(tableData))
 
+}
+
+func (c *defaultApp) Ganz() {
+	year := c.Cc.SubCommand
+	if year == "" {
+		lgr.Info("请输入年份，来计算干支纪元法。默认为当年")
+	}
+
+	y, _ := strconv.Atoi(year)
+	if y <= 0 {
+		y = time.Now().Year()
+	}
+
+	gz, zod := ganz.CountGzAndZodiac(y)
+
+	fmt.Printf("  %d年，干支纪元%s年，属%s.\n", y, gz, zod)
+	fmt.Printf("\n天干：%s\n地支：%s\n属相：%s\n", ganz.TianGan, ganz.DiZhi, ganz.Zodiac)
 }

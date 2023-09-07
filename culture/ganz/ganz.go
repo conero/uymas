@@ -1,9 +1,11 @@
 // Package ganz Chinese Traditional Heavenly Stems and Earthly Branches(天干地支).
+// Refer to <GB/T 33661-2017> http://c.gb688.cn/bzgk/gb/showGb?type=online&hcno=E107EA4DE9725EDF819F33C60A44B296
 package ganz
 
 import (
 	"fmt"
 	"strings"
+	"time"
 )
 
 const (
@@ -101,15 +103,23 @@ func GzList() []string {
 // CountGzAndZodiac Calculate the Heavenly Stems, Earthly Branches, and Zodiac Phases Based on the Year
 // reference link: http://www.360doc.com/content/19/0131/15/30390538_812371769.shtml
 func CountGzAndZodiac(year int) (gz string, zodiac string) {
-	tg := (year - 3) % 10
-	dz := (year - 3) % 12
-
 	tgLs := TgList()
 	dzLs := DzList()
-	zodiacLs := ZodiacList()
 
-	gz = fmt.Sprintf("%s%s", tgLs[tg-1], dzLs[dz-1])
-	zodiac = zodiacLs[dz-1]
+	tg := (year - 3) % 10
+	tg = tg - 1
+	if tg < 0 {
+		tg = len(tgLs) - 1
+	}
+	dz := (year - 3) % 12
+	dz = dz - 1
+	if dz < 0 {
+		dz = len(dzLs) - 1
+	}
+
+	zodiacLs := ZodiacList()
+	gz = fmt.Sprintf("%s%s", tgLs[tg], dzLs[dz])
+	zodiac = zodiacLs[dz]
 	return
 }
 
@@ -152,4 +162,20 @@ func DzTimeList() []DzTime {
 	}
 
 	return cacheDzTimeDick
+}
+
+// TimeParse @todo try and need todo, let make it.
+func TimeParse(tm time.Time) {
+	year := tm.Year()
+	fmt.Println(year)
+	gz, zodiac := CountGzAndZodiac(year)
+
+	dzTimeLs := DzTimeList()
+
+	month := tm.Month()
+	mth := dzTimeLs[month]
+
+	//hour := tm.Hour()
+
+	fmt.Printf("农历%s年（%s年）,%#v\n", gz, zodiac, mth)
 }
