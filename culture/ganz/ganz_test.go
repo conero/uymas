@@ -126,3 +126,27 @@ func TestCountGzAndZodiac(t *testing.T) {
 		t.Errorf("input -> rsl ≠ ref: %d -> (%s, %s) ≠ (%s, %s)", ipt, rslGz, rslSx, refGz, refSx)
 	}
 }
+
+func TestDzTimeList(t *testing.T) {
+	dtd := DzTimeList()
+	if len(dtd) != 12 {
+		t.Fatal("地支时间列表生成错误！")
+	}
+
+	dt := dtd[4]
+	if dt.Name != "辰" || dt.Alias != "食时" {
+		t.Errorf("地支时间列表检查失败，不匹配。%v", dt)
+	}
+
+	dt = dtd[5]
+	if dt.Name != "巳" || dt.Alias != "隅中" {
+		t.Errorf("地支时间列表检查失败，不匹配。%v", dt)
+	}
+
+	dt = dtd[11]
+	if dt.Name != "亥" || dt.Alias != "人定" {
+		t.Errorf("地支时间列表检查失败，不匹配。%v", dt)
+	}
+
+	t.Logf("DzTimeList: %#v\n", dtd)
+}

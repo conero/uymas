@@ -15,14 +15,17 @@ const (
 	// DiZhi Earthly Branches （E-B）
 	// 子   1E, the first of the twelve Earthly Branches.
 	// 丑   2E, the 2nd of the twelve Earthly Branches.
-	DiZhi  = "子丑寅卯辰巳午未申酉戌亥"
-	Zodiac = "鼠牛虎兔龙蛇马羊猴鸡狗猪"
+	DiZhi      = "子丑寅卯辰巳午未申酉戌亥"
+	DiZhiMonth = "冬月,腊月,正月,二月,三月,四月,五月,六月,七月,八月,九月,十月"
+	DiZhiTime  = "夜半,鸡鸣,平旦,日出,食时,隅中,日中,日昳,哺时,日入,黄昏,人定"
+	Zodiac     = "鼠牛虎兔龙蛇马羊猴鸡狗猪"
 )
 
 var (
 	cacheTgList     []string
 	cacheDzList     []string
 	cacheZodiacList []string
+	cacheDzTimeDick []DzTime
 )
 
 func TgList() []string {
@@ -108,4 +111,45 @@ func CountGzAndZodiac(year int) (gz string, zodiac string) {
 	gz = fmt.Sprintf("%s%s", tgLs[tg-1], dzLs[dz-1])
 	zodiac = zodiacLs[dz-1]
 	return
+}
+
+type DzTime struct {
+	Name      string // dizhi name like '子'
+	Alias     string
+	Range     [2]int
+	Month     int
+	MonthName string
+	Zodiac    string
+}
+
+func (c *DzTime) String() string {
+	return fmt.Sprintf("%s时, [%d:00-%d:00]", c.Name, c.Range[0], c.Range[1])
+}
+
+// DzTimeList reference link: https://mbd.baidu.com/newspage/data/dtlandingsuper?nid=dt_3438222656616746597
+// 十二时辰
+// https://zhuanlan.zhihu.com/p/490496771
+func DzTimeList() []DzTime {
+	if cacheDzTimeDick == nil {
+		dztList := strings.Split(DiZhiTime, ",")
+		monthList := strings.Split(DiZhiMonth, ",")
+		zodiacLs := ZodiacList()
+		for i, dz := range DzList() {
+			name := dz
+
+			begin := 23 + i*2
+			end := begin + 2
+			vRang := [2]int{begin % 24, end % 24}
+			cacheDzTimeDick = append(cacheDzTimeDick, DzTime{
+				Name:      name,
+				Alias:     dztList[i],
+				Range:     vRang,
+				Month:     (11 + i) % 12,
+				MonthName: monthList[i],
+				Zodiac:    zodiacLs[i],
+			})
+		}
+	}
+
+	return cacheDzTimeDick
 }
