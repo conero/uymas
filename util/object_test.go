@@ -138,6 +138,47 @@ func TestObject_Assign(t *testing.T) {
 	t.Logf("tc target chage use field: tc.ta: %#v , \r\n use by last source", tc1)
 }
 
+func TestObject_Assign2(t *testing.T) {
+	type subConfig struct {
+		Level string
+		Data  map[string]any
+	}
+	type config struct {
+		Port      int
+		Type      string
+		Username  string
+		Pswd      string
+		DevAble   bool
+		SubConfig subConfig
+	}
+
+	// case
+	var defCfg = config{
+		Port:    3308,
+		Type:    "mysql",
+		DevAble: true,
+		// @bug 二级存在问题
+		// @todo
+		SubConfig: subConfig{
+			Data: map[string]any{
+				"weight": 45.87,
+			},
+		},
+	}
+	var vCfg = &config{
+		Username: "sys-mng",
+		Pswd:     "3gtwfrb6i.k-1/z*9'hd4x8e2p",
+	}
+
+	var obj Object
+	obj.Assign(vCfg, defCfg)
+	if vCfg.Port != defCfg.Port {
+		t.Errorf("Assign 数据合并无效，%#v", *vCfg)
+	}
+	t.Logf("vConf: %#v", *vCfg)
+
+}
+
 func TestObject_AssignMap(t *testing.T) {
 	obj := Object{}
 	type dog struct {
