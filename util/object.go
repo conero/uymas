@@ -30,6 +30,9 @@ func (obj Object) Assign(target any, source any) any {
 		return target
 	}
 
+	if tReft.Kind() != reflect.Struct {
+		return target
+	}
 	sRefv := reflect.ValueOf(source)
 	num := tReft.NumField()
 	for i := 0; i < num; i++ {
@@ -42,12 +45,19 @@ func (obj Object) Assign(target any, source any) any {
 				//@todo <Nesting Assign>
 				//panic: reflect: Elem of invalid type reflect.Value
 				//fmt.Println(field.Name)
-				if tField.CanAddr() {
-					//fmt.Printf("Nest->tField %#v\n", tField)
-					//fmt.Printf("Nest->sField %#v\n", sField)
-					//obj.Assign(tField.Addr(), sField)
-					//obj.Assign(tField.Addr(), sField)
-				}
+				//if tField.CanAddr() {
+				//fmt.Printf("Nest->tField %#v\n", tField)
+				//fmt.Printf("Nest->sField %#v\n", sField)
+				//obj.Assign(tField.Addr(), sField)
+				//obj.Assign(tField.Addr(), sField)
+				//}
+
+				tfValue := tField.Interface()
+				sfValue := sField.Interface()
+				//fmt.Printf("tfValue: %#v, sfValue:%#v\n", tfValue, sfValue)
+				obj.Assign(&tfValue, sfValue)
+				//fmt.Printf("tfValue: %#v, sfValue:%#v\n", tfValue, sfValue)
+				tField.Set(reflect.ValueOf(tfValue))
 			} else {
 				tField.Set(sField)
 			}

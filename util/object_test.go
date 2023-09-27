@@ -140,8 +140,11 @@ func TestObject_Assign(t *testing.T) {
 
 func TestObject_Assign2(t *testing.T) {
 	type subConfig struct {
-		Level string
-		Data  map[string]any
+		Level   string
+		Data    map[string]any
+		Score   float64
+		Charset string
+		IsTcp   bool
 	}
 	type config struct {
 		Port      int
@@ -163,11 +166,15 @@ func TestObject_Assign2(t *testing.T) {
 			Data: map[string]any{
 				"weight": 45.87,
 			},
+			Score: -0.19,
 		},
 	}
 	var vCfg = &config{
 		Username: "sys-mng",
 		Pswd:     "3gtwfrb6i.k-1/z*9'hd4x8e2p",
+		SubConfig: subConfig{
+			IsTcp: true,
+		},
 	}
 
 	var obj Object
