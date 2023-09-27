@@ -73,6 +73,22 @@ $ [command] [<sub-command>] [<options>]
 
 
 
+##### plugin sub command（PSC）
+
+插件式子命令
+
+通过扫描二进制所在目录"\$/"及“$/plg"下可执行文件，若存在将其视为PSC。
+
+支持命名格式：
+
+- \$/\$app-name           name
+- \$/\$app_name           name
+- \$/name                      name
+- $/plg/\$app-name     name
+- \$/plg/\$app_name     name
+
+
+
 #### tinygo
 
 `Experimental/Try`  尝试实验性支持 [tinygo](https://github.com/tinygo-org/tinygo)

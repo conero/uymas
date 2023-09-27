@@ -115,6 +115,12 @@ func (c *defaultApp) Pinyin() {
 // Uls command allis: uls,uymas ls
 func (c *defaultApp) Uls() {
 	fmt.Println("  " + strings.Join(cli.GetCmdList(), "\n  "))
+
+	// plugin-sub-command 支持
+	plugs := bin.PlgCmdList()
+	if len(plugs) > 0 {
+		fmt.Println("\nPlugin Sub command:\n" + "  " + strings.Join(plugs, "\n  "))
+	}
 }
 
 // Cache namespace@key.key setValue

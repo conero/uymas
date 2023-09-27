@@ -6,7 +6,11 @@ import (
 	"errors"
 	"fmt"
 	"gitee.com/conero/uymas/bin/butil"
+	"os"
 	"os/exec"
+	"path"
+	"runtime"
+	"strings"
 	"time"
 )
 
@@ -113,7 +117,7 @@ func plgCmdDetect(cc *Arg) *PlgCProfile {
 		}
 	}
 
-	// name-$name
+	// name_$name
 	pBin = butil.RootPath(fmt.Sprintf("%s_%s", appName, name))
 	cmd = exec.Command(pBin, PlgCmdGetProfile)
 	rtBy, err = cmd.CombinedOutput()
@@ -126,4 +130,102 @@ func plgCmdDetect(cc *Arg) *PlgCProfile {
 	}
 
 	return plg
+}
+
+// Dependent on suffix, like exe, bat, cmd.
+func plgCmdListWindows() []string {
+	var plugs []string
+	rootName := butil.Basedir()
+	appName := butil.AppName()
+
+	// to scan file
+	toScan := func(vDir string) {
+		entrys, err := os.ReadDir(vDir)
+		if err != nil {
+			return
+		}
+
+		for _, entry := range entrys {
+			if entry.IsDir() {
+				continue
+			}
+			name := entry.Name()
+			ext := path.Ext(name)
+			extLower := strings.ToLower(ext)
+			if extLower == ".exe" {
+				plugName := strings.ReplaceAll(name, ext, "")
+				plugName = strings.ReplaceAll(plugName, appName+"-", "")
+				plugName = strings.ReplaceAll(plugName, appName+"_", "")
+				if plugName == appName {
+					continue
+				}
+				plugs = append(plugs, plugName)
+			}
+
+		}
+	}
+
+	toScan(rootName)
+	toScan(butil.RootPath("plg/"))
+
+	return plugs
+}
+
+// Dependent on `file` that use to detect.
+func plgCmdListLinux() []string {
+	var plugs []string
+	rootName := butil.Basedir()
+	appName := butil.AppName()
+
+	// to scan file
+	toScan := func(vDir string) {
+		entrys, err := os.ReadDir(vDir)
+		if err != nil {
+			return
+		}
+
+		for _, entry := range entrys {
+			if entry.IsDir() {
+				continue
+			}
+			name := entry.Name()
+			pathName := path.Join(vDir, name)
+
+			// ELF 64-bit LSB executable
+			cmd := exec.Command("file", pathName)
+			rtBy, er := cmd.CombinedOutput()
+			if er != nil {
+				continue
+			}
+			rtStr := string(rtBy)
+			if strings.Index(rtStr, "ELF") > -1 && strings.Index(rtStr, "LSB executable") > -1 {
+				plugName := name
+				plugName = strings.ReplaceAll(plugName, appName+"-", "")
+				plugName = strings.ReplaceAll(plugName, appName+"_", "")
+				if plugName == appName {
+					continue
+				}
+				plugs = append(plugs, plugName)
+			}
+
+		}
+	}
+
+	toScan(rootName)
+	toScan(butil.RootPath("plg/"))
+
+	return plugs
+}
+
+// PlgCmdList Get Plugin Sub-Command list, support windows/linux/darwin.
+func PlgCmdList() []string {
+	var plugs []string
+	switch runtime.GOOS {
+	case "windows":
+		return plgCmdListWindows()
+	case "linux", "darwin":
+		return plgCmdListLinux()
+
+	}
+	return plugs
 }

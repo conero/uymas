@@ -32,6 +32,7 @@
   - feat: 新增 `CLI.RgisterEnd`  实现用于实现执行后的最后处理事件
   - feat: 新增 `Args.NextList` 方法用于获取队列参数，支持默认参数
   - feat: 新增`PluginCommand` 等相关结构体及方法实现对可插拔的子命令支持
+  - feat: 新增`PlgCmdList` 方法用于扫描当前目录下所有支持的子命令
   - pref!: 重写CLI命令路由，统一函数式调用
 - **bin/butil**
   - feat: 新增函数 `AppName` 用于获取当前正在运行的App名称，以及重写`Basedir()` 计算规则
