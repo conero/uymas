@@ -22,6 +22,7 @@ type Arg struct {
 	cmdType         int                 //the command type enumeration
 	commandAlias    map[string][]string // the alias of command, using for App-style and runtime state
 	subCommandAlias map[string][]string // the alias of command, using for App-style and runtime state
+	isPlgCmd        bool                // is plugin command type
 }
 
 // CheckSetting to checkout if the set exist in `Arg` sets and support multi.
@@ -411,6 +412,10 @@ func (app *Arg) SubCommandAlias(key string, alias ...string) *Arg {
 func (app *Arg) SubCommandAliasAll(alias map[string][]string) *Arg {
 	app.subCommandAlias = app.addAliasAll(app.subCommandAlias, alias)
 	return app
+}
+
+func (app *Arg) IsPlgCmd() bool {
+	return app.isPlgCmd
 }
 
 // NewCliCmd the construct of `Arg`, args default set os.Args if no function arguments

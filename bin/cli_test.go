@@ -1,6 +1,9 @@
 package bin
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func TestNewCliCmd(t *testing.T) {
 	command, subcommand := "git", "clone"
@@ -48,4 +51,25 @@ func TestNewCliCmd(t *testing.T) {
 		}
 	}
 
+}
+
+func TestCLI_RegisterEnd(t *testing.T) {
+	cli := NewCLI()
+	cli.RegisterEnd(func() {
+		fmt.Println("  ->Running event end :~~~~~")
+		fmt.Println()
+	})
+	cli.RegisterFunc(func(arg *Arg) {
+		fmt.Println(">>default")
+		fmt.Println("Default empty.")
+	})
+	cli.RegisterFunc(func(arg *Arg) {
+		fmt.Println(">>test")
+		fmt.Println("test The testy command.")
+	}, "test")
+
+	// case
+	cli.Run()
+	// case
+	cli.Run("test")
 }

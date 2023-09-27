@@ -429,15 +429,25 @@ func (cli *CLI) router(cc *Arg) {
 		rc := cli.routerCommand(cc)
 		isRouterMk = rc.isMatch
 		if isRouterMk {
-			rc.callMethod(actionRunEnd, cc)
+			if !rc.callMethod(actionRunEnd, cc) {
+				cli.hookEndCall(cc)
+			}
 			return
 		}
 	} else { // router command is empty.
 		isRouterMk = cli.routerEmpty(cc)
+		if isRouterMk {
+			cli.hookEndCall(cc)
+		}
 	}
 
+	// handler plugin command router
 	if !isRouterMk && !cli.DisPlgCmdDetect {
 		isRouterMk = cli.plgCmdDetect(cc)
+		if isRouterMk {
+			cc.isPlgCmd = true
+			cli.hookEndCall(cc)
+		}
 	}
 
 	// router command is default.
@@ -445,7 +455,9 @@ func (cli *CLI) router(cc *Arg) {
 		if cli.actionAnyRegister != nil {
 			if isMatch, rc := cli.routerAny(cc); isMatch {
 				if rc != nil {
-					rc.callMethod(actionRunEnd, cc)
+					if !rc.callMethod(actionRunEnd, cc) {
+						cli.hookEndCall(cc)
+					}
 				}
 				isRouterMk = isMatch
 			}
@@ -493,7 +505,7 @@ func (cli *CLI) findRegisterFuncAndRun(fnName string, cc *Arg) (rc *registerComm
 	rc = &registerCommand{}
 	value := cli.findRegisterValueByCommand(fnName)
 	if value != nil {
-		if runFn(value, cc) {
+		if tryCallFn(value, cc) {
 			rc.isMatch = true
 			rc.isFunc = true
 		} else {
@@ -572,9 +584,9 @@ func (cli *CLI) routerCommand(cc *Arg) *registerCommand {
 func (cli *CLI) routerEmpty(cc *Arg) bool {
 	routerValidMk := false
 	if cli.actionEmptyRegister != nil {
-		routerValidMk = runFn(cli.actionEmptyRegister, cc)
+		routerValidMk = tryCallFn(cli.actionEmptyRegister, cc)
 	} else if cli.actionAnyRegister != nil {
-		routerValidMk = runFn(cli.actionAnyRegister, cc)
+		routerValidMk = tryCallFn(cli.actionAnyRegister, cc)
 	}
 	return routerValidMk
 }
@@ -587,7 +599,7 @@ func (cli *CLI) routerAny(cc *Arg) (bool, *registerCommand) {
 	if aur == nil {
 		return false, nil
 	}
-	if runFn(aur, cc) {
+	if tryCallFn(aur, cc) {
 		isRouterMk = true
 	} else {
 		rc = &registerCommand{
@@ -646,6 +658,14 @@ func (cli *CLI) routerAny(cc *Arg) (bool, *registerCommand) {
 func (cli *CLI) hookBeforeCall(cc *Arg) {
 	cli.loadDataSyntax(cc)
 	cli.loadScriptSyntax(cc)
+}
+
+// the hook before call the func
+func (cli *CLI) hookEndCall(cc *Arg) {
+	if cli.actionEndRegister == nil {
+		return
+	}
+	tryCallFn(cli.actionEndRegister, cc)
 }
 
 // let program exit by unconventionally
@@ -846,7 +866,7 @@ func ParseValueByStr(ss string) any {
 }
 
 // try run the call
-func runFn(fn any, cc *Arg) bool {
+func tryCallFn(fn any, cc *Arg) bool {
 	switch fn.(type) {
 	case func(string):
 		fn.(func(string))(cc.Command)
