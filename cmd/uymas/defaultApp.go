@@ -90,9 +90,18 @@ func (c *defaultApp) Test() {
 	fmt.Printf("  NextLing : %#v \n", cc.NextList())
 	fmt.Printf("  Args : %#v \n", os.Args[1:])
 
+	// var
+	varName := cc.ArgRaw("var", "v")
+	if varName != "" {
+		fmt.Printf("  Var : %s =>  %s \n", varName, cc.ArgRaw(varName))
+		fmt.Printf("  Var/Raw : %s =>  %#v \n", varName, cc.Arg(varName))
+	}
+
 	fmt.Println()
 	fmt.Printf(" %v \n", getSpendStr())
 	fmt.Println()
+	fmt.Println()
+	fmt.Println("输入命令 “--var,-v $name”   可用于读取 $name 的option参数")
 }
 
 // Repl REPL

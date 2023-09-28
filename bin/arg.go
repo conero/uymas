@@ -439,8 +439,6 @@ func NewCliCmd(args ...string) *Arg {
 }
 
 // NewCliCmdByString construction of `Arg` by string
-//
-//	@todo notice: `--test-string="Joshua 存在空格的字符串 Conero"` 解析失败
 func NewCliCmdByString(ss string) *Arg {
 	return NewCliCmd(butil.StringToArgs(ss)...)
 }
