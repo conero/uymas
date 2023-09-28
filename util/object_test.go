@@ -155,6 +155,17 @@ func TestObject_Assign2(t *testing.T) {
 		SubConfig subConfig
 	}
 
+	//var sbCf = subConfig{
+	//	Score: 1.4,
+	//	Data:  map[string]any{"name": "joshua"},
+	//}
+	//var testSbCf = func(sc *subConfig) {
+	//	sc.Score = 5.2
+	//	sc.Data = map[string]any{"age": 31}
+	//}
+	//testSbCf(&sbCf)
+	//fmt.Printf("sbCf: %#v\n", sbCf)
+
 	// case
 	var defCfg = config{
 		Port:    3308,
@@ -169,7 +180,7 @@ func TestObject_Assign2(t *testing.T) {
 			Score: -0.19,
 		},
 	}
-	var vCfg = &config{
+	var vCfg = config{
 		Username: "sys-mng",
 		Pswd:     "3gtwfrb6i.k-1/z*9'hd4x8e2p",
 		SubConfig: subConfig{
@@ -178,11 +189,11 @@ func TestObject_Assign2(t *testing.T) {
 	}
 
 	var obj Object
-	obj.Assign(vCfg, defCfg)
+	obj.Assign(&vCfg, defCfg)
 	if vCfg.Port != defCfg.Port {
-		t.Errorf("Assign 数据合并无效，%#v", *vCfg)
+		t.Errorf("Assign 数据合并无效，%#v", vCfg)
 	}
-	t.Logf("vConf: %#v", *vCfg)
+	t.Logf("vConf: %#v", vCfg)
 
 }
 

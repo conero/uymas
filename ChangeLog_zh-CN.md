@@ -52,6 +52,7 @@
   - feat: 新增命令“ganz"实现年份的干支纪元法计算
 - **util**
   - feat: 新方法 `ExtractParam` 实现不定参数首参数抽取
+  - feat: `Object.Assign` 支持嵌套struct赋值
 - **util/rock**
   - feat: 新增泛型等基础库，实现最小的依赖。避免外部库的循环引用
 - **str**

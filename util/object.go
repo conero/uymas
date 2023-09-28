@@ -9,20 +9,20 @@ import (
 type Object struct {
 }
 
-// Assign @todo
-//
-//	Base of `reflect` to come true like javascript `Object.Assign`, target should be pointer best.
-//	It can be Multiple, only for `reflect.Map`.
+// Assign Base of `reflect` to come true like javascript `Object.Assign`, target should be pointer best.
+// It can be Multiple, only for `reflect.Map`. And support nested struct.
 func (obj Object) Assign(target any, source any) any {
 	var m = target
 	tReft := reflect.TypeOf(target)
 	if tReft.Kind() == reflect.Ptr {
 		tReft = tReft.Elem()
 	}
+
 	tRefv := reflect.ValueOf(target)
 	if tRefv.Kind() == reflect.Ptr {
 		tRefv = tRefv.Elem()
 	}
+
 	//if it's map that can add field
 	isMap := tReft.Kind() == reflect.Map
 	if isMap {
@@ -30,7 +30,7 @@ func (obj Object) Assign(target any, source any) any {
 		return target
 	}
 
-	if tReft.Kind() != reflect.Struct {
+	if tRefv.Kind() != reflect.Struct {
 		return target
 	}
 	sRefv := reflect.ValueOf(source)
@@ -41,23 +41,7 @@ func (obj Object) Assign(target any, source any) any {
 		tField := tRefv.Field(i)
 		if sField.IsValid() && !sField.IsZero() && sField.Kind() == tField.Kind() {
 			if sField.Kind() == reflect.Struct { // Nesting Assign
-				//Structure nesting handler
-				//@todo <Nesting Assign>
-				//panic: reflect: Elem of invalid type reflect.Value
-				//fmt.Println(field.Name)
-				//if tField.CanAddr() {
-				//fmt.Printf("Nest->tField %#v\n", tField)
-				//fmt.Printf("Nest->sField %#v\n", sField)
-				//obj.Assign(tField.Addr(), sField)
-				//obj.Assign(tField.Addr(), sField)
-				//}
-
-				tfValue := tField.Interface()
-				sfValue := sField.Interface()
-				//fmt.Printf("tfValue: %#v, sfValue:%#v\n", tfValue, sfValue)
-				obj.Assign(&tfValue, sfValue)
-				//fmt.Printf("tfValue: %#v, sfValue:%#v\n", tfValue, sfValue)
-				tField.Set(reflect.ValueOf(tfValue))
+				obj.nestStructAssign(tField, sField)
 			} else {
 				tField.Set(sField)
 			}
@@ -65,6 +49,30 @@ func (obj Object) Assign(target any, source any) any {
 	}
 
 	return m
+}
+
+// Nested struct substructures alignment and assignment
+func (obj Object) nestStructAssign(dst, src reflect.Value) {
+	if dst.Kind() != src.Kind() || dst.Kind() != reflect.Struct {
+		return
+	}
+
+	dstType := dst.Type()
+	for i := 0; i < dst.NumField(); i++ {
+		nestField := dst.Field(i)
+		dFieldTy := dstType.Field(i)
+
+		sField := src.FieldByName(dFieldTy.Name)
+		if !sField.IsValid() || sField.IsZero() || sField.Kind() != nestField.Kind() {
+			continue
+		}
+
+		if sField.Kind() == reflect.Struct {
+			obj.nestStructAssign(nestField, sField)
+		} else {
+			nestField.Set(sField)
+		}
+	}
 }
 
 // AssignMap Assign Map/Struct to map
