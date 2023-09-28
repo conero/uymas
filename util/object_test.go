@@ -339,3 +339,69 @@ func TestObject_Keys(t *testing.T) {
 		t.Errorf("Fail by map[string]string => %v != %v", vmStr, rfStr)
 	}
 }
+
+func TestObject_AssignCovert(t *testing.T) {
+	var obj Object
+	var tgt, src any
+
+	// case
+	tgt = "Joshua"
+	src = "Joshua Doeeking Conero"
+	obj.AssignCovert(&tgt, src)
+	ref := fmt.Sprintf("%T/%#v", src, src)
+	rslt := fmt.Sprintf("%T/%#v", tgt, tgt)
+	if ref != rslt {
+		t.Errorf("至覆盖错误，IN => %s\n    OUT =>%s\n", rslt, ref)
+	}
+
+	// case
+	tgt = "Joshua"
+	src = ""
+
+	ref = fmt.Sprintf("%T/%#v", tgt, tgt)
+	obj.AssignCovert(&tgt, src)
+	rslt = fmt.Sprintf("%T/%#v", tgt, tgt)
+	if ref != rslt {
+		t.Errorf("至覆盖错误，IN => %s\n    OUT =>%s\n", rslt, ref)
+	}
+
+	// case
+	tgt = int64(64)
+	src = 202_403
+	obj.AssignCovert(&tgt, src)
+	ref = fmt.Sprintf("%T/%#v", src, src)
+	rslt = fmt.Sprintf("%T/%#v", tgt, tgt)
+	if ref != rslt {
+		t.Errorf("至覆盖错误，IN => %s\n    OUT =>%s\n", rslt, ref)
+	}
+
+	// case
+	tgt = 3.141592654
+	src = 11_000
+	obj.AssignCovert(&tgt, src)
+	ref = fmt.Sprintf("%T/%#v", src, src)
+	rslt = fmt.Sprintf("%T/%#v", tgt, tgt)
+	if ref != rslt {
+		t.Errorf("至覆盖错误，IN => %s\n    OUT =>%s\n", rslt, ref)
+	}
+
+	// case
+	tgt = 1949
+	src = "1949"
+	obj.AssignCovert(&tgt, src)
+	ref = fmt.Sprintf("%T/%#v", src, src)
+	rslt = fmt.Sprintf("%T/%#v", tgt, tgt)
+	if ref != rslt {
+		t.Errorf("至覆盖错误，IN => %s\n    OUT =>%s\n", rslt, ref)
+	}
+
+	// case
+	tgt = false
+	src = "1949"
+	obj.AssignCovert(&tgt, src)
+	ref = fmt.Sprintf("%T/%#v", true, true)
+	rslt = fmt.Sprintf("%T/%#v", tgt, tgt)
+	if ref != rslt {
+		t.Errorf("至覆盖错误.\n  IN=>  %s\n  OUT=> %s\n", rslt, ref)
+	}
+}

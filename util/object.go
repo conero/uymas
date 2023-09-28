@@ -2,6 +2,7 @@ package util
 
 import (
 	"encoding/json"
+	"fmt"
 	"gitee.com/conero/uymas/str"
 	"reflect"
 )
@@ -30,7 +31,9 @@ func (obj Object) Assign(target any, source any) any {
 		return target
 	}
 
+	// Automatically support value conversion when it is not struct or map.
 	if tRefv.Kind() != reflect.Struct {
+		obj.AssignCovert(target, source)
 		return target
 	}
 	sRefv := reflect.ValueOf(source)
@@ -73,6 +76,36 @@ func (obj Object) nestStructAssign(dst, src reflect.Value) {
 			nestField.Set(sField)
 		}
 	}
+}
+
+// AssignCovert Simple type automatic coverage, supporting cross type. So do not try to cover complex type.
+func (obj Object) AssignCovert(target any, source any) any {
+	tvf := reflect.ValueOf(target)
+	if tvf.Kind() == reflect.Pointer {
+		tvf = tvf.Elem()
+	}
+
+	svf := reflect.ValueOf(source)
+	if svf.IsZero() {
+		return target
+	}
+
+	tvfKind := tvf.Kind()
+	//fmt.Printf("tvfKind: %v, %v\n", tvfKind, tvf.Type().Kind())
+	//fmt.Printf("svfKind: %v\n", svf.Kind())
+	ttf := tvf.Type()
+
+	if tvfKind == svf.Kind() { // same parameter type
+		tvf.Set(svf)
+	} else if tvfKind == reflect.String { // all types can covert into strings
+		tvf.Set(reflect.ValueOf(fmt.Sprintf("%v", source)))
+	} else if tvfKind == reflect.Bool { // Non null values are valid, can be true
+		tvf.Set(reflect.ValueOf(true))
+	} else if svf.CanConvert(ttf) {
+		tvf.Set(svf.Convert(ttf))
+	}
+
+	return target
 }
 
 // AssignMap Assign Map/Struct to map

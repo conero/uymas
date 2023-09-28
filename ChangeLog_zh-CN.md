@@ -37,7 +37,7 @@
 - **bin/butil**
   - feat: 新增函数 `AppName` 用于获取当前正在运行的App名称，以及重写`Basedir()` 计算规则
   - feat: 新增函数`DetectPath` 用于兼容绝对地址或相对地址。（*即相对地址根据指二进制所在路径，绝对地址不变自适应*）
-  - pref!: 重名函数`GetBasedir() -> Basedir()`及`GetPathDir()->RootPath()`，原函数标记为“遗弃”状态。（v1.4.x删除）
+  - pref!: 重名函数`GetBasedir() -> Basedir()`及`GetPathDir()->RootPath()`，原函数标记为“遗弃”状态。（v1.5.x删除）
 - **bin/data**（实验性添加）
   - feat: 新增数据管理器，默认地址以及目录获取等提供
 - **culture/digit**（实验性添加）
@@ -52,7 +52,7 @@
   - feat: 新增命令“ganz"实现年份的干支纪元法计算
 - **util**
   - feat: 新方法 `ExtractParam` 实现不定参数首参数抽取
-  - feat: `Object.Assign` 支持嵌套struct赋值
+  - feat: `Object.Assign` 支持嵌套struct赋值，新增`AssignCovert`方法用于是前者支持任何参数检测及转换
 - **util/rock**
   - feat: 新增泛型等基础库，实现最小的依赖。避免外部库的循环引用
 - **str**
