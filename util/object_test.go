@@ -351,7 +351,7 @@ func TestObject_AssignCovert(t *testing.T) {
 	ref := fmt.Sprintf("%T/%#v", src, src)
 	rslt := fmt.Sprintf("%T/%#v", tgt, tgt)
 	if ref != rslt {
-		t.Errorf("至覆盖错误，IN => %s\n    OUT =>%s\n", rslt, ref)
+		t.Errorf("至覆盖错误.\n  IN=>  %s\n  OUT=> %s\n", rslt, ref)
 	}
 
 	// case
@@ -362,37 +362,37 @@ func TestObject_AssignCovert(t *testing.T) {
 	obj.AssignCovert(&tgt, src)
 	rslt = fmt.Sprintf("%T/%#v", tgt, tgt)
 	if ref != rslt {
-		t.Errorf("至覆盖错误，IN => %s\n    OUT =>%s\n", rslt, ref)
+		t.Errorf("至覆盖错误.\n  IN=>  %s\n  OUT=> %s\n", rslt, ref)
 	}
 
 	// case
 	tgt = int64(64)
 	src = 202_403
 	obj.AssignCovert(&tgt, src)
-	ref = fmt.Sprintf("%T/%#v", src, src)
+	ref = fmt.Sprintf("%T/%#v", tgt, src)
 	rslt = fmt.Sprintf("%T/%#v", tgt, tgt)
 	if ref != rslt {
-		t.Errorf("至覆盖错误，IN => %s\n    OUT =>%s\n", rslt, ref)
+		t.Errorf("至覆盖错误.\n  IN=>  %s\n  OUT=> %s\n", rslt, ref)
 	}
 
 	// case
 	tgt = 3.141592654
 	src = 11_000
 	obj.AssignCovert(&tgt, src)
-	ref = fmt.Sprintf("%T/%#v", src, src)
+	ref = fmt.Sprintf("%T/%#v", tgt, src)
 	rslt = fmt.Sprintf("%T/%#v", tgt, tgt)
 	if ref != rslt {
-		t.Errorf("至覆盖错误，IN => %s\n    OUT =>%s\n", rslt, ref)
+		t.Errorf("至覆盖错误.\n  IN=>  %s\n  OUT=> %s\n", rslt, ref)
 	}
 
 	// case
 	tgt = 1949
 	src = "1949"
 	obj.AssignCovert(&tgt, src)
-	ref = fmt.Sprintf("%T/%#v", src, src)
+	ref = fmt.Sprintf("%T/%#v", tgt, 1949)
 	rslt = fmt.Sprintf("%T/%#v", tgt, tgt)
 	if ref != rslt {
-		t.Errorf("至覆盖错误，IN => %s\n    OUT =>%s\n", rslt, ref)
+		t.Errorf("至覆盖错误.\n  IN=>  %s\n  OUT=> %s\n", rslt, ref)
 	}
 
 	// case
@@ -400,6 +400,26 @@ func TestObject_AssignCovert(t *testing.T) {
 	src = "1949"
 	obj.AssignCovert(&tgt, src)
 	ref = fmt.Sprintf("%T/%#v", true, true)
+	rslt = fmt.Sprintf("%T/%#v", tgt, tgt)
+	if ref != rslt {
+		t.Errorf("至覆盖错误.\n  IN=>  %s\n  OUT=> %s\n", rslt, ref)
+	}
+
+	// case
+	tgt = 1949
+	src = "1949"
+	obj.AssignCovert(&tgt, src)
+	ref = fmt.Sprintf("%T/%#v", tgt, 1949)
+	rslt = fmt.Sprintf("%T/%#v", tgt, tgt)
+	if ref != rslt {
+		t.Errorf("至覆盖错误.\n  IN=>  %s\n  OUT=> %s\n", rslt, ref)
+	}
+
+	// case
+	tgt = 2024.0328
+	src = "2024.0328"
+	obj.AssignCovert(&tgt, src)
+	ref = fmt.Sprintf("%T/%#v", tgt, 2024.0328)
 	rslt = fmt.Sprintf("%T/%#v", tgt, tgt)
 	if ref != rslt {
 		t.Errorf("至覆盖错误.\n  IN=>  %s\n  OUT=> %s\n", rslt, ref)

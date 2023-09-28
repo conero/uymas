@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"gitee.com/conero/uymas/str"
 	"reflect"
+	"strconv"
 )
 
 type Object struct {
@@ -79,21 +80,28 @@ func (obj Object) nestStructAssign(dst, src reflect.Value) {
 }
 
 // AssignCovert Simple type automatic coverage, supporting cross type. So do not try to cover complex type.
+// number covert
+// any -> string
+// string -> number
 func (obj Object) AssignCovert(target any, source any) any {
-	tvf := reflect.ValueOf(target)
-	if tvf.Kind() == reflect.Pointer {
-		tvf = tvf.Elem()
+	if source == nil {
+		return target
 	}
+
+	tvf := reflect.ValueOf(target)
+	// AssignCovert: The target parameter should provide a string
+	if tvf.Kind() != reflect.Pointer {
+		return target
+	}
+	tvf = tvf.Elem()
 
 	svf := reflect.ValueOf(source)
 	if svf.IsZero() {
 		return target
 	}
 
-	tvfKind := tvf.Kind()
-	//fmt.Printf("tvfKind: %v, %v\n", tvfKind, tvf.Type().Kind())
-	//fmt.Printf("svfKind: %v\n", svf.Kind())
-	ttf := tvf.Type()
+	ttf := reflect.TypeOf(tvf.Interface()) // The type of actual execution target
+	tvfKind := ttf.Kind()
 
 	if tvfKind == svf.Kind() { // same parameter type
 		tvf.Set(svf)
@@ -101,11 +109,198 @@ func (obj Object) AssignCovert(target any, source any) any {
 		tvf.Set(reflect.ValueOf(fmt.Sprintf("%v", source)))
 	} else if tvfKind == reflect.Bool { // Non null values are valid, can be true
 		tvf.Set(reflect.ValueOf(true))
+		//} else if obj.covertSameNumber(tvf, svf) {
+		//	fmt.Printf("covertSameNumber/isOK, tvf: %v\n", tvf)
+	} else if obj.stringCoverNumber(tvf, svf) {
 	} else if svf.CanConvert(ttf) {
 		tvf.Set(svf.Convert(ttf))
 	}
 
 	return target
+}
+
+// Deprecated:  [Experimental], maybe will remove
+// cover a number type into other number type.
+func (obj Object) covertSameNumber(dst, src reflect.Value) bool {
+	if !src.CanInt() && !src.CanFloat() && !src.CanUint() {
+		return false
+	}
+	dstKind := reflect.TypeOf(dst.Interface()).Kind()
+	getIntFn := func() int64 {
+		if src.CanInt() {
+			return src.Int()
+		} else if src.CanUint() {
+			return int64(src.Uint())
+		} else if src.CanFloat() {
+			return int64(src.Float())
+		}
+		return 0
+	}
+	getFloatFn := func() float64 {
+		if src.CanFloat() {
+			return src.Float()
+		} else if src.CanInt() {
+			return float64(src.Int())
+		} else if src.CanUint() {
+			return float64(src.Uint())
+		}
+		return 0
+	}
+	getUintFn := func() uint64 {
+		if src.CanUint() {
+			return src.Uint()
+		} else if src.CanInt() {
+			return uint64(src.Int())
+		} else if src.CanFloat() {
+			return uint64(src.Float())
+		}
+		return 0
+	}
+	isOk := false
+	switch dstKind {
+	case reflect.Int:
+		dst.Set(reflect.ValueOf(int(getIntFn())))
+		isOk = true
+	case reflect.Int8:
+		dst.Set(reflect.ValueOf(int8(getIntFn())))
+		isOk = true
+	case reflect.Int16:
+		dst.Set(reflect.ValueOf(int16(getIntFn())))
+		isOk = true
+	case reflect.Int32:
+		dst.Set(reflect.ValueOf(int32(getIntFn())))
+		isOk = true
+	case reflect.Int64:
+		dst.Set(reflect.ValueOf(getIntFn()))
+		isOk = true
+	case reflect.Uint:
+		dst.Set(reflect.ValueOf(uint(getUintFn())))
+		isOk = true
+	case reflect.Uint8:
+		dst.Set(reflect.ValueOf(uint8(getUintFn())))
+		isOk = true
+	case reflect.Uint16:
+		dst.Set(reflect.ValueOf(uint16(getUintFn())))
+		isOk = true
+	case reflect.Uint32:
+		dst.Set(reflect.ValueOf(uint32(getUintFn())))
+		isOk = true
+	case reflect.Uint64:
+		dst.Set(reflect.ValueOf(getUintFn()))
+		isOk = true
+	case reflect.Float64:
+		dst.Set(reflect.ValueOf(getFloatFn()))
+		isOk = true
+	case reflect.Float32:
+		dst.Set(reflect.ValueOf(float32(getFloatFn())))
+		isOk = true
+	}
+	return isOk
+}
+
+// string type covert into a number
+func (obj Object) stringCoverNumber(dst, src reflect.Value) bool {
+	if src.Kind() != reflect.String {
+		return false
+	}
+	vStr := src.String()
+	dstKind := reflect.TypeOf(dst.Interface()).Kind()
+	// init
+	getIntFn := func() int64 {
+		i64, err := strconv.ParseInt(vStr, 10, 64)
+		if err == nil {
+			return i64
+		}
+
+		u64, err := strconv.ParseUint(vStr, 10, 64)
+		if err == nil {
+			return int64(u64)
+		}
+
+		f64, err := strconv.ParseFloat(vStr, 64)
+		if err == nil {
+			return int64(f64)
+		}
+		return 0
+	}
+	// float
+	getFloatFn := func() float64 {
+		f64, err := strconv.ParseFloat(vStr, 64)
+		if err == nil {
+			return f64
+		}
+
+		i64, err := strconv.ParseInt(vStr, 10, 64)
+		if err == nil {
+			return float64(i64)
+		}
+
+		u64, err := strconv.ParseUint(vStr, 10, 64)
+		if err == nil {
+			return float64(u64)
+		}
+
+		return 0
+	}
+	// uint
+	getUintFn := func() uint64 {
+		u64, err := strconv.ParseUint(vStr, 10, 64)
+		if err == nil {
+			return u64
+		}
+
+		i64, err := strconv.ParseInt(vStr, 10, 64)
+		if err == nil {
+			return uint64(i64)
+		}
+
+		f64, err := strconv.ParseFloat(vStr, 64)
+		if err == nil {
+			return uint64(f64)
+		}
+
+		return 0
+	}
+	isOk := false
+	switch dstKind {
+	case reflect.Int:
+		dst.Set(reflect.ValueOf(int(getIntFn())))
+		isOk = true
+	case reflect.Int8:
+		dst.Set(reflect.ValueOf(int8(getIntFn())))
+		isOk = true
+	case reflect.Int16:
+		dst.Set(reflect.ValueOf(int16(getIntFn())))
+		isOk = true
+	case reflect.Int32:
+		dst.Set(reflect.ValueOf(int32(getIntFn())))
+		isOk = true
+	case reflect.Int64:
+		dst.Set(reflect.ValueOf(getIntFn()))
+		isOk = true
+	case reflect.Uint:
+		dst.Set(reflect.ValueOf(uint(getUintFn())))
+		isOk = true
+	case reflect.Uint8:
+		dst.Set(reflect.ValueOf(uint8(getUintFn())))
+		isOk = true
+	case reflect.Uint16:
+		dst.Set(reflect.ValueOf(uint16(getUintFn())))
+		isOk = true
+	case reflect.Uint32:
+		dst.Set(reflect.ValueOf(uint32(getUintFn())))
+		isOk = true
+	case reflect.Uint64:
+		dst.Set(reflect.ValueOf(getUintFn()))
+		isOk = true
+	case reflect.Float64:
+		dst.Set(reflect.ValueOf(getFloatFn()))
+		isOk = true
+	case reflect.Float32:
+		dst.Set(reflect.ValueOf(float32(getFloatFn())))
+		isOk = true
+	}
+	return isOk
 }
 
 // AssignMap Assign Map/Struct to map
