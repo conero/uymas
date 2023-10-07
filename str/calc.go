@@ -179,11 +179,13 @@ func (c *Calc) pow(eq string) string {
 	return eq
 }
 
-// Exp support functional expression eg.
-// sprt,log
+// Exp support functional expression e.g.
+// sprt, log, sin, cos, tan.
+//
 // Notice: Attempt to expose it to external interfaces
 func (c *Calc) Exp(eq string) string {
 	if c.expReg == nil {
+		// 存在嵌套检测的问题，即函数嵌套时提取有误
 		c.expReg = regexp.MustCompile(`(?i)(?:sqrt|log|sin|cos|tan)\(.*\)`)
 	}
 
