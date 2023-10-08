@@ -9,6 +9,10 @@ import (
 	"strings"
 )
 
+var (
+	cacheCalc *Calc
+)
+
 // Calc String equality operator, which calculates the result of input string equality
 // support: `**,^,*,/,+,-,%`
 type Calc struct {
@@ -186,40 +190,67 @@ func (c *Calc) pow(eq string) string {
 func (c *Calc) Exp(eq string) string {
 	if c.expReg == nil {
 		// 存在嵌套检测的问题，即函数嵌套时提取有误
-		c.expReg = regexp.MustCompile(`(?i)(?:sqrt|log|sin|cos|tan)\(.*\)`)
+		c.expReg = regexp.MustCompile(`(?i)(sqrt|log|sin|cos|tan)\(`)
 	}
 
-	expSg := "("
-	expLs := c.expReg.FindAllString(eq, -1)
-	for _, exp := range expLs {
-		idx := strings.Index(exp, expSg)
-		if idx == -1 {
+	// 嵌套环境下：由于正则表达式无法实现取反，遂采用其他方法进行改造
+	if !c.expReg.MatchString(eq) {
+		return eq
+	}
+
+	index := c.expReg.FindAllStringIndex(eq, -1)
+	size := len(index)
+	sLen := len(eq)
+	for x, idx := range index {
+		end := sLen
+		if size > x+1 {
+			end = index[x+1][0]
+		} else {
+			end = strings.LastIndex(eq, ")") + 1
+		}
+		name := eq[idx[0] : idx[1]-1]
+
+		// 获取原始表达式
+		rawEq := eq[idx[0]:end]
+		braB := strings.Count(rawEq, "(")
+		braE := strings.Count(rawEq, ")")
+
+		// 闭合的括号＞开始括号，进行字符串切割
+		if braE > braB {
+			scanCtt := 0
+			for bIdx, b := range []byte(rawEq) {
+				scanChar := string(b)
+				if scanChar == ")" {
+					scanCtt += 1
+				}
+				if scanCtt == braB {
+					rawEq = rawEq[:bIdx+1]
+					braE = scanCtt
+					break
+				}
+			}
+		} else {
+			scanCtt := 0
+			for bIdx, b := range []byte(rawEq) {
+				scanChar := string(b)
+				if scanChar == ")" {
+					scanCtt += 1
+				}
+				if scanCtt == braB {
+					rawEq = rawEq[:bIdx+1]
+					braE = scanCtt
+					break
+				}
+			}
+		}
+
+		if braB != braE {
 			continue
 		}
 
-		name := strings.ToLower(exp[:idx])
-		subExp := exp[idx+1:]
-		subExp = subExp[:len(subExp)-1]
-		// Internally nested representation processing
-		if c.expReg.MatchString(subExp) {
-			subExp = c.Exp(subExp)
-		}
-		subValue := StringAsFloat(c.operNonBrk(subExp))
-
-		switch name {
-		case "sqrt":
-			subValue = math.Sqrt(subValue)
-		case "log":
-			subValue = math.Log(subValue)
-		case "sin":
-			subValue = math.Asin(subValue)
-		case "cos":
-			subValue = math.Acos(subValue)
-		case "tan":
-			subValue = math.Atan(subValue)
-		}
-
-		eq = strings.ReplaceAll(eq, exp, FloatSimple(fmt.Sprintf(c.accuracyStr, subValue)))
+		subValue := c.expCalc(name, rawEq)
+		eq = strings.ReplaceAll(eq, rawEq, FloatSimple(fmt.Sprintf(c.accuracyStr, subValue)))
+		break
 	}
 
 	if c.expReg.MatchString(eq) {
@@ -227,6 +258,28 @@ func (c *Calc) Exp(eq string) string {
 	}
 
 	return eq
+}
+
+// 表达式实际执行
+func (c *Calc) expCalc(name, eq string) float64 {
+	eqClear := eq[len(name)+1 : len(eq)-1]
+
+	child := CalcEq(eqClear)
+	subValue := StringAsFloat(child.String())
+
+	switch name {
+	case "sqrt":
+		subValue = math.Sqrt(subValue)
+	case "log":
+		subValue = math.Log(subValue)
+	case "sin":
+		subValue = math.Asin(subValue)
+	case "cos":
+		subValue = math.Acos(subValue)
+	case "tan":
+		subValue = math.Atan(subValue)
+	}
+	return subValue
 }
 
 // Clear interfering characters
@@ -306,4 +359,12 @@ func FloatSimple(fv string) string {
 func StringAsFloat(s string) float64 {
 	f64, _ := strconv.ParseFloat(s, 10)
 	return f64
+}
+
+func CalcEq(eq string) Calc {
+	if cacheCalc == nil {
+		cacheCalc = NewCalc("")
+	}
+	cacheCalc.Count(eq)
+	return *cacheCalc
 }
