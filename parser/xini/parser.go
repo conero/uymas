@@ -1,5 +1,7 @@
 package xini
 
+import "strconv"
+
 // @Date：   2018/8/19 0019 10:54
 // @Author:  Joshua Conero
 // @Name:    解析器
@@ -39,4 +41,57 @@ type Parser interface {
 	Save() bool
 	SaveAsFile(filename string) bool
 	Driver() string
+}
+
+// 解析为数字类型，i64/f64
+func parseNumber(vStr string) (value any, isOk bool) {
+	i64Symbol := getRegByKey("reg_i64_symbol")
+	if i64Symbol != nil && i64Symbol.MatchString(vStr) {
+		i64, er := strconv.ParseInt(vStr, 10, 10)
+		if er == nil {
+			value = i64
+			isOk = true
+			return
+		}
+	}
+
+	f64Symbol := getRegByKey("reg_f64_symbol")
+	if f64Symbol != nil && f64Symbol.MatchString(vStr) {
+		f64, er := strconv.ParseFloat(vStr, 10)
+		if er == nil {
+			value = f64
+			isOk = true
+			return
+		}
+	}
+	return
+}
+
+// 字符串清理
+func stringClear(vStr string) string {
+	strSymbol := getRegByKey("reg_str_symbol")
+	if strSymbol != nil && strSymbol.MatchString(vStr) {
+		vStr = vStr[1 : len(vStr)-1]
+	}
+	return vStr
+}
+
+// 将字符串解析为参数
+// 将原始的字符串解析为对应的参数
+func parseValue(vStr string) any {
+	var value any
+	switch vStr {
+	case "true", "TRUE":
+		value = true
+	case "false", "FALSE":
+		value = false
+	default:
+		// 包裹找字符串如，`"string"` 或 `'string'`
+		if v, isOk := parseNumber(vStr); isOk {
+			value = v
+		} else {
+			value = stringClear(vStr)
+		}
+	}
+	return value
 }

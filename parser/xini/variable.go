@@ -6,6 +6,8 @@
 
 package xini
 
+import "regexp"
+
 const (
 	SupportNameIni  = "ini"
 	SupportNameRong = "rong"
@@ -23,7 +25,7 @@ const (
 )
 
 // IniParseSettings ini-parse set base
-var IniParseSettings map[string]string = map[string]string{
+var IniParseSettings = map[string]string{
 	"equal":          "=",                    // 等号符
 	"comment":        "#|;",                  // 注释符号
 	"mcomment1":      "'''",                  // 多行注释 - 开始
@@ -46,11 +48,31 @@ var IniParseSettings map[string]string = map[string]string{
 	"reg_mlstring_sta":   `^['"].*`,                     //	多行字符正则开始
 	//"reg_mlstring_end": `[^=]*['"]+$`,                          // 多行字符正则结束
 	//"reg_mlstring_end": `^[^"'=]*['"]{1}$`, 				//	多行字符正则结束 不支持分隔符
-	"reg_mlstring_end": `^[^"'=]*['"\,]+$`, // 多行字符正则结束 支持分隔符
+	"reg_mlstring_end": `^[^"'=]*['"\,]+$`,   // 多行字符正则结束 支持分隔符
+	"reg_str_symbol":   `^["'].*["']+$`,      // 字符串符号
+	"reg_i64_symbol":   `^-{0,1}\d+$`,        // int64 符号
+	"reg_f64_symbol":   `^-{0,1}\d+(.\d+)+$`, // float64 符号
+}
+
+// 正则表达式缓存器
+var regDickCache = map[string]*regexp.Regexp{}
+
+// 获取缓存的正则表达式
+func getRegByKey(key string) *regexp.Regexp {
+	reg, exist := regDickCache[key]
+	if exist {
+		return reg
+	}
+	regStr, exist := IniParseSettings[key]
+	if exist {
+		regDickCache[key] = regexp.MustCompile(regStr)
+		return regDickCache[key]
+	}
+	return nil
 }
 
 // TranStrMap transfer character parsing
-var TranStrMap map[string]string = map[string]string{
+var TranStrMap = map[string]string{
 	`\,`: "_JC__COMMA", // 逗号转移符
 	`\{`: "_L__BRACE",  // 左大括弧号
 	`\}`: "_R__BRACE",  // 右大括弧号

@@ -23,6 +23,8 @@
 ### v1.4.0/dev
 
 - [ ] xini 库的测试，使其可用常规使用
+  - [ ] 支持指令，如导入文件
+
 - [ ] bin 重复注册命令式，提供可选的panic。即提前预知错误（错误检测）
 
 
@@ -35,6 +37,7 @@
   - fix(calc): 修复`Calc.Exp`三角函数与实际计算的不一致，且扩展对双曲线三角函数、反三角函数。
 - **parser/xini**
   - pref!: 将 `parser.GetData()` 返回类型由map[any]any 转 map[string]any，使其可正常json化。
+  - feat: base parse实现string，float64，int64的字符格式解析
 
 - **cmd/uymas**
   - feat: 新增 ini 命令实现对ini文件的解析，可用于其调试

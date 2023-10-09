@@ -75,20 +75,11 @@ func (p *baseFileParse) read(filename string) *baseFileParse {
 		idx := strings.Index(str, baseEqualToken)
 		key := strings.TrimSpace(str[:idx])
 		value := strings.TrimSpace(str[idx+1:])
-		var dd any
-		switch value {
-		case "true":
-			dd = true
-		case "false":
-			dd = false
-		default:
-			dd = value
-		}
 		// 赋值
 		if isSecMk {
-			secTmpDd[key] = dd
+			secTmpDd[key] = parseValue(value)
 		} else {
-			p.data[key] = dd
+			p.data[key] = parseValue(value)
 		}
 		p.rawData[key] = value
 	})
