@@ -119,12 +119,9 @@ func (p *BaseParser) SaveAsFile(filename string) bool {
 		"\n;time: " + time.Now().String() +
 		"\n; github.com/" + Name
 	for k, v := range p.Data {
-		switch k.(type) {
-		case string:
-			iniTxt += "\n" + k.(string) + "	= "
-			if _, isStr := v.(string); isStr {
-				iniTxt += v.(string)
-			}
+		iniTxt += "\n" + k + "	= "
+		if _, isStr := v.(string); isStr {
+			iniTxt += v.(string)
 		}
 	}
 	// 0644 Append

@@ -33,6 +33,8 @@
   - pref(calc): `Calc.Exp` 使用文本扫描替换原正则替换已解决函数表达式嵌套的问题，如`sqrt(sqrt(625)) + sqrt(25+(300+100*3))` 计算错误。
   - feat(calc): 新增 CaclEq 函数实现对表达式的直接计算并输出结果。
   - fix(calc): 修复`Calc.Exp`三角函数与实际计算的不一致，且扩展对双曲线三角函数、反三角函数。
+- **parser/xini**
+  - pref!: 将 `parser.GetData()` 返回类型由map[any]any 转 map[string]any，使其可正常json化。
 
 - **cmd/uymas**
   - feat: 新增 ini 命令实现对ini文件的解析，可用于其调试

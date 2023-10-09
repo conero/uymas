@@ -12,7 +12,7 @@ import (
 // FileParser File parser
 type FileParser interface {
 	Line() int // 获取总行数
-	GetData() map[any]any
+	GetData() map[string]any
 }
 
 // base 文件解析
@@ -20,7 +20,7 @@ type baseFileParse struct {
 	line    int               // 总行数
 	comment int               // 注释行
 	equal   int               // 等式行
-	data    map[any]any       // 解析以后的数据
+	data    map[string]any    // 解析以后的数据
 	rawData map[string]string // 原始数据
 	section []string          // 节
 	err     error             // 错误信息
@@ -29,7 +29,7 @@ type baseFileParse struct {
 // 文件读取
 func (p *baseFileParse) read(filename string) *baseFileParse {
 	if p.data == nil {
-		p.data = map[any]any{}
+		p.data = map[string]any{}
 	}
 
 	if p.rawData == nil {
@@ -41,7 +41,7 @@ func (p *baseFileParse) read(filename string) *baseFileParse {
 	}
 	ln := NewLnRer(filename)
 	// 行扫描
-	secTmpDd := map[any]any{}
+	secTmpDd := map[string]any{}
 	isSecMk := false
 	var section string
 	ln.Scan(func(line string) {
@@ -64,7 +64,7 @@ func (p *baseFileParse) read(filename string) *baseFileParse {
 			}
 
 			// 值重置
-			secTmpDd = map[any]any{}
+			secTmpDd = map[string]any{}
 			isSecMk = true
 			section = str[1 : len(str)-1]
 			p.section = append(p.section, section)
@@ -110,6 +110,6 @@ func (p *baseFileParse) Line() int {
 }
 
 // GetData get all data by parse file.
-func (p *baseFileParse) GetData() map[any]any {
+func (p *baseFileParse) GetData() map[string]any {
 	return p.data
 }

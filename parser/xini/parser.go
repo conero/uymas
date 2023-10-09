@@ -26,7 +26,7 @@ type Parser interface {
 	//		2.     fun Section(format string) 			点操作
 	Section(params ...any) any
 
-	GetData() map[any]any
+	GetData() map[string]any
 
 	Set(key string, value any) Parser // 设置值
 	Del(key string) bool              // 删除键值

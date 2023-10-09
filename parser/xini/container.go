@@ -6,19 +6,19 @@ package xini
 
 // Container  abstract data container
 type Container struct {
-	Data        map[any]any
+	Data        map[string]any
 	_eventGetFn map[any]func() any
 }
 
 // GetData the data of `Container`
-func (c *Container) GetData() map[any]any {
+func (c *Container) GetData() map[string]any {
 	if c.Data == nil {
-		c.Data = map[any]any{}
+		c.Data = map[string]any{}
 	}
 	return c.Data
 }
 
-func (c *Container) Get(key any) (bool, any) {
+func (c *Container) Get(key string) (bool, any) {
 	data := c.GetData()
 	value, has := data[key]
 	if !has {
@@ -34,7 +34,7 @@ func (c *Container) Get(key any) (bool, any) {
 }
 
 // GetDef get value by key with default.
-func (c *Container) GetDef(key any, def any) any {
+func (c *Container) GetDef(key string, def any) any {
 	return c.Value(key, nil, def)
 }
 
@@ -48,7 +48,7 @@ func (c *Container) SetFunc(key string, fn func() any) *Container {
 }
 
 // HasKey checkout if keys exist
-func (c *Container) HasKey(keys ...any) bool {
+func (c *Container) HasKey(keys ...string) bool {
 	data := c.GetData()
 	for _, key := range keys {
 		if _, has := data[key]; has {
@@ -79,14 +79,14 @@ func (c *Container) Value(params ...any) any {
 }
 
 // Set set container value
-func (c *Container) Set(key, value any) *Container {
+func (c *Container) Set(key string, value any) *Container {
 	c.GetData()
 	c.Data[key] = value
 	return c
 }
 
 // Del del key from container
-func (c *Container) Del(key any) bool {
+func (c *Container) Del(key string) bool {
 	if c.HasKey(key) {
 		delete(c.Data, key)
 		return true
@@ -95,7 +95,7 @@ func (c *Container) Del(key any) bool {
 }
 
 // Merge merge data from map set
-func (c *Container) Merge(data map[any]any) *Container {
+func (c *Container) Merge(data map[string]any) *Container {
 	for k, v := range data {
 		c.Set(k, v)
 	}
@@ -104,6 +104,6 @@ func (c *Container) Merge(data map[any]any) *Container {
 
 // Reset reset container will del all data
 func (c *Container) Reset() *Container {
-	c.Data = map[any]any{}
+	c.Data = map[string]any{}
 	return c
 }
