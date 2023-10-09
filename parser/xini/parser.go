@@ -1,6 +1,11 @@
 package xini
 
-import "strconv"
+import (
+	"fmt"
+	"strconv"
+	"strings"
+	"time"
+)
 
 // @Date：   2018/8/19 0019 10:54
 // @Author:  Joshua Conero
@@ -76,14 +81,56 @@ func stringClear(vStr string) string {
 	return vStr
 }
 
+// 行内字符清理，如含内注释等
+func lnTrim(vStr string) (vs string) {
+	vs = vStr
+	vs = strings.TrimSpace(vs)
+
+	strSymbol := getRegByKey("reg_str_symbol")
+	// 标准的`"string"`或`'string'`不再进行处理
+	if strSymbol != nil && strSymbol.MatchString(vs) {
+		return
+	}
+
+	lnReg := getRegByKey("reg_str_symbol_ln")
+	if lnReg != nil && lnReg.MatchString(vs) {
+		line := lnReg.FindAllString(vs, -1)
+		dick := map[string]string{}
+		tmStr := fmt.Sprintf("%v", time.Now().Unix())
+		for i, ln := range line {
+			key := fmt.Sprintf("L%vN%v", tmStr, i)
+			vs = strings.ReplaceAll(vs, ln, key)
+			dick[key] = ln
+		}
+
+		cmtReg := getRegByKey("reg_has_comment")
+		if cmtReg != nil && cmtReg.MatchString(vs) {
+			indexList := cmtReg.FindAllStringIndex(vs, -1)
+			if len(indexList) > 0 {
+				if len(indexList[0]) > 0 {
+					vs = vs[:indexList[0][0]+1]
+				}
+			}
+		}
+
+		// 字符串还原
+		for rpl, raw := range dick {
+			vs = strings.ReplaceAll(vs, rpl, raw)
+		}
+		vs = strings.TrimSpace(vs)
+	}
+
+	return
+}
+
 // 将字符串解析为参数
 // 将原始的字符串解析为对应的参数
 func parseValue(vStr string) any {
 	var value any
-	switch vStr {
-	case "true", "TRUE":
+	switch strings.ToLower(vStr) {
+	case "true":
 		value = true
-	case "false", "FALSE":
+	case "false":
 		value = false
 	default:
 		// 包裹找字符串如，`"string"` 或 `'string'`

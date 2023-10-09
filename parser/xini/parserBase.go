@@ -11,7 +11,7 @@ import (
 // @Author:  Joshua Conero
 // @Name:    基本 go 解析器
 const (
-	baseCommentReg = "^#|;"               // 注释符号
+	baseCommentReg = "^(#|;)"             // 注释符号
 	baseSectionReg = "^\\[[^\\[\\]]+\\]$" // 节正则
 
 	baseEqualToken = "="      // 等于符号

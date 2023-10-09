@@ -74,13 +74,14 @@ func (p *baseFileParse) read(filename string) *baseFileParse {
 		// 赋值
 		idx := strings.Index(str, baseEqualToken)
 		key := strings.TrimSpace(str[:idx])
-		value := strings.TrimSpace(str[idx+1:])
+		value := lnTrim(str[idx+1:])
 		// 赋值
 		if isSecMk {
 			secTmpDd[key] = parseValue(value)
 		} else {
 			p.data[key] = parseValue(value)
 		}
+
 		p.rawData[key] = value
 	})
 

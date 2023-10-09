@@ -16,7 +16,8 @@ type ActionIni struct {
 func (c *ActionIni) DefaultHelp() {
 	fmt.Println("  ini 命令，实现对文件ini文件的加载解析")
 	fmt.Println("  ini [file]   文件解析")
-	fmt.Println("      --output,-O   是否打印内容（反序列）")
+	fmt.Println("      --output,-O   是否打印内容")
+	fmt.Println("      --restore,-R  反序列恢复")
 }
 
 func (c *ActionIni) DefaultUnmatched() {
@@ -40,14 +41,23 @@ func (c *ActionIni) DefaultUnmatched() {
 	lgr.Info("文件加载成功！\n  用时：%s", timeTck())
 
 	isOut := c.Cc.CheckSetting("output", "O")
+	isRestore := c.Cc.CheckSetting("restore", "R")
+	allData := psr.GetData()
 	if isOut {
-		allData := psr.GetData()
 		jsonBy, jsonEr := json.Marshal(allData)
 
 		lgr.Info("解析后的内容：\n\n--------------[RAW]--------------\n%#v\n\n--------------[JSON]--------------\n%s",
 			allData, string(jsonBy))
 		if jsonEr != nil {
 			lgr.Error("json 编码错误，%s", jsonEr.Error())
+		}
+	}
+	if isRestore {
+		bys, err := xini.Marshal(allData)
+		if err != nil {
+			lgr.Error("xini 序列化生成错误，%s", err.Error())
+		} else {
+			lgr.Info("xini 序列化生成\n\n------------[ini]-----------\n%s\n", string(bys))
 		}
 	}
 }
