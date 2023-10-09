@@ -108,4 +108,13 @@ func TestCalc_Count(t *testing.T) {
 	if rsl != ref {
 		t.Errorf("input -> rsl ≠ ref: %s -> %s ≠ %s", ipt, rsl, ref)
 	}
+
+	// case
+	ipt, ref = "tanh(45) + sqrt(tanh(45)+2*4)", "4"
+	//ipt, ref = "sqrt(sqrt(625)) + sqrt(25+(300+100*3))", "30"
+	calc.Count(ipt)
+	rsl = calc.String()
+	if rsl != ref {
+		t.Errorf("input -> rsl ≠ ref: %s -> %s ≠ %s", ipt, rsl, ref)
+	}
 }

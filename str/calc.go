@@ -190,7 +190,8 @@ func (c *Calc) pow(eq string) string {
 func (c *Calc) Exp(eq string) string {
 	if c.expReg == nil {
 		// 存在嵌套检测的问题，即函数嵌套时提取有误
-		c.expReg = regexp.MustCompile(`(?i)(sqrt|log|sin|cos|tan)\(`)
+		// sin 与 sinh，带h的为双曲线三角函数
+		c.expReg = regexp.MustCompile(`(?i)(sqrt|log|log2|log10|sin|cos|tan|sinh|cosh|tanh|asin|acos|atan|asinh|acosh|atanh|abs)\(`)
 	}
 
 	// 嵌套环境下：由于正则表达式无法实现取反，遂采用其他方法进行改造
@@ -272,12 +273,36 @@ func (c *Calc) expCalc(name, eq string) float64 {
 		subValue = math.Sqrt(subValue)
 	case "log":
 		subValue = math.Log(subValue)
+	case "log2":
+		subValue = math.Log2(subValue)
+	case "log10":
+		subValue = math.Log10(subValue)
 	case "sin":
-		subValue = math.Asin(subValue)
+		subValue = math.Sin(subValue)
 	case "cos":
-		subValue = math.Acos(subValue)
+		subValue = math.Cos(subValue)
 	case "tan":
+		subValue = math.Tan(subValue)
+	case "sinh":
+		subValue = math.Sinh(subValue)
+	case "cosh":
+		subValue = math.Cosh(subValue)
+	case "tanh":
+		subValue = math.Tanh(subValue)
+	case "asin":
+		subValue = math.Asin(subValue)
+	case "acos":
+		subValue = math.Acos(subValue)
+	case "atan":
 		subValue = math.Atan(subValue)
+	case "asinh":
+		subValue = math.Asinh(subValue)
+	case "acosh":
+		subValue = math.Acosh(subValue)
+	case "atanh":
+		subValue = math.Atanh(subValue)
+	case "abs": // absolute-value
+		subValue = math.Abs(subValue)
 	}
 	return subValue
 }
