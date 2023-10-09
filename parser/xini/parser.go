@@ -74,6 +74,7 @@ func parseNumber(vStr string) (value any, isOk bool) {
 
 // 字符串清理
 func stringClear(vStr string) string {
+	vStr = strings.TrimSpace(vStr)
 	strSymbol := getRegByKey("reg_str_symbol")
 	if strSymbol != nil && strSymbol.MatchString(vStr) {
 		vStr = vStr[1 : len(vStr)-1]
@@ -108,7 +109,7 @@ func lnTrim(vStr string) (vs string) {
 			indexList := cmtReg.FindAllStringIndex(vs, -1)
 			if len(indexList) > 0 {
 				if len(indexList[0]) > 0 {
-					vs = vs[:indexList[0][0]+1]
+					vs = vs[:indexList[0][0]]
 				}
 			}
 		}
@@ -118,6 +119,52 @@ func lnTrim(vStr string) (vs string) {
 			vs = strings.ReplaceAll(vs, rpl, raw)
 		}
 		vs = strings.TrimSpace(vs)
+	}
+
+	return
+}
+
+// 切片解析（行内）
+func parseSlice(vStr string) (value any, isOk bool) {
+	if strings.Index(vStr, baseLimiterToken) == -1 {
+		return
+	}
+
+	dick := map[string]string{}
+	lnReg := getRegByKey("reg_str_symbol_ln")
+	isStr := false
+	if lnReg != nil && lnReg.MatchString(vStr) {
+		line := lnReg.FindAllString(vStr, -1)
+		tmStr := fmt.Sprintf("%v", time.Now().Unix())
+		for i, ln := range line {
+			key := fmt.Sprintf("L%vN%v", tmStr, i)
+			vStr = strings.ReplaceAll(vStr, ln, key)
+			dick[key] = ln
+		}
+		isStr = true
+	}
+
+	// 字符换分隔
+	var strQue []string
+	//fmt.Printf("vStr: %#v, dick: %#v\n", vStr, dick)
+	for _, s := range strings.Split(vStr, baseLimiterToken) {
+		// 字符串
+		if isStr {
+			for rpl, raw := range dick {
+				s = strings.ReplaceAll(s, rpl, raw)
+			}
+			//fmt.Printf("v => %s, %s\n", s, stringClear(s))
+			s = stringClear(s)
+			strQue = append(strQue, s)
+		} else {
+			s = stringClear(s)
+			strQue = append(strQue, s)
+		}
+	}
+
+	if len(strQue) > 0 {
+		isOk = true
+		value = strQue
 	}
 
 	return
@@ -135,6 +182,8 @@ func parseValue(vStr string) any {
 	default:
 		// 包裹找字符串如，`"string"` 或 `'string'`
 		if v, isOk := parseNumber(vStr); isOk {
+			value = v
+		} else if v, isOk = parseSlice(vStr); isOk {
 			value = v
 		} else {
 			value = stringClear(vStr)

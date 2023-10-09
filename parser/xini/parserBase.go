@@ -14,8 +14,9 @@ const (
 	baseCommentReg = "^(#|;)"             // 注释符号
 	baseSectionReg = "^\\[[^\\[\\]]+\\]$" // 节正则
 
-	baseEqualToken = "="      // 等于符号
-	baseSecRegPref = "__sec_" // 节前缀
+	baseEqualToken   = "="      // 等于符号
+	baseLimiterToken = ","      // 分隔符号
+	baseSecRegPref   = "__sec_" // 节前缀
 )
 
 // BaseParser base and default file parse, support the standard ini configure file
