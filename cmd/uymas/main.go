@@ -25,6 +25,7 @@ func application() {
 	cli = bin.NewCLI()
 	//app App 应用
 	cli.RegisterApp(new(App), "app")
+	cli.RegisterApp(new(ActionIni), "ini")
 	cli.RegisterAny(&defaultApp{})
 	cli.Run()
 }
