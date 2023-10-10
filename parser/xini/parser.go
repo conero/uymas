@@ -146,25 +146,54 @@ func parseSlice(vStr string) (value any, isOk bool) {
 
 	// 字符换分隔
 	var strQue []string
-	//fmt.Printf("vStr: %#v, dick: %#v\n", vStr, dick)
+	var i64Que []int64
+	var f64Que []float64
+	var isI64 = false
 	for _, s := range strings.Split(vStr, baseLimiterToken) {
 		// 字符串
 		if isStr {
 			for rpl, raw := range dick {
 				s = strings.ReplaceAll(s, rpl, raw)
 			}
-			//fmt.Printf("v => %s, %s\n", s, stringClear(s))
 			s = stringClear(s)
 			strQue = append(strQue, s)
 		} else {
-			s = stringClear(s)
-			strQue = append(strQue, s)
+			num, isNum := parseNumber(strings.TrimSpace(s))
+			if isNum {
+				if i64, isMatch := num.(int64); isMatch {
+					if !isI64 && len(i64Que) == 0 && len(f64Que) == 0 {
+						isI64 = true
+					}
+					if isI64 {
+						i64Que = append(i64Que, i64)
+					} else {
+						// i64 存在且不是i64是将原数组切换到f64存储栈中
+						for _, oldI64 := range i64Que {
+							f64Que = append(f64Que, float64(oldI64))
+						}
+						i64Que = []int64{}
+					}
+				} else {
+					f64Que = append(f64Que, num.(float64))
+					isI64 = false
+				}
+			} else {
+				s = stringClear(s)
+				strQue = append(strQue, s)
+			}
+
 		}
 	}
 
 	if len(strQue) > 0 {
 		isOk = true
 		value = strQue
+	} else if len(f64Que) > 0 {
+		isOk = true
+		value = f64Que
+	} else if len(i64Que) > 0 {
+		isOk = true
+		value = i64Que
 	}
 
 	return
