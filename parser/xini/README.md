@@ -88,6 +88,16 @@ str3 = "the var is : &author"   ; the var is : Joshua Conero
 
 
 
+> 支持 include 文本引入指令
+
+```ini
+; 引入文件
+include conf/database.ini
+
+; 批量文件引入
+include conf/*.ini
+```
+
 
 
 

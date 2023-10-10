@@ -56,6 +56,7 @@ var IniParseSettings = map[string]string{
 	"reg_var_support":     `^".*(\$|&)\w+.*"+$`,  // 是否存在变量
 	"reg_var_support_val": `\$\w+`,               // 变量名
 	"reg_var_support_ref": `&\w+`,                // 变量引用
+	"reg_include_smbl":    `(?i)^include\s\w+`,   // include指令识别
 }
 
 // 正则表达式缓存器
