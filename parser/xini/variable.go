@@ -48,11 +48,14 @@ var IniParseSettings = map[string]string{
 	"reg_mlstring_sta":   `^['"].*`,                     //	多行字符正则开始
 	//"reg_mlstring_end": `[^=]*['"]+$`,                          // 多行字符正则结束
 	//"reg_mlstring_end": `^[^"'=]*['"]{1}$`, 				//	多行字符正则结束 不支持分隔符
-	"reg_mlstring_end":  `^[^"'=]*['"\,]+$`,    // 多行字符正则结束 支持分隔符
-	"reg_str_symbol":    `^["'].*["']+$`,       // 字符串符号
-	"reg_str_symbol_ln": `("[^"]*")|('[^']*')`, // 字符串符号，行内
-	"reg_i64_symbol":    `^-{0,1}\d+$`,         // int64 符号
-	"reg_f64_symbol":    `^-{0,1}\d+(.\d+)+$`,  // float64 符号
+	"reg_mlstring_end":    `^[^"'=]*['"\,]+$`,    // 多行字符正则结束 支持分隔符
+	"reg_str_symbol":      `^["'].*["']+$`,       // 字符串符号
+	"reg_str_symbol_ln":   `("[^"]*")|('[^']*')`, // 字符串符号，行内
+	"reg_i64_symbol":      `^-{0,1}\d+$`,         // int64 符号
+	"reg_f64_symbol":      `^-{0,1}\d+(.\d+)+$`,  // float64 符号
+	"reg_var_support":     `^".*(\$|&)\w+.*"+$`,  // 是否存在变量
+	"reg_var_support_val": `\$\w+`,               // 变量名
+	"reg_var_support_ref": `&\w+`,                // 变量引用
 }
 
 // 正则表达式缓存器

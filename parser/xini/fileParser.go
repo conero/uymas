@@ -1,6 +1,7 @@
 package xini
 
 import (
+	"fmt"
 	"regexp"
 	"strings"
 )
@@ -24,6 +25,45 @@ type baseFileParse struct {
 	rawData map[string]string // 原始数据
 	section []string          // 节
 	err     error             // 错误信息
+}
+
+// 变量解析支持
+func (p *baseFileParse) supportVariable(s string) string {
+	reg := getRegByKey("reg_var_support")
+	if reg == nil || !reg.MatchString(s) {
+		return s
+	}
+
+	// 变量
+	regVal := getRegByKey("reg_var_support_val")
+	if regVal != nil {
+		// 变量
+		for _, vl := range regVal.FindAllString(s, -1) {
+			name := strings.TrimSpace(vl[1:])
+			vAny, exist := p.data[name]
+			rpl := ""
+			if exist && vAny != nil {
+				rpl = fmt.Sprintf("%v", vAny)
+			}
+			s = strings.ReplaceAll(s, vl, rpl)
+		}
+	}
+
+	// 变量引用
+	regRef := getRegByKey("reg_var_support_ref")
+	if regRef != nil {
+		// 变量
+		for _, vl := range regRef.FindAllString(s, -1) {
+			name := strings.TrimSpace(vl[1:])
+			vAny, exist := p.data[name]
+			rpl := ""
+			if exist && vAny != nil {
+				rpl = fmt.Sprintf("%v", vAny)
+			}
+			s = strings.ReplaceAll(s, vl, rpl)
+		}
+	}
+	return s
 }
 
 // 文件读取
@@ -75,6 +115,8 @@ func (p *baseFileParse) read(filename string) *baseFileParse {
 		idx := strings.Index(str, baseEqualToken)
 		key := strings.TrimSpace(str[:idx])
 		value := lnTrim(str[idx+1:])
+		// 变量命令替换
+		value = p.supportVariable(value)
 		// 赋值
 		if isSecMk {
 			secTmpDd[key] = parseValue(value)
