@@ -41,7 +41,7 @@
   - feat: 实现 include 指令支持文件引入
   
 - **cmd/uymas**
-  - feat: 新增 ini 命令实现对ini文件的解析，可用于其调试
+  - feat: 新增 ini 命令实现对ini文件的解析，可用于其调试；create 子命令用于生成文件
 
 
 
