@@ -130,9 +130,79 @@ func (p *baseFileParse) read(filename string) *baseFileParse {
 	secTmpDd := map[string]any{}
 	isSecMk := false
 	var section string
+
+	// 多行注释
+	var isMutLineCmt = false
+	var mt1 = IniParseSettings["mcomment1"]
+	var mt2 = IniParseSettings["mcomment2"]
+
+	// 多行字符串
+	var isMutLineStr = false
+	var mutLineStr = [2]string{"", ""}
+	// 多行字符串结束处理，返回是否中断
+	var mtsEndHandler = func() bool {
+		mlsKey := mutLineStr[0]
+		if mlsKey == "" {
+			mutLineStr = [2]string{"", ""}
+			return true
+		}
+
+		// 赋值
+		if isSecMk {
+			secTmpDd[mlsKey] = mutLineStr[1]
+		} else {
+			p.data[mlsKey] = mutLineStr[1]
+		}
+
+		mutLineStr = [2]string{"", ""}
+		return true
+	}
+
 	ln.Scan(func(line string) {
 		p.line += 1
 		str := strings.TrimSpace(line)
+
+		// 多行注释或字符串多行
+		if str == mt1 || str == mt2 {
+			if isMutLineStr { // 多行字符串结束
+				isMutLineStr = false
+				if mtsEndHandler() {
+					return
+				}
+
+				return
+			}
+			if isMutLineCmt { // 结束
+				isMutLineCmt = false
+				return
+			}
+
+			isMutLineCmt = true
+			return
+		}
+		if isMutLineStr {
+			mtsIdxEnd := strings.Index(line, mt1)
+			if mtsIdxEnd == -1 {
+				mtsIdxEnd = strings.Index(line, mt2)
+			}
+			if mtsIdxEnd > -1 {
+				isMutLineStr = false
+				mutLineStr[1] += line[:mtsIdxEnd]
+				// 保存字符串
+				if mtsEndHandler() {
+					return
+				}
+				return
+			}
+			mutLineStr[1] += line
+			//fmt.Printf("mutLineStr: %#v\n", mutLineStr)
+			return
+		}
+		if isMutLineCmt {
+			//fmt.Printf("mt: %s\n", line)
+			return
+		}
+
 		// 空行过滤
 		if "" == str {
 			p.comment += 1
@@ -176,8 +246,27 @@ func (p *baseFileParse) read(filename string) *baseFileParse {
 		if idx == -1 { // 非法行自动过滤
 			return
 		}
+
+		// 作用域， `{}`
+
 		key := strings.TrimSpace(str[:idx])
 		value := lnTrim(str[idx+1:])
+
+		// 长字符串，`"""|'''`
+		if strings.Index(value, mt1) == 0 || strings.Index(value, mt2) == 0 {
+			isMutLineStr = true
+			mutLineStr[0] = key
+
+			mlsIdx := strings.Index(line, mt1)
+			if mlsIdx == -1 {
+				mlsIdx = strings.Index(line, mt2)
+			}
+
+			mutLineStr[1] = line[mlsIdx+len(mt1):]
+			//fmt.Printf("mutLineStr: %#v\n", mutLineStr)
+			return
+		}
+
 		// 变量命令替换
 		value = p.supportVariable(value)
 		// 赋值

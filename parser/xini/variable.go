@@ -28,7 +28,7 @@ const (
 var IniParseSettings = map[string]string{
 	"equal":          "=",                    // 等号符
 	"comment":        "#|;",                  // 注释符号
-	"mcomment1":      "'''",                  // 多行注释 - 开始
+	"mcomment1":      `"""`,                  // 多行注释 - 开始
 	"mcomment2":      "'''",                  // 多行注释 - 结束
 	"limiter":        ",",                    // 分隔符
 	"scope1":         "{",                    // 作用域 - 开始
