@@ -6,7 +6,9 @@
 
 package xini
 
-import "regexp"
+import (
+	"regexp"
+)
 
 const (
 	SupportNameIni  = "ini"

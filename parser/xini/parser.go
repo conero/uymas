@@ -220,3 +220,32 @@ func parseValue(vStr string) any {
 	}
 	return value
 }
+
+// DecKvPairs Deconstruct key value pairs
+func DecKvPairs(s string) *KvPairs {
+	var kp = &KvPairs{
+		raw: s,
+	}
+	ln := strings.TrimSpace(s)
+	strSymbol := getRegByKey("reg_str_symbol")
+	if strSymbol != nil && strSymbol.MatchString(ln) {
+		kp.isString = true
+	} else {
+		eqlIdx := strings.Index(ln, baseEqualToken)
+		if eqlIdx > -1 {
+			kp.isKv = true
+			kp.key = ln[:eqlIdx]
+			kp.value = ln[eqlIdx:]
+		}
+	}
+	return kp
+}
+
+// KvPairs KV 键值对
+type KvPairs struct {
+	key      string
+	value    string
+	isString bool
+	isKv     bool
+	raw      string
+}

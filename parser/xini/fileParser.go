@@ -158,6 +158,36 @@ func (p *baseFileParse) read(filename string) *baseFileParse {
 		return true
 	}
 
+	// 作用域解析， “{}”
+	var isScope = false
+	var scopeKey string
+	var scopeValue map[string]any
+	var scopeValStrSlice []string
+	// 作用域符号
+	var scopeSml = [2]string{IniParseSettings["scope1"], IniParseSettings["scope2"]}
+	var handlerScope = func() {
+		if scopeKey == "" {
+			return
+		}
+		var vAny any
+		if len(scopeValue) > 0 {
+			vAny = scopeValue
+		} else if len(scopeValStrSlice) > 0 {
+			vAny = scopeValStrSlice
+		}
+
+		if isSecMk {
+			secTmpDd[scopeKey] = vAny
+		} else {
+			p.data[scopeKey] = vAny
+		}
+
+		// 数据复原
+		scopeKey = ""
+		scopeValStrSlice = []string{}
+		scopeValue = map[string]any{}
+	}
+
 	ln.Scan(func(line string) {
 		p.line += 1
 		str := strings.TrimSpace(line)
@@ -212,6 +242,13 @@ func (p *baseFileParse) read(filename string) *baseFileParse {
 		if matched, _ := regexp.MatchString(baseCommentReg, str); matched {
 			return
 		}
+
+		// 作用域结束
+		if str == scopeSml[1] {
+			handlerScope()
+			return
+		}
+
 		// 节处理
 		if matched, _ := regexp.MatchString(baseSectionReg, str); matched {
 			// section 加到 data 中
@@ -247,8 +284,6 @@ func (p *baseFileParse) read(filename string) *baseFileParse {
 			return
 		}
 
-		// 作用域， `{}`
-
 		key := strings.TrimSpace(str[:idx])
 		value := lnTrim(str[idx+1:])
 
@@ -267,13 +302,36 @@ func (p *baseFileParse) read(filename string) *baseFileParse {
 			return
 		}
 
+		// 作用域， `{}`
+		if strings.Index(value, scopeSml[0]) == 0 {
+			isScope = true
+			scopeValue = map[string]any{}
+			scopeKey = key
+
+			// 变量处理
+			value = strings.TrimSpace(value[1:])
+			if value != "" {
+				kp := DecKvPairs(value)
+				if kp.isString {
+					scopeValStrSlice = append(scopeValStrSlice, value)
+				} else if kp.isKv {
+					scopeValue[kp.key] = parseValue(kp.value)
+				}
+			}
+
+			return
+		}
+
 		// 变量命令替换
 		value = p.supportVariable(value)
+		vAny := parseValue(value)
 		// 赋值
-		if isSecMk {
-			secTmpDd[key] = parseValue(value)
+		if isScope {
+			scopeValue[key] = vAny
+		} else if isSecMk {
+			secTmpDd[key] = vAny
 		} else {
-			p.data[key] = parseValue(value)
+			p.data[key] = vAny
 		}
 
 		p.rawData[key] = value

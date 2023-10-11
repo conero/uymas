@@ -37,7 +37,7 @@
   - fix(calc): 修复`Calc.Exp`三角函数与实际计算的不一致，且扩展对双曲线三角函数、反三角函数。
 - **parser/xini**
   - pref!: 将 `parser.GetData()` 返回类型由map[any]any 转 map[string]any，使其可正常json化。
-  - feat: base parse实现string（多行字符串支持），float64，int64，以及其对应的切片支持的字符格式解析
+  - feat: base parse实现string（多行字符串支持），float64，int64，作用域（`{}`）以及其对应的切片支持的字符格式解析
   - feat: 实现 include 指令支持文件引入
   - feat: marshal map提供 section支持
   
