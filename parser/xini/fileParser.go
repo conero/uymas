@@ -225,11 +225,9 @@ func (p *baseFileParse) read(filename string) *baseFileParse {
 				return
 			}
 			mutLineStr[1] += line
-			//fmt.Printf("mutLineStr: %#v\n", mutLineStr)
 			return
 		}
 		if isMutLineCmt {
-			//fmt.Printf("mt: %s\n", line)
 			return
 		}
 
@@ -298,7 +296,6 @@ func (p *baseFileParse) read(filename string) *baseFileParse {
 			}
 
 			mutLineStr[1] = line[mlsIdx+len(mt1):]
-			//fmt.Printf("mutLineStr: %#v\n", mutLineStr)
 			return
 		}
 
