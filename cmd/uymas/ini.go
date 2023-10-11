@@ -66,6 +66,10 @@ func (c *ActionIni) DefaultUnmatched() {
 			lgr.Info("xini 序列化生成\n\n------------[ini]-----------\n%s\n", string(bys))
 		}
 	}
+
+	if isRestore || isOut {
+		lgr.Info("所有操作完成用时 %v", timeTck())
+	}
 }
 
 // Create 文件创建，用于测试

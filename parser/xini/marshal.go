@@ -45,9 +45,39 @@ func (c *Encoder) Put(v any) {
 
 func (c *Encoder) putMap(v any) {
 	rv := reflect.ValueOf(v)
+	// 先处理非section部门，由于map无的序的
 	for _, key := range rv.MapKeys() {
+		keyStr := fmt.Sprintf("%v", key)
+		isSec := strings.Index(keyStr, baseSecRegPref) == 0
+		if isSec {
+			continue
+		}
 		value := rv.MapIndex(key)
-		c.buff.WriteString(fmt.Sprintf("%v = %s\n", key, valueToString(value)))
+		valueStr, isMt := marshalToString(value, "")
+		if isMt {
+			valueStr = fmt.Sprintf("{\n%s\n}\n", valueStr)
+			c.buff.WriteString(fmt.Sprintf("\n%s = %s\n", keyStr, valueStr))
+		} else {
+			c.buff.WriteString(fmt.Sprintf("%s = %s\n", keyStr, valueStr))
+		}
+	}
+
+	// Section, 处理节部分
+	for _, key := range rv.MapKeys() {
+		keyStr := fmt.Sprintf("%v", key)
+		isSec := strings.Index(keyStr, baseSecRegPref) == 0
+		if !isSec {
+			continue
+		}
+
+		keyStr = keyStr[len(baseSecRegPref):]
+		value := rv.MapIndex(key)
+		valueStr, isMt := marshalToString(value, "")
+		if isMt {
+			c.buff.WriteString(fmt.Sprintf("\n[%s]\n%s\n", keyStr, valueStr))
+		} else {
+			c.buff.WriteString(fmt.Sprintf("%s = %s\n", keyStr, valueStr))
+		}
 	}
 }
 
@@ -58,34 +88,71 @@ func (c *Encoder) putStruct(v any) {
 		sf := rt.Field(i)
 		fieldName := sf.Name
 		value := rv.FieldByName(fieldName)
-		c.buff.WriteString(fmt.Sprintf("%v = %s\n", fieldName, valueToString(value)))
+		valueStr, isMt := marshalToString(value, "")
+		if isMt {
+			valueStr = fmt.Sprintf("{\n%s\n}", valueStr)
+			c.buff.WriteString(fmt.Sprintf("\n%v = %s\n", fieldName, valueStr))
+		} else {
+			c.buff.WriteString(fmt.Sprintf("%v = %s\n", fieldName, valueStr))
+		}
 	}
 }
 
-func valueToString(v reflect.Value) string {
+// 返回渲染的内容，以及返回内容是否多行
+func marshalToString(v reflect.Value, parentKey string) (string, bool) {
 	if v.Kind() == reflect.Interface {
 		v = reflect.ValueOf(v.Interface())
 	}
-	//fmt.Printf("%v => value: %v\n", v, v.Kind())
 	switch v.Kind() {
 	case reflect.String:
-		return fmt.Sprintf(`"%s"`, v.String())
+		return fmt.Sprintf(`"%s"`, v.String()), false
 	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		return fmt.Sprintf(`%v`, v)
+		return fmt.Sprintf(`%v`, v), false
 	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-		return fmt.Sprintf(`%v`, v)
+		return fmt.Sprintf(`%v`, v), false
 	case reflect.Bool:
-		return fmt.Sprintf(`%v`, v)
+		return fmt.Sprintf(`%v`, v), false
 	case reflect.Float32, reflect.Float64:
-		return fmt.Sprintf(`%v`, v)
+		return fmt.Sprintf(`%v`, v), false
 	case reflect.Slice, reflect.Array:
 		vl := v.Len()
 		var arr []string
 		for i := 0; i < vl && vl > 1; i++ {
 			el := v.Index(i)
-			arr = append(arr, valueToString(el))
+			valueStr, mtlLn := marshalToString(el, "")
+			if mtlLn {
+				valueStr = "{ " + valueStr + " }"
+			}
+			arr = append(arr, valueStr)
 		}
-		return strings.Join(arr, ",")
+		return strings.Join(arr, ","), false
+	case reflect.Map: // support section
+		var queue []string
+		for _, key := range v.MapKeys() {
+			value := v.MapIndex(key)
+			valueStr, isMt := marshalToString(value, "")
+			var mapLn string
+			if parentKey != "" {
+				if isMt {
+					mapLn = fmt.Sprintf("\n%s.%s = {\n%v\n}", parentKey, key, valueStr)
+				} else {
+					mapLn = fmt.Sprintf("%s.%s = %v", parentKey, key, valueStr)
+				}
+
+			} else {
+				if isMt {
+					mapLn = fmt.Sprintf("\n%s = {\n%v\n}", key, valueStr)
+				} else {
+					mapLn = fmt.Sprintf("%s = %v", key, valueStr)
+				}
+			}
+			queue = append(queue, mapLn)
+		}
+		startStr := ""
+		if len(queue) > 0 {
+			startStr = "    "
+		}
+		return startStr + strings.Join(queue, "\n    "), true
 	}
-	return fmt.Sprintf(`%v`, v)
+	return fmt.Sprintf(`%v`, v), false
 }
