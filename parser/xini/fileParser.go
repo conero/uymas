@@ -81,6 +81,7 @@ func (p *baseFileParse) loadFile(flPath string, target *map[string]any) bool {
 }
 
 // 文件引入
+// @todo 应该记载载入了那些文件，以及对应文件的大小等信息（可选）
 func (p *baseFileParse) include(ln string, target *map[string]any) (loadOk bool, isIcl bool) {
 	ln = strings.TrimSpace(ln)
 	isIclReg := getRegByKey("reg_include_smbl")
@@ -290,6 +291,7 @@ func (p *baseFileParse) read(filename string) *baseFileParse {
 		// 作用域结束
 		if str == scopeSml[1] {
 			handlerScope()
+			isScope = false
 			return
 		}
 
@@ -325,19 +327,23 @@ func (p *baseFileParse) read(filename string) *baseFileParse {
 		} else if isIcl {
 			return
 		}
-		// 赋值
-		idx := strings.Index(str, baseEqualToken)
-		if idx == -1 { // 非法行自动过滤
+		// kv-键值对解析
+		dkvp := DecKvPairs(str)
+		if dkvp.isString { // 此行为字符串
+			if isScope {
+				scopeValStrSlice = append(scopeValStrSlice, dkvp.value)
+				return
+			}
+		}
+		if !dkvp.isKv {
+			// 非法行自动过滤，不是有效的等式时
 			return
 		}
 
-		key := strings.TrimSpace(str[:idx])
-		value := lnTrim(str[idx+1:])
-
 		// 长字符串，`"""|'''`
-		if strings.Index(value, mt1) == 0 || strings.Index(value, mt2) == 0 {
+		if strings.Index(dkvp.value, mt1) == 0 || strings.Index(dkvp.value, mt2) == 0 {
 			isMutLineStr = true
-			mutLineStr[0] = key
+			mutLineStr[0] = dkvp.key
 
 			mlsIdx := strings.Index(line, mt1)
 			if mlsIdx == -1 {
@@ -349,17 +355,17 @@ func (p *baseFileParse) read(filename string) *baseFileParse {
 		}
 
 		// 作用域， `{}`
-		if strings.Index(value, scopeSml[0]) == 0 {
+		if strings.Index(dkvp.value, scopeSml[0]) == 0 {
 			isScope = true
 			scopeValue = map[string]any{}
-			scopeKey = key
+			scopeKey = dkvp.key
 
 			// 变量处理
-			value = strings.TrimSpace(value[1:])
+			value := strings.TrimSpace(dkvp.value[1:])
 			if value != "" {
 				kp := DecKvPairs(value)
 				if kp.isString {
-					scopeValStrSlice = append(scopeValStrSlice, value)
+					scopeValStrSlice = append(scopeValStrSlice, kp.value)
 				} else if kp.isKv {
 					scopeValue[kp.key] = parseValue(kp.value)
 				}
@@ -369,18 +375,17 @@ func (p *baseFileParse) read(filename string) *baseFileParse {
 		}
 
 		// 变量命令替换
-		value = p.supportVariable(value)
+		value := p.supportVariable(dkvp.value)
 		vAny := parseValue(value)
 		// 赋值
 		if isScope {
-			scopeValue[key] = vAny
+			scopeValue[dkvp.key] = vAny
 		} else if isSecMk {
-			secTmpDd[key] = vAny
+			secTmpDd[dkvp.key] = vAny
 		} else {
-			p.data[key] = vAny
+			p.data[dkvp.key] = vAny
 		}
-
-		p.rawData[key] = value
+		p.rawData[dkvp.key] = value
 	})
 
 	// section 加到 data 中

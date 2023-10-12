@@ -227,15 +227,17 @@ func DecKvPairs(s string) *KvPairs {
 		raw: s,
 	}
 	ln := strings.TrimSpace(s)
+	ln = lnTrim(ln) // 行内注释处理
 	strSymbol := getRegByKey("reg_str_symbol")
 	if strSymbol != nil && strSymbol.MatchString(ln) {
 		kp.isString = true
+		kp.value = s[1 : len(s)-1]
 	} else {
 		eqlIdx := strings.Index(ln, baseEqualToken)
 		if eqlIdx > -1 {
 			kp.isKv = true
 			kp.key = ln[:eqlIdx]
-			kp.value = ln[eqlIdx:]
+			kp.value = strings.TrimSpace(ln[eqlIdx+1:])
 		}
 	}
 	return kp

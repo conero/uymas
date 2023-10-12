@@ -100,6 +100,10 @@ func (c *Encoder) putStruct(v any) {
 
 // 返回渲染的内容，以及返回内容是否多行
 func marshalToString(v reflect.Value, parentKey string) (string, bool) {
+	if !v.IsValid() {
+		return "", false
+	}
+
 	if v.Kind() == reflect.Interface {
 		v = reflect.ValueOf(v.Interface())
 	}
