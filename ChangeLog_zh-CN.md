@@ -23,8 +23,9 @@
 ### v1.4.0/dev
 
 - [ ] xini 库的测试，使其可用常规使用
-  - [ ] 支持指令，如导入文件
-
+  - [x] 支持指令，如导入文件
+  - [ ] 是否支持条件，如三元符号或`if-else`
+  
 - [ ] bin 重复注册命令式，提供可选的panic。即提前预知错误（错误检测）
 
 
@@ -38,7 +39,7 @@
 - **parser/xini**
   - pref!: 将 `parser.GetData()` 返回类型由map[any]any 转 map[string]any，使其可正常json化。
   - feat: base parse实现string（多行字符串支持），float64，int64，作用域（`{}`）以及其对应的切片支持的字符格式解析
-  - feat: 实现 include 指令支持文件引入
+  - feat: 实现 include 指令支持文件引入，模糊文件匹配载入等（`如  vdir/*.pud.ini`）。
   - feat: marshal map提供 section支持
   
 - **cmd/uymas**

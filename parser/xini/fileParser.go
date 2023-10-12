@@ -70,44 +70,90 @@ func (p *baseFileParse) supportVariable(s string) string {
 	return s
 }
 
+func (p *baseFileParse) loadFile(flPath string, target *map[string]any) bool {
+	bfp := &baseFileParse{
+		data: *target,
+	}
+	bfp.read(flPath)
+	target = &bfp.data
+
+	return true
+}
+
 // 文件引入
-func (p *baseFileParse) include(ln string, target *map[string]any) bool {
+func (p *baseFileParse) include(ln string, target *map[string]any) (loadOk bool, isIcl bool) {
 	ln = strings.TrimSpace(ln)
 	isIclReg := getRegByKey("reg_include_smbl")
 	if isIclReg == nil || !isIclReg.MatchString(ln) {
-		return false
+		return
 	}
+
+	isIcl = true // 是否为include标签
 
 	idx := strings.Index(ln, " ")
 	if idx == -1 {
-		return false
+		return
 	}
 
 	// 文件读取
 	filename := strings.TrimSpace(ln[idx:])
 	filepath := path.Join(p.baseDir, filename)
+
+	// 支持目录
+	dirIdx := strings.Index(filepath, "*")
+	if dirIdx > 0 {
+		vDir := filepath[:dirIdx]
+		entrys, err := os.ReadDir(vDir)
+		if err != nil {
+			return
+		}
+
+		likeName := filepath[dirIdx:]
+		regStr := strings.ReplaceAll(likeName, ".", `\.`)
+		regStr = strings.ReplaceAll(likeName, "*", `.*`)
+		regStr = fmt.Sprintf(`^%s$`, regStr)
+		reg, regEr := regexp.Compile(regStr)
+		if regEr != nil {
+			return
+		}
+		childLoadOk := false
+		for _, entry := range entrys {
+			if entry.IsDir() {
+				continue
+			}
+			if !reg.MatchString(entry.Name()) {
+				continue
+			}
+
+			childFp := path.Join(vDir, entry.Name())
+			ldMk := p.loadFile(childFp, target)
+			if !childLoadOk && ldMk {
+				childLoadOk = true
+			}
+		}
+
+		loadOk = childLoadOk
+		return
+
+	}
+
 	fi, err := os.Stat(filepath)
 	if err != nil {
 		fi, err = os.Stat(filename)
 		if err != nil {
 			// 文件读取失败！
-			return false
+			return
 		}
 		filepath = filename
 	}
 
 	// 为目录，则中断
 	if fi.IsDir() {
-		return true
+		return
 	}
 
-	bfp := &baseFileParse{
-		data: *target,
-	}
-	bfp.read(filepath)
-	target = &bfp.data
-
-	return true
+	loadOk = p.loadFile(filepath, target)
+	return
 }
 
 // 文件读取
@@ -268,12 +314,15 @@ func (p *baseFileParse) read(filename string) *baseFileParse {
 			target = secTmpDd
 		}
 		// include
-		if p.include(str, &target) {
+		loadMk, isIcl := p.include(str, &target)
+		if loadMk {
 			if isSecMk {
 				secTmpDd = target
 			} else {
 				p.data = target
 			}
+			return
+		} else if isIcl {
 			return
 		}
 		// 赋值
