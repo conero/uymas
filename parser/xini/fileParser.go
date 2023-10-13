@@ -20,6 +20,7 @@ type FileParser interface {
 }
 
 // base 文件解析
+// @todo 待删除结构体
 type baseFileParse struct {
 	line    int               // 总行数
 	comment int               // 注释行

@@ -41,6 +41,7 @@
   - feat: base parse实现string（多行字符串支持），float64，int64，作用域（`{}`）以及其对应的切片支持的字符格式解析
   - feat: 实现 include 指令支持文件引入，模糊文件匹配载入等（`如  vdir/*.pud.ini`）。
   - feat: marshal map提供 section支持
+  - feat: 新增 `Scanner` 结构体实现对原 ini 文件的解析重写，将结构代码通过函数化进行分割优化（临时）。
   
 - **cmd/uymas**
   - feat: 新增 ini 命令实现对ini文件的解析，可用于其调试；create 子命令用于生成文件

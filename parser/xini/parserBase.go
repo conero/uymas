@@ -89,18 +89,32 @@ func (p *BaseParser) IsValid() bool {
 	return p.valid
 }
 
+// OpenFile 打开并解析文件
+// @todo 文件解析，临时替换旧方法
 func (p *BaseParser) OpenFile(filename string) Parser {
-	reader := &baseFileParse{}
-	reader.read(filename)
-	p.Data = reader.GetData()
-	p.filename = filename
-	p.rawKvData = reader.rawData
 	p.valid = true
-	if reader.err != nil {
-		p.errorMsg = reader.err.Error()
+	scanner := NewScanner(filename)
+	err := scanner.Scan()
+	p.Data = scanner.data
+	p.filename = scanner.filename
+	if err != nil {
+		p.errorMsg = err.Error()
 		p.valid = false
 	}
+
 	return p
+
+	//reader := &baseFileParse{}
+	//reader.read(filename)
+	//p.Data = reader.GetData()
+	//p.filename = filename
+	//p.rawKvData = reader.rawData
+	//p.valid = true
+	//if reader.err != nil {
+	//	p.errorMsg = reader.err.Error()
+	//	p.valid = false
+	//}
+	//return p
 }
 
 func (p *BaseParser) ReadStr(content string) Parser {

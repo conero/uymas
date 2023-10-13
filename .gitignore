@@ -17,3 +17,6 @@
 # 其他语言
 # python
 *__pycache__*
+
+# windows 运行环境
+*~$$*
