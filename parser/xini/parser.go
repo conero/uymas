@@ -236,8 +236,11 @@ func DecKvPairs(s string) *KvPairs {
 		eqlIdx := strings.Index(ln, baseEqualToken)
 		if eqlIdx > -1 {
 			kp.isKv = true
-			kp.key = ln[:eqlIdx]
+			kp.key = strings.TrimSpace(ln[:eqlIdx])
 			kp.value = strings.TrimSpace(ln[eqlIdx+1:])
+		} else {
+			kp.value = strings.TrimSpace(ln)
+			kp.isString = true
 		}
 	}
 	return kp

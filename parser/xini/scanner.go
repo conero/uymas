@@ -90,7 +90,7 @@ func (c *Scanner) shouldSkip(line string) (isSkip bool, ln string) {
 
 	// 单行注释过滤
 	if matched, _ := regexp.MatchString(baseCommentReg, hdlLn); matched {
-		return
+		return true, ""
 	}
 
 	return hdlLn == "", hdlLn
@@ -98,42 +98,43 @@ func (c *Scanner) shouldSkip(line string) (isSkip bool, ln string) {
 
 func (c *Scanner) handlerMtl(kv KvPairs) (isSkip bool) {
 	var cmt = [2]string{IniParseSettings["mcomment1"], IniParseSettings["mcomment2"]}
-	rtIsMtl := kv.value == cmt[0] || kv.value == cmt[1]
-
+	rtIsMtl := strings.Index(kv.value, cmt[0]) == 0 || strings.Index(kv.value, cmt[1]) == 0
 	if !rtIsMtl {
 		return
 	}
 
 	c.rtMtlKey = kv.key
 	c.rtIsMtl = true
-	c.rtMtlLine = append(c.rtMtlLine, kv.value[len(cmt[0]):])
+	c.rtMtlLine = append(c.rtMtlLine, kv.value[len(cmt[0]):]+"\n")
 	return true
 }
 
 // save 保存
 func (c *Scanner) handlerMtlSave(raw string) (isSkip bool) {
+	line := raw
 	if c.rtIsMtl {
 		var cmt = [2]string{IniParseSettings["mcomment1"], IniParseSettings["mcomment2"]}
-		idx := strings.LastIndex(raw, cmt[0])
-		sLen := len(raw)
+		idx := strings.LastIndex(line, cmt[0])
+		line = strings.TrimSpace(line)
+		sLen := len(line)
 		isEndMtl := false
 		if idx > -1 && sLen-idx == len(cmt[0]) {
 			isEndMtl = true
-			raw = raw[:idx]
+			line = line[:idx]
 		}
 
 		if !isEndMtl {
-			idx = strings.LastIndex(raw, cmt[1])
+			idx = strings.LastIndex(line, cmt[1])
 			if idx > -1 && sLen-idx == len(cmt[0]) {
 				isEndMtl = true
-				raw = raw[:idx]
+				line = line[:idx]
 			}
 		}
 
 		// 多行结束处理
 		if isEndMtl {
-			c.rtMtlLine = append(c.rtMtlLine, raw)
-			c.saveData(c.rtMtlKey, strings.Join(c.rtMtlLine, "\n"))
+			c.rtMtlLine = append(c.rtMtlLine, line)
+			c.saveData(c.rtMtlKey, strings.Join(c.rtMtlLine, ""))
 
 			// 重置
 			c.rtIsMtl = false
@@ -186,9 +187,23 @@ func (c *Scanner) parseScope(kv *KvPairs) (isSkip bool) {
 	var scopeSml = [2]string{IniParseSettings["scope1"], IniParseSettings["scope2"]}
 
 	// 作用域开始
-	if !c.rtIsScp && kv.value == scopeSml[0] {
+	isStartIdx := strings.Index(kv.value, scopeSml[0])
+	if !c.rtIsScp && (kv.value == scopeSml[0] || isStartIdx == 0) {
 		c.rtIsScp = true
 		c.rtScpKey = kv.key
+
+		// 解析 `{xxxxx`
+		if isStartIdx == 0 {
+			vs := strings.TrimSpace(kv.value[1:])
+			if vs != "" {
+				ckv := DecKvPairs(vs)
+				if ckv.isKv {
+					c.rtScpMap[ckv.key] = parseValue(vs)
+				} else {
+					c.rtScpStrLs = append(c.rtScpStrLs, vs)
+				}
+			}
+		}
 		return true
 	} else if !c.rtIsScp {
 		return false
@@ -208,6 +223,7 @@ func (c *Scanner) parseScope(kv *KvPairs) (isSkip bool) {
 		c.rtScpKey = ""
 		c.rtScpStrLs = nil
 		c.rtScpMap = nil
+		c.rtIsScp = false
 		return true
 	}
 
@@ -218,7 +234,7 @@ func (c *Scanner) parseScope(kv *KvPairs) (isSkip bool) {
 		if c.rtScpMap == nil {
 			c.rtScpMap = map[string]any{}
 		}
-		c.rtScpMap[kv.key] = kv.value
+		c.rtScpMap[kv.key] = parseValue(kv.value)
 	}
 	return true
 }
@@ -228,6 +244,7 @@ func (c *Scanner) parseSection(hdlLn string) (isSkip bool) {
 	if matched, _ := regexp.MatchString(baseSectionReg, hdlLn); matched {
 		// section 加到 data 中
 		if c.rtIsSec {
+			c.rtIsSec = false
 			c.saveData(baseSecRegPref+c.rtSecKey, c.rtSecDd)
 		}
 
@@ -236,8 +253,7 @@ func (c *Scanner) parseSection(hdlLn string) (isSkip bool) {
 		c.rtIsSec = true
 		c.rtSecKey = hdlLn[1 : len(hdlLn)-1]
 		c.section = append(c.section, c.rtSecKey)
-
-		return
+		return true
 	}
 	return
 }
