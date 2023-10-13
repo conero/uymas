@@ -39,7 +39,7 @@ type Parser interface {
 	Del(key string) bool              // 删除键值
 
 	IsValid() bool
-	OpenFile(filename string) Parser
+	OpenFile(filename string) (error, []ScannerLog)
 	ReadStr(content string) Parser
 	ErrorMsg() string // 错误信息
 

@@ -36,9 +36,9 @@ func (c *ActionIni) DefaultUnmatched() {
 
 	timeTck := util.SpendTimeDiff()
 	psr := xini.NewParser()
-	psr.OpenFile(file)
-	if !psr.IsValid() {
-		lgr.Error("文件加载失败!\n  %s", psr.ErrorMsg())
+	err, records := psr.OpenFile(file)
+	if err != nil {
+		lgr.Error("文件加载失败!\n  %s", err.Error())
 		return
 	}
 
@@ -70,6 +70,7 @@ func (c *ActionIni) DefaultUnmatched() {
 	if isRestore || isOut {
 		lgr.Info("所有操作完成用时 %v", timeTck())
 	}
+	lgr.Info("加载文件情况。\n%s", xini.FileLog(records))
 }
 
 // Create 文件创建，用于测试

@@ -1,9 +1,10 @@
 package xini
 
 import (
-	"crypto/sha256"
+	"crypto/sha512"
 	"fmt"
 	"gitee.com/conero/uymas/fs"
+	"gitee.com/conero/uymas/number"
 	"gitee.com/conero/uymas/util/rock"
 	"os"
 	"path"
@@ -468,7 +469,34 @@ func (c *Scanner) supportVariable(s string) string {
 }
 
 func getHash(s string) string {
-	hash := sha256.New()
-	hash.Sum([]byte(s))
-	return fmt.Sprintf("%X", hash)
+	return fmt.Sprintf("%x", sha512.Sum512([]byte(s)))
+}
+
+// FileLog pring file reload info
+func FileLog(arr []ScannerLog) string {
+	if len(arr) == 0 {
+		return "无文件读取记录"
+	}
+
+	var dick = map[string]ScannerLog{}
+	var parent []string
+	for _, slg := range arr {
+		dick[slg.Hash] = slg
+		if slg.ParentHash == "" {
+			parent = append(parent, slg.Hash)
+		}
+	}
+
+	var info []string
+	for _, pid := range parent {
+		my := dick[pid]
+		info = append(info, fmt.Sprintf("Line %v: %v，成功-%v. %s", my.Line, number.Bytes(my.Size), my.IsOk, my.Filename))
+		for _, clg := range arr {
+			if clg.ParentHash == pid {
+				info = append(info, fmt.Sprintf("  --> Line %v: %v，成功-%v. \n    %s", clg.Line, number.Bytes(clg.Size), clg.IsOk, clg.Filename))
+			}
+		}
+	}
+
+	return strings.Join(info, "\n")
 }
