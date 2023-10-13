@@ -75,7 +75,7 @@ func (c *Scanner) shouldSkip(line string) (isSkip bool, ln string) {
 	var cmt = [2]string{IniParseSettings["mcomment1"], IniParseSettings["mcomment2"]}
 	hdlLn := strings.TrimSpace(line)
 
-	// 通常为多行注释
+	// 多行注释结束
 	rtIsCmt := hdlLn == cmt[0] || hdlLn == cmt[1]
 	if c.rtIsCmt {
 		// 多行注释结束
@@ -83,10 +83,10 @@ func (c *Scanner) shouldSkip(line string) (isSkip bool, ln string) {
 			c.rtIsCmt = false
 		}
 
-		return true, line
+		return true, ""
 	} else if rtIsCmt {
 		c.rtIsCmt = true
-		return true, line
+		return true, ""
 	}
 
 	// 单行注释过滤
@@ -97,7 +97,7 @@ func (c *Scanner) shouldSkip(line string) (isSkip bool, ln string) {
 	return hdlLn == "", hdlLn
 }
 
-func (c *Scanner) handlerMtl(kv KvPairs) (isSkip bool) {
+func (c *Scanner) parseMtl(kv KvPairs) (isSkip bool) {
 	var cmt = [2]string{IniParseSettings["mcomment1"], IniParseSettings["mcomment2"]}
 	rtIsMtl := strings.Index(kv.value, cmt[0]) == 0 || strings.Index(kv.value, cmt[1]) == 0
 	if !rtIsMtl {
@@ -111,30 +111,28 @@ func (c *Scanner) handlerMtl(kv KvPairs) (isSkip bool) {
 }
 
 // save 保存
-func (c *Scanner) handlerMtlSave(raw string) (isSkip bool) {
-	line := raw
+func (c *Scanner) parseMtlSave(raw string) (isSkip bool) {
 	if c.rtIsMtl {
 		var cmt = [2]string{IniParseSettings["mcomment1"], IniParseSettings["mcomment2"]}
-		idx := strings.LastIndex(line, cmt[0])
-		line = strings.TrimSpace(line)
-		sLen := len(line)
+		idx := strings.LastIndex(raw, cmt[0])
+		sLen := len(raw)
 		isEndMtl := false
-		if idx > -1 && sLen-idx == len(cmt[0]) {
+		if idx > -1 && sLen-idx == 4 {
 			isEndMtl = true
-			line = line[:idx]
+			raw = raw[:idx]
 		}
 
 		if !isEndMtl {
-			idx = strings.LastIndex(line, cmt[1])
-			if idx > -1 && sLen-idx == len(cmt[0]) {
+			idx = strings.LastIndex(raw, cmt[1])
+			if idx > -1 && sLen-idx == 4 {
 				isEndMtl = true
-				line = line[:idx]
+				raw = raw[:idx]
 			}
 		}
 
 		// 多行结束处理
 		if isEndMtl {
-			c.rtMtlLine = append(c.rtMtlLine, line)
+			c.rtMtlLine = append(c.rtMtlLine, raw)
 			c.saveData(c.rtMtlKey, strings.Join(c.rtMtlLine, ""))
 
 			// 重置
@@ -162,7 +160,7 @@ func (c *Scanner) parseKv(hdlLn string) {
 	if kv.key == "" {
 		return
 	}
-	if c.handlerMtl(*kv) {
+	if c.parseMtl(*kv) {
 		return
 	}
 
@@ -262,17 +260,19 @@ func (c *Scanner) parseSection(hdlLn string) (isSkip bool) {
 func (c *Scanner) handler(line string) {
 	c.mySelf.Line += 1
 
-	if c.handlerMtlSave(line) {
+	// 多行解析保存
+	if c.parseMtlSave(line) {
 		return
 	}
-
-	line = lnTrim(line)
 
 	// 非法字符处理
 	isSkip, hdlLn := c.shouldSkip(line)
 	if isSkip {
 		return
 	}
+
+	// 行字符串处理
+	hdlLn = lnTrim(hdlLn)
 
 	// 解析节
 	if c.parseSection(hdlLn) {
