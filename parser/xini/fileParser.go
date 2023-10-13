@@ -235,7 +235,7 @@ func (p *baseFileParse) read(filename string) *baseFileParse {
 		scopeValue = map[string]any{}
 	}
 
-	ln.Scan(func(line string) {
+	_, err := ln.ScanWithFlInfo(func(line string) {
 		p.line += 1
 		str := strings.TrimSpace(line)
 
@@ -394,7 +394,7 @@ func (p *baseFileParse) read(filename string) *baseFileParse {
 	}
 
 	// 错误信息
-	p.err = ln.error
+	p.err = err
 
 	return p
 }
