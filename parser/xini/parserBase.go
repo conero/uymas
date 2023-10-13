@@ -90,7 +90,6 @@ func (p *BaseParser) IsValid() bool {
 }
 
 // OpenFile 打开并解析文件
-// @todo 文件解析，临时替换旧方法
 func (p *BaseParser) OpenFile(filename string) (error, []ScannerLog) {
 	p.valid = true
 	scanner := NewScanner(filename)

@@ -24,6 +24,7 @@ func (c *ActionIni) DefaultHelp() {
 	fmt.Println("  ini [file]   文件解析")
 	fmt.Println("      --output,-O   是否打印内容")
 	fmt.Println("      --restore,-R  反序列恢复")
+	fmt.Println("      --simple,-S   简介输出，与旧版测试减少额外输出（用于比对测评）")
 }
 
 func (c *ActionIni) DefaultUnmatched() {
@@ -33,6 +34,7 @@ func (c *ActionIni) DefaultUnmatched() {
 	}
 
 	lgr.Info("正在读取文件 %s ……", file)
+	isSimple := c.Cc.CheckSetting("simple", "S")
 
 	timeTck := util.SpendTimeDiff()
 	psr := xini.NewParser()
@@ -70,7 +72,10 @@ func (c *ActionIni) DefaultUnmatched() {
 	if isRestore || isOut {
 		lgr.Info("所有操作完成用时 %v", timeTck())
 	}
-	lgr.Info("加载文件情况。\n%s", xini.FileLog(records))
+
+	if !isSimple {
+		lgr.Info("加载文件情况。\n%s", xini.FileLog(records))
+	}
 }
 
 // Create 文件创建，用于测试
