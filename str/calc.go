@@ -39,6 +39,7 @@ type Calc struct {
 	simpleRegSg *regexp.Regexp
 	expReg      *regexp.Regexp
 	facReg      *regexp.Regexp
+	constReg    *regexp.Regexp
 }
 
 func NewCalc(equality string) *Calc {
@@ -80,6 +81,8 @@ func (c *Calc) operNonBrk(eq string) string {
 		eq = eq[:len(eq)-1]
 	}
 
+	// 支持 e/pi
+	eq = c.constSupt(eq)
 	// `n!`
 	eq = c.factorial(eq)
 	// x**y or x^y
@@ -204,6 +207,65 @@ func (c *Calc) factorial(eq string) string {
 
 	if c.facReg.MatchString(eq) {
 		eq = c.factorial(eq)
+	}
+
+	return eq
+}
+
+// support const like, pi/e
+func (c *Calc) constSupt(eq string) string {
+	if c.constReg == nil {
+		c.constReg = regexp.MustCompile(`(?i)\d*(e|pi)\d*`)
+	}
+
+	if !c.constReg.MatchString(eq) {
+		return eq
+	}
+	for _, fd := range c.constReg.FindAllString(eq, -1) {
+		fdEq := strings.ToLower(fd)
+		if fdEq == "e" || fdEq == "pi" {
+			var value float64
+			if fdEq == "pi" {
+				value = math.Pi
+			} else {
+				value = math.E
+			}
+
+			eq = strings.ReplaceAll(eq, fd, fmt.Sprintf(c.accuracyStr, value))
+			continue
+		}
+
+		// e
+		idx := strings.Index(fdEq, "e")
+		if idx > -1 {
+			if idx == 0 { // 开头
+				fdEq = strings.ReplaceAll(fdEq, "e", fmt.Sprintf(c.accuracyStr, math.E)+"*")
+			} else if idx == len(fdEq)-1 { // 结尾
+				fdEq = strings.ReplaceAll(fdEq, "e", "*"+fmt.Sprintf(c.accuracyStr, math.E))
+			} else {
+				fdEq = strings.ReplaceAll(fdEq, "e", "*"+fmt.Sprintf(c.accuracyStr, math.E)+"*")
+			}
+			eq = strings.ReplaceAll(eq, fd, fdEq)
+			continue
+		}
+
+		// pi
+		idx = strings.Index(fdEq, "pi")
+		if idx > -1 {
+			if idx == 0 { // 开头
+				fdEq = strings.ReplaceAll(fdEq, "pi", fmt.Sprintf(c.accuracyStr, math.Pi)+"*")
+			} else if idx == len(fdEq)-2 { // 结尾
+				fdEq = strings.ReplaceAll(fdEq, "pi", "*"+fmt.Sprintf(c.accuracyStr, math.Pi))
+			} else {
+				fdEq = strings.ReplaceAll(fdEq, "pi", "*"+fmt.Sprintf(c.accuracyStr, math.Pi)+"*")
+			}
+			eq = strings.ReplaceAll(eq, fd, fdEq)
+			continue
+		}
+	}
+
+	if c.constReg.MatchString(eq) {
+		eq = c.constSupt(eq)
 	}
 
 	return eq
