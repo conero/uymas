@@ -10,6 +10,8 @@ import (
 	"strings"
 )
 
+const CalcAccuracy int8 = 7
+
 var (
 	cacheCalc *Calc
 )
@@ -42,10 +44,26 @@ type Calc struct {
 	constReg    *regexp.Regexp
 }
 
+// NewCalc String Equation Calculation
+// support `f8,exp` to set .Accuracy
 func NewCalc(equality string) *Calc {
+	idx := strings.Index(equality, ",")
+	accVal := CalcAccuracy
+	if idx > -1 {
+		accStr := strings.ToLower(equality[:idx])
+		if strings.Index(accStr, "f") == 0 {
+			accStr = accStr[1:]
+			v, err := strconv.ParseInt(accStr, 10, 8)
+			if err == nil && v > 0 {
+				accVal = int8(v)
+			}
+		}
+		equality = equality[idx+1:]
+	}
+
 	return &Calc{
 		equality: equality,
-		Accuracy: 7,
+		Accuracy: accVal,
 	}
 }
 
