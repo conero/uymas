@@ -2,6 +2,7 @@ package str
 
 import (
 	"fmt"
+	"gitee.com/conero/uymas/number"
 	"gitee.com/conero/uymas/util/rock"
 	"math"
 	"regexp"
@@ -37,6 +38,7 @@ type Calc struct {
 	simpleReg   *regexp.Regexp
 	simpleRegSg *regexp.Regexp
 	expReg      *regexp.Regexp
+	facReg      *regexp.Regexp
 }
 
 func NewCalc(equality string) *Calc {
@@ -78,6 +80,8 @@ func (c *Calc) operNonBrk(eq string) string {
 		eq = eq[:len(eq)-1]
 	}
 
+	// `n!`
+	eq = c.factorial(eq)
 	// x**y or x^y
 	eq = c.pow(eq)
 	// add, subtract, multiply and divide => +-*/
@@ -178,6 +182,28 @@ func (c *Calc) pow(eq string) string {
 
 	if c.powReg.MatchString(eq) {
 		eq = c.pow(eq)
+	}
+
+	return eq
+}
+
+func (c *Calc) factorial(eq string) string {
+	if c.facReg == nil {
+		c.facReg = regexp.MustCompile(`\d+!`)
+	}
+
+	if !c.facReg.MatchString(eq) {
+		return eq
+	}
+
+	for _, fd := range c.facReg.FindAllString(eq, -1) {
+		fdVal := fd[:len(fd)-1]
+		val := number.Factorial(uint64(StringAsI64(fdVal)))
+		eq = strings.ReplaceAll(eq, fd, fmt.Sprintf("%d", val))
+	}
+
+	if c.facReg.MatchString(eq) {
+		eq = c.factorial(eq)
 	}
 
 	return eq
@@ -384,6 +410,11 @@ func FloatSimple(fv string) string {
 func StringAsFloat(s string) float64 {
 	f64, _ := strconv.ParseFloat(s, 10)
 	return f64
+}
+
+func StringAsI64(s string) int64 {
+	v, _ := strconv.ParseInt(s, 10, 60)
+	return v
 }
 
 func CalcEq(eq string) Calc {

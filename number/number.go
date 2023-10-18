@@ -123,3 +123,16 @@ func AnyInt64(v any) int64 {
 	}
 	return i64
 }
+
+// Factorial Supports factorial operations on natural numbers
+// `n! = n*(n-1)*(n-2)*...*1`
+func Factorial(n uint64) uint64 {
+	if n == 0 {
+		return 1
+	}
+	var amass uint64 = 1
+	for i := n; i > 0; i-- {
+		amass *= i
+	}
+	return amass
+}
