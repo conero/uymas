@@ -13,6 +13,7 @@ type Object struct {
 
 // Assign Base of `reflect` to come true like javascript `Object.Assign`, target should be pointer best.
 // It can be Multiple, only for `reflect.Map`. And support nested struct.
+// @todo 将使用 reflect 与 未使用reflect从包去区分开
 func (obj Object) Assign(target any, source any) any {
 	var m = target
 	tReft := reflect.TypeOf(target)

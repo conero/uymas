@@ -2,7 +2,7 @@ package digit
 
 import (
 	"fmt"
-	"gitee.com/conero/uymas/util"
+	"gitee.com/conero/uymas/util/rock"
 	"math"
 	"strconv"
 	"strings"
@@ -34,7 +34,7 @@ func (c Cover) ToRmbLower() string {
 
 // NumberCoverChnDigit Arabic numerals to Chinese numerals, supporting uppercase and lowercase
 func NumberCoverChnDigit(latest float64, isUpperDef ...bool) string {
-	isUpper := util.ExtractParam(true, isUpperDef...)
+	isUpper := rock.ExtractParam(true, isUpperDef...)
 	var numbers []string
 	var unitList = []int{UnitYValue, UnitWValue, UnitQValue, UnitBValue, UnitSValue}
 
@@ -125,7 +125,7 @@ func NumberCoverChnDigit(latest float64, isUpperDef ...bool) string {
 
 // NumberCoverRmb Transforming Numbers into People's Digital Writing
 func NumberCoverRmb(amount float64, isUpperDef ...bool) string {
-	isUpper := util.ExtractParam(true, isUpperDef...)
+	isUpper := rock.ExtractParam(true, isUpperDef...)
 	val, _ := math.Modf(amount)
 
 	// Processing decimals

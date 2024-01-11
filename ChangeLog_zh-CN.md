@@ -46,6 +46,8 @@
   - feat: 新增 `Scanner` 结构体实现对原 ini 文件的解析重写，将结构代码通过函数化进行分割优化（临时）。
 - **number**
   - feat: 新增函数`Factorial`实现阶乘运算支持
+- **util**
+  - feat: 新增函数 `MapAssign` 用于合并相同类型的 map类型
 
 - **cmd/uymas**
   - feat: 新增 ini 命令实现对ini文件的解析，可用于其调试；create 子命令用于生成文件
