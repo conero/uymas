@@ -425,3 +425,35 @@ func TestObject_AssignCovert(t *testing.T) {
 		t.Errorf("至覆盖错误.\n  IN=>  %s\n  OUT=> %s\n", rslt, ref)
 	}
 }
+
+func TestMapToStructViaJson(t *testing.T) {
+	type test1 struct {
+		Age    int64  `json:"age"`
+		Name   string `json:"name"`
+		IsMale bool
+		Kg     float32
+	}
+
+	t1 := test1{}
+	err := MapToStructViaJson(map[string]string{
+		"age":    "15",
+		"name":   "Joshua Conero",
+		"IsMale": "true",
+		"Kg":     "23.189",
+	}, &t1)
+	if err != nil {
+		t.Errorf("MapToStructViaJson 错误，%v", err)
+	} else {
+		t.Logf("test1: %#v\n", t1)
+		if t1.Age != 15 {
+			t.Errorf("MapToStructViaJson 赋值 string -> int64 不匹配")
+		}
+		if t1.Name != "Joshua Conero" {
+			t.Errorf("MapToStructViaJson 赋值 string -> string 不匹配")
+		}
+		if t1.IsMale != true {
+			t.Errorf("MapToStructViaJson 赋值 string -> true 不匹配")
+		}
+	}
+
+}

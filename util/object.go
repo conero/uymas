@@ -6,6 +6,7 @@ import (
 	"gitee.com/conero/uymas/str"
 	"reflect"
 	"strconv"
+	"strings"
 )
 
 type Object struct {
@@ -513,4 +514,113 @@ func StructToMapViaJson(value any, ignoreKeys ...string) map[string]any {
 		}
 	}
 	return newVal
+}
+
+// MapToStructViaJson use the map value to set structPtr
+func MapToStructViaJson(mapValue any, structPtr any) error {
+	vm := reflect.ValueOf(mapValue)
+	if vm.Kind() != reflect.Map {
+		return fmt.Errorf("mapValue is not belong to map type")
+	}
+
+	sp := reflect.ValueOf(structPtr)
+	if sp.Kind() != reflect.Ptr {
+		return fmt.Errorf("structPtr is not belong to ptr type")
+	}
+
+	sp = sp.Elem()
+	if sp.Kind() != reflect.Struct {
+		return fmt.Errorf("structPtr is not belong to ptr type of struct")
+	}
+
+	mapValKv := map[string]reflect.Value{}
+	for _, mKey := range vm.MapKeys() {
+		mVal := vm.MapIndex(mKey)
+		keyName := mKey.String()
+		mapValKv[keyName] = mVal
+	}
+	spt := sp.Type()
+	for i := 0; i < sp.NumField(); i++ {
+		field := sp.Field(i)
+		sf := spt.Field(i)
+		keyName := sf.Name
+
+		// from file name
+		if src, exist := mapValKv[keyName]; exist {
+			TryAssignValue(src, field)
+			continue
+		}
+
+		// from json tag name
+		jsonName, exist := sf.Tag.Lookup("json")
+		if exist {
+			if src, exist := mapValKv[jsonName]; exist {
+				TryAssignValue(src, field)
+				continue
+			}
+		}
+
+	}
+
+	return nil
+}
+
+// TryAssignValue try assign value to another value.
+func TryAssignValue(src reflect.Value, tgt reflect.Value) bool {
+	if !tgt.CanSet() {
+		return false
+	}
+
+	tTy := tgt.Type()
+	sTy := src.Type()
+	// assign
+	if tTy.AssignableTo(sTy) {
+		tgt.Set(src)
+		return true
+	}
+
+	// conver
+	if sTy.ConvertibleTo(tTy) {
+		tgt.Set(src.Convert(tTy))
+		return true
+	}
+
+	// string -> any.
+	// any only can be int, bool, float
+	sKind := src.Kind()
+	tKind := tgt.Kind()
+	if sKind == reflect.String {
+		stringVal := src.String()
+		if tgt.CanInt() { // string -> int
+			i, err := strconv.ParseInt(stringVal, 10, 64)
+			if err != nil {
+				return false
+			}
+
+			tgt.SetInt(i)
+			return true
+		} else if tgt.CanUint() { // string -> int
+			u, err := strconv.ParseUint(stringVal, 10, 64)
+			if err != nil {
+				return false
+			}
+			tgt.SetUint(u)
+			return true
+		} else if tgt.CanFloat() { // string -> int
+			f, err := strconv.ParseFloat(stringVal, 64)
+			if err != nil {
+				return false
+			}
+			tgt.SetFloat(f)
+			return true
+		} else if tKind == reflect.Bool {
+			if strings.ToLower(stringVal) == "true" {
+				tgt.SetBool(true)
+				return true
+			}
+			return false
+		}
+	}
+
+	return false
 }

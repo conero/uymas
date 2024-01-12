@@ -48,7 +48,9 @@
   - feat: 新增函数`Factorial`实现阶乘运算支持
 - **util**
   - feat: 新增函数 `MapAssign` 用于合并相同类型的 map类型
-
+  - feat: 新增函数 `MapToStructViaJson` 实现map到struct赋值
+  - feat: 新增函数 `TryAssignValue` 实现任意变量之间赋值（跨类型赋值）
+  
 - **cmd/uymas**
   - feat: 新增 ini 命令实现对ini文件的解析，可用于其调试；create 子命令用于生成文件
 
