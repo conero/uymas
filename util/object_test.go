@@ -427,6 +427,7 @@ func TestObject_AssignCovert(t *testing.T) {
 }
 
 func TestMapToStructViaJson(t *testing.T) {
+	// case 1
 	type test1 struct {
 		Age    int64  `json:"age"`
 		Name   string `json:"name"`
@@ -456,4 +457,28 @@ func TestMapToStructViaJson(t *testing.T) {
 		}
 	}
 
+	// case
+	type test2 struct {
+		Age    int64  `json:"age"`
+		Name   string `json:"name"`
+		IsMale bool
+		Kg     float32
+		Addr   string `json:"addr"`
+		IsOk   bool   `json:"is_ok"`
+	}
+
+	t2 := test2{}
+	err = MapToStructViaJson(map[string]any{
+		"age":    "15",
+		"name":   "Joshua Conero",
+		"IsMale": "true",
+		"Kg":     23.189,
+		"addr":   3.14,
+		"is_ok":  1,
+	}, &t2)
+	if err != nil {
+		t.Errorf("MapToStructViaJson 错误，%v", err)
+	} else {
+		t.Logf("test2: %#v\n", t2)
+	}
 }

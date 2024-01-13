@@ -571,25 +571,31 @@ func TryAssignValue(src reflect.Value, tgt reflect.Value) bool {
 		return false
 	}
 
+	// interface
+	if src.CanInterface() {
+		src = reflect.ValueOf(src.Interface())
+	}
+
 	tTy := tgt.Type()
 	sTy := src.Type()
 	// assign
-	if tTy.AssignableTo(sTy) {
+	if sTy.AssignableTo(tTy) {
 		tgt.Set(src)
 		return true
 	}
 
-	// conver
+	// convert
 	if sTy.ConvertibleTo(tTy) {
 		tgt.Set(src.Convert(tTy))
 		return true
 	}
 
-	// string -> any.
 	// any only can be int, bool, float
 	sKind := src.Kind()
 	tKind := tgt.Kind()
-	if sKind == reflect.String {
+	if tKind == reflect.String { // any -> string
+		tgt.Set(reflect.ValueOf(fmt.Sprintf("%v", src)))
+	} else if sKind == reflect.String { // string -> any.
 		stringVal := src.String()
 		if tgt.CanInt() { // string -> int
 			i, err := strconv.ParseInt(stringVal, 10, 64)
@@ -617,10 +623,15 @@ func TryAssignValue(src reflect.Value, tgt reflect.Value) bool {
 			if strings.ToLower(stringVal) == "true" {
 				tgt.SetBool(true)
 				return true
+			} else if strings.ToLower(stringVal) == "false" {
+				tgt.SetBool(false)
+				return true
 			}
 			return false
 		}
+	} else if tKind == reflect.Bool { // any -> bool
+		tgt.SetBool(!src.IsZero())
+		return true
 	}
-
 	return false
 }
