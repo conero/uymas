@@ -45,3 +45,26 @@ func MapGenByKv[K constraints.KeyIterable, V constraints.ValueIterable](keys []K
 
 	return
 }
+
+// MapFilter use the keys of map to filter itself
+func MapFilter[K constraints.KeyIterable, V constraints.ValueIterable](kv map[K]V, filter []K) map[K]V {
+	var newMap = map[K]V{}
+	for kVal, value := range kv {
+		if ListIndex(filter, kVal) > -1 {
+			newMap[kVal] = value
+		}
+	}
+	return newMap
+}
+
+// MapSlice use the keys of map to slice itself
+func MapSlice[K constraints.KeyIterable, V constraints.ValueIterable](kv map[K]V, filter []K) map[K]V {
+	var newMap = map[K]V{}
+	for kVal, value := range kv {
+		if ListIndex(filter, kVal) > -1 {
+			continue
+		}
+		newMap[kVal] = value
+	}
+	return newMap
+}
