@@ -11,15 +11,15 @@ import (
 	"strings"
 )
 
-// current application by parse binary.
-type application struct {
-	baseDir      string
-	name         string
-	nameNoSuffix string
+// BinInfo by parse binary.
+type BinInfo struct {
+	BaseDir      string
+	Name         string
+	NameNoSuffix string
 }
 
 var (
-	current *application
+	current *BinInfo
 )
 
 // parse the current application
@@ -36,10 +36,10 @@ func parseCurrent(force bool) {
 		nameNoSuffix = strings.ReplaceAll(vFile, path.Ext(vFile), "")
 	}
 
-	current = &application{
-		baseDir:      vDir,
-		name:         vFile,
-		nameNoSuffix: nameNoSuffix,
+	current = &BinInfo{
+		BaseDir:      vDir,
+		Name:         vFile,
+		NameNoSuffix: nameNoSuffix,
 	}
 
 }
@@ -51,16 +51,19 @@ func GetBasedir() string {
 
 // Basedir get application binary root dir.
 func Basedir() string {
-	return current.baseDir
+	if current.BaseDir == "" {
+		return "./"
+	}
+	return current.BaseDir
 }
 
 // AppName get current binary application name
 func AppName() string {
-	return current.nameNoSuffix
+	return current.NameNoSuffix
 }
 
 func AppFilename() string {
-	return current.name
+	return current.Name
 }
 
 // Deprecated: the path dir by application same location, please replace use  `RootPath`.
@@ -109,6 +112,11 @@ func StringToArgs(str string) []string {
 // StringToMultiArgs string line parse multi line, support ";" split.
 func StringToMultiArgs(str string) [][]string {
 	return parser.ParseLine(str)
+}
+
+// Current get the current application's `BinInfo`
+func Current() BinInfo {
+	return *current
 }
 
 func init() {
