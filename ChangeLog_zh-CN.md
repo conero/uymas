@@ -51,7 +51,9 @@
   - feat: 新增函数 `MapToStructViaJson` 实现map到struct赋值
   - feat: 新增函数 `TryAssignValue` 实现任意变量之间赋值（跨类型赋值）
   - feat: 新增函数 `MapFilter` 和 `MapSlice` 用于筛选和分割 map 类型数据
-  
+- **util/rock**
+  - feat: 新增函数`ExtractParamFunc`实现通过自定义回调函数实现参数提取
+
 - **cmd/uymas**
   - feat: 新增 ini 命令实现对ini文件的解析，可用于其调试；create 子命令用于生成文件
 

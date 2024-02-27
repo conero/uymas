@@ -9,3 +9,12 @@ func ExtractParam[T constraints.Equable](defValue T, args ...T) T {
 	}
 	return defValue
 }
+
+// ExtractParamFunc Implementing parameter extraction through custom callback functions
+func ExtractParamFunc[T constraints.Equable](defFunc func() T, args ...T) T {
+	var defValue T
+	if len(args) > 0 && defFunc != nil {
+		defValue = defFunc()
+	}
+	return defValue
+}
