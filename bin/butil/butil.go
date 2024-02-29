@@ -57,7 +57,7 @@ func Basedir() string {
 		// Therefore, at this point, read the cwd of the current running environment
 		cwd, err := os.Getwd()
 		if err == nil {
-			basedir := path.Dir(cwd)
+			basedir := fs.StdPathName(cwd + "/")
 			return basedir
 		}
 		return "./"
