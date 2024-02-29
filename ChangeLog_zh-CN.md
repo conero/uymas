@@ -51,6 +51,7 @@
   - feat: 新增函数 `MapToStructViaJson` 实现map到struct赋值
   - feat: 新增函数 `TryAssignValue` 实现任意变量之间赋值（跨类型赋值）
   - feat: 新增函数 `MapFilter` 和 `MapSlice` 用于筛选和分割 map 类型数据
+  - feat: 新增函数 `ExtractArrUnique` 实现从数组中随机抽取元组（有损地）
 - **util/rock**
   - feat: 新增函数`ExtractParamFunc`实现通过自定义回调函数实现参数提取
 - **bin/butil**
@@ -60,6 +61,11 @@
   - feat: 新增 ini 命令实现对ini文件的解析，可用于其调试；create 子命令用于生成文件
 - **fs**
   - feat: 新增函数 `CheckFileDir` 使用检测文件所在父目录是否存在
+  - feat: 新增函数 `InsToFilename` 及 `InsToFilenameDetect` 用于实现文件名后及后缀前插入名称
+  - feat: 新增函数 `RemoveList` 用于批量移除文件列表
+
+- **culture/digit**
+  - feat: 新增函数`LowerIndex`用于实现数字转小写中文数字，如用于word等文档中的需要获取
 
 
 
