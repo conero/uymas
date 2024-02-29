@@ -52,6 +52,14 @@ func GetBasedir() string {
 // Basedir get application binary root dir.
 func Basedir() string {
 	if current.BaseDir == "" {
+		// Notice: When the system is running in a cmd environment,
+		// it may not be possible to obtain the current directory.
+		// Therefore, at this point, read the cwd of the current running environment
+		cwd, err := os.Getwd()
+		if err == nil {
+			basedir := path.Dir(cwd)
+			return basedir
+		}
 		return "./"
 	}
 	return current.BaseDir

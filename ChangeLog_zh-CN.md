@@ -56,7 +56,7 @@
 
 - **bin/butil**
   - pref!: 将 `application` 重命名为 `BinInfo`，并使其可暴露给外部
-  - pref: 优化 `Basedir()` 为空时默认为 `./`，及当前目录
+  - pref: 优化 `Basedir()` 为空时默认为当前目录。若失败则使用 `./`
 
 - **cmd/uymas**
   - feat: 新增 ini 命令实现对ini文件的解析，可用于其调试；create 子命令用于生成文件
