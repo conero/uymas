@@ -53,13 +53,14 @@
   - feat: 新增函数 `MapFilter` 和 `MapSlice` 用于筛选和分割 map 类型数据
 - **util/rock**
   - feat: 新增函数`ExtractParamFunc`实现通过自定义回调函数实现参数提取
-
 - **bin/butil**
   - pref!: 将 `application` 重命名为 `BinInfo`，并使其可暴露给外部
   - pref: 优化 `Basedir()` 为空时默认为当前目录。若失败则使用 `./`
-
 - **cmd/uymas**
   - feat: 新增 ini 命令实现对ini文件的解析，可用于其调试；create 子命令用于生成文件
+- **fs**
+  - feat: 新增函数 `CheckFileDir` 使用检测文件所在父目录是否存在
+
 
 
 

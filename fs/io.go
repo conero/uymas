@@ -3,6 +3,7 @@ package fs
 import (
 	"io"
 	"os"
+	"path"
 	"regexp"
 	"strings"
 )
@@ -59,7 +60,7 @@ func copyBaseDiy(dstFile, srcFile string) (bool, error) {
 	return true, nil
 }
 
-// Copy copy file by io
+// Copy file by io
 func Copy(dstFile, srcFile string) (bool, error) {
 	// 获取源文件
 	content, err := os.ReadFile(srcFile)
@@ -99,23 +100,26 @@ func CheckDir(dir string) string {
 	dir = StdDir(dir)
 	_, err := os.Open(dir)
 	if err != nil {
-		os.MkdirAll(dir, 0666)
+		_ = os.MkdirAll(dir, 0666)
 	}
 	return dir
+}
+
+// CheckFileDir detect whether the parent directory where the file is located exists,
+// and use it to automatically generate the parent directory when generating files (adaptable)
+func CheckFileDir(filename string) string {
+	return CheckDir(path.Dir(filename))
 }
 
 // IsDir checkout string path is dir.
 func IsDir(dir string) bool {
 	fi, err := os.Stat(dir)
-	if err == nil {
-		return fi.IsDir()
-	}
-	return false
+	return err == nil && fi.IsDir()
 }
 
 // ExistPath checkout the path of file/dir exist.
-func ExistPath(vpath string) bool {
-	_, err := os.Stat(vpath)
+func ExistPath(vPath string) bool {
+	_, err := os.Stat(vPath)
 	if err == nil {
 		return true
 	}
@@ -148,7 +152,7 @@ func Append(filename, text string) error {
 		return err
 	}
 	_, err = f.WriteString(text)
-	f.Close()
+	_ = f.Close()
 	return err
 }
 
@@ -159,6 +163,6 @@ func Put(filename, text string) error {
 		return err
 	}
 	_, err = f.WriteString(text)
-	f.Close()
+	_ = f.Close()
 	return err
 }
