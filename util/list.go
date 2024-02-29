@@ -1,6 +1,9 @@
 package util
 
-import "gitee.com/conero/uymas/util/constraints"
+import (
+	"gitee.com/conero/uymas/util/constraints"
+	"math/rand"
+)
 
 // ListIndex get index by search value from list
 func ListIndex[T constraints.Equable](list []T, value T) (index int) {
@@ -12,6 +15,30 @@ func ListIndex[T constraints.Equable](list []T, value T) (index int) {
 		}
 	}
 	return
+}
+
+// ExtractArrUnique extracting array elements with loss (non-repeatable) from an array
+func ExtractArrUnique[T constraints.ValueIterable](count int, arr []T) []T {
+	vLen := len(arr)
+	if vLen <= count {
+		return arr
+	}
+
+	var extArr []T
+	for j := 1; j <= count; j++ {
+		vl := len(arr)
+		if vl < 1 {
+			break
+		}
+
+		idx := rand.Intn(vl)
+		extArr = append(extArr, arr[idx])
+		rpl := arr[:idx]
+		rpl = append(rpl, arr[idx+1:]...)
+		arr = rpl
+	}
+
+	return extArr
 }
 
 // MapKeys Extract the key name array of the dictionary
