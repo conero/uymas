@@ -1,5 +1,7 @@
 package digit
 
+import "strings"
+
 var zhIndexDick = map[int]string{
 	0:    "零",
 	1:    "一",
@@ -17,11 +19,18 @@ var zhIndexDick = map[int]string{
 }
 
 // LowerIndex convert serial number to Chinese digits
-// @todo need to do
 func LowerIndex(i int) string {
-	var zh string
 	if i <= 10 {
 		return zhIndexDick[i]
 	}
+
+	zh := NumberCoverChnDigit(float64(i), false)
+	// replace `〇` -> `零`
+	zh = strings.ReplaceAll(zh, "〇", "零")
+	// simple `一十` as `十`
+	if strings.Index(zh, "一十") == 0 {
+		zh = strings.Replace(zh, "一十", "十", 1)
+	}
+
 	return zh
 }
