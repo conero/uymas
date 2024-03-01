@@ -66,6 +66,7 @@
 
 - **culture/digit**
   - feat: 新增函数`LowerIndex`用于实现数字转小写中文数字，如用于word等文档中的需要获取
+  - feat: 新增函数`NumberCover`用于实现自定义字典的数字转换，并使用其重构函数 `NumberCoverChnDigit`。
 
 
 

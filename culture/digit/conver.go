@@ -1,6 +1,7 @@
 package digit
 
 import (
+	"errors"
 	"fmt"
 	"gitee.com/conero/uymas/util/rock"
 	"math"
@@ -32,93 +33,72 @@ func (c Cover) ToRmbLower() string {
 	return NumberCoverRmb(float64(c), false)
 }
 
-// NumberCoverChnDigit Arabic numerals to Chinese numerals, supporting uppercase and lowercase
-func NumberCoverChnDigit(latest float64, isUpperDef ...bool) string {
-	isUpper := rock.ExtractParam(true, isUpperDef...)
-	var numbers []string
-	var unitList = []int{UnitYValue, UnitWValue, UnitQValue, UnitBValue, UnitSValue}
-
-	var vMap map[int8]string
-	if isUpper {
-		vMap = vUpperMap
-	} else {
-		vMap = vLowerMap
+// NumberCover convert numbers to Chinese style with definable dictionary
+func NumberCover(latest float64, vMap map[uint32]string) (dgt string, err error) {
+	if vMap == nil || len(vMap) == 1 {
+		err = errors.New("vMap is empty")
+		return
 	}
-
+	var unitList = []uint32{UnitYValue, UnitWValue, UnitQValue, UnitBValue, UnitSValue}
+	var numbers []string
 	for _, unit := range unitList {
 		cvUnit := float64(unit)
 		if latest < cvUnit {
-			if latest < UnitSValue && latest > 0 {
-				numbers = append(numbers, vMap[int8(latest)])
+			if latest < 10 && latest > 0 {
+				numbers = append(numbers, vMap[uint32(latest)])
 				latest = 0
 				break
 			}
 			continue
 		}
-		value := int(math.Floor(latest / cvUnit))
+		value := uint32(math.Floor(latest / cvUnit))
 		if value > 10 {
-			numbers = append(numbers, NumberCoverChnDigit(float64(value), isUpper))
+			childStr, childEr := NumberCover(float64(value), vMap)
+			if childEr != nil {
+				err = childEr
+				return
+			}
+			numbers = append(numbers, childStr)
 		} else {
-			numbers = append(numbers, vMap[int8(value)])
+			numbers = append(numbers, vMap[value])
 		}
 
 		latest = latest - float64(value)*cvUnit
-		switch cvUnit {
-		case UnitYValue:
-			var unitStr string
-			if isUpper {
-				unitStr = UnitUpperY
-			} else {
-				unitStr = UnitLowerY
-			}
-			numbers = append(numbers, unitStr)
-		case UnitWValue:
-			var unitStr string
-			if isUpper {
-				unitStr = UnitUpperW
-			} else {
-				unitStr = UnitLowerW
-			}
-			numbers = append(numbers, unitStr)
-		case UnitQValue:
-			var unitStr string
-			if isUpper {
-				unitStr = UnitUpperQ
-			} else {
-				unitStr = UnitLowerQ
-			}
-			numbers = append(numbers, unitStr)
-		case UnitBValue:
-			var unitStr string
-			if isUpper {
-				unitStr = UnitUpperB
-			} else {
-				unitStr = UnitLowerB
-			}
-			numbers = append(numbers, unitStr)
-		case UnitSValue:
-			var unitStr string
-			if isUpper {
-				unitStr = UnitUpperS
-			} else {
-				unitStr = UnitLowerS
-			}
-			numbers = append(numbers, unitStr)
-		case 0:
-			numbers = append(numbers, vMap[int8(value)])
+		unitStr, exist := vMap[unit]
+		if !exist {
+			err = fmt.Errorf("%d: as key not exist in vMap", unit)
+			return
 		}
+		numbers = append(numbers, unitStr)
 
 		// zero fill
-		if cvUnit > UnitSValue && latest > 0 && (cvUnit/10)-latest > 0 {
+		if cvUnit > 10 && latest > 0 && (cvUnit/10)-latest > 0 {
 			numbers = append(numbers, vMap[0])
 		}
 	}
 
 	// Final remaining quantity
-	if latest < UnitSValue && latest > 0 {
-		numbers = append(numbers, vMap[int8(latest)])
+	if latest < 10 && latest > 0 {
+		numbers = append(numbers, vMap[uint32(latest)])
 	}
-	return strings.Join(numbers, "")
+
+	dgt = strings.Join(numbers, "")
+	return
+}
+
+// NumberCoverChnDigit Arabic numerals to Chinese numerals, supporting uppercase and lowercase
+func NumberCoverChnDigit(latest float64, isUpperDef ...bool) string {
+	isUpper := rock.ExtractParam(true, isUpperDef...)
+	var vMap = vUpperMap
+	if !isUpper {
+		vMap = vLowerMap
+	}
+
+	dgt, err := NumberCover(latest, vMap)
+	if err != nil {
+		return ""
+	}
+	return dgt
 }
 
 // BUG(who): NumberCoverRmb 6.01 -> math.Modf frac is inaccurate.link: https://github.com/golang/go/issues/62232
