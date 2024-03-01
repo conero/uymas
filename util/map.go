@@ -1,6 +1,6 @@
 package util
 
-import "gitee.com/conero/uymas/util/constraints"
+import "gitee.com/conero/uymas/v2/util/constraints"
 
 // MapAssign Merge multiple map parameters, where the same key value is the forward overwrite value.
 //

@@ -1,8 +1,8 @@
 package data
 
 import (
-	"gitee.com/conero/uymas/bin/butil"
-	"gitee.com/conero/uymas/fs"
+	"gitee.com/conero/uymas/v2/bin/butil"
+	"gitee.com/conero/uymas/v2/fs"
 	"path"
 )
 

@@ -2,7 +2,7 @@ package bin
 
 import (
 	"fmt"
-	"gitee.com/conero/uymas/str"
+	"gitee.com/conero/uymas/v2/str"
 	"strings"
 )
 

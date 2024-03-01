@@ -2,7 +2,7 @@
 package fs
 
 import (
-	"gitee.com/conero/uymas/number"
+	"gitee.com/conero/uymas/v2/number"
 	"runtime"
 )
 

@@ -3,9 +3,9 @@ package xini
 import (
 	"crypto/sha512"
 	"fmt"
-	"gitee.com/conero/uymas/fs"
-	"gitee.com/conero/uymas/number"
-	"gitee.com/conero/uymas/util/rock"
+	"gitee.com/conero/uymas/v2/fs"
+	"gitee.com/conero/uymas/v2/number"
+	"gitee.com/conero/uymas/v2/util/rock"
 	"os"
 	"path"
 	"regexp"

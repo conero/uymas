@@ -2,7 +2,7 @@ package fs
 
 import (
 	"errors"
-	"gitee.com/conero/uymas/str"
+	"gitee.com/conero/uymas/v2/str"
 	"os"
 	"strings"
 )

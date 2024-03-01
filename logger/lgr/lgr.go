@@ -2,7 +2,7 @@
 package lgr
 
 import (
-	"gitee.com/conero/uymas/logger"
+	"gitee.com/conero/uymas/v2/logger"
 )
 
 var vLgr *logger.Logger

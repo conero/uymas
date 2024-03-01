@@ -2,9 +2,9 @@
 package tag
 
 import (
-	"gitee.com/conero/uymas/bin"
-	"gitee.com/conero/uymas/bin/parser"
-	"gitee.com/conero/uymas/util"
+	"gitee.com/conero/uymas/v2/bin"
+	"gitee.com/conero/uymas/v2/bin/parser"
+	"gitee.com/conero/uymas/v2/util"
 	"reflect"
 	"strings"
 )

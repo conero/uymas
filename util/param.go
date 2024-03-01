@@ -1,8 +1,8 @@
 package util
 
 import (
-	"gitee.com/conero/uymas/util/constraints"
-	"gitee.com/conero/uymas/util/rock"
+	"gitee.com/conero/uymas/v2/util/constraints"
+	"gitee.com/conero/uymas/v2/util/rock"
 )
 
 // ExtractParam Extract indefinite parameters from functions and default code values

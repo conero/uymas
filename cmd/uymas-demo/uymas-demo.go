@@ -1,7 +1,7 @@
 package main
 
 import (
-	"gitee.com/conero/uymas/bin"
+	"gitee.com/conero/uymas/v2/bin"
 )
 
 // uymas 子命令（测试）

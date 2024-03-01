@@ -3,7 +3,7 @@ package util
 import (
 	"encoding/json"
 	"fmt"
-	"gitee.com/conero/uymas/str"
+	"gitee.com/conero/uymas/v2/str"
 	"reflect"
 	"strconv"
 	"strings"

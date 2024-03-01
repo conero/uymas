@@ -2,10 +2,10 @@ package bin
 
 import (
 	"fmt"
-	"gitee.com/conero/uymas"
-	"gitee.com/conero/uymas/bin/parser"
-	"gitee.com/conero/uymas/str"
-	"gitee.com/conero/uymas/util"
+	"gitee.com/conero/uymas/v2"
+	"gitee.com/conero/uymas/v2/bin/parser"
+	"gitee.com/conero/uymas/v2/str"
+	"gitee.com/conero/uymas/v2/util"
 	"log"
 	"os"
 	"reflect"

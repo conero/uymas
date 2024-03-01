@@ -4,8 +4,8 @@ package butil
 
 import (
 	"fmt"
-	"gitee.com/conero/uymas/bin/parser"
-	"gitee.com/conero/uymas/fs"
+	"gitee.com/conero/uymas/v2/bin/parser"
+	"gitee.com/conero/uymas/v2/fs"
 	"os"
 	"path"
 	"strings"

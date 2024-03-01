@@ -1,7 +1,7 @@
 package util
 
 import (
-	"gitee.com/conero/uymas/util/constraints"
+	"gitee.com/conero/uymas/v2/util/constraints"
 	"math/rand"
 )
 

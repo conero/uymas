@@ -1,6 +1,6 @@
 package rock
 
-import "gitee.com/conero/uymas/util/constraints"
+import "gitee.com/conero/uymas/v2/util/constraints"
 
 // ExtractParam Extract indefinite parameters from functions and default code values
 func ExtractParam[T constraints.Equable](defValue T, args ...T) T {

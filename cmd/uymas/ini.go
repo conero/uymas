@@ -3,12 +3,12 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"gitee.com/conero/uymas"
-	"gitee.com/conero/uymas/bin"
-	"gitee.com/conero/uymas/logger/lgr"
-	"gitee.com/conero/uymas/parser/xini"
-	"gitee.com/conero/uymas/str"
-	"gitee.com/conero/uymas/util"
+	"gitee.com/conero/uymas/v2"
+	"gitee.com/conero/uymas/v2/bin"
+	"gitee.com/conero/uymas/v2/logger/lgr"
+	"gitee.com/conero/uymas/v2/parser/xini"
+	"gitee.com/conero/uymas/v2/str"
+	"gitee.com/conero/uymas/v2/util"
 	"math/rand"
 	"time"
 )

@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"gitee.com/conero/uymas/bin"
-	"gitee.com/conero/uymas/bin/butil"
+	"gitee.com/conero/uymas/v2/bin"
+	"gitee.com/conero/uymas/v2/bin/butil"
 	"strings"
 )
 

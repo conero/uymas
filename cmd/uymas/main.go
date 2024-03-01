@@ -2,12 +2,12 @@ package main
 
 import (
 	"fmt"
-	"gitee.com/conero/uymas/bin"
-	"gitee.com/conero/uymas/culture/pinyin"
-	"gitee.com/conero/uymas/fs"
-	"gitee.com/conero/uymas/number"
-	"gitee.com/conero/uymas/storage"
-	"gitee.com/conero/uymas/util"
+	"gitee.com/conero/uymas/v2/bin"
+	"gitee.com/conero/uymas/v2/culture/pinyin"
+	"gitee.com/conero/uymas/v2/fs"
+	"gitee.com/conero/uymas/v2/number"
+	"gitee.com/conero/uymas/v2/storage"
+	"gitee.com/conero/uymas/v2/util"
 	"strings"
 	"time"
 )

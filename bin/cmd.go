@@ -3,7 +3,7 @@ package bin
 import (
 	"errors"
 	"fmt"
-	"gitee.com/conero/uymas/util"
+	"gitee.com/conero/uymas/v2/util"
 	"reflect"
 	"strings"
 )

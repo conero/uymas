@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"gitee.com/conero/uymas/bin/butil"
+	"gitee.com/conero/uymas/v2/bin/butil"
 	"os"
 	"os/exec"
 	"path"

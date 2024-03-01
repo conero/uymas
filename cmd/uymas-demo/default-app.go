@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"gitee.com/conero/uymas/bin"
-	"gitee.com/conero/uymas/logger/lgr"
-	"gitee.com/conero/uymas/str"
+	"gitee.com/conero/uymas/v2/bin"
+	"gitee.com/conero/uymas/v2/logger/lgr"
+	"gitee.com/conero/uymas/v2/str"
 	"regexp"
 )
 

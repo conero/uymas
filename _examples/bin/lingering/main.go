@@ -3,10 +3,10 @@ package main
 import (
 	"bufio"
 	"fmt"
-	"gitee.com/conero/uymas"
-	"gitee.com/conero/uymas/bin"
-	"gitee.com/conero/uymas/bin/butil"
-	"gitee.com/conero/uymas/bin/parser"
+	"gitee.com/conero/uymas/v2"
+	"gitee.com/conero/uymas/v2/bin"
+	"gitee.com/conero/uymas/v2/bin/butil"
+	"gitee.com/conero/uymas/v2/bin/parser"
 	"os"
 	"strings"
 )

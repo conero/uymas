@@ -5,9 +5,9 @@ package bin
 
 import (
 	"fmt"
-	"gitee.com/conero/uymas/number"
-	"gitee.com/conero/uymas/str"
-	"gitee.com/conero/uymas/util"
+	"gitee.com/conero/uymas/v2/number"
+	"gitee.com/conero/uymas/v2/str"
+	"gitee.com/conero/uymas/v2/util"
 	"reflect"
 	"sort"
 	"strconv"
