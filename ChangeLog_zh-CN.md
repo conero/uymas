@@ -31,3 +31,4 @@
 
 
 - pref!: 将应用由 `gitee.com/conero/uymas` 调整为 `gitee.com/conero/uymas/v2`，使v2与旧版本可并行运行
+- pref!: 移除`Deprecated:`标注的代码

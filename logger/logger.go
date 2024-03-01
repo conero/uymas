@@ -127,16 +127,6 @@ func (l *Logger) Buffer() *bytes.Buffer {
 	return l.bufDriver
 }
 
-// CoverLevel cover input string level into `Level`
-// Deprecated: replace by the func `ToLevel`
-func CoverLevel(lvl string, defLevel Level) Level {
-	lv, er := ToLevel(lvl, defLevel)
-	if er != nil {
-		panic(er)
-	}
-	return lv
-}
-
 // ToLevel turn string to level
 func ToLevel(lvl string, args ...Level) (Level, error) {
 	var (
