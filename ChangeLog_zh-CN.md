@@ -55,7 +55,8 @@
 - **util/rock**
   - feat: 新增函数`ExtractParamFunc`实现通过自定义回调函数实现参数提取
 - **bin**
-  - feat: `Arg `新增方式如 `DefString` , `DefInt`, `DefF64` 等含默认的参数获取
+  - feat: `Arg `新增方法如 `DefString` , `DefInt`, `DefF64` 等含默认的参数获取
+  - feat: `Arg` 新增方法`ParseOption` 实现使用`Args`解析到`struct`对象上，并支持选项解析
 
 - **bin/butil**
   - pref!: 将 `application` 重命名为 `BinInfo`，并使其可暴露给外部

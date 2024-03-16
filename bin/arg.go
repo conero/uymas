@@ -443,6 +443,13 @@ func (app *Arg) DefF64(def float64, args ...string) float64 {
 	return optValue
 }
 
+// ParseOption parse the option object using parameters
+func (app *Arg) ParseOption(v any) *Option {
+	opt := &Option{cc: app}
+	opt.Unmarshal(v)
+	return opt
+}
+
 // NewCliCmd the construct of `Arg`, args default set os.Args if no function arguments
 func NewCliCmd(args ...string) *Arg {
 	if args == nil {
