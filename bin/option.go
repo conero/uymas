@@ -9,8 +9,10 @@ import (
 	"strings"
 )
 
-const OptionTagName = "arg"
-const OptionTagDef = "argDef"
+const (
+	OptionTagName = "arg"
+	OptionTagDef  = "argDef"
+)
 
 // Option the command of options parse.
 type Option struct {
@@ -19,6 +21,8 @@ type Option struct {
 }
 
 // Unmarshal parse the struct tag name arg <Name type `arg:"i,name"`>
+//
+// <Name type `argDef:"0"`> set default values
 func (c *Option) Unmarshal(v any) {
 	cc := c.cc
 	vt := reflect.TypeOf(v).Elem()
@@ -48,6 +52,13 @@ func (c *Option) Unmarshal(v any) {
 			}
 			return vI64
 		}
+		getFnUi64 := func() uint64 {
+			vI64 := uint64(cc.ArgInt(args...))
+			if vI64 == 0 && hasDef && defValue != "" {
+				vI64, _ = strconv.ParseUint(defValue, 10, 10)
+			}
+			return vI64
+		}
 		getFnF64 := func() float64 {
 			vf64 := cc.ArgFloat64(args...)
 			if vf64 == 0 && hasDef && defValue != "" {
@@ -63,7 +74,9 @@ func (c *Option) Unmarshal(v any) {
 			vv.Field(i).SetBool(cc.CheckSetting(args...) || hasDef)
 		case reflect.Int, reflect.Int64, reflect.Int32, reflect.Int16, reflect.Int8:
 			vv.Field(i).SetInt(getFnI64())
-		case reflect.Float64:
+		case reflect.Uint, reflect.Uint64, reflect.Uint32, reflect.Uint16, reflect.Uint8:
+			vv.Field(i).SetUint(getFnUi64())
+		case reflect.Float64, reflect.Float32:
 			vv.Field(i).SetFloat(getFnF64())
 
 		}

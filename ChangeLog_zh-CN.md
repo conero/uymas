@@ -53,9 +53,9 @@
   - feat: 新增函数 `MapFilter` 和 `MapSlice` 用于筛选和分割 map 类型数据
   - feat: 新增函数 `ExtractArrUnique` 实现从数组中随机抽取元组（有损地）
 - **util/rock**
-  - feat: 新增函数`ExtractParamFunc`实现通过自定义回调函数实现参数提取
+  - feat: 新增函数 `ExtractParamFunc`实现通过自定义回调函数实现参数提取
 - **bin**
-  - feat: `Arg `新增方法如 `DefString` , `DefInt`, `DefF64` 等含默认的参数获取
+  - feat: `Arg ` 新增方法如 `DefString` , `DefInt`, `DefF64` 等含默认的参数获取
   - feat: `Arg` 新增方法`ParseOption` 实现使用`Args`解析到`struct`对象上，并支持选项解析
 
 - **bin/butil**
