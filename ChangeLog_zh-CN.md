@@ -54,6 +54,9 @@
   - feat: 新增函数 `ExtractArrUnique` 实现从数组中随机抽取元组（有损地）
 - **util/rock**
   - feat: 新增函数`ExtractParamFunc`实现通过自定义回调函数实现参数提取
+- **bin**
+  - feat: `Arg `新增方式如 `DefString` , `DefInt`, `DefF64` 等含默认的参数获取
+
 - **bin/butil**
   - pref!: 将 `application` 重命名为 `BinInfo`，并使其可暴露给外部
   - pref: 优化 `Basedir()` 为空时默认为当前目录。若失败则使用 `./`

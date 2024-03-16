@@ -418,6 +418,31 @@ func (app *Arg) IsPlgCmd() bool {
 	return app.isPlgCmd
 }
 
+// DefString @todo In the near future, generics will be used instead of template functions
+func (app *Arg) DefString(def string, args ...string) string {
+	optValue := app.ArgRaw(args...)
+	if optValue == "" {
+		return def
+	}
+	return optValue
+}
+
+func (app *Arg) DefInt(def int, args ...string) int {
+	optValue := app.ArgInt(args...)
+	if optValue == 0 {
+		return def
+	}
+	return optValue
+}
+
+func (app *Arg) DefF64(def float64, args ...string) float64 {
+	optValue := app.ArgFloat64(args...)
+	if optValue == 0 {
+		return def
+	}
+	return optValue
+}
+
 // NewCliCmd the construct of `Arg`, args default set os.Args if no function arguments
 func NewCliCmd(args ...string) *Arg {
 	if args == nil {
