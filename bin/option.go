@@ -5,10 +5,12 @@ import (
 	"gitee.com/conero/uymas/util"
 	"reflect"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
 const OptionTagName = "arg"
+const OptionTagDef = "argDef"
 
 // Option the command of options parse.
 type Option struct {
@@ -29,6 +31,7 @@ func (c *Option) Unmarshal(v any) {
 		}
 		fld := vt.Field(i)
 		tag, hasTag := fld.Tag.Lookup(OptionTagName)
+		defValue, hasDef := fld.Tag.Lookup(OptionTagDef)
 
 		var args []string
 		if !hasTag {
@@ -38,12 +41,31 @@ func (c *Option) Unmarshal(v any) {
 			args = c.argParse(tag)
 		}
 
+		getFnI64 := func() int64 {
+			vI64 := int64(cc.ArgInt(args...))
+			if vI64 == 0 && hasDef && defValue != "" {
+				vI64, _ = strconv.ParseInt(defValue, 10, 10)
+			}
+			return vI64
+		}
+		getFnF64 := func() float64 {
+			vf64 := cc.ArgFloat64(args...)
+			if vf64 == 0 && hasDef && defValue != "" {
+				vf64, _ = strconv.ParseFloat(defValue, 10)
+			}
+			return vf64
+		}
 		c.allow = append(c.allow, args...)
 		switch fld.Type.Kind() {
 		case reflect.String:
-			vv.Field(i).SetString(cc.ArgRaw(args...))
+			vv.Field(i).SetString(cc.DefString(defValue, args...))
 		case reflect.Bool:
-			vv.Field(i).SetBool(cc.CheckSetting(args...))
+			vv.Field(i).SetBool(cc.CheckSetting(args...) || hasDef)
+		case reflect.Int, reflect.Int64, reflect.Int32, reflect.Int16, reflect.Int8:
+			vv.Field(i).SetInt(getFnI64())
+		case reflect.Float64:
+			vv.Field(i).SetFloat(getFnF64())
+
 		}
 	}
 }
