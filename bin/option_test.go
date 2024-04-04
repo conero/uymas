@@ -16,11 +16,12 @@ func TestOption_Unmarshal(t *testing.T) {
 		var bv base
 		opt.Unmarshal(&bv)
 		opt.Exclude("exclude")
+		opt.ExcludeReg(`^config.*`)
 
 		if cc.CheckSetting("display") && cc.ArgRaw("display") != "Joshua" {
 			t.Errorf("display 选项解析失败")
 		}
-		if cc.CheckSetting("version", "x", "exclude") {
+		if cc.CheckSetting("version", "x", "exclude", "config") {
 			if err := opt.CheckAllow(); err != nil {
 				t.Logf("%v", err)
 			} else {
@@ -36,4 +37,5 @@ func TestOption_Unmarshal(t *testing.T) {
 
 	//设置排除选项
 	cli.Run("--exclude", "Joshua", "ju", "m", "-g", "--grep", "*x")
+	cli.Run("--config.level", "Joshua", "--config.log", "m", "--config.dev", "true", "--config", "--exclude-reg")
 }

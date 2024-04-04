@@ -34,6 +34,20 @@ func (c *Option) ExcludeReg(regs ...string) *Option {
 	return c
 }
 
+// check if it has been excluded
+func (c *Option) isExclude(optName string) bool {
+	if util.ListIndex(c.exclude, optName) > -1 {
+		return true
+	}
+	for _, rg := range c.excludeReg {
+		isMatch, _ := regexp.MatchString(rg, optName)
+		if isMatch {
+			return true
+		}
+	}
+	return false
+}
+
 // Unmarshal parse the struct tag name arg <Name type `arg:"i,name"`>
 //
 // <Name type `argDef:"0"`> set default values
@@ -101,7 +115,7 @@ func (c *Option) NotAllow() []string {
 	var unAllow []string
 	for _, set := range c.cc.Setting {
 		if util.ListIndex(c.allow, set) == -1 {
-			if util.ListIndex(c.exclude, set) > -1 {
+			if c.isExclude(set) {
 				continue
 			}
 			unAllow = append(unAllow, set)
@@ -113,7 +127,7 @@ func (c *Option) NotAllow() []string {
 func (c *Option) CheckAllow() error {
 	for _, set := range c.cc.Setting {
 		if util.ListIndex(c.allow, set) == -1 {
-			if util.ListIndex(c.exclude, set) > -1 {
+			if c.isExclude(set) {
 				continue
 			}
 			return fmt.Errorf(" unexpected argument '%s' found", set)
