@@ -15,11 +15,12 @@ func TestOption_Unmarshal(t *testing.T) {
 		opt := &Option{cc: cc}
 		var bv base
 		opt.Unmarshal(&bv)
+		opt.Exclude("exclude")
 
 		if cc.CheckSetting("display") && cc.ArgRaw("display") != "Joshua" {
 			t.Errorf("display 选项解析失败")
 		}
-		if cc.CheckSetting("version", "x") {
+		if cc.CheckSetting("version", "x", "exclude") {
 			if err := opt.CheckAllow(); err != nil {
 				t.Logf("%v", err)
 			} else {
@@ -32,4 +33,7 @@ func TestOption_Unmarshal(t *testing.T) {
 
 	cli.Run("-d", "Joshua", "--name", "xyz")
 	cli.Run("--display", "Joshua", "--name", "xyz", "--version", "-x")
+
+	//设置排除选项
+	cli.Run("--exclude", "Joshua", "ju", "m", "-g", "--grep", "*x")
 }

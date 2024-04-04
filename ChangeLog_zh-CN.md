@@ -57,7 +57,8 @@
 - **bin**
   - feat: `Arg ` 新增方法如 `DefString` , `DefInt`, `DefF64` 等含默认的参数获取
   - feat: `Arg` 新增方法`ParseOption` 实现使用`Args`解析到`struct`对象上，并支持选项解析
-
+  - feat: `Option` 实现选项验证、带（正则）排除验证等
+  
 - **bin/butil**
   - pref!: 将 `application` 重命名为 `BinInfo`，并使其可暴露给外部
   - pref: 优化 `Basedir()` 为空时默认为当前目录。若失败则使用 `./`

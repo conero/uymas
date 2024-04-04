@@ -16,8 +16,22 @@ const (
 
 // Option the command of options parse.
 type Option struct {
-	cc    *Arg
-	allow []string
+	cc         *Arg
+	allow      []string
+	exclude    []string // exclude specified options during validation
+	excludeReg []string //
+}
+
+// Exclude set exclude specified options
+func (c *Option) Exclude(excludes ...string) *Option {
+	c.exclude = append(c.exclude, excludes...)
+	return c
+}
+
+// ExcludeReg use regular expressions to exclude specified options during validation
+func (c *Option) ExcludeReg(regs ...string) *Option {
+	c.excludeReg = append(c.excludeReg, regs...)
+	return c
 }
 
 // Unmarshal parse the struct tag name arg <Name type `arg:"i,name"`>
@@ -87,6 +101,9 @@ func (c *Option) NotAllow() []string {
 	var unAllow []string
 	for _, set := range c.cc.Setting {
 		if util.ListIndex(c.allow, set) == -1 {
+			if util.ListIndex(c.exclude, set) > -1 {
+				continue
+			}
 			unAllow = append(unAllow, set)
 		}
 	}
@@ -96,6 +113,9 @@ func (c *Option) NotAllow() []string {
 func (c *Option) CheckAllow() error {
 	for _, set := range c.cc.Setting {
 		if util.ListIndex(c.allow, set) == -1 {
+			if util.ListIndex(c.exclude, set) > -1 {
+				continue
+			}
 			return fmt.Errorf(" unexpected argument '%s' found", set)
 		}
 	}
