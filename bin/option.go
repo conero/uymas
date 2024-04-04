@@ -130,6 +130,11 @@ func (c *Option) CheckAllow() error {
 			if c.isExclude(set) {
 				continue
 			}
+			if len(set) == 1 {
+				set = "-" + set
+			} else {
+				set = "--" + set
+			}
 			return fmt.Errorf(" unexpected argument '%s' found", set)
 		}
 	}
