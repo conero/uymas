@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/base64"
 	"fmt"
 	"gitee.com/conero/uymas"
 	"gitee.com/conero/uymas/bin"
@@ -12,6 +13,9 @@ import (
 	"gitee.com/conero/uymas/logger/lgr"
 	"gitee.com/conero/uymas/number"
 	"gitee.com/conero/uymas/str"
+	"io"
+	"math/rand"
+	"net/http"
 	"os"
 	"regexp"
 	"strconv"
@@ -32,6 +36,7 @@ func (c *defaultApp) Construct() {
 		"uls":      {"uymas-ls"},
 		"digit":    {"dg"},
 		"datediff": {"dd"},
+		"base64":   {"b64"},
 	})
 	/*cc.CommandAlias("pinyin", "py").
 	CommandAlias("scan", "sc").
@@ -330,4 +335,77 @@ func (c *defaultApp) Ganz() {
 
 	fmt.Printf("  %d年，干支纪元%s年，属%s.\n", y, gz, zod)
 	fmt.Printf("\n天干：%s\n地支：%s\n属相：%s\n", ganz.TianGan, ganz.DiZhi, ganz.Zodiac)
+}
+
+func tryReadFileOrText(text string) (string, error, string) {
+	fl, err := os.Open(text)
+	if err != nil {
+		return text, fmt.Errorf("文件读取错误，%v", err), ""
+	}
+	defer fl.Close()
+	bys, err := io.ReadAll(fl)
+	if err != nil {
+		return text, fmt.Errorf("文件内容读取错误，%v", err), ""
+	}
+
+	mime := http.DetectContentType(bys)
+
+	return string(bys), nil, fmt.Sprintf("data:%s;base64,", mime)
+}
+
+func (c *defaultApp) Base64() {
+	isDec := c.Cc.CheckSetting("decode", "d")
+	outOptions := []string{"out", "o"}
+	outName := c.Cc.ArgRaw(outOptions...)
+	if c.Cc.CheckSetting(outOptions...) {
+		if isDec {
+			outName = "dec.raw"
+		} else {
+			outName = "enc.base64"
+		}
+	}
+	text := c.Cc.SubCommand
+	var prefix string
+	if text == "" {
+		if isDec {
+			lgr.Info("解密时请提供编码文本")
+			return
+		}
+		var rd str.RandString
+		text = "这是一个实例文本，" + rd.String(rand.Intn(35))
+		lgr.Info("空文本，设置默认文本：%s", text)
+	} else if c.Cc.CheckSetting("file", "f") {
+		var err error
+		text, err, _ = tryReadFileOrText(text)
+		if err != nil {
+			lgr.Error(err.Error())
+			return
+		}
+	} else {
+		text, _, prefix = tryReadFileOrText(text)
+	}
+
+	if isDec {
+		by, err := base64.StdEncoding.DecodeString(text)
+		if err != nil {
+			lgr.Error("编码错误，%v", err)
+			return
+		}
+
+		lgr.Info("解码成功：\n%s", string(by))
+		return
+	}
+
+	uriContent := base64.StdEncoding.EncodeToString([]byte(text))
+	uriContent = fmt.Sprintf("%s%s", prefix, uriContent)
+	if outName != "" {
+		err := fs.Put(outName, uriContent)
+		if err != nil {
+			lgr.Error("文件保存错误(%s)\n  %v", outName, uriContent)
+			return
+		}
+		lgr.Info("已保存内容到(%s)", outName)
+		return
+	}
+	lgr.Info("数据已编码！编码内容(URI)：\n%s\n", uriContent)
 }

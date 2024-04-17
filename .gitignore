@@ -18,5 +18,9 @@
 # python
 *__pycache__*
 
+# cmd 相关文件
+enc.base64
+dec.raw
+
 # windows 运行环境
 *~$$*
