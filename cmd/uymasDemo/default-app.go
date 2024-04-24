@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"gitee.com/conero/uymas/bin"
+	"gitee.com/conero/uymas/bin/color"
 	"gitee.com/conero/uymas/logger/lgr"
 	"gitee.com/conero/uymas/str"
 	"regexp"
@@ -40,6 +41,11 @@ func (c *defaultApp) Cal() {
 		return
 	}
 	fmt.Println(calc)
+}
+
+// Color 测试命令行文本颜色
+func (c *defaultApp) Color() {
+	fmt.Println(color.ColorByAnsi(color.AnsiRed, "it's a demo, test."))
 }
 
 func (c *defaultApp) DefaultUnmatched() {
