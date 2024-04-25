@@ -7,6 +7,7 @@ import (
 	"gitee.com/conero/uymas/logger/lgr"
 	"gitee.com/conero/uymas/str"
 	"regexp"
+	"time"
 )
 
 type defaultApp struct {
@@ -20,6 +21,8 @@ func (c *defaultApp) DefaultIndex() {
 func (c *defaultApp) DefaultHelp() {
 	fmt.Println("cal [equal]  计算器")
 	fmt.Println("  -V,--verbose     详细显示")
+	fmt.Println("color [text] 文本颜色码测试，不设置时默认")
+	fmt.Println("  -v,--value       指定样式默认时为红色")
 }
 
 func (c *defaultApp) Cal() {
@@ -45,7 +48,16 @@ func (c *defaultApp) Cal() {
 
 // Color 测试命令行文本颜色
 func (c *defaultApp) Color() {
-	fmt.Println(color.ColorByAnsi(color.AnsiRed, "it's a demo, test."))
+	text := c.Cc.SubCommand
+	if text == "" {
+		text = ":)- It's demo test text, default.\n    " + time.Now().Format(time.RFC3339)
+	}
+	value := c.Cc.ArgInt("value", "v")
+	if value < 1 {
+		value = color.AnsiTextRed
+	}
+
+	fmt.Println(color.StyleByAnsi(value, text))
 }
 
 func (c *defaultApp) DefaultUnmatched() {
