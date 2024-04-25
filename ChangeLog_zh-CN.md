@@ -37,6 +37,7 @@
   - pref(calc): `NewCalc` 支持等式中指定精度格式如，`fn, exp`, n 为精度。
   - feat(calc): 新增 CaclEq 函数实现对表达式的直接计算并输出结果。
   - feat(calc): 阶乘，`e`或`pi`常量运算支持
+  - feat: 新增函数 Ucfirst 用于实现首字母大写，因`strings.Totitle`建议删除
   - fix(calc): 修复`Calc.Exp`三角函数与实际计算的不一致，且扩展对双曲线三角函数、反三角函数。
 - **parser/xini**
   - pref!: 将 `parser.GetData()` 返回类型由map[any]any 转 map[string]any，使其可正常json化。
@@ -58,10 +59,12 @@
   - feat: `Arg ` 新增方法如 `DefString` , `DefInt`, `DefF64` 等含默认的参数获取
   - feat: `Arg` 新增方法`ParseOption` 实现使用`Args`解析到`struct`对象上，并支持选项解析
   - feat: `Option` 实现选项验证、带（正则）排除验证等
-  
 - **bin/butil**
   - pref!: 将 `application` 重命名为 `BinInfo`，并使其可暴露给外部
   - pref: 优化 `Basedir()` 为空时默认为当前目录。若失败则使用 `./`
+- **bin/color** (new)
+  - feat: 新增基于 ANSI 转码的文本颜色以及背景色等样式设计
+
 - **cmd/uymas**
   - feat: 新增 ini 命令实现对ini文件的解析，可用于其调试；create 子命令用于生成文件
   - feat: 新增命令 base64 实现对文件的 base64 编码

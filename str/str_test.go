@@ -35,6 +35,18 @@ func TestLcfirst(t *testing.T) {
 	fn(Lcfirst("AA BB C D E"), "aAbBcde")
 }
 
+func TestUcfirst(t *testing.T) {
+	fn := func(s, sT string) {
+		if ClearSpace(s) != sT {
+			fmt.Println(s + " VS " + sT)
+			t.Fail()
+		}
+	}
+	fn(Ucfirst("joshua conero"), "JoshuaConero")
+	fn(Ucfirst("joshua"), "Joshua")
+	fn(Ucfirst("a ab bc de "), "AAbBcDe")
+}
+
 // 项目测试
 func TestClearSpace(t *testing.T) {
 	s := " s p a c e"

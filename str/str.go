@@ -39,6 +39,23 @@ func Lcfirst(str string) string {
 	return str
 }
 
+// Ucfirst converts the first character of each word in a string to uppercase.
+func Ucfirst(str string) string {
+	idx := strings.Index(str, " ")
+	if idx > -1 {
+		var newStr []string
+		for _, s := range strings.Split(str, " ") {
+			newStr = append(newStr, Ucfirst(s))
+		}
+		str = strings.Join(newStr, "")
+	} else {
+		if len(str) > 0 {
+			str = strings.ToUpper(str[0:1]) + str[1:]
+		}
+	}
+	return str
+}
+
 func IsLatinAlpha(alpha string) bool {
 	return strings.Index(LowerStr, strings.ToLower(alpha)) > -1
 }

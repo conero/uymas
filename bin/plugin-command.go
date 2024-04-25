@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"gitee.com/conero/uymas/bin/butil"
+	"gitee.com/conero/uymas/str"
 	"os"
 	"os/exec"
 	"path"
@@ -105,7 +106,7 @@ func plgCmdDetect(cc *Arg) *PlgCProfile {
 
 	appName := butil.AppName()
 
-	// name-$name
+	// app-$name
 	pBin = butil.RootPath(fmt.Sprintf("%s-%s", appName, name))
 	cmd = exec.Command(pBin, PlgCmdGetProfile)
 	rtBy, err = cmd.CombinedOutput()
@@ -117,8 +118,32 @@ func plgCmdDetect(cc *Arg) *PlgCProfile {
 		}
 	}
 
-	// name_$name
+	// app_$name
 	pBin = butil.RootPath(fmt.Sprintf("%s_%s", appName, name))
+	cmd = exec.Command(pBin, PlgCmdGetProfile)
+	rtBy, err = cmd.CombinedOutput()
+	if err == nil {
+		err = json.Unmarshal(rtBy, &plg)
+		if err == nil {
+			plg.ExecName = pBin
+			return plg
+		}
+	}
+
+	// app$name
+	pBin = butil.RootPath(fmt.Sprintf("%s%s", appName, name))
+	cmd = exec.Command(pBin, PlgCmdGetProfile)
+	rtBy, err = cmd.CombinedOutput()
+	if err == nil {
+		err = json.Unmarshal(rtBy, &plg)
+		if err == nil {
+			plg.ExecName = pBin
+			return plg
+		}
+	}
+
+	// app$Name
+	pBin = butil.RootPath(fmt.Sprintf("%s%s", appName, str.Ucfirst(name)))
 	cmd = exec.Command(pBin, PlgCmdGetProfile)
 	rtBy, err = cmd.CombinedOutput()
 	if err == nil {
