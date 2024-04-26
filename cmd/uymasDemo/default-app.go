@@ -23,6 +23,8 @@ func (c *defaultApp) DefaultHelp() {
 	fmt.Println("  -V,--verbose     详细显示")
 	fmt.Println("color [text] 文本颜色码测试，不设置时默认")
 	fmt.Println("  -v,--value       指定样式默认时为红色")
+	fmt.Println("  -r,--raw         原始输出，")
+
 }
 
 func (c *defaultApp) Cal() {
@@ -49,9 +51,24 @@ func (c *defaultApp) Cal() {
 // Color 测试命令行文本颜色
 func (c *defaultApp) Color() {
 	text := c.Cc.SubCommand
+	rawArgs := []string{"raw", "r"}
+	if c.Cc.CheckSetting(rawArgs...) {
+		argStr := c.Cc.ArgRaw(rawArgs...)
+		if argStr != "" {
+			text = argStr
+		}
+		if text == "" {
+			lgr.Info("请输入内容先！")
+			return
+		}
+		fmt.Printf("\033[%s", text)
+		fmt.Println()
+		return
+	}
 	if text == "" {
 		text = ":)- It's demo test text, default.\n    " + time.Now().Format(time.RFC3339)
 	}
+
 	value := c.Cc.ArgInt("value", "v")
 	if value < 1 {
 		value = color.AnsiTextRed
