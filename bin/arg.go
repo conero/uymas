@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gitee.com/conero/uymas/bin/butil"
 	"gitee.com/conero/uymas/bin/parser"
+	"gitee.com/conero/uymas/str"
 	"gitee.com/conero/uymas/util"
 	"os"
 	"reflect"
@@ -171,7 +172,31 @@ func (app *Arg) ArgStringSlice(keys ...string) []string {
 					vSlice = append(vSlice, fmt.Sprintf("%v", vr.Index(i).Interface()))
 				}
 			} else {
-				vSlice = append(vSlice, fmt.Sprintf("%v", keys))
+				vSlice = append(vSlice, fmt.Sprintf("%v", value))
+			}
+			return vSlice
+		}
+	}
+	return nil
+}
+
+func (app *Arg) ArgIntSlice(keys ...string) []int {
+	value := app.Arg(keys...)
+	if value != nil {
+		switch value.(type) {
+		case []int:
+			return value.([]int)
+		case int:
+			return []int{value.(int)}
+		default:
+			var vSlice []int
+			vr := reflect.ValueOf(value)
+			if vr.Kind() == reflect.Array || vr.Kind() == reflect.Slice {
+				for i := 0; i < vr.Len(); i++ {
+					vSlice = append(vSlice, str.StringAsInt(vr.Index(i).String()))
+				}
+			} else {
+				vSlice = append(vSlice, str.StringAsInt(fmt.Sprintf("%v", value)))
 			}
 			return vSlice
 		}

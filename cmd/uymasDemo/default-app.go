@@ -21,9 +21,11 @@ func (c *defaultApp) DefaultIndex() {
 func (c *defaultApp) DefaultHelp() {
 	fmt.Println("cal [equal]  计算器")
 	fmt.Println("  -V,--verbose     详细显示")
+	fmt.Println()
 	fmt.Println("color [text] 文本颜色码测试，不设置时默认")
 	fmt.Println("  -v,--value       指定样式默认时为红色")
-	fmt.Println("  -r,--raw         原始输出，")
+	fmt.Println("  -r,--raw         原始输出，用于原始命令控制如清屏之类")
+	fmt.Println("  -m,--multi [..]  设置多种样式合并效果，组合样式")
 
 }
 
@@ -67,6 +69,13 @@ func (c *defaultApp) Color() {
 	}
 	if text == "" {
 		text = ":)- It's demo test text, default.\n    " + time.Now().Format(time.RFC3339)
+	}
+
+	multi := c.Cc.ArgIntSlice("multi", "m")
+
+	if len(multi) > 0 {
+		fmt.Println(color.StyleByAnsiMulti(text, multi...))
+		return
 	}
 
 	value := c.Cc.ArgInt("value", "v")

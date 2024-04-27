@@ -497,6 +497,10 @@ func StringAsI64(s string) int64 {
 	return v
 }
 
+func StringAsInt(s string) int {
+	return int(StringAsI64(s))
+}
+
 func CalcEq(eq string) Calc {
 	if cacheCalc == nil {
 		cacheCalc = NewCalc("")

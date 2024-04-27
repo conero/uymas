@@ -38,6 +38,7 @@
   - feat(calc): 新增 CaclEq 函数实现对表达式的直接计算并输出结果。
   - feat(calc): 阶乘，`e`或`pi`常量运算支持
   - feat: 新增函数 Ucfirst 用于实现首字母大写，因`strings.Totitle`建议删除
+  - feat: 新增函数 `StringAsInt` 用于字符串转int
   - fix(calc): 修复`Calc.Exp`三角函数与实际计算的不一致，且扩展对双曲线三角函数、反三角函数。
 - **parser/xini**
   - pref!: 将 `parser.GetData()` 返回类型由map[any]any 转 map[string]any，使其可正常json化。
@@ -58,6 +59,7 @@
 - **bin**
   - feat: `Arg ` 新增方法如 `DefString` , `DefInt`, `DefF64` 等含默认的参数获取
   - feat: `Arg` 新增方法`ParseOption` 实现使用`Args`解析到`struct`对象上，并支持选项解析
+  - feat: `Arg` 新增方法 `ArgIntSlice` 实现读取字符串数据为`[]int`
   - feat: `Option` 实现选项验证、带（正则）排除验证等
 - **bin/butil**
   - pref!: 将 `application` 重命名为 `BinInfo`，并使其可暴露给外部
