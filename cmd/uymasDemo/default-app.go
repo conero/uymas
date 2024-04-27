@@ -4,9 +4,12 @@ import (
 	"fmt"
 	"gitee.com/conero/uymas/bin"
 	"gitee.com/conero/uymas/bin/color"
+	"gitee.com/conero/uymas/logger"
 	"gitee.com/conero/uymas/logger/lgr"
 	"gitee.com/conero/uymas/str"
+	"os"
 	"regexp"
+	"runtime"
 	"time"
 )
 
@@ -26,6 +29,9 @@ func (c *defaultApp) DefaultHelp() {
 	fmt.Println("  -v,--value       指定样式默认时为红色")
 	fmt.Println("  -r,--raw         原始输出，用于原始命令控制如清屏之类")
 	fmt.Println("  -m,--multi [..]  设置多种样式合并效果，组合样式")
+	fmt.Println()
+	fmt.Println("log [text]  日志测试")
+	fmt.Println("  -l,--level 日志级别设置")
 
 }
 
@@ -88,4 +94,29 @@ func (c *defaultApp) Color() {
 
 func (c *defaultApp) DefaultUnmatched() {
 	lgr.Error("命令 %v 不存在", c.Cc.Command)
+}
+
+func (c *defaultApp) Log() {
+	text := c.Cc.SubCommand
+	if text == "" {
+		text = "日志测试文本，可输入内容显示不同内容。" + time.Now().Format(time.RFC3339)
+	}
+
+	level := c.Cc.ArgRaw("l", "level")
+	lg := logger.NewLogger(logger.Config{
+		Level: level,
+	})
+
+	if level != "" {
+		lg.Infof("当前设置 level 参数: %s", level)
+	}
+
+	lg.Errorf(text)
+	lg.Warnf(text)
+	lg.Infof(text)
+	lg.Infof("go version: %s, Os: %s, pid: %d, ppid: %d", runtime.Version(), runtime.GOOS, os.Getpid(), os.Getppid())
+	lg.Debugf(text)
+
+	lg.Debugf("os args: %#v", os.Args)
+	fmt.Println()
 }

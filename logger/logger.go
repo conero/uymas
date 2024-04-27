@@ -7,6 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"gitee.com/conero/uymas/bin/butil"
+	"gitee.com/conero/uymas/bin/color"
 	"gitee.com/conero/uymas/fs"
 	"log"
 	"os"
@@ -61,9 +62,39 @@ func Prefix(level Level) string {
 }
 
 type Logger struct {
-	bufDriver *bytes.Buffer // only when Config.Driver is `buffer`
-	logger    *log.Logger
-	Level     Level
+	bufDriver    *bytes.Buffer // only when Config.Driver is `buffer`
+	logger       *log.Logger
+	Level        Level
+	cfg          Config
+	DisableColor bool
+}
+
+func (l *Logger) autoColor(prefix string, level Level) string {
+	if l.cfg.Driver != "" && l.cfg.Driver != DriverStdout {
+		return prefix
+	}
+
+	if l.DisableColor {
+		return prefix
+	}
+
+	var ansi int
+	switch level {
+	case LogError:
+		ansi = color.AnsiTextRedBr
+	case LogWarn:
+		ansi = color.AnsiTextYellowBr
+	case LogInfo:
+		ansi = color.AnsiTextGreenBr
+	case LogDebug:
+		ansi = color.AnsiTextCyanBr
+	}
+
+	if ansi < 1 {
+		return prefix
+	}
+
+	return color.StyleByAnsi(ansi, prefix)
 }
 
 func (l *Logger) Format(prefix, message string, args ...any) {
@@ -75,7 +106,8 @@ func (l *Logger) formatLevel(level Level, message string, args ...any) {
 	if l.Level > level {
 		return
 	}
-	l.Format(Prefix(level), message, args...)
+
+	l.Format(l.autoColor(Prefix(level), level), message, args...)
 }
 
 // output logging with callback, logging creator
@@ -205,7 +237,9 @@ func NewLogger(cfgs ...Config) *Logger {
 	} else {
 		cfg = DefaultConfig
 	}
-	logging := &Logger{}
+	logging := &Logger{
+		cfg: cfg,
+	}
 	// default base log level is `Warn`
 	lv, er := ToLevel(cfg.Level, LogWarn)
 	if er != nil {
