@@ -1,4 +1,14 @@
-// Package lgr An instance of library `logger`, used for direct output from the command line, etc
+// Package lgr An instance of library logger, used for direct output from the command line, etc.
+//
+// To change logger level shou use the system environment "UYMAS_LGR_LEVEL", like:
+//
+//	//window powershell
+//	$env:UYMAS_LGR_LEVEL='all'
+//
+//	// linux shell
+//	export UYMAS_LGR_LEVEL=all
+//
+// if not info by default.
 package lgr
 
 import (
