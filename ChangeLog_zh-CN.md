@@ -84,6 +84,10 @@
 - **logger**
   - feat: 新增对日志级别 Trace 的支持
 
+- **logger/lgr**
+  - feat: 新增环境变量 `UYMAS_LRG_LEVEL` 设置日志级别
+  - beark: 日志级别默认为 `LevelInfo`（原 `LevelAll`）
+
 
 
 

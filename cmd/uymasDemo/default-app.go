@@ -99,13 +99,20 @@ func (c *defaultApp) DefaultUnmatched() {
 func (c *defaultApp) Log() {
 	text := c.Cc.SubCommand
 	if text == "" {
-		text = "日志测试文本，可输入内容显示不同内容。" + time.Now().Format(time.RFC3339)
+		text = "日志测试文本，可输入内容显示不同内容。" + time.Now().Format(time.RFC3339) +
+			"。\n    可通过 UYMAS_LGR_LEVEL 环境变量设置 lgr 的日志级别"
 	}
 
 	level := c.Cc.ArgRaw("l", "level")
-	lg := logger.NewLogger(logger.Config{
-		Level: level,
-	})
+	var lg *logger.Logger
+	if level == "" {
+		tmpLog := lgr.Log()
+		lg = &tmpLog
+	} else {
+		lg = logger.NewLogger(logger.Config{
+			Level: level,
+		})
+	}
 
 	if level != "" {
 		lg.Infof("当前设置 level 参数: %s", level)

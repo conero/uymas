@@ -203,6 +203,8 @@ func ToLevel(lvl string, args ...Level) (Level, error) {
 		lv = LogInfo
 	case LevelDebug:
 		lv = LogDebug
+	case LevelTrace:
+		lv = LogTrace
 	case LevelNone, "no", "mute", "quiet":
 		lv = LogNone
 	default:

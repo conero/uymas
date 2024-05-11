@@ -10,13 +10,13 @@ var vLgr *logger.Logger
 
 const (
 	// EnvLevelKey try set the lgr level by system environment, like `$ export EnvLevelKey=info`
-	EnvLevelKey = "UYMAS_LRG_LEVEL"
+	EnvLevelKey = "UYMAS_LGR_LEVEL"
 )
 
 func init() {
 	lvl := os.Getenv(EnvLevelKey)
 	if lvl == "" {
-		lvl = logger.LevelAll
+		lvl = logger.LevelInfo
 	}
 	vLgr = logger.NewLogger(logger.Config{
 		Level: lvl,
@@ -25,6 +25,10 @@ func init() {
 
 func Log() logger.Logger {
 	return *vLgr
+}
+
+func Trace(message string, args ...any) {
+	vLgr.Tracef(message, args...)
 }
 
 func Debug(message string, args ...any) {
