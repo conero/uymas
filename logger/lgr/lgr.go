@@ -3,13 +3,23 @@ package lgr
 
 import (
 	"gitee.com/conero/uymas/logger"
+	"os"
 )
 
 var vLgr *logger.Logger
 
+const (
+	// EnvLevelKey try set the lgr level by system environment, like `$ export EnvLevelKey=info`
+	EnvLevelKey = "UYMAS_LRG_LEVEL"
+)
+
 func init() {
+	lvl := os.Getenv(EnvLevelKey)
+	if lvl == "" {
+		lvl = logger.LevelAll
+	}
 	vLgr = logger.NewLogger(logger.Config{
-		Level: logger.LevelAll,
+		Level: lvl,
 	})
 }
 

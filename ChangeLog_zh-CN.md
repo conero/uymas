@@ -72,7 +72,6 @@
 - **cmd/uymasDemo**
   - feat: 新增命令 color 用于测试命令行日志不同颜色
   - feat: 新增命令 log 用于测试日志不同级别测试输出
-
 - **fs**
   - feat: 新增函数 `CheckFileDir` 使用检测文件所在父目录是否存在
   - feat: 新增函数 `InsToFilename` 及 `InsToFilenameDetect` 用于实现文件名后及后缀前插入名称
@@ -82,6 +81,9 @@
   - feat: 新增函数`NumberCover`用于实现自定义字典的数字转换，并使用其重构函数 `NumberCoverChnDigit`。
 - **cmd/tiny**
   - feat: 新增用于tinygo测试的应用包
+- **logger**
+  - feat: 新增对日志级别 Trace 的支持
+
 
 
 

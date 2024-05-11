@@ -116,7 +116,9 @@ func (c *defaultApp) Log() {
 	lg.Infof(text)
 	lg.Infof("go version: %s, Os: %s, pid: %d, ppid: %d", runtime.Version(), runtime.GOOS, os.Getpid(), os.Getppid())
 	lg.Debugf(text)
+	lg.Tracef(text)
 
 	lg.Debugf("os args: %#v", os.Args)
+	lg.Tracef("Getpid: %v, uid: %v", os.Getpid(), os.Getuid())
 	fmt.Println()
 }

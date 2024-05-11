@@ -20,6 +20,7 @@ type Level int8
 // logging Level constant
 const (
 	LogAll Level = iota
+	LogTrace
 	LogDebug
 	LogInfo
 	LogWarn
@@ -34,6 +35,7 @@ const (
 	LevelWarn  = "warn"
 	LevelInfo  = "info"
 	LevelDebug = "debug"
+	LevelTrace = "trace"
 	LevelNone  = "none"
 )
 
@@ -49,6 +51,8 @@ func Prefix(level Level) string {
 	switch level {
 	case LogAll:
 		prefix = "ALL"
+	case LogTrace:
+		prefix = "TRACE"
 	case LogDebug:
 		prefix = "DEBUG"
 	case LogInfo:
@@ -88,6 +92,8 @@ func (l *Logger) autoColor(prefix string, level Level) string {
 		ansi = color.AnsiTextGreenBr
 	case LogDebug:
 		ansi = color.AnsiTextCyanBr
+	case LogTrace:
+		ansi = color.AnsiTextBlackBr
 	}
 
 	if ansi < 1 {
@@ -120,6 +126,10 @@ func (l *Logger) outputFunc(level Level, callback func() string) {
 
 func (l *Logger) Debugf(message string, args ...any) {
 	l.formatLevel(LogDebug, message, args...)
+}
+
+func (l *Logger) Tracef(message string, args ...any) {
+	l.formatLevel(LogTrace, message, args...)
 }
 
 func (l *Logger) DebugFunc(callback func() string) {
@@ -209,6 +219,7 @@ func ToLevel(lvl string, args ...Level) (Level, error) {
 //	`w/W -> warning`
 //	`i/I -> info`
 //	`d/D -> debug`
+//	`t/T -> trace`
 //	`n/N -> none`
 func ShortCover(short string) (lvlStr string) {
 	lvlStr = short
@@ -223,6 +234,8 @@ func ShortCover(short string) (lvlStr string) {
 		lvlStr = LevelInfo
 	case "d":
 		lvlStr = LevelDebug
+	case "t":
+		lvlStr = LevelTrace
 	case "n":
 		lvlStr = LevelNone
 	}
