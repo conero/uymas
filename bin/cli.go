@@ -301,7 +301,7 @@ func (cli *CLI) RegisterCommand(c Cmd) *CLI {
 
 // RegisterApp register the struct app, the format same as RegisterFunc. cmds any be `cmd string` or `cmd, alias string`
 func (cli *CLI) RegisterApp(ap any, cmds ...string) *CLI {
-	if cmds != nil && len(cmds) > 0 {
+	if len(cmds) > 0 {
 		cmd := cmds[0]
 		cli.cmds[cmd] = ap
 		if len(cmds) > 1 {

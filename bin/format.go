@@ -124,7 +124,7 @@ func FormatKvSort(kv any, params ...string) string {
 func FormatQue(que any, prefs ...string) string {
 	pref := ""  // 开头符号
 	dter := " " // 空格
-	if prefs != nil && len(prefs) > 0 {
+	if len(prefs) > 0 {
 		pref = prefs[0]
 		if len(prefs) > 1 {
 			dter = prefs[1]

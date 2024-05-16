@@ -83,14 +83,14 @@ func (c *Option) Unmarshal(v any) {
 		getFnUi64 := func() uint64 {
 			vI64 := uint64(cc.ArgInt(args...))
 			if vI64 == 0 && hasDef && defValue != "" {
-				vI64, _ = strconv.ParseUint(defValue, 10, 10)
+				vI64, _ = strconv.ParseUint(defValue, 10, 64)
 			}
 			return vI64
 		}
 		getFnF64 := func() float64 {
 			vf64 := cc.ArgFloat64(args...)
 			if vf64 == 0 && hasDef && defValue != "" {
-				vf64, _ = strconv.ParseFloat(defValue, 10)
+				vf64, _ = strconv.ParseFloat(defValue, 64)
 			}
 			return vf64
 		}

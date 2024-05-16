@@ -62,7 +62,7 @@ func parseNumber(vStr string) (value any, isOk bool) {
 
 	f64Symbol := getRegByKey("reg_f64_symbol")
 	if f64Symbol != nil && f64Symbol.MatchString(vStr) {
-		f64, er := strconv.ParseFloat(vStr, 10)
+		f64, er := strconv.ParseFloat(vStr, 64)
 		if er == nil {
 			value = f64
 			isOk = true

@@ -329,9 +329,7 @@ func (app *Arg) parseArgs() {
 						} else { // -xyz => -x -y -z
 							tmpArr := strings.Split(arg, "")
 							optKey = ""
-							for _, vs := range tmpArr {
-								app.Setting = append(app.Setting, vs)
-							}
+							app.Setting = append(app.Setting, tmpArr...)
 							tmpArrLen := len(tmpArr)
 							if tmpArrLen > 0 {
 								optKey = tmpArr[tmpArrLen-1]
