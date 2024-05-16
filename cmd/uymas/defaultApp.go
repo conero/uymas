@@ -6,6 +6,7 @@ import (
 	"gitee.com/conero/uymas"
 	"gitee.com/conero/uymas/bin"
 	"gitee.com/conero/uymas/bin/butil"
+	"gitee.com/conero/uymas/bin/color"
 	"gitee.com/conero/uymas/bin/data"
 	"gitee.com/conero/uymas/culture/digit"
 	"gitee.com/conero/uymas/culture/ganz"
@@ -408,4 +409,37 @@ func (c *defaultApp) Base64() {
 		return
 	}
 	lgr.Info("数据已编码！编码内容(URI)：\n%s\n", uriContent)
+}
+
+// Cal 等式计算
+//
+// 支持进制转换，Decimal/Binary/Octal/Hexadecimal
+func (c *defaultApp) Cal() {
+	equal := c.Cc.SubCommand
+	if equal == "" {
+		equal = butil.InputRequire("请输入等式符号：", nil)
+	}
+
+	var baseExp string
+	toArgs := []string{"to", "t"}
+	baseTsf := c.Cc.CheckSetting(toArgs...)
+	if baseTsf {
+		baseExp = c.Cc.ArgRaw(toArgs...)
+		rslt, err := baseTransfer(equal, baseExp)
+		if err != nil {
+			lgr.Error("进制转换错误。\n  %v", err)
+			return
+		}
+		lgr.Info("进制转换：%s", color.StyleByAnsi(color.AnsiTextGreen, rslt))
+		return
+	}
+
+	spanReg := regexp.MustCompile(`\s+`)
+	equal = spanReg.ReplaceAllString(equal, "")
+
+	calc := str.NewCalc(equal)
+	calc.Count()
+	lgr.Info("输入等式：\n%s => %v",
+		color.StyleByAnsi(color.AnsiTextCyan, equal),
+		color.StyleByAnsi(color.AnsiTextGreen, calc))
 }

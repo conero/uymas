@@ -69,9 +69,11 @@
 - **cmd/uymas**
   - feat: 新增 ini 命令实现对ini文件的解析，可用于其调试；create 子命令用于生成文件
   - feat: 新增命令 base64 实现对文件的 base64 编码
+  - pref: 新增 cal 命令实现数值等式计算以及进制转换等
 - **cmd/uymasDemo**
   - feat: 新增命令 color 用于测试命令行日志不同颜色
   - feat: 新增命令 log 用于测试日志不同级别测试输出
+  - pref: 标记 cal 命令与下版本删除
 - **fs**
   - feat: 新增函数 `CheckFileDir` 使用检测文件所在父目录是否存在
   - feat: 新增函数 `InsToFilename` 及 `InsToFilenameDetect` 用于实现文件名后及后缀前插入名称

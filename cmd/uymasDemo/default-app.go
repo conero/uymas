@@ -35,6 +35,9 @@ func (c *defaultApp) DefaultHelp() {
 
 }
 
+// Cal @todo 下一版本进行删除（next-remove）
+//
+// Deprecated: next major version remove
 func (c *defaultApp) Cal() {
 	equal := c.Cc.SubCommand
 	if equal != "" {
