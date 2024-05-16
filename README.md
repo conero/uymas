@@ -23,6 +23,14 @@ go-version： *v1.11.1*
 
 
 
+支持 *[golangci-lint](https://github.com/golangci/golangci-lint)* 推荐规范
+
+```shell
+golangci-lint run ./...
+```
+
+
+
 **分支介绍**
 
 - master 项目主分支
@@ -45,7 +53,6 @@ nestling --> develop -->master
 ```ini
 # github
 $ go get -u gitee.com/conero/uymas
-
 ```
 
 

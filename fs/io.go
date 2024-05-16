@@ -49,6 +49,7 @@ func (f *FsReaderWriter) Error() string {
 }
 
 // 基于DIY 实现 Copy
+// @todo test if real need
 func copyBaseDiy(dstFile, srcFile string) (bool, error) {
 	frw := &FsReaderWriter{
 		dstFile: dstFile,
@@ -89,7 +90,7 @@ func CopyDir(dst, src string) {
 				s1 += "/"
 				CopyDir(d1, s1)
 			} else {
-				Copy(d1, s1)
+				_, _ = Copy(d1, s1)
 			}
 		}
 	}

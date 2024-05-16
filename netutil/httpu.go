@@ -31,16 +31,15 @@ func (hu HttpUtil) PostForm(rUrl string, files map[string]string, data map[strin
 				panic(er)
 			}
 
-			io.Copy(fw, fh)
-
-			fh.Close()
+			defer fh.Close()
+			_, _ = io.Copy(fw, fh)
 		}
 	}
 
 	// 数据库
 	if data != nil {
 		for dk, dv := range data {
-			bufWrite.WriteField(dk, dv)
+			_ = bufWrite.WriteField(dk, dv)
 		}
 	}
 

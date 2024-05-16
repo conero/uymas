@@ -46,7 +46,7 @@ func main() {
 func getCache(key, value string) (bool, storage.Any) {
 	var namespace string
 	var nsSplit = "@"
-	if strings.Index(key, nsSplit) > -1 {
+	if strings.Contains(key, nsSplit) {
 		tapQueue := strings.Split(key, nsSplit)
 		namespace = strings.TrimSpace(tapQueue[0])
 		key = strings.TrimSpace(tapQueue[1])

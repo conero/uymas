@@ -206,7 +206,7 @@ func (c *defaultApp) Digit() {
 	isMatch, _ := regexp.MatchString(`\d+(.?\d+)?`, value)
 	if isMatch {
 		lgr.Info("识别为：阿拉伯数字转中文数字")
-		vNum, err := strconv.ParseFloat(value, 10)
+		vNum, err := strconv.ParseFloat(value, 64)
 		if err != nil {
 			lgr.Error("%s 不是有效数字!", value)
 			return

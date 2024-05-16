@@ -94,7 +94,7 @@ func (ds *DirScanner) Scan() error {
 		ds.AllItem = ds.AllDirItem + ds.AllFileItem
 		ds.Runtime = time.Since(start)
 	} else {
-		err = errors.New(fmt.Sprintf("%v is not a valid dir.", baseDir))
+		err = fmt.Errorf("%v is not a valid dir", baseDir)
 	}
 	return err
 }

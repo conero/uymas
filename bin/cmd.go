@@ -151,7 +151,7 @@ func (c *AppOptionGroup) ParseEach(v any, each func(*AppOption)) error {
 	}
 
 	if !isStruct {
-		return errors.New(fmt.Sprintf("the param v is not (ptr) struct type."))
+		return errors.New("the param v is not (ptr) struct type")
 	}
 
 	optDick := map[string]*AppOption{}

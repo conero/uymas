@@ -267,7 +267,7 @@ func (cli *CLI) Describe(desc string) bool {
 
 // GetDescribe support the `cmd, alias` param.
 func (cli *CLI) GetDescribe(cmd string) string {
-	if strings.Index(cmd, ",") > -1 {
+	if strings.Contains(cmd, ",") {
 		que := strings.Split(cmd, ",")
 		cmd = strings.TrimSpace(que[0])
 	}
