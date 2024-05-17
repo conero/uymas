@@ -10,37 +10,37 @@ import (
 var (
 	CcReg          = regexp.MustCompile("^[\u4E00-\u9FA5]$")
 	ChineseToneMap = map[string]map[string]int{
-		"ue": map[string]int{
+		"ue": {
 			"üē": 1,
 			"üé": 2,
 			"üě": 3,
 			"üè": 4,
 		},
-		"a": map[string]int{
+		"a": {
 			"ā": 1,
 			"á": 2,
 			"ǎ": 3,
 			"à": 4,
 		},
-		"e": map[string]int{
+		"e": {
 			"ē": 1,
 			"é": 2,
 			"ě": 3,
 			"è": 4,
 		},
-		"i": map[string]int{
+		"i": {
 			"ī": 1,
 			"í": 2,
 			"ǐ": 3,
 			"ì": 4,
 		},
-		"o": map[string]int{
+		"o": {
 			"ō": 1,
 			"ó": 2,
 			"ǒ": 3,
 			"ò": 4,
 		},
-		"u": map[string]int{
+		"u": {
 			"ū": 1,
 			"ú": 2,
 			"ǔ": 3,
@@ -111,7 +111,7 @@ func (pyt *Pinyin) GetPyToneNumber(chinese string) string {
 		for k, m := range ChineseToneMap {
 			isBreak := false
 			for s, n := range m {
-				if strings.Index(word, s) > -1 {
+				if strings.Contains(word, s) {
 					word = strings.ReplaceAll(word, s, k)
 					word = fmt.Sprintf("%v%v", word, n)
 					isBreak = true
@@ -132,8 +132,8 @@ func (pyt *Pinyin) GetPyToneAlpha(chinese string) string {
 	chinese = pyt.GetPyToneFunc(chinese, func(word string) string {
 		for k, m := range ChineseToneMap {
 			isBreak := false
-			for s, _ := range m {
-				if strings.Index(word, s) > -1 {
+			for s := range m {
+				if strings.Contains(word, s) {
 					word = strings.ReplaceAll(word, s, k)
 					isBreak = true
 					break

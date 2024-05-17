@@ -96,17 +96,19 @@ func (c *Tag) nameForShort() string {
 
 func (c *Tag) Short() []string {
 	exist := c.CheckOption(OptShort)
-	if exist {
-		values := c.Value(OptShort)
-		if values != nil {
-			return values
-		}
-
-		if defShort := c.nameForShort(); defShort != "" {
-			values = append(values, defShort)
-		}
+	if !exist {
+		return nil
 	}
-	return nil
+
+	values := c.Value(OptShort)
+	if values != nil {
+		return values
+	}
+
+	if defShort := c.nameForShort(); defShort != "" {
+		values = append(values, defShort)
+	}
+	return values
 }
 
 func ParseTag(vTag string) *Tag {

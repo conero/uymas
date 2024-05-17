@@ -20,27 +20,23 @@ func (hu HttpUtil) PostForm(rUrl string, files map[string]string, data map[strin
 	bufWrite := multipart.NewWriter(buf)
 
 	// 文件
-	if files != nil {
-		for flKey, flName := range files {
-			fw, er := bufWrite.CreateFormFile(flKey, filepath.Base(flName))
-			if er != nil {
-				panic(er)
-			}
-			fh, er := os.Open(flName)
-			if er != nil {
-				panic(er)
-			}
-
-			defer fh.Close()
-			_, _ = io.Copy(fw, fh)
+	for flKey, flName := range files {
+		fw, er := bufWrite.CreateFormFile(flKey, filepath.Base(flName))
+		if er != nil {
+			panic(er)
 		}
+		fh, er := os.Open(flName)
+		if er != nil {
+			panic(er)
+		}
+
+		defer fh.Close()
+		_, _ = io.Copy(fw, fh)
 	}
 
 	// 数据库
-	if data != nil {
-		for dk, dv := range data {
-			_ = bufWrite.WriteField(dk, dv)
-		}
+	for dk, dv := range data {
+		_ = bufWrite.WriteField(dk, dv)
 	}
 
 	//获取请求Content-Type类型,后面有用
@@ -66,6 +62,9 @@ func (hu HttpUtil) PostForm(rUrl string, files map[string]string, data map[strin
 // PostFormString postForm post add the directly by string content
 func (hu HttpUtil) PostFormString(rUrl string, files map[string]string, data map[string]string) string {
 	res, er := hu.PostForm(rUrl, files, data)
+	if er != nil {
+		panic(er)
+	}
 
 	cttBys, er := io.ReadAll(res.Body)
 	if er != nil {

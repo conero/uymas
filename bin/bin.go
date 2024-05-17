@@ -5,6 +5,7 @@
 package bin
 
 import (
+	"gitee.com/conero/uymas/str"
 	"regexp"
 	"strings"
 )
@@ -37,7 +38,7 @@ func Cmd2StringMap(c string) string {
 	var words []string
 	for _, v := range strings.Split(c, " ") {
 		if v != "" {
-			words = append(words, strings.Title(v))
+			words = append(words, str.Ucfirst(v))
 		}
 	}
 

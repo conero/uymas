@@ -139,8 +139,8 @@ func StdDir(d string) string {
 // StdPathName the standard path format
 func StdPathName(vPath string) string {
 	if vPath != "" {
-		vPath = strings.Replace(vPath, "\\", "/", -1)
-		reg := regexp.MustCompile("[\\/]{2,}")
+		vPath = strings.ReplaceAll(vPath, "\\", "/")
+		reg := regexp.MustCompile(`/{2,}`)
 		vPath = reg.ReplaceAllString(vPath, "/")
 	}
 	return vPath

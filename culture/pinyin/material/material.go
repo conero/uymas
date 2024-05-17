@@ -42,8 +42,7 @@ type CommonList struct {
 // WordList get word list by strokes(笔画)
 func (c *CommonList) WordList(strokes int) string {
 	if c.dicks != nil {
-		value, _ := c.dicks[fmt.Sprintf("%v", strokes)]
-		return value
+		return c.dicks[fmt.Sprintf("%v", strokes)]
 	}
 	return ""
 }
@@ -51,7 +50,7 @@ func (c *CommonList) WordList(strokes int) string {
 // StrokesList get strokes(笔画) list
 func (c *CommonList) StrokesList() []int {
 	var sl []int
-	for idx, _ := range c.dicks {
+	for idx := range c.dicks {
 		sl = append(sl, int(number.AnyInt64(idx)))
 	}
 	return sl

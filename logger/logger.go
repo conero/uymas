@@ -4,7 +4,6 @@ package logger
 
 import (
 	"bytes"
-	"errors"
 	"fmt"
 	"gitee.com/conero/uymas/bin/butil"
 	"gitee.com/conero/uymas/bin/color"
@@ -208,7 +207,7 @@ func ToLevel(lvl string, args ...Level) (Level, error) {
 	case LevelNone, "no", "mute", "quiet":
 		lv = LogNone
 	default:
-		er = errors.New(fmt.Sprintf("%v: invalid level param, reference value all, error, warn, info, debug, none", lvl))
+		er = fmt.Errorf("%v: invalid level param, reference value all, error, warn, info, debug, none", lvl)
 	}
 	return lv, er
 }

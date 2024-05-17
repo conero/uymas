@@ -26,7 +26,11 @@ go-version： *v1.11.1*
 支持 *[golangci-lint](https://github.com/golangci/golangci-lint)* 推荐规范
 
 ```shell
+# 执行规范推荐
 golangci-lint run ./...
+
+# 执行所有测试用例
+go test ./...
 ```
 
 
