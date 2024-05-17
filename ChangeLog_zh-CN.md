@@ -71,6 +71,7 @@
   - feat: 新增 ini 命令实现对ini文件的解析，可用于其调试；create 子命令用于生成文件
   - feat: 新增命令 base64 实现对文件的 base64 编码
   - pref: 新增 cal 命令实现数值等式计算以及进制转换等
+  - pref: pinyin 命令使用 embed模式使其支持外部直接调用，以及优化命令
 - **cmd/uymasDemo**
   - feat: 新增命令 color 用于测试命令行日志不同颜色
   - feat: 新增命令 log 用于测试日志不同级别测试输出

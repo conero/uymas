@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gitee.com/conero/uymas/bin"
 	"gitee.com/conero/uymas/culture/pinyin"
+	"gitee.com/conero/uymas/culture/pinyin/material"
 	"gitee.com/conero/uymas/fs"
 	"gitee.com/conero/uymas/number"
 	"gitee.com/conero/uymas/storage"
@@ -32,7 +33,8 @@ func application() {
 
 func getPinyin() *pinyin.Pinyin {
 	if pinyinCache == nil {
-		pinyinCache = pinyin.NewPinyin("./resource/culture/pinyin.txt")
+		py := material.NewPinyin()
+		pinyinCache = &py
 	}
 	return pinyinCache
 }

@@ -14,6 +14,7 @@ import (
 	"gitee.com/conero/uymas/logger/lgr"
 	"gitee.com/conero/uymas/number"
 	"gitee.com/conero/uymas/str"
+	"gitee.com/conero/uymas/util"
 	"io"
 	"math/rand"
 	"net/http"
@@ -117,14 +118,15 @@ func (c *defaultApp) Repl() {
 
 // Pinyin 拼音
 func (c *defaultApp) Pinyin() {
+	tmSpend := util.SpendTimeDiff()
 	cc := c.Cc
 	words := cc.SubCommand
-	if words != "" {
-		pinyinCache = getPinyin()
-		fmt.Println(pinyinCache.GetPyTone(words))
-	} else {
-		fmt.Println("请输入: $ pinyin <汉字>")
+	if words == "" {
+		words = butil.InputRequire("请输入中文汉字：", nil)
 	}
+	pinyinCache = getPinyin()
+	fmt.Println(pinyinCache.GetPyTone(words))
+	fmt.Printf("\n   字长%d（Unicode），用时 %v\n", len(words), tmSpend())
 }
 
 // Uls command allis: uls,uymas ls
