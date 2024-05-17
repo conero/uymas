@@ -32,6 +32,7 @@
 
 > v1.3.0 的兼容性版本，存在新增功能但无删除（遗弃的方法）。支持golangci-lint规范
 
+- chore：更新 pinyin.txt $$ 0.12.0 \to 0.14.0$$
 - **str**
   - pref(calc): `Calc.Exp` 使用文本扫描替换原正则替换已解决函数表达式嵌套的问题，如`sqrt(sqrt(625)) + sqrt(25+(300+100*3))` 计算错误。
   - pref(calc): `NewCalc` 支持等式中指定精度格式如，`fn, exp`, n 为精度。
@@ -85,7 +86,6 @@
   - feat: 新增用于tinygo测试的应用包
 - **logger**
   - feat: 新增对日志级别 Trace 的支持
-
 - **logger/lgr**
   - feat: 新增环境变量 `UYMAS_LRG_LEVEL` 设置日志级别
   - beark: 日志级别默认为 `LevelInfo`（原 `LevelAll`）
