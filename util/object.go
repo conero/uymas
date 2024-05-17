@@ -506,7 +506,7 @@ func StructToMapViaJson(value any, ignoreKeys ...string) map[string]any {
 		return nil
 	}
 	if len(ignoreKeys) > 0 && newVal != nil {
-		for key, _ := range newVal {
+		for key := range newVal {
 			//ignore keys
 			if str.InQuei(key, ignoreKeys) > -1 {
 				delete(newVal, key)

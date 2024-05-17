@@ -167,7 +167,6 @@ func (c *Scanner) parseKv(hdlLn string) {
 	value := c.supportVariable(kv.value)
 	vAny := parseValue(value)
 	c.saveData(kv.key, vAny)
-	return
 }
 
 func (c *Scanner) saveData(key string, value any) {
@@ -367,7 +366,7 @@ func (c *Scanner) cmdInclude(ln string, target *map[string]any) (loadOk bool, is
 
 		likeName := filepath[dirIdx:]
 		regStr := strings.ReplaceAll(likeName, ".", `\.`)
-		regStr = strings.ReplaceAll(likeName, "*", `.*`)
+		regStr = strings.ReplaceAll(regStr, "*", `.*`)
 		regStr = fmt.Sprintf(`^%s$`, regStr)
 		reg, regEr := regexp.Compile(regStr)
 		if regEr != nil {

@@ -57,7 +57,7 @@ func Ucfirst(str string) string {
 }
 
 func IsLatinAlpha(alpha string) bool {
-	return strings.Index(LowerStr, strings.ToLower(alpha)) > -1
+	return strings.Contains(LowerStr, strings.ToLower(alpha))
 }
 
 // LowerStyle camelcase --> snake case
@@ -116,7 +116,7 @@ func CamelCase(vStr string) string {
 			if vQ == "" {
 				continue
 			}
-			newQue = append(newQue, strings.Title(vQ))
+			newQue = append(newQue, Ucfirst(vQ))
 		}
 		vStr = strings.Join(newQue, "")
 	}
@@ -134,8 +134,8 @@ func SplitSafe(s, sep string) []string {
 // ClearSpace clear string space
 func ClearSpace(s string) string {
 	s = strings.TrimSpace(s)
-	if strings.Index(s, " ") > -1 {
-		spaceReg := regexp.MustCompile("\\s")
+	if strings.Contains(s, " ") {
+		spaceReg := regexp.MustCompile(`\s`)
 		s = spaceReg.ReplaceAllString(s, "")
 	}
 	return s

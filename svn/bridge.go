@@ -112,7 +112,7 @@ func (b *Bridge) GetArgs(args ...string) []string {
 func (b *Bridge) Info(pArgs ...string) (XmlInfo, error) {
 	args := b.GetArgs("info", "--xml")
 	// 附加参数
-	if pArgs != nil && len(pArgs) > 1 {
+	if len(pArgs) > 1 {
 		args = append(args, pArgs...)
 	}
 	out, err := Call(args...)
@@ -164,7 +164,7 @@ type XmlLog struct {
 func (b *Bridge) Log(pArgs ...string) (XmlLog, error) {
 	args := b.GetArgs("log", "--xml")
 	// 附加参数
-	if pArgs != nil && len(pArgs) > 1 {
+	if len(pArgs) > 1 {
 		args = append(args, pArgs...)
 	}
 	//fmt.Println(args)

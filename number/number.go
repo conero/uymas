@@ -103,22 +103,23 @@ func SumQInt(data []int) int {
 
 func AnyInt64(v any) int64 {
 	var i64 int64
-	if v != nil {
-		switch v.(type) {
-		case int64:
-			i64 = v.(int64)
-		case int32:
-			i64 = int64(v.(int32))
-		case int:
-			i64 = int64(v.(int))
-		case int16:
-			i64 = int64(v.(int16))
-		case int8:
-			i64 = int64(v.(int8))
-		default:
-			if i, er := strconv.ParseInt(fmt.Sprintf("%v", v), 10, 64); er == nil {
-				i64 = i
-			}
+	if v == nil {
+		return i64
+	}
+	switch v.(type) {
+	case int64:
+		i64 = v.(int64)
+	case int32:
+		i64 = int64(v.(int32))
+	case int:
+		i64 = int64(v.(int))
+	case int16:
+		i64 = int64(v.(int16))
+	case int8:
+		i64 = int64(v.(int8))
+	default:
+		if i, er := strconv.ParseInt(fmt.Sprintf("%v", v), 10, 64); er == nil {
+			i64 = i
 		}
 	}
 	return i64

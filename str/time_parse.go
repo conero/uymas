@@ -28,7 +28,7 @@ func (c *TimeLayoutDetector) timeDetect(tm string) string {
 	}
 	tmSpl := ":"
 	// time
-	if strings.Index(tm, tmSpl) > -1 {
+	if strings.Contains(tm, tmSpl) {
 		for j, ss := range strings.Split(tm, tmSpl) {
 			ssLn := len(ss)
 			if j == 0 {
@@ -63,7 +63,7 @@ func (c *TimeLayoutDetector) layoutFmt1(spl string) string {
 	var layout string
 	var layoutQueue []string
 	// yyyy-mm-dd
-	if strings.Index(tmStr, spl) == -1 {
+	if strings.Contains(tmStr, spl) {
 		return layout
 	}
 
@@ -249,7 +249,7 @@ func (c *TimeLayoutDetector) layoutFmt3() string {
 	} else if vLn == 2 {
 		layout += "2"
 	}
-	if strings.Index(input, splMon) > -1 {
+	if strings.Contains(input, splMon) {
 		layout += "日"
 	}
 	return layout

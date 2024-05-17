@@ -43,7 +43,7 @@ func ExtractArrUnique[T constraints.ValueIterable](count int, arr []T) []T {
 
 // MapKeys Extract the key name array of the dictionary
 func MapKeys[T constraints.KeyIterable, X constraints.ValueIterable](vMap map[T]X) (keys []T) {
-	for k, _ := range vMap {
+	for k := range vMap {
 		keys = append(keys, k)
 	}
 	return

@@ -14,12 +14,10 @@ import (
 // InQue exist value exist in array, if not exists will return -1
 func InQue(val any, que []any) int {
 	idx := -1
-	if que != nil {
-		for i, v := range que {
-			if v == val {
-				idx = i
-				break
-			}
+	for i, v := range que {
+		if v == val {
+			idx = i
+			break
 		}
 	}
 	return idx
@@ -55,7 +53,7 @@ func InQueAny(que any, keys ...any) int {
 func SpendTimeDiff() func() time.Duration {
 	now := time.Now()
 	return func() time.Duration {
-		return time.Now().Sub(now)
+		return time.Since(now)
 	}
 }
 

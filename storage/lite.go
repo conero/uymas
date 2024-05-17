@@ -135,9 +135,9 @@ func ExpNoBracket(expression string) string {
 				fragV2, _ := strconv.ParseFloat(frag2, 64)
 
 				rpl := ""
-				if strings.Index(frag, "/") > -1 {
+				if strings.Contains(frag, "/") {
 					rpl = fmt.Sprintf("%v", fragV1/fragV2)
-				} else if strings.Index(frag, "*") > -1 {
+				} else if strings.Contains(frag, "*") {
 					rpl = fmt.Sprintf("%v", fragV1*fragV2)
 				}
 
