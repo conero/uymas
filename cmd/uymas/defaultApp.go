@@ -125,7 +125,20 @@ func (c *defaultApp) Pinyin() {
 		words = butil.InputRequire("请输入中文汉字：", nil)
 	}
 	pinyinCache = getPinyin()
-	fmt.Println(pinyinCache.GetPyTone(words))
+	var line string
+	if c.Cc.CheckSetting("number", "n") {
+		line = pinyinCache.GetPyToneNumber(words)
+	} else if c.Cc.CheckSetting("alpha", "a") {
+		line = pinyinCache.GetPyToneAlpha(words)
+	} else if c.Cc.CheckSetting("all", "A") {
+		line = "原始拼音：" + pinyinCache.GetPyToneNumber(words) + "\n" +
+			"数字声调拼音：" + pinyinCache.GetPyToneNumber(words) + "\n" +
+			"字母拼音：" + pinyinCache.GetPyToneAlpha(words)
+	} else {
+		line = pinyinCache.GetPyTone(words)
+	}
+
+	fmt.Println(line)
 	fmt.Printf("\n   字长%d（Unicode），用时 %v\n", len(words), tmSpend())
 }
 

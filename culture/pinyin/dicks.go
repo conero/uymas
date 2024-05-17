@@ -156,33 +156,34 @@ func IsChineseCharacters(word string) bool {
 // GetLinesFromFile the line from file
 func GetLinesFromFile(filename string) []string {
 	fh, err := os.Open(filename)
-	if err == nil {
-		buf := bufio.NewReader(fh)
-		var lines []string
-		var linesCase []string
-		for {
-			line, err2 := buf.ReadString('\n')
-			line = strings.TrimSpace(line)
-			// "#/;" 开头含忽略
-			w := ""
-			if line != "" {
-				w = line[:1]
-			}
-			if w == "#" || w == ";" {
-				line = ""
-			}
-			if line != "" {
-				lines = append(lines, line)
-				linesCase = append(linesCase, line)
-			}
-			// 错误
-			if err2 != nil {
-				break
-			}
-		}
-		return lines
+	if err != nil {
+		return nil
 	}
-	return nil
+	defer fh.Close()
+	buf := bufio.NewReader(fh)
+	var lines []string
+	var linesCase []string
+	for {
+		line, err2 := buf.ReadString('\n')
+		line = strings.TrimSpace(line)
+		// "#/;" 开头含忽略
+		w := ""
+		if line != "" {
+			w = line[:1]
+		}
+		if w == "#" || w == ";" {
+			line = ""
+		}
+		if line != "" {
+			lines = append(lines, line)
+			linesCase = append(linesCase, line)
+		}
+		// 错误
+		if err2 != nil {
+			break
+		}
+	}
+	return lines
 }
 
 // GetLinesFromByte the line byte

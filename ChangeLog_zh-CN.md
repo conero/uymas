@@ -71,7 +71,7 @@
   - feat: 新增 ini 命令实现对ini文件的解析，可用于其调试；create 子命令用于生成文件
   - feat: 新增命令 base64 实现对文件的 base64 编码
   - pref: 新增 cal 命令实现数值等式计算以及进制转换等
-  - pref: pinyin 命令使用 embed模式使其支持外部直接调用，以及优化命令
+  - pref: pinyin 命令使用 embed模式使其支持外部直接调用，以及支持声调等
 - **cmd/uymasDemo**
   - feat: 新增命令 color 用于测试命令行日志不同颜色
   - feat: 新增命令 log 用于测试日志不同级别测试输出
@@ -90,6 +90,9 @@
 - **logger/lgr**
   - feat: 新增环境变量 `UYMAS_LRG_LEVEL` 设置日志级别
   - beark: 日志级别默认为 `LevelInfo`（原 `LevelAll`）
+- **culture/pinyin**
+  - feat: 新增 `Element` 并且内部查询字典使用 `Element` 代替 `map[string]string` 
+
 
 
 

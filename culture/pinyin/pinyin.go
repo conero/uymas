@@ -3,6 +3,7 @@ package pinyin
 
 import (
 	"fmt"
+	"gitee.com/conero/uymas/fs"
 	"regexp"
 	"strings"
 )
@@ -52,7 +53,7 @@ var (
 // Pinyin the pinyin dick creator
 type Pinyin struct {
 	filename string
-	Dicks    map[string]map[string]string
+	dicks    map[string]Element
 }
 
 func NewPinyin(filename string) *Pinyin {
@@ -72,7 +73,7 @@ func (pyt *Pinyin) loadData() {
 
 // LineToDick turn lines to dick data.
 func (pyt *Pinyin) LineToDick(lines []string) *Pinyin {
-	innerDick := map[string]map[string]string{}
+	innerDick := map[string]Element{}
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
 		if line == "" {
@@ -89,13 +90,13 @@ func (pyt *Pinyin) LineToDick(lines []string) *Pinyin {
 		pinyin := strings.TrimSpace(queue[0])
 		chinese := strings.TrimSpace(queue[1])
 
-		innerDick[chinese] = map[string]string{
-			"unicode": unicode,
-			"pinyin":  pinyin,
-			"chinese": chinese,
+		innerDick[chinese] = Element{
+			Unicode: unicode,
+			pinyin:  pinyin,
+			Chinese: chinese,
 		}
 	}
-	pyt.Dicks = innerDick
+	pyt.dicks = innerDick
 	return pyt
 }
 
@@ -153,7 +154,7 @@ func (pyt *Pinyin) GetPyToneFunc(chinese string, call func(string) string) strin
 	queue := strings.Split(chinese, "")
 	var words []string
 
-	dicks := pyt.Dicks
+	dicks := pyt.dicks
 	for _, c := range queue {
 		c = strings.TrimSpace(c)
 		if c == "" {
@@ -162,9 +163,9 @@ func (pyt *Pinyin) GetPyToneFunc(chinese string, call func(string) string) strin
 		if dd, has := dicks[c]; has {
 			var word string
 			if call == nil {
-				word = pyt.checkOneMultipleWords(dd["pinyin"])
+				word = pyt.checkOneMultipleWords(dd.pinyin)
 			} else {
-				word = call(pyt.checkOneMultipleWords(dd["pinyin"]))
+				word = call(pyt.checkOneMultipleWords(dd.pinyin))
 			}
 			words = append(words, word)
 		} else {
@@ -192,4 +193,19 @@ func (pyt *Pinyin) checkOneMultipleWords(word string) string {
 	}
 
 	return word
+}
+
+func (pyt *Pinyin) FileLoadSuccess() bool {
+	if pyt.filename != "" {
+		if !fs.ExistPath(pyt.filename) {
+			return false
+		}
+
+		return len(pyt.dicks) > 0
+	}
+	return false
+}
+
+func (pyt *Pinyin) Dicks() map[string]Element {
+	return pyt.dicks
 }
