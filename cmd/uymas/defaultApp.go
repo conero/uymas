@@ -131,7 +131,7 @@ func (c *defaultApp) Pinyin() {
 	} else if c.Cc.CheckSetting("alpha", "a") {
 		line = pinyinCache.GetPyToneAlpha(words)
 	} else if c.Cc.CheckSetting("all", "A") {
-		line = "原始拼音：" + pinyinCache.GetPyToneNumber(words) + "\n" +
+		line = "原始拼音：" + pinyinCache.GetPyTone(words) + "\n" +
 			"数字声调拼音：" + pinyinCache.GetPyToneNumber(words) + "\n" +
 			"字母拼音：" + pinyinCache.GetPyToneAlpha(words)
 	} else {
