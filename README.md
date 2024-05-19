@@ -2,7 +2,8 @@
 
 Golang 常用包，快速实现命令行程序开发、struct合并、随机数等生成.
 
-[![Go](https://img.shields.io/badge/go-1.18-cyan.svg)](https://golang.org) [![Go.Dev reference](https://img.shields.io/badge/go.dev-reference-blue?logo=go&logoColor=white)](https://pkg.go.dev/gitee.com/conero/uymas?tab=doc)  [![Goproxy.cn](https://goproxy.cn/stats/gitee.com/conero/uymas/badges/download-count.svg)](https://goproxy.cn)  [![](https://goreportcard.com/badge/gitee.com/uymas/conero)](https://goreportcard.com/report/gitee.com/conero/uymas)  [![Go](https://github.com/conero/uymas/actions/workflows/go.yml/badge.svg)](https://github.com/conero/uymas/actions/workflows/go.yml) 
+[![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/conero/uymas?label=Latest%20Version&color=teal)](https://github.com/conero/uymas/releases/latest)
+ [![Go](https://img.shields.io/badge/go-1.18-cyan.svg)](https://golang.org) [![Go.Dev reference](https://img.shields.io/badge/go.dev-reference-blue?logo=go&logoColor=white)](https://pkg.go.dev/gitee.com/conero/uymas?tab=doc)  [![Goproxy.cn](https://goproxy.cn/stats/gitee.com/conero/uymas/badges/download-count.svg)](https://goproxy.cn)  [![](https://goreportcard.com/badge/gitee.com/uymas/conero)](https://goreportcard.com/report/gitee.com/conero/uymas)  [![Go](https://github.com/conero/uymas/actions/workflows/go.yml/badge.svg)](https://github.com/conero/uymas/actions/workflows/go.yml) 
 
 
 
