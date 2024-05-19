@@ -209,3 +209,22 @@ func (pyt *Pinyin) FileLoadSuccess() bool {
 func (pyt *Pinyin) Dicks() map[string]Element {
 	return pyt.dicks
 }
+
+// Len get the length of dicks
+func (pyt *Pinyin) Len() int {
+	return len(pyt.dicks)
+}
+
+// SearchByGroupFunc @todo implement grouped text queries and call callback functions
+func (pyt *Pinyin) SearchByGroupFunc(words string, call func(el Element)) {
+
+}
+
+// SearchByGroup @todo implement grouped text queries
+func (pyt *Pinyin) SearchByGroup(words string) []Element {
+	var elList []Element
+	pyt.SearchByGroupFunc(words, func(el Element) {
+		elList = append(elList, el)
+	})
+	return elList
+}

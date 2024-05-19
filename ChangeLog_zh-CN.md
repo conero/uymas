@@ -34,6 +34,10 @@
 > 1.4 计划中还未实现的开发（兼容性）
 
 - pref(doc): Readme 文档更新，添加相关徽章以及内容完善 
+- **culture/pinyin**
+  - feat: 新增类型 *ZhSentences* 并实现句长计算
+  - feat: Pinyin 新增方法 *Len* 用于计算拼音字典长度
+  - feat: Pinyin 新增方法 *SearchByGroupFunc* 、*SearchByGroup* 用于中文句子的查询（初步，优化查询）
 
 
 
