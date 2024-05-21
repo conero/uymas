@@ -124,6 +124,17 @@ func (c *defaultApp) Pinyin() {
 	if words == "" {
 		words = butil.InputRequire("请输入中文汉字：", nil)
 	}
+
+	// 输出utf16 代码
+	if c.Cc.CheckSetting("utf16") {
+		var codeList []string
+		for _, r := range []rune(words) {
+			codeList = append(codeList, fmt.Sprintf("U+%s", strconv.FormatInt(int64(r), 16)))
+		}
+		lgr.Info("%s 转utf16如：\n %s\n", words,
+			color.StyleByAnsi(color.AnsiTextGreen, strings.Join(codeList, " ")))
+	}
+
 	pinyinCache = getPinyin()
 	var line string
 	if c.Cc.CheckSetting("number", "n") {

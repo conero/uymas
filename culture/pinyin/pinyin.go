@@ -216,8 +216,26 @@ func (pyt *Pinyin) Len() int {
 }
 
 // SearchByGroupFunc @todo implement grouped text queries and call callback functions
-func (pyt *Pinyin) SearchByGroupFunc(words string, call func(el Element)) {
+func (pyt *Pinyin) SearchByGroupFunc(s string, call func(el Element)) {
+	stc := ZhSentences(s)
+	// smail dynamic cache dick
+	var cacheDick = map[string]Element{}
+	dicks := pyt.dicks
+	for _, w := range stc.Words() {
+		// smail
+		el, exist := cacheDick[w]
+		if exist {
+			call(el)
+			continue
+		}
 
+		// full
+		el, exist = dicks[w]
+		if exist {
+			cacheDick[w] = el
+			call(el)
+		}
+	}
 }
 
 // SearchByGroup @todo implement grouped text queries

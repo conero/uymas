@@ -31,15 +31,18 @@
 
   
 
-> 1.4 计划中还未实现的开发（兼容性）
+> 1.4 计划中还未实现的开发（兼容性），含新增功能
 
 - pref(doc): Readme 文档更新，添加相关徽章以及内容完善 
 - **culture/pinyin**
-  - feat: 新增类型 *ZhSentences* 并实现句长计算
+  - feat: 新增类型 *ZhSentences* 并实现句长，字符集获取计算
   - feat: Pinyin 新增方法 *Len* 用于计算拼音字典长度
   - feat: Pinyin 新增方法 *SearchByGroupFunc* 、*SearchByGroup* 用于中文句子的查询（初步，优化查询）
 - **str**
   - feat: 新增函数 *NumberSplitFormat* 和 *NumberClear* 用于处理数字型字符串分割或清理（无效尾部）
+
+- **cmd/uymas**
+  - pref: pinyin 支持字符串转utf代码
 
 
 
