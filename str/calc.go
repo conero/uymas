@@ -508,3 +508,49 @@ func CalcEq(eq string) Calc {
 	cacheCalc.Count(eq)
 	return *cacheCalc
 }
+
+// NumberSplitFormat numeric value segmentation and beautification
+func NumberSplitFormat(n float64, bits ...int) string {
+	bit := rock.ExtractParam(3, bits...)
+	s := fmt.Sprintf("%f", n)
+	queue := strings.Split(s, ".")
+	vInt := queue[0]
+	vLen := len(vInt)
+	if vLen <= bit {
+		return FloatSimple(s)
+	}
+	var subQueue []string
+	var last = 0
+	for i := 0; i < vLen; i++ {
+		c := i + 1
+		if c == vLen || c%bit != 0 {
+			continue
+		}
+		start := vLen - c
+		subQueue = append([]string{vInt[start : start+3]}, subQueue...)
+		last = start
+	}
+
+	if last < vLen {
+		subQueue = append([]string{vInt[:last]}, subQueue...)
+	}
+
+	queue[0] = strings.Join(subQueue, ",")
+	if len(queue) > 1 {
+		// 全零
+		if queue[1] == strings.Repeat("0", len(queue[1])) {
+			queue = append([]string{}, queue[0])
+		}
+	}
+	return strings.Join(queue, ".")
+}
+
+// NumberClear number string clear like '_' or ','
+func NumberClear(s string) string {
+	matched, _ := regexp.MatchString(`\d+([_,]\d)+\d*(\.\d)*`, s)
+	if !matched {
+		return s
+	}
+	clrReg := regexp.MustCompile(`[_,]`)
+	return clrReg.ReplaceAllString(s, "")
+}

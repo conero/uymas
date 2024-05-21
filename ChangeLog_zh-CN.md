@@ -38,6 +38,9 @@
   - feat: 新增类型 *ZhSentences* 并实现句长计算
   - feat: Pinyin 新增方法 *Len* 用于计算拼音字典长度
   - feat: Pinyin 新增方法 *SearchByGroupFunc* 、*SearchByGroup* 用于中文句子的查询（初步，优化查询）
+- **str**
+  - feat: 新增函数 *NumberSplitFormat* 和 *NumberClear* 用于处理数字型字符串分割或清理（无效尾部）
+
 
 
 

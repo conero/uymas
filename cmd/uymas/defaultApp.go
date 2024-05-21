@@ -434,6 +434,8 @@ func (c *defaultApp) Cal() {
 	if equal == "" {
 		equal = butil.InputRequire("请输入等式符号：", nil)
 	}
+	// 清理 ',/_'
+	equal = str.NumberClear(equal)
 
 	var baseExp string
 	toArgs := []string{"to", "t"}
@@ -453,8 +455,9 @@ func (c *defaultApp) Cal() {
 	equal = spanReg.ReplaceAllString(equal, "")
 
 	calc := str.NewCalc(equal)
-	calc.Count()
-	lgr.Info("输入等式：\n%s => %v",
+	rslt := calc.Count()
+	lgr.Info("输入等式：\n%s => %s， %s",
 		color.StyleByAnsi(color.AnsiTextCyan, equal),
-		color.StyleByAnsi(color.AnsiTextGreen, calc))
+		color.StyleByAnsi(color.AnsiTextGreen, str.NumberSplitFormat(rslt)),
+		color.StyleByAnsi(color.AnsiTextBlackBr, str.FloatSimple(calc.String())))
 }
