@@ -57,6 +57,24 @@ func FromLine(content string, langs ...string) *Doc {
 		mutilLang map[string][]HelpDick
 	)
 
+	// flush curHelp
+	flushCurHelpFn := func() {
+		if len(curHelp.Alias) == 0 {
+			return
+		}
+
+		// update
+		lastHd := mutilLang[curLang]
+		curHelp.AllText = cmdText
+		lastHd = append(lastHd, curHelp)
+		mutilLang[curLang] = append(mutilLang[curLang], curHelp)
+
+		// flush
+		curHelp.Alias = []string{}
+		curCmd = ""
+		cmdText = ""
+	}
+
 	cmdNameReg := regexp.MustCompile(`^\w+(,\w+)*`)
 	optNameReg := regexp.MustCompile(`^(-{1,2}\w+)+`)
 	for _, line := range queue {
@@ -72,6 +90,11 @@ func FromLine(content string, langs ...string) *Doc {
 		// ":key = value"
 		if first == ":" {
 			pk, pv := ParseKv(ln)
+			// flush lang
+			_, findLast := mutilLang[curLang]
+			if curLang != pv && findLast {
+				flushCurHelpFn()
+			}
 			if pk == "lang" {
 				if util.ListIndex(doc.LangList, pv) == -1 {
 					doc.LangList = append(doc.LangList, pv)
@@ -126,6 +149,9 @@ func FromLine(content string, langs ...string) *Doc {
 		cmdText += line
 		mutilLang[curLang] = hd
 	}
+
+	// last todo
+	flushCurHelpFn()
 
 	//doc.AllText = allText
 	doc.MutilLang = mutilLang
