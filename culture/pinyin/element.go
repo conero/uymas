@@ -100,6 +100,14 @@ func (e List) Alpha(seps ...string) string {
 	return strings.Join(queue, sep)
 }
 
+func (e List) Text() []string {
+	var text []string
+	for _, v := range e {
+		text = append(text, v.Text)
+	}
+	return text
+}
+
 // PyinFormat set format date
 func PyinFormat(pinyin, vFmt string) string {
 	switch vFmt {

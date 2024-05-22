@@ -4,6 +4,7 @@ package pinyin
 import (
 	"fmt"
 	"gitee.com/conero/uymas/fs"
+	"gitee.com/conero/uymas/util/rock"
 	"regexp"
 	"strings"
 )
@@ -53,6 +54,10 @@ var (
 var (
 	hanRegString = `\p{Han}`
 	hanReg       *regexp.Regexp
+)
+
+const (
+	SearchAlphaLimit = 1000
 )
 
 // Pinyin the pinyin dick creator
@@ -274,4 +279,22 @@ func PyinAlpha(word string) string {
 		}
 	}
 	return word
+}
+
+// SearchAlpha search word by single alpha
+func (pyt *Pinyin) SearchAlpha(alpha string, limits ...int) List {
+	limit := rock.ExtractParam(SearchAlphaLimit, limits...)
+	list := List{}
+
+	for _, v := range pyt.dicks {
+		matchAlpha := PyinAlpha(v.pinyin)
+		if limit > 0 && len(list) >= limit {
+			break
+		}
+		if strings.Contains(matchAlpha, alpha) {
+			list = append(list, v)
+		}
+	}
+
+	return list
 }

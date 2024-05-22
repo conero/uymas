@@ -183,6 +183,23 @@ func (c *defaultApp) Pinyin() {
 	}
 
 	pinyinCache = getPinyin()
+
+	// 拼音搜索
+	pinyinArgs := []string{"pyin", "P"}
+	searchAlpha := c.Cc.ArgRaw(pinyinArgs...)
+	if searchAlpha == "" {
+		searchAlpha = words
+	}
+	if c.Cc.CheckSetting(pinyinArgs...) {
+		limit := c.Cc.DefInt(pinyin.SearchAlphaLimit, "limit", "L")
+		list := pinyinCache.SearchAlpha(searchAlpha, limit)
+		textList := list.Text()
+		//lgr.Info("搜索到字符如下：\n%s\n", bin.FormatQue(textList))
+		lgr.Info("搜索到字符如下：\n%s\n", strings.Join(textList, " "))
+		fmt.Printf("\n   搜索到 %d 个字，限制搜索字数字 %d，用时 %v\n", len(textList), limit, tmSpend())
+		return
+	}
+
 	isOld := c.Cc.CheckSetting("old")
 	vFmt := ""
 	switch c.Cc.DefString("", "fmt", "F") {

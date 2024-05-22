@@ -20,7 +20,7 @@
 
 
 
-### v1.4.1/dev
+#### v1.4.x
 
 - [x] xini 库的测试，使其可用常规使用
 
@@ -30,6 +30,10 @@
 - [ ] bin 重复注册命令式，提供可选的panic。即提前预知错误（错误检测）
 
   
+
+
+
+### v1.4.1/dev
 
 > 1.4 计划中还未实现的开发（兼容性），含新增功能
 
@@ -43,6 +47,7 @@
   - feat: Pinyin 新增方法 *SearchByGroupFunc* 、*SearchByGroup* 用于中文句子的查询（初步，优化查询）
   - feat: 新增 Element 添加是否为空、多音字等判断
   - feat: 新增 List 实现汉字列表处理，如生成带音节、数字音节、无音节的拼音获取
+  - feat: 新增函数 SearchAlpha 支持拼音搜索汉字
 - **str**
   - feat: 新增函数 *NumberSplitFormat* 和 *NumberClear* 用于处理数字型字符串分割或清理（无效尾部）
   - feat: 新增函数 *ParseUnicode* ，实现对Unicode代码的解析
@@ -50,7 +55,7 @@
   - feat: 新增函数 *ExtractParamIndex* 实现指定索引好函数参数提取
 
 - **cmd/uymas**
-  - pref: pinyin 支持字符串转utf代码，已经互转；支持配置分割以及风格
+  - pref: pinyin 支持字符串转utf代码，已经互转；支持配置分割以及风格、拼音搜索汉字
   - pref: help 信息完善，且可实现查看单独的命令字段信息
 
 
