@@ -27,6 +27,7 @@ import (
 
 type defaultApp struct {
 	bin.CliApp
+	isVerbose bool // 详细输出
 }
 
 func (c *defaultApp) Construct() {
@@ -44,6 +45,7 @@ func (c *defaultApp) Construct() {
 	CommandAlias("scan", "sc").
 	CommandAlias("cache", "cc").
 	CommandAlias("uls", "uymas-ls")*/
+	c.isVerbose = c.Cc.CheckSetting("vv", "verbose")
 }
 
 // DefaultIndex index
@@ -121,18 +123,43 @@ func (c *defaultApp) Pinyin() {
 	tmSpend := util.SpendTimeDiff()
 	cc := c.Cc
 	words := cc.SubCommand
+	fl := cc.ArgRaw("file", "f")
+	if fl != "" {
+		bys, err := os.ReadFile(fl)
+		if err != nil {
+			lgr.Error("读取文件错误，%s", color.StyleByAnsi(color.AnsiTextRed, err))
+			return
+		}
+		lgr.Info("已读取文件 %s 的内容", fl)
+		words = string(bys)
+	}
+
 	if words == "" {
 		words = butil.InputRequire("请输入中文汉字：", nil)
 	}
 
+	if c.Cc.CheckSetting("from-unicode", "fu", "U", "unicode") {
+		lgr.Info("%s", str.ParseUnicode(words))
+		return
+	}
+
+	words = str.ParseUnicode(words)
+
 	// 输出utf16 代码
-	if c.Cc.CheckSetting("utf16") {
+	if c.Cc.CheckSetting("utf16", "utf") {
 		var codeList []string
+		var strList []string
 		for _, r := range []rune(words) {
 			codeList = append(codeList, fmt.Sprintf("U+%s", strconv.FormatInt(int64(r), 16)))
+			strList = append(strList, fmt.Sprintf("\\u%s", strconv.FormatInt(int64(r), 16)))
 		}
 		lgr.Info("%s 转utf16如：\n %s\n", words,
-			color.StyleByAnsi(color.AnsiTextGreen, strings.Join(codeList, " ")))
+			color.StyleByAnsi(color.AnsiTextGreen, strings.Join(strList, "")))
+
+		if c.isVerbose {
+			lgr.Info("%s 转utf16 (unicode 风格)如：\n %s\n", words,
+				color.StyleByAnsi(color.AnsiTextGreen, strings.Join(codeList, " ")))
+		}
 	}
 
 	pinyinCache = getPinyin()
