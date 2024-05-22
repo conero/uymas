@@ -41,6 +41,9 @@
 - **bin/doc**
   - feat: 新增包实现对命令行文档的解析，新增控制类 Doc 等实现配置信息解析
 
+- **bin**
+  - fixed: 修复 CleanoutString 函数因为空而报错的引起的异常
+
 - **culture/pinyin**
   - feat: 新增类型 *ZhSentences* 并实现句长，字符集获取计算
   - feat: Pinyin 新增方法 *Len* 用于计算拼音字典长度

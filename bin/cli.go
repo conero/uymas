@@ -827,6 +827,9 @@ func isVaildCmd(c string) bool {
 //	`'string'`		=> `string`
 //	`'"string"'`	=> `"string"`
 func CleanoutString(ss string) string {
+	if ss == "" {
+		return ss
+	}
 	ssLen := len(ss)
 	first, last := ss[0:1], ss[ssLen-1:]
 	if first == last {
