@@ -11,6 +11,7 @@ import (
 	"gitee.com/conero/uymas/bin/doc"
 	"gitee.com/conero/uymas/culture/digit"
 	"gitee.com/conero/uymas/culture/ganz"
+	"gitee.com/conero/uymas/culture/pinyin"
 	"gitee.com/conero/uymas/fs"
 	"gitee.com/conero/uymas/logger/lgr"
 	"gitee.com/conero/uymas/number"
@@ -182,17 +183,47 @@ func (c *defaultApp) Pinyin() {
 	}
 
 	pinyinCache = getPinyin()
+	isOld := c.Cc.CheckSetting("old")
+	vFmt := ""
+	switch c.Cc.DefString("", "fmt", "F") {
+	case "title":
+		vFmt = pinyin.SepTitle
+	}
+	seps := []string{
+		c.Cc.DefString("", "sep", "S"),
+		vFmt,
+	}
 	var line string
 	if c.Cc.CheckSetting("number", "n") {
-		line = pinyinCache.GetPyToneNumber(words)
+		if isOld {
+			line = pinyinCache.GetPyToneNumber(words)
+		} else {
+			line = pinyinCache.SearchByGroup(words).Number(seps...)
+		}
 	} else if c.Cc.CheckSetting("alpha", "a") {
-		line = pinyinCache.GetPyToneAlpha(words)
+		if isOld {
+			line = pinyinCache.GetPyToneAlpha(words)
+		} else {
+			line = pinyinCache.SearchByGroup(words).Alpha(seps...)
+		}
 	} else if c.Cc.CheckSetting("all", "A") {
-		line = "原始拼音：" + pinyinCache.GetPyTone(words) + "\n" +
-			"数字声调拼音：" + pinyinCache.GetPyToneNumber(words) + "\n" +
-			"字母拼音：" + pinyinCache.GetPyToneAlpha(words)
+		if isOld {
+			line = "原始拼音：" + pinyinCache.GetPyTone(words) + "\n" +
+				"数字声调拼音：" + pinyinCache.GetPyToneNumber(words) + "\n" +
+				"字母拼音：" + pinyinCache.GetPyToneAlpha(words)
+		} else {
+			vList := pinyinCache.SearchByGroup(words)
+			line = "原始拼音：" + vList.Tone(seps...) + "\n" +
+				"数字声调拼音：" + vList.Number(seps...) + "\n" +
+				"字母拼音：" + vList.Alpha(seps...)
+		}
 	} else {
-		line = pinyinCache.GetPyTone(words)
+		if isOld {
+			line = pinyinCache.GetPyTone(words)
+		} else {
+			line = pinyinCache.SearchByGroup(words).Tone(seps...)
+		}
+
 	}
 
 	fmt.Println(line)

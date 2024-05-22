@@ -1,4 +1,4 @@
-// Package digit Provide digitization tools such as converting numbers to Chinese uppercase and commonly used strings.
+// Package digit Provide digitization tools such as converting numbers to Text uppercase and commonly used strings.
 // link: http://daxie.gjcha.com/
 package digit
 

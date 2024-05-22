@@ -50,6 +50,11 @@ var (
 	}
 )
 
+var (
+	hanRegString = `\p{Han}`
+	hanReg       *regexp.Regexp
+)
+
 // Pinyin the pinyin dick creator
 type Pinyin struct {
 	filename string
@@ -93,7 +98,7 @@ func (pyt *Pinyin) LineToDick(lines []string) *Pinyin {
 		innerDick[chinese] = Element{
 			Unicode: unicode,
 			pinyin:  pinyin,
-			Chinese: chinese,
+			Text:    chinese,
 		}
 	}
 	pyt.dicks = innerDick
@@ -108,44 +113,13 @@ func (pyt *Pinyin) GetPyTone(chinese string) string {
 
 // GetPyToneNumber get pinyin with tone that replace by number (1-4)
 func (pyt *Pinyin) GetPyToneNumber(chinese string) string {
-	chinese = pyt.GetPyToneFunc(chinese, func(word string) string {
-		for k, m := range ChineseToneMap {
-			isBreak := false
-			for s, n := range m {
-				if strings.Contains(word, s) {
-					word = strings.ReplaceAll(word, s, k)
-					word = fmt.Sprintf("%v%v", word, n)
-					isBreak = true
-					break
-				}
-			}
-			if isBreak {
-				break
-			}
-		}
-		return word
-	})
+	chinese = pyt.GetPyToneFunc(chinese, PyinNumber)
 	return chinese
 }
 
 // GetPyToneAlpha get pinyin without tone
 func (pyt *Pinyin) GetPyToneAlpha(chinese string) string {
-	chinese = pyt.GetPyToneFunc(chinese, func(word string) string {
-		for k, m := range ChineseToneMap {
-			isBreak := false
-			for s := range m {
-				if strings.Contains(word, s) {
-					word = strings.ReplaceAll(word, s, k)
-					isBreak = true
-					break
-				}
-			}
-			if isBreak {
-				break
-			}
-		}
-		return word
-	})
+	chinese = pyt.GetPyToneFunc(chinese, PyinAlpha)
 	return chinese
 }
 
@@ -222,6 +196,13 @@ func (pyt *Pinyin) SearchByGroupFunc(s string, call func(el Element)) {
 	var cacheDick = map[string]Element{}
 	dicks := pyt.dicks
 	for _, w := range stc.Words() {
+		if !IsHanWord(w) {
+			// empty
+			call(Element{
+				Text: w,
+			})
+		}
+
 		// smail
 		el, exist := cacheDick[w]
 		if exist {
@@ -234,15 +215,63 @@ func (pyt *Pinyin) SearchByGroupFunc(s string, call func(el Element)) {
 		if exist {
 			cacheDick[w] = el
 			call(el)
+			continue
 		}
+
 	}
 }
 
 // SearchByGroup @todo implement grouped text queries
-func (pyt *Pinyin) SearchByGroup(words string) []Element {
-	var elList []Element
+func (pyt *Pinyin) SearchByGroup(words string) List {
+	var elList List
 	pyt.SearchByGroupFunc(words, func(el Element) {
 		elList = append(elList, el)
 	})
 	return elList
+}
+
+// IsHanWord detect if it is chinese word.
+func IsHanWord(w string) bool {
+	if hanReg == nil {
+		hanReg = regexp.MustCompile(hanRegString)
+	}
+
+	return hanReg.MatchString(w)
+}
+
+// PyinNumber turn pinyin with number
+func PyinNumber(word string) string {
+	for k, m := range ChineseToneMap {
+		isBreak := false
+		for s, n := range m {
+			if strings.Contains(word, s) {
+				word = strings.ReplaceAll(word, s, k)
+				word = fmt.Sprintf("%v%v", word, n)
+				isBreak = true
+				break
+			}
+		}
+		if isBreak {
+			break
+		}
+	}
+	return word
+}
+
+// PyinAlpha turn pinyin with alpha
+func PyinAlpha(word string) string {
+	for k, m := range ChineseToneMap {
+		isBreak := false
+		for s := range m {
+			if strings.Contains(word, s) {
+				word = strings.ReplaceAll(word, s, k)
+				isBreak = true
+				break
+			}
+		}
+		if isBreak {
+			break
+		}
+	}
+	return word
 }
