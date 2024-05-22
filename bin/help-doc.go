@@ -3,16 +3,14 @@ package bin
 import (
 	"fmt"
 	"gitee.com/conero/uymas/str"
+	"gitee.com/conero/uymas/util/rock"
 	"strings"
 )
 
 // GetHelpEmbed GetHelpEmbed(content string, lang string)
 func GetHelpEmbed(content string, args ...string) string {
 	queue := strings.Split(content, "\n")
-	argsLine := ""
-	if len(args) > 0 {
-		argsLine = strings.ToLower(args[0])
-	}
+	argsLine := rock.ExtractParam("", args...)
 	var (
 		needStrQueue  []string
 		isNeedMk      = false

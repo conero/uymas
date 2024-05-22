@@ -34,6 +34,9 @@
 > 1.4 计划中还未实现的开发（兼容性），含新增功能
 
 - pref(doc): Readme 文档更新，添加相关徽章以及内容完善 
+- **bin/doc**
+  - feat: 新增包实现对命令行文档的解析，新增控制类 Doc 等实现配置信息解析
+
 - **culture/pinyin**
   - feat: 新增类型 *ZhSentences* 并实现句长，字符集获取计算
   - feat: Pinyin 新增方法 *Len* 用于计算拼音字典长度
@@ -41,7 +44,6 @@
 - **str**
   - feat: 新增函数 *NumberSplitFormat* 和 *NumberClear* 用于处理数字型字符串分割或清理（无效尾部）
   - feat: 新增函数 *ParseUnicode* ，实现对Unicode代码的解析
-  
 - **cmd/uymas**
   - pref: pinyin 支持字符串转utf代码，已经互转
   - pref: help 信息完善

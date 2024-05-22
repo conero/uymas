@@ -8,6 +8,7 @@ import (
 	"gitee.com/conero/uymas/bin/butil"
 	"gitee.com/conero/uymas/bin/color"
 	"gitee.com/conero/uymas/bin/data"
+	"gitee.com/conero/uymas/bin/doc"
 	"gitee.com/conero/uymas/culture/digit"
 	"gitee.com/conero/uymas/culture/ganz"
 	"gitee.com/conero/uymas/fs"
@@ -69,10 +70,28 @@ func (c *defaultApp) DefaultIndex() {
 
 // DefaultHelp help
 func (c *defaultApp) DefaultHelp() {
-	cc := c.Cc
-	lang := cc.ArgRaw("lang", "L")
-	content := bin.GetHelpEmbed(s, lang)
-	fmt.Println(content)
+	lng := c.Cc.ArgRaw("lang", "L")
+	help := doc.FromLine(s, lng)
+	if lng != "" && !help.Support(lng) {
+		lgr.Error("%s 不支持该语言", lng)
+		return
+	}
+
+	// help
+	fnCmd := c.Cc.SubCommand
+	if fnCmd == "" {
+		img := help.Help(lng)
+		fmt.Println(img)
+		return
+	}
+
+	helpDoc, exist := help.Search(fnCmd)
+	if !exist {
+		lgr.Error("%s Not Find", fnCmd)
+		return
+	}
+
+	fmt.Println(helpDoc)
 }
 
 func (c *defaultApp) DefaultUnmatched() {
