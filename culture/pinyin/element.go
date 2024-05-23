@@ -24,6 +24,7 @@ func (e Element) IsEmpty() bool {
 	return e.pinyin == ""
 }
 
+// FirstPinyin if pinyin exists get the first pinyin, compatible with polyphonics
 func (e Element) FirstPinyin() string {
 	list := e.PinyinList()
 	if list == nil {
@@ -32,10 +33,12 @@ func (e Element) FirstPinyin() string {
 	return list[0]
 }
 
+// Polyphony test if the pinyin is polyphonic
 func (e Element) Polyphony() bool {
 	return len(e.PinyinList()) > 1
 }
 
+// PinyinList get the polyphonic pinyin as list
 func (e Element) PinyinList() []string {
 	if e.pinyin == "" {
 		return nil

@@ -291,7 +291,22 @@ func (pyt *Pinyin) SearchAlpha(alpha string, limits ...int) List {
 		if limit > 0 && len(list) >= limit {
 			break
 		}
-		if strings.Contains(matchAlpha, alpha) {
+		// Search from polyphonic word
+		pyList := v.PinyinList()
+		if len(pyList) > 0 {
+			isContinue := false
+			for _, py := range pyList {
+				if strings.Index(py, alpha) == 0 {
+					list = append(list, v)
+					isContinue = true
+					break
+				}
+			}
+			if isContinue {
+				continue
+			}
+		}
+		if strings.Index(matchAlpha, alpha) == 0 {
 			list = append(list, v)
 		}
 	}
