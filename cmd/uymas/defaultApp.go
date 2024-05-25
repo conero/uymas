@@ -233,6 +233,23 @@ func (c *defaultApp) Pinyin() {
 			line = "原始拼音：" + vList.Tone(seps...) + "\n" +
 				"数字声调拼音：" + vList.Number(seps...) + "\n" +
 				"字母拼音：" + vList.Alpha(seps...)
+
+			// 多音字
+			mpCount := 0
+			var pmList []string
+			for _, vl := range vList {
+				pyList := vl.PinyinList()
+				if len(pyList) == 1 {
+					continue
+				}
+				mpCount += 1
+				pmList = append(pmList,
+					color.StyleByAnsi(color.AnsiTextCyan, vl.Text+": "+strings.Join(pyList, "、")))
+			}
+
+			if mpCount > 0 {
+				line += fmt.Sprintf("\n  多音字共 %d 个，详细如：%s\n", mpCount, strings.Join(pmList, "，"))
+			}
 		}
 	} else {
 		if isOld {
