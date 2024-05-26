@@ -10,6 +10,16 @@ const (
 	SepTitle = `__LIB_TITLE__`
 )
 
+const (
+	_ = iota
+	// PinyinTone pinyin as tone for raw
+	PinyinTone
+	// PinyinNumber pinyin as tone for number
+	PinyinNumber
+	// PinyinAlpha pinyin as tone for alpha
+	PinyinAlpha
+)
+
 // Element the data dictionary enter
 type Element struct {
 	Unicode string
@@ -103,6 +113,7 @@ func (e List) Alpha(seps ...string) string {
 	return strings.Join(queue, sep)
 }
 
+// Text get pinyin text as the list of element
 func (e List) Text() []string {
 	var text []string
 	for _, v := range e {

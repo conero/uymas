@@ -118,7 +118,9 @@ func (pyt *Pinyin) GetPyTone(chinese string) string {
 
 // GetPyToneNumber get pinyin with tone that replace by number (1-4)
 func (pyt *Pinyin) GetPyToneNumber(chinese string) string {
-	chinese = pyt.GetPyToneFunc(chinese, PyinNumber)
+	chinese = pyt.GetPyToneFunc(chinese, func(s string) string {
+		return PyinNumber(s)
+	})
 	return chinese
 }
 
@@ -245,22 +247,32 @@ func IsHanWord(w string) bool {
 }
 
 // PyinNumber turn pinyin with number
-func PyinNumber(word string) string {
-	for k, m := range ChineseToneMap {
-		isBreak := false
-		for s, n := range m {
-			if strings.Contains(word, s) {
-				word = strings.ReplaceAll(word, s, k)
-				word = fmt.Sprintf("%v%v", word, n)
-				isBreak = true
+//
+// Since alphanumeric pinyin is loaded at the end of the word rather than replacing it in situ,
+// new segmentation symbols are added
+func PyinNumber(word string, seqs ...string) string {
+	seq := rock.ExtractParam(",", seqs...)
+	var queue []string
+
+	for _, vs := range strings.Split(word, seq) {
+		for k, m := range ChineseToneMap {
+			isBreak := false
+			for s, n := range m {
+				if strings.Contains(vs, s) {
+					vs = strings.ReplaceAll(vs, s, k)
+					vs = fmt.Sprintf("%v%v", vs, n)
+					queue = append(queue, vs)
+					isBreak = true
+					break
+				}
+			}
+			if isBreak {
 				break
 			}
 		}
-		if isBreak {
-			break
-		}
 	}
-	return word
+
+	return strings.Join(queue, seq)
 }
 
 // PyinAlpha turn pinyin with alpha

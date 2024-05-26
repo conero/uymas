@@ -37,6 +37,7 @@
 
 - **culture/pinyin**
   - pref: pinyin.SearchAlpha 搜索拼音必须以给定的拼音开头，并支持多拼音
+  - pref: PyinNumber 函数新增参数使其支持字符分割，因其不是原位替换
 - **cmd/uymas**
   - pref: pinyin 命令添加多音字显示
 
