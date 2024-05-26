@@ -130,3 +130,14 @@ func Current() BinInfo {
 func init() {
 	parseCurrent(false)
 }
+
+// Pwd try to get the current working directory
+func Pwd(joins ...string) string {
+	vDir, err := os.Getwd()
+	if err != nil {
+		vDir = "./"
+	}
+
+	joins = append([]string{vDir}, joins...)
+	return fs.StdPathName(path.Join(joins...))
+}

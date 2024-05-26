@@ -41,6 +41,9 @@
 - **cmd/uymas**
   - pref: pinyin 命令添加多音字显示
 
+- **bin/butil**
+  - feat: 新增函数 *Pwd* 用于获取当前的工作目录
+
 
 
 
