@@ -36,11 +36,12 @@
 > 1.4 计划完成以及代码优化（向下兼容性）
 
 - **culture/pinyin**
+  - feat: 新增 List.Polyphony 用于获取以多音字分割的多组拼音
+  - feat: 新增 Pinyin.IsEmpty 判断是否为空
   - pref: pinyin.SearchAlpha 搜索拼音必须以给定的拼音开头，并支持多拼音
-  - pref: PyinNumber 函数新增参数使其支持字符分割，因其不是原位替换
+  - pref: PyinNumber 函数新增参数使其支持字符分割，因其不是原位替换 
 - **cmd/uymas**
   - pref: pinyin 命令添加多音字显示
-
 - **bin/butil**
   - feat: 新增函数 *Pwd* 用于获取当前的工作目录
 

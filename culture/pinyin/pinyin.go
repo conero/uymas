@@ -325,3 +325,7 @@ func (pyt *Pinyin) SearchAlpha(alpha string, limits ...int) List {
 
 	return list
 }
+
+func (pyt *Pinyin) IsEmpty() bool {
+	return pyt.Len() == 0
+}

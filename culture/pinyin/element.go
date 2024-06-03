@@ -1,6 +1,7 @@
 package pinyin
 
 import (
+	"fmt"
 	"gitee.com/conero/uymas/str"
 	"gitee.com/conero/uymas/util/rock"
 	"strings"
@@ -122,11 +123,49 @@ func (e List) Text() []string {
 	return text
 }
 
+// Polyphony gets all columns composed of polyphonics
+//
+// @todo to be realized
+func (e List) Polyphony(args ...string) []string {
+	var polys []string
+	queue := polyphonyTraverse(e, 0, nil)
+	//fmt.Printf("queue: %#v\n", queue)
+	fmt.Printf("queue: %v\n", len(queue))
+	return polys
+}
+
 // PyinFormat set format date
+//
+// support `title` like 'latest name' to 'Latest Name'
 func PyinFormat(pinyin, vFmt string) string {
 	switch vFmt {
 	case SepTitle:
 		pinyin = str.Ucfirst(pinyin)
 	}
 	return pinyin
+}
+
+// recursive polyphonics
+func polyphonyTraverse(ls List, next int, queue []string) []string {
+	vLen := len(ls)
+	for j := next; j < vLen; j++ {
+		elNext := ls[j]
+		if elNext.IsEmpty() {
+			queue = append(queue, elNext.Text)
+			continue
+		}
+		l := elNext.PinyinList()
+		if len(l) == 1 {
+			queue = append(queue, elNext.pinyin)
+			continue
+		}
+
+		for _, cv := range l {
+			fmt.Printf("i: %d, cv: %s\n", j, cv)
+			queue = append(queue, cv)
+			child := polyphonyTraverse(ls, j+1, queue)
+			queue = append(queue, child...)
+		}
+	}
+	return queue
 }
