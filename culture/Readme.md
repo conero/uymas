@@ -37,11 +37,21 @@ F900-FAFF   中日韩兼容表意文字
 
 
 
+### pinyin
+
+相关法规
+
+- [1958 汉语拼音方案](http://www.moe.gov.cn/jyb_sjzl/ziliao/A19/195802/t19580201_186000.html)
+- [GB/T 16159-2012 汉语拼音正词法基本规则](https://openstd.samr.gov.cn/bzgk/gb/std_list?p.p1=0&p.p90=circulation_date&p.p91=desc&p.p2=16159)
+- [中华人民共和国国家通用语言文字法](https://www.gov.cn/ziliao/flfg/2005-08/31/content_27920.htm)
 
 
 
+中文编码，字符丰富级别 $$ GB18030 \ge GBK \ge GB2312 $$
 
-
+- [GB18030-2022](https://openstd.samr.gov.cn/bzgk/gb/std_list?r=0.5793551501355529&p.p1=0&p.p2=18030&p.p5=PUBLISHED&p.p90=circulation_date&p.p91=desc)    	信息技术-中文编码字符集
+- GBK        是对 gb2312 的扩展
+- [GB/T 2312-1980 ](https://openstd.samr.gov.cn/bzgk/gb/std_list?r=0.7429677389909746&p.p1=0&p.p2=2312%2B%E6%B1%89%E5%AD%97&p.p90=circulation_date&p.p91=desc)  信息交换用汉字编码字符集基本集
 
 
 
