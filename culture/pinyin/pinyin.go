@@ -126,7 +126,9 @@ func (pyt *Pinyin) GetPyToneNumber(chinese string) string {
 
 // GetPyToneAlpha get pinyin without tone
 func (pyt *Pinyin) GetPyToneAlpha(chinese string) string {
-	chinese = pyt.GetPyToneFunc(chinese, PyinAlpha)
+	chinese = pyt.GetPyToneFunc(chinese, func(s string) string {
+		return PyinAlpha(s)
+	})
 	return chinese
 }
 
@@ -275,15 +277,43 @@ func PyinNumber(word string, seqs ...string) string {
 	return strings.Join(queue, seq)
 }
 
+// PyinNumberList convert the pinyin number to C and output the list
+func PyinNumberList(word []string) []string {
+	for i, vs := range word {
+		for k, m := range ChineseToneMap {
+			isBreak := false
+			for s, n := range m {
+				if strings.Contains(vs, s) {
+					vs = strings.ReplaceAll(vs, s, k)
+					vs = fmt.Sprintf("%v%v", vs, n)
+					isBreak = true
+					break
+				}
+			}
+			if isBreak {
+				break
+			}
+		}
+		word[i] = vs
+	}
+
+	return word
+}
+
 // PyinAlpha turn pinyin with alpha
-func PyinAlpha(word string) string {
+func PyinAlpha(word string, isAllArgs ...bool) string {
+	isAll := rock.ExtractParam(false, isAllArgs...)
 	for k, m := range ChineseToneMap {
 		isBreak := false
 		for s := range m {
 			if strings.Contains(word, s) {
 				word = strings.ReplaceAll(word, s, k)
-				isBreak = true
-				break
+				isBreak = !isAll
+				if isBreak {
+					break
+				} else {
+					continue
+				}
 			}
 		}
 		if isBreak {

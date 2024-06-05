@@ -1,7 +1,6 @@
 package pinyin
 
 import (
-	"fmt"
 	"gitee.com/conero/uymas/str"
 	"gitee.com/conero/uymas/util/rock"
 	"strings"
@@ -125,12 +124,24 @@ func (e List) Text() []string {
 
 // Polyphony gets all columns composed of polyphonics
 //
-// @todo to be realized
-func (e List) Polyphony(args ...string) []string {
+// Polyphony(vType int32, join string)
+func (e List) Polyphony(vType int32, args ...string) []string {
+	joinSeq := rock.ExtractParam("", args...)
 	var polys []string
 	queue := polyphonyTraverse(e, 0, nil)
-	//fmt.Printf("queue: %#v\n", queue)
-	fmt.Printf("queue: %v\n", len(queue))
+	for _, qs := range queue {
+		var elStr string
+		switch vType {
+		case PinyinNumber:
+			elStr = strings.Join(PyinNumberList(qs), joinSeq)
+		case PinyinAlpha:
+			elStr = strings.Join(qs, joinSeq)
+			elStr = PyinAlpha(elStr, true)
+		default:
+			elStr = strings.Join(qs, joinSeq)
+		}
+		polys = append(polys, elStr)
+	}
 	return polys
 }
 
@@ -146,8 +157,21 @@ func PyinFormat(pinyin, vFmt string) string {
 }
 
 // recursive polyphonics
-func polyphonyTraverse(ls List, next int, queue []string) []string {
+func polyphonyTraverse(ls List, next int, queue []string) [][]string {
 	vLen := len(ls)
+	var polyphonyLs [][]string
+	var tmpChildBranch [][]string
+
+	todoAppendFn := func(single string) {
+		if len(tmpChildBranch) > 0 {
+			for i, cld := range tmpChildBranch {
+				tmpChildBranch[i] = append(cld, single)
+			}
+			return
+		}
+		queue = append(queue, single)
+	}
+
 	for j := next; j < vLen; j++ {
 		elNext := ls[j]
 		if elNext.IsEmpty() {
@@ -156,16 +180,33 @@ func polyphonyTraverse(ls List, next int, queue []string) []string {
 		}
 		l := elNext.PinyinList()
 		if len(l) == 1 {
-			queue = append(queue, elNext.pinyin)
+			todoAppendFn(elNext.pinyin)
 			continue
 		}
 
+		var tcbNext [][]string
 		for _, cv := range l {
-			fmt.Printf("i: %d, cv: %s\n", j, cv)
-			queue = append(queue, cv)
-			child := polyphonyTraverse(ls, j+1, queue)
-			queue = append(queue, child...)
+			if len(tmpChildBranch) > 0 {
+				for _, tcb := range tmpChildBranch {
+					tcbNext2 := polyphonyTraverse(ls, j+1, append(tcb, cv))
+					tcbNext = append(tcbNext, tcbNext2...)
+				}
+				continue
+			}
+
+			for _, cn := range polyphonyTraverse(ls, j+1, append(queue, cv)) {
+				tcbNext = append(tcbNext, cn)
+			}
 		}
+
+		tmpChildBranch = tcbNext
+		break
 	}
-	return queue
+
+	if len(tmpChildBranch) > 0 {
+		return tmpChildBranch
+	}
+	polyphonyLs = append(polyphonyLs, queue)
+
+	return polyphonyLs
 }

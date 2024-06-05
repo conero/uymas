@@ -44,6 +44,9 @@
   - pref: pinyin 命令添加多音字显示
 - **bin/butil**
   - feat: 新增函数 *Pwd* 用于获取当前的工作目录
+- **util**
+  - feat: 新增函数 *ListNoRepeat* 实现对数组重复元素的过滤
+
 
 
 

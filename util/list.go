@@ -17,6 +17,22 @@ func ListIndex[T constraints.Equable](list []T, value T) (index int) {
 	return
 }
 
+// ListNoRepeat filter duplicate elements in list
+func ListNoRepeat[T constraints.Equable](list []T) []T {
+	var noRepeat []T
+	var tmpMap = map[T]bool{}
+
+	for _, v := range list {
+		if _, exist := tmpMap[v]; exist {
+			continue
+		}
+
+		noRepeat = append(noRepeat, v)
+		tmpMap[v] = true
+	}
+	return noRepeat
+}
+
 // ExtractArrUnique extracting array elements with loss (non-repeatable) from an array
 func ExtractArrUnique[T constraints.ValueIterable](count int, arr []T) []T {
 	vLen := len(arr)

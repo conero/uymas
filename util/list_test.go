@@ -2,6 +2,7 @@ package util
 
 import (
 	"fmt"
+	"strings"
 	"testing"
 )
 
@@ -21,6 +22,21 @@ func TestListIndex(t *testing.T) {
 	if idx != rfIdx {
 		t.Errorf("Search []uint8 Index failure: %v != %v", idx, rfIdx)
 	}
+}
+
+func TestListNoRepeat(t *testing.T) {
+	var list = []string{"a", "a", "b", "c", "c", "f"}
+	rel := ListNoRepeat(list)
+	ref := "abcf"
+	toTestFn := func() {
+		matchRef := strings.Join(rel, "")
+		if ref != matchRef {
+			t.Errorf("%v 去重失败，%s ≠ %s", list, matchRef, ref)
+		}
+	}
+
+	// case
+	toTestFn()
 }
 
 func TestMapKeys(t *testing.T) {

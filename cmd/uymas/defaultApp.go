@@ -235,25 +235,21 @@ func (c *defaultApp) Pinyin() {
 				"字母拼音：" + vList.Alpha(seps...)
 
 			// 多音字
-			mpCount := 0
-			var pmList []string
-			for _, vl := range vList {
-				pyList := vl.PinyinList()
-				if len(pyList) == 1 {
-					continue
-				}
-				mpCount += 1
-				pmList = append(pmList,
-					color.StyleByAnsi(color.AnsiTextCyan, vl.Text+": "+strings.Join(pyList, "、")))
-			}
-
-			if mpCount > 0 {
-				line += fmt.Sprintf("\n  多音字共 %d 个，详细如：%s\n", mpCount, strings.Join(pmList, "，"))
+			pyList := vList.Polyphony(pinyin.PinyinTone)
+			pyCount := len(pyList)
+			if len(pyList) > 0 {
+				line += fmt.Sprintf("\n  多音字共 %d 组，详细如：\n原始拼音组：\n%s\n数字拼音组：\n%s\n字母拼音组：\n%s\n",
+					pyCount, bin.FormatQue(pyList, "  "),
+					bin.FormatQue(vList.Polyphony(pinyin.PinyinNumber), "  "),
+					bin.FormatQue(util.ListNoRepeat(vList.Polyphony(pinyin.PinyinAlpha)), "  "))
 			}
 		}
 	} else {
 		if isOld {
 			line = pinyinCache.GetPyTone(words)
+		} else if c.isVerbose {
+			list := pinyinCache.SearchByGroup(words)
+			line = bin.FormatQue(list.Polyphony(pinyin.PinyinTone, seps...), " ")
 		} else {
 			line = pinyinCache.SearchByGroup(words).Tone(seps...)
 		}
