@@ -63,7 +63,7 @@ func (c *TimeLayoutDetector) layoutFmt1(spl string) string {
 	var layout string
 	var layoutQueue []string
 	// yyyy-mm-dd
-	if strings.Contains(tmStr, spl) {
+	if !strings.Contains(tmStr, spl) {
 		return layout
 	}
 
@@ -265,13 +265,19 @@ func (c *TimeLayoutDetector) Parse() (string, error) {
 	if lot = c.layoutFmt1("-"); lot != "" {
 		c.layout = lot
 		return lot, nil
-	} else if lot = c.layoutFmt1("/"); lot != "" {
+	}
+
+	if lot = c.layoutFmt1("/"); lot != "" {
 		c.layout = lot
 		return lot, nil
-	} else if lot = c.layoutFmt2(); lot != "" {
+	}
+
+	if lot = c.layoutFmt2(); lot != "" {
 		c.layout = lot
 		return lot, nil
-	} else if lot = c.layoutFmt3(); lot != "" {
+	}
+
+	if lot = c.layoutFmt3(); lot != "" {
 		c.layout = lot
 		return lot, nil
 	}

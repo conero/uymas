@@ -126,7 +126,7 @@ func lnTrim(vStr string) (vs string) {
 
 // 切片解析（行内）
 func parseSlice(vStr string) (value any, isOk bool) {
-	if strings.Contains(vStr, baseLimiterToken) {
+	if !strings.Contains(vStr, baseLimiterToken) {
 		return
 	}
 
