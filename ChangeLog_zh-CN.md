@@ -47,6 +47,9 @@
   - feat: 新增函数 *Pwd* 用于获取当前的工作目录
 - **util**
   - feat: 新增函数 *ListNoRepeat* 实现对数组重复元素的过滤
+- **str**
+  - feat: 新增函数 *ParseDuration* 实现对字符串时间的解析
+
 
 
 

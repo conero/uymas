@@ -1,6 +1,9 @@
 package str
 
-import "testing"
+import (
+	"testing"
+	"time"
+)
 
 func TestTimeParseLayout(t *testing.T) {
 	var ipt, ref, actl string
@@ -135,4 +138,25 @@ func TestTimeParseLayout(t *testing.T) {
 	} else if actl != ref {
 		t.Fatalf("值 [%v], 转换后 [%v]; 与参考值 [%v] 不符合！", ipt, actl, ref)
 	}
+}
+
+func TestParseDuration(t *testing.T) {
+	duraStr := "10天"
+	dura, err := ParseDuration(duraStr)
+	ref := 10 * 24 * time.Hour
+
+	toDiffFn := func() {
+		if err != nil {
+			t.Errorf("%s 解析错误，%v", duraStr, err)
+		} else if ref != dura {
+			t.Errorf("%s(%s) ≠ %s", duraStr, dura, ref)
+		}
+	}
+	toDiffFn()
+
+	// case
+	duraStr = "time spend: 6hours, 10.3 minute"
+	dura, err = ParseDuration(duraStr)
+	ref = 6*time.Hour + 10*time.Minute + (0.3*60)*time.Second
+	toDiffFn()
 }

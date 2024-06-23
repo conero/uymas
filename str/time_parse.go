@@ -3,8 +3,13 @@ package str
 import (
 	"errors"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
+)
+
+var (
+	strAsFloatReg *regexp.Regexp
 )
 
 func TimeParse(tmStr string) (time.Time, error) {
@@ -306,4 +311,93 @@ func NewTimeLotDtr(tmStr string) *TimeLayoutDetector {
 func TimeParseLayout(tmStr string) (string, error) {
 	tld := NewTimeLotDtr(tmStr)
 	return tld.Parse()
+}
+
+// ParseDuration parse duration by input string data like day/d(default)/天,hour/h/时,minute/m/分,second/s/秒
+//
+// like: -10d73s, 73h11m1002s, 13分12秒
+func ParseDuration(dura string) (time.Duration, error) {
+	if dura == "" {
+		return 0, nil
+	}
+	symbol := 1
+	if dura[:1] == "-" {
+		dura = dura[1:]
+		symbol = -1
+	}
+
+	if dura == "" {
+		return 0, errors.New("duration data is error that no number")
+	}
+
+	var duration time.Duration
+
+	// day
+	reg := regexp.MustCompile(`\d+(\.\d+)*\s?(天|d)`)
+	if reg.MatchString(dura) {
+		for _, s := range reg.FindAllString(dura, -1) {
+			vDay := strAsFloat(s)
+			if vDay == 0 {
+				continue
+			}
+			duration += time.Millisecond * time.Duration(vDay*24*60*60*1000)
+			dura = strings.ReplaceAll(dura, s, "")
+		}
+	}
+
+	// hour
+	reg = regexp.MustCompile(`\d+(\.\d+)*\s?(时|h)`)
+	if reg.MatchString(dura) {
+		for _, s := range reg.FindAllString(dura, -1) {
+			vHour := strAsFloat(s)
+			if vHour == 0 {
+				continue
+			}
+			duration += time.Millisecond * time.Duration(vHour*60*60*1000)
+			dura = strings.ReplaceAll(dura, s, "")
+		}
+	}
+
+	// minute
+	reg = regexp.MustCompile(`\d+(\.\d+)*\s?(分|m)`)
+	if reg.MatchString(dura) {
+		for _, s := range reg.FindAllString(dura, -1) {
+			vMinute := strAsFloat(s)
+			if vMinute == 0 {
+				continue
+			}
+			duration += time.Millisecond * time.Duration(vMinute*60*1000)
+			dura = strings.ReplaceAll(dura, s, "")
+		}
+	}
+
+	// second
+	reg = regexp.MustCompile(`\d+(\.\d+)*\s?(秒|s)`)
+	if reg.MatchString(dura) {
+		for _, s := range reg.FindAllString(dura, -1) {
+			vSecond := strAsFloat(s)
+			if vSecond == 0 {
+				continue
+			}
+			duration += time.Millisecond * time.Duration(vSecond*1000)
+			dura = strings.ReplaceAll(dura, s, "")
+		}
+	}
+	duration *= time.Duration(symbol)
+
+	return duration, nil
+
+}
+
+func strAsFloat(s string) float64 {
+	if strAsFloatReg == nil {
+		strAsFloatReg = regexp.MustCompile(`-?\d+(\.\d+)*`)
+	}
+
+	for _, eS := range strAsFloatReg.FindAllString(s, 1) {
+		vf, _ := strconv.ParseFloat(eS, 64)
+		return vf
+	}
+
+	return 0
 }
