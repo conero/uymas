@@ -315,14 +315,16 @@ func TimeParseLayout(tmStr string) (string, error) {
 
 // ParseDuration parse duration by input string data like day/d(default)/天,hour/h/时,minute/m/分,second/s/秒
 //
-// like: -10d73s, 73h11m1002s, 13分12秒
+// like: -10d73s, 73h11m1002s, 13分12秒。"-"/"减"/“负” are similar terms
 func ParseDuration(dura string) (time.Duration, error) {
 	if dura == "" {
 		return 0, nil
 	}
 	symbol := 1
-	if dura[:1] == "-" {
-		dura = dura[1:]
+	queue := strings.Split(dura, "")
+	first := queue[0]
+	if first == "-" || first == "减" || first == "负" {
+		dura = strings.Join(queue[1:], "")
 		symbol = -1
 	}
 

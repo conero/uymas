@@ -43,6 +43,7 @@
   - pref: PyinNumber 函数新增参数使其支持字符分割，因其不是原位替换 
 - **cmd/uymas**
   - pref: pinyin 命令添加多音字显示
+  - pref: datediff/dd 新增-add用于运行时间加减
 - **bin/butil**
   - feat: 新增函数 *Pwd* 用于获取当前的工作目录
 - **util**

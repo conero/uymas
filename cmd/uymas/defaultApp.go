@@ -391,9 +391,32 @@ func (c *defaultApp) Datediff() {
 	endDate := c.Cc.ArgRaw("end", "e")
 
 	// 日期解析
-	tm, err := str.TimeParse(date)
-	if err != nil {
-		lgr.Error("日期格式不支持！")
+	var tm time.Time
+	var err error
+	if strings.ToLower(date) == "now" {
+		tm = time.Now()
+	} else {
+		tm, err = str.TimeParse(date)
+		if err != nil {
+			lgr.Error("日期格式不支持！")
+			return
+		}
+	}
+
+	// 日期运算
+	add := c.Cc.ArgRaw("add", "a")
+	if add != "" {
+		dura, err := str.ParseDuration(add)
+		if err != nil {
+			lgr.Error("加入日期错误，%s", err)
+			return
+		}
+
+		newTm := tm.Add(dura)
+		lgr.Info("当前时间：%s, 运算：%s，得\n    %s",
+			color.StyleByAnsi(color.AnsiTextBlackBr, tm.Format(time.DateTime)),
+			color.StyleByAnsi(color.AnsiTextBlackBr, add+"("+dura.String()+")"),
+			color.StyleByAnsi(color.AnsiTextGreenBr, newTm.Format(time.DateTime)))
 		return
 	}
 
