@@ -334,6 +334,27 @@ func ParseDuration(dura string) (time.Duration, error) {
 
 	var duration time.Duration
 
+	timeFormatReg := regexp.MustCompile(`\d+(\.\d+)*:\d+(\.\d+)*:\d+(\.\d+)*`)
+	if timeFormatReg.MatchString(dura) {
+		var durationTmp time.Duration
+		for i, s := range strings.Split(dura, ":") {
+			value := strAsFloat(s)
+			if value == 0 {
+				continue
+			}
+			durationTmp = time.Duration(value * 1000)
+			switch i {
+			case 0: // hour
+				duration += durationTmp * time.Millisecond * 60 * 60
+			case 1: // minute
+				duration += durationTmp * time.Millisecond * 60
+			case 2: // second
+				duration += durationTmp * time.Millisecond
+			}
+		}
+		dura = ""
+	}
+
 	// day
 	reg := regexp.MustCompile(`\d+(\.\d+)*\s?(天|d)`)
 	if reg.MatchString(dura) {

@@ -159,4 +159,10 @@ func TestParseDuration(t *testing.T) {
 	dura, err = ParseDuration(duraStr)
 	ref = 6*time.Hour + 10*time.Minute + (0.3*60)*time.Second
 	toDiffFn()
+
+	// case
+	duraStr = "12:0.3:0"
+	dura, err = ParseDuration(duraStr)
+	ref = 12*time.Hour + (0.3*60)*time.Second
+	toDiffFn()
 }
