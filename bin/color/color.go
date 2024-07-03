@@ -18,6 +18,7 @@ package color
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 )
 
@@ -78,4 +79,30 @@ func StyleByAnsiMulti(value any, ansi ...int) string {
 
 func StyleByAnsiString(ansi string, value any) string {
 	return fmt.Sprintf("\033[%sm%v\033[0m", ansi, value)
+}
+
+// AnsiClear clear ansi color code from text string
+//
+// Format: `\033[<parameter1>;<parameter2>...<parameterN><letter>`
+func AnsiClear(ansiColor string) string {
+	clearFn := AnsiClearFn()
+	return clearFn(ansiColor)
+}
+
+// AnsiClearFn clear ansi with anonymous function
+func AnsiClearFn() func(string) string {
+	reg := regexp.MustCompile(`\\033\[\d+(;\d+)*m.*(\\033\[0m){0, 1}`)
+	headReg := regexp.MustCompile(`\\033\[\d+(;\d+)*m`)
+	endReg := regexp.MustCompile(`(\\033\[0m)`)
+
+	return func(s string) string {
+		if s == "" {
+			return ""
+		}
+		if reg.MatchString(s) {
+			s = headReg.ReplaceAllString(s, "")
+			s = endReg.ReplaceAllString(s, "")
+		}
+		return s
+	}
 }

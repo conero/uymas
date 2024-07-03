@@ -432,11 +432,11 @@ func (c *defaultApp) Datediff() {
 	diff := tm.Sub(now)
 	d3 := NewD3(diff)
 
-	var dittType string
+	var diffType string
 	if diff > 0 {
-		dittType = "之后"
+		diffType = "之后"
 	} else {
-		dittType = "之前"
+		diffType = "之前"
 	}
 
 	// 输出
@@ -445,7 +445,7 @@ func (c *defaultApp) Datediff() {
 		cmdLsString = " " + cmdLsString + "\n"
 	}
 	lgr.Info("%s 距今(%s)比较：\n 时间总差：%v\n 差别类型：%s\n%s",
-		date, now.Format("2006-01-02"), diff, dittType, cmdLsString)
+		date, now.Format("2006-01-02"), diff, diffType, cmdLsString)
 }
 
 func (c *defaultApp) Hash() {

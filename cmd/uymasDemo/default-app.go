@@ -83,7 +83,9 @@ func (c *defaultApp) Color() {
 	multi := c.Cc.ArgIntSlice("multi", "m")
 
 	if len(multi) > 0 {
-		fmt.Println(color.StyleByAnsiMulti(text, multi...))
+		colorStr := color.StyleByAnsiMulti(text, multi...)
+		fmt.Println(colorStr)
+		lgr.Info("原始：%#v", colorStr)
 		return
 	}
 
@@ -92,7 +94,9 @@ func (c *defaultApp) Color() {
 		value = color.AnsiTextRed
 	}
 
-	fmt.Println(color.StyleByAnsi(value, text))
+	colorStr := color.StyleByAnsi(value, text)
+	fmt.Println(colorStr)
+	lgr.Info("原始：%#v", colorStr)
 }
 
 func (c *defaultApp) DefaultUnmatched() {

@@ -44,8 +44,14 @@
 - **cmd/uymas**
   - pref: pinyin 命令添加多音字显示
   - pref: datediff/dd 新增-add用于运行时间加减
+- **cmd/uymasDemo**
+  - pref: color 命令添加原始字符输出
+
 - **bin/butil**
   - feat: 新增函数 *Pwd* 用于获取当前的工作目录
+- **bin/color**
+  - feat: 新增函数 *AnsiClearFn*、*AnsiClear* 使用清理验收码字符串
+
 - **util**
   - feat: 新增函数 *ListNoRepeat* 实现对数组重复元素的过滤
 - **str**
