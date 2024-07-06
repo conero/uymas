@@ -129,11 +129,13 @@ type CliApp struct {
 
 // Construct
 // implement method for `CliAppCompleteInterface` interface.
-func (c *CliApp) Construct()        {}
-func (c *CliApp) DefaultHelp()      {}
-func (c *CliApp) DefaultIndex()     {}
-func (c *CliApp) DefaultUnmatched() {}
-func (c *CliApp) DefaultEnd()       {}
+func (c *CliApp) Construct()    {}
+func (c *CliApp) DefaultHelp()  {}
+func (c *CliApp) DefaultIndex() {}
+func (c *CliApp) DefaultUnmatched() {
+	defaultUnmatchFn(c.Cc)
+}
+func (c *CliApp) DefaultEnd() {}
 
 // CliAppInterface the interface of CliApp
 type CliAppInterface interface {
@@ -464,15 +466,7 @@ func (cli *CLI) router(cc *Arg) {
 		}
 
 		if !isRouterMk {
-			if cc.Command != "" {
-				fmt.Printf(" Fail: the command `%v` not find.\n", cc.Command)
-				fmt.Println()
-			}
-			fmt.Printf("   Power by framework %v, Version: %v/%v.\n", uymas.PkgName,
-				uymas.Version, uymas.Release)
-			fmt.Printf("   You call register `RegisterAny` handler for it.\n")
-			fmt.Printf("   Welcome to learn more doc from link. https://pkg.go.dev/gitee.com/conero/uymas \n")
-			fmt.Println()
+			defaultUnmatchFn(cc)
 			isRouterMk = false
 		}
 	}
@@ -891,4 +885,17 @@ func tryCallFn(fn any, cc *Arg) bool {
 		return true
 	}
 	return false
+}
+
+// where command is unmatched.
+func defaultUnmatchFn(cc *Arg) {
+	if cc.Command != "" {
+		fmt.Printf(" Fail: the command `%v` not find.\n", cc.Command)
+		fmt.Println()
+	}
+	fmt.Printf("   Power by framework %v, Version: %v/%v.\n", uymas.PkgName,
+		uymas.Version, uymas.Release)
+	fmt.Printf("   You call register `RegisterAny` handler for it.\n")
+	fmt.Printf("   Welcome to learn more doc from link. https://pkg.go.dev/gitee.com/conero/uymas \n")
+	fmt.Println()
 }
