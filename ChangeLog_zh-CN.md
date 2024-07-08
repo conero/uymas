@@ -44,11 +44,13 @@
 - **cmd/uymas**
   - pref: pinyin 命令添加多音字显示
   - pref: datediff/dd 新增-add用于运行时间加减
+  - pref: test 命令支持配置命令行解析格式
 - **cmd/uymasDemo**
   - pref: color 命令添加原始字符输出
 - **bin**
+  - feat: 新增 bin.ArgConfig 用于实现对长短选项及`:`等于符号的设置
+  - feat: 新增方法 CLI.RunWith 及 Args.NewArgWith 对 ArgConfig的支持
   - pref: 优化 bin.CliApp 使的其`DefaultUnmatched` 默认提示不存在的命令并与原函数式一致
-
 - **bin/butil**
   - feat: 新增函数 *Pwd* 用于获取当前的工作目录
 - **bin/color**

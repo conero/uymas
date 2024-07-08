@@ -370,6 +370,14 @@ func (cli *CLI) Run(args ...string) {
 	cli.router(cmd)
 }
 
+// RunWith run the application with ArgConfig
+func (cli *CLI) RunWith(cfg ArgConfig, args ...string) {
+	// construct of `Arg`
+	cmd := NewArgWith(&cfg, args...)
+	// start router by register.
+	cli.router(cmd)
+}
+
 // RunDefault Run cli app using user defined `args` when os.args is empty,
 // it'll be useful to debug or default define.
 func (cli *CLI) RunDefault(args ...string) {
@@ -807,7 +815,7 @@ func (cli *CLI) GetInjection(key string) any {
 }
 
 // check the cmd of validation
-func isVaildCmd(c string) bool {
+func isValidCmd(c string) bool {
 	if len(c) == 0 || c[0:1] == "-" {
 		return false
 	}

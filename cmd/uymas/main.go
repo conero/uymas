@@ -9,6 +9,7 @@ import (
 	"gitee.com/conero/uymas/number"
 	"gitee.com/conero/uymas/storage"
 	"gitee.com/conero/uymas/util"
+	"os"
 	"strings"
 	"time"
 )
@@ -24,11 +25,18 @@ var (
 // the cli app tools
 func application() {
 	cli = bin.NewCLI()
-	//app App 应用
+	// app App 应用
 	cli.RegisterApp(new(App), "app")
 	cli.RegisterApp(new(ActionIni), "ini")
 	cli.RegisterAny(&defaultApp{})
-	cli.Run()
+
+	// 设置 cli
+	long := os.Getenv("UYMAS_CMD_UYMAS_LONG")
+	colon := os.Getenv("UYMAS_CMD_UYMAS_COLON")
+	cli.RunWith(bin.ArgConfig{
+		LongOption: strings.ToLower(long) != "false" && strings.ToLower(long) != "0",
+		EqualColon: strings.ToLower(colon) == "true" || strings.ToLower(colon) == "1",
+	})
 }
 
 func getPinyin() *pinyin.Pinyin {

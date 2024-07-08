@@ -11,6 +11,18 @@ import (
 	"strings"
 )
 
+type ArgConfig struct {
+	// if it's support `--long` that is true, otherwise as `-long`
+	LongOption bool
+	// support `:` as equity
+	EqualColon bool
+}
+
+var DefaultArgConfig = ArgConfig{
+	LongOption: true,
+	EqualColon: false,
+}
+
 // Arg the command of the cli application.
 type Arg struct {
 	Data            map[string]any    // the data from the `DataRaw` by parse for type
@@ -24,9 +36,10 @@ type Arg struct {
 	commandAlias    map[string][]string // the alias of command, using for App-style and runtime state
 	subCommandAlias map[string][]string // the alias of command, using for App-style and runtime state
 	isPlgCmd        bool                // is plugin command type
+	config          *ArgConfig
 }
 
-// CheckSetting to checkout if the set exist in `Arg` sets and support multi.
+// CheckSetting checkout if the set exist in `Arg` sets and support multi.
 func (app *Arg) CheckSetting(sets ...string) bool {
 	has := false
 	for _, set := range sets {
@@ -294,54 +307,53 @@ func (app *Arg) AppendData(vMap map[string]any) *Arg {
 //
 // @todo app.Data --> 类型解析太简陋；支持类型与 Readme.md 不统一
 func (app *Arg) parseArgs() {
-	if app.Raw != nil {
-		optKey := ""
-		for i, arg := range app.Raw {
-			if i == 0 && isVaildCmd(arg) {
-				app.Command = arg
-			} else if i == 1 && app.Command != "" && isVaildCmd(arg) {
-				app.SubCommand = arg
-			} else {
-				strLen := len(arg)
-				markKeySuccess := false
-				if strLen > 1 {
-					if strLen > 1 && "--" == arg[0:2] {
-						arg = arg[2:]
-						idx := strings.Index(arg, "=")
-						if idx == -1 { // --key
-							optKey = arg
-							app.Setting = append(app.Setting, arg)
-						} else { // --key=value
-							optKey = ""
-							k, v := arg[0:idx], arg[idx+1:]
-							app.saveOptionDick(k, v)
-							if util.ListIndex(app.Setting, k) == -1 {
-								app.Setting = append(app.Setting, k)
-							}
-						}
-						markKeySuccess = true
-					} else if "-" == arg[0:1] {
-						arg = arg[1:]
-						// -x
-						if len(arg) == 1 {
-							optKey = arg
-							app.Setting = append(app.Setting, arg)
-						} else { // -xyz => -x -y -z
-							tmpArr := strings.Split(arg, "")
-							optKey = ""
-							app.Setting = append(app.Setting, tmpArr...)
-							tmpArrLen := len(tmpArr)
-							if tmpArrLen > 0 {
-								optKey = tmpArr[tmpArrLen-1]
-							}
-						}
-						markKeySuccess = true
-					}
-				}
+	if app.Raw == nil {
+		return
+	}
+	if app.config == nil {
+		app.config = &DefaultArgConfig
+	}
+	config := app.config
+	optKey := ""
 
-				if !markKeySuccess && optKey != "" {
-					app.saveOptionDick(optKey, CleanoutString(arg))
+	toSplitFn := func(s string) {
+		idx := strings.Index(s, "=")
+		if idx == -1 && config.EqualColon {
+			idx = strings.Index(s, ":")
+		}
+		if idx > -1 { // --key=value
+			optKey = ""
+			k, v := s[0:idx], s[idx+1:]
+			app.saveOptionDick(k, v)
+			if util.ListIndex(app.Setting, k) == -1 {
+				app.Setting = append(app.Setting, k)
+			}
+		} else {
+			optKey = s
+			app.Setting = append(app.Setting, s)
+		}
+	}
+
+	for i, arg := range app.Raw {
+		if i == 0 && isValidCmd(arg) {
+			app.Command = arg
+		} else if i == 1 && app.Command != "" && isValidCmd(arg) {
+			app.SubCommand = arg
+		} else {
+			markKeySuccess := false
+			if len(arg) > 1 && "-" == arg[0:1] {
+				if !config.LongOption { // support `-short`
+					arg = arg[1:]
+					toSplitFn(arg)
+				} else { // support `--short`
+					arg = arg[2:]
+					toSplitFn(arg)
 				}
+				markKeySuccess = true
+			}
+
+			if !markKeySuccess && optKey != "" {
+				app.saveOptionDick(optKey, CleanoutString(arg))
 			}
 		}
 	}
@@ -473,8 +485,24 @@ func (app *Arg) ParseOption(v any) *Option {
 	return opt
 }
 
+func (app *Arg) Config() ArgConfig {
+	if app.config == nil {
+		return DefaultArgConfig
+	}
+	return *app.config
+}
+
 // NewCliCmd the construct of `Arg`, args default set os.Args if no function arguments
 func NewCliCmd(args ...string) *Arg {
+	return NewArgWith(&DefaultArgConfig, args...)
+}
+
+// NewArgWith Args is instantiated in tape configuration mode
+func NewArgWith(cfg *ArgConfig, args ...string) *Arg {
+	if cfg == nil {
+		cfg = &DefaultArgConfig
+	}
+
 	if args == nil {
 		// if the args is empty then use the `os.Args`
 		osArgs := os.Args
@@ -487,10 +515,12 @@ func NewCliCmd(args ...string) *Arg {
 		Setting: []string{},
 		DataRaw: map[string]string{},
 		Data:    map[string]any{},
+		config:  cfg,
 	}
 	// parse the args
 	c.parseArgs()
 	return c
+
 }
 
 // NewCliCmdByString construction of `Arg` by string

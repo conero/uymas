@@ -62,6 +62,21 @@ $ go get -u gitee.com/conero/uymas
 
 
 
+内置环境变量
+
+```ini
+# logger/lgr 包，设置日志级别：
+UYMAS_LGR_LEVEL = info
+
+# uymas 命令
+UYMAS_CMD_UYMAS_LONG = true
+UYMAS_CMD_UYMAS_COLON = false
+```
+
+
+
+
+
 #### bin
 
 > 命令行行语法

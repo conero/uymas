@@ -67,6 +67,10 @@ func (c *defaultApp) DefaultIndex() {
 	fmt.Println()
 	fmt.Printf(" v%v/%v\n", uymas.Version, uymas.Release)
 	fmt.Printf(" Power by %v.\n", uymas.Author)
+	fmt.Println()
+	fmt.Println(" 命令行设置，通环境变量如:")
+	fmt.Println("   UYMAS_CMD_UYMAS_COLON=false # 支持 ':' 等式，或者0/1")
+	fmt.Println("   UYMAS_CMD_UYMAS_LONG=true # 支持长选项和段选项，使用 false/0 关闭")
 }
 
 // DefaultHelp help
@@ -118,6 +122,7 @@ func (c *defaultApp) Test() {
 	fmt.Printf("  PWD : %v \n", pwd)
 	fmt.Printf("  NextLing : %#v \n", cc.NextList())
 	fmt.Printf("  Args : %#v \n", os.Args[1:])
+	fmt.Printf("  ArgCofnig : %#v \n", c.Cc.Config())
 
 	// var
 	varName := cc.ArgRaw("var", "v")
@@ -131,6 +136,7 @@ func (c *defaultApp) Test() {
 	fmt.Println()
 	fmt.Println()
 	fmt.Println("输入命令 “--var,-v $name”   可用于读取 $name 的option参数")
+	fmt.Println("环境变量（powershell 版本）：\n  $env:UYMAS_CMD_UYMAS_LONG=1/true\n  $env:UYMAS_CMD_UYMAS_COLON=0/false")
 }
 
 // Repl REPL
