@@ -455,6 +455,7 @@ func (c *defaultApp) Datediff() {
 }
 
 func (c *defaultApp) Hash() {
+	timeDiffFn := util.SpendTimeDiff()
 	vPath := c.Cc.SubCommand
 	if vPath == "" {
 		lgr.Error("请指定路径文件或目录")
@@ -479,8 +480,9 @@ func (c *defaultApp) Hash() {
 		lgr.Info("未发现文件：%s", vPath)
 		return
 	}
-	lgr.Info("文件读取(%s)成功，如列表下：\n%s\n", fh.Vtype, bin.FormatTable(tableData))
 
+	lgr.Info("文件读取(%s)成功，如列表下：\n%s\n", fh.Vtype, bin.FormatTable(tableData))
+	lgr.Info("用时 %s", timeDiffFn())
 }
 
 func (c *defaultApp) Ganz() {
