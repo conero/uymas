@@ -50,6 +50,15 @@ $ go get -u gitee.com/conero/uymas
 
 
 
+编译程序
+
+```shell
+# 压缩化编译
+go build -o ./dist -ldflags "-s -w" ./cmd/...
+```
+
+
+
 #### bin
 
 > 命令行行语法
