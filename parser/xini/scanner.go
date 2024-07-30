@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"gitee.com/conero/uymas/v2/fs"
 	"gitee.com/conero/uymas/v2/number"
-	"gitee.com/conero/uymas/v2/util/rock"
+	"gitee.com/conero/uymas/v2/rock"
 	"os"
 	"path"
 	"regexp"

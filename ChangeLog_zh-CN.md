@@ -30,9 +30,13 @@
 
 
 
+- pref!: 将应用由 `gitee.com/conero/uymas` 调整为 `gitee.com/conero/uymas/v2`，使v2与旧版本可并行运行
+- pref!: 移除`Deprecated:`标注的代码
 - **cli**
   - feat: 命令行包初步搭建
 - **data/input**
   - feat: 初步创建字符串输入解析器
-- pref!: 将应用由 `gitee.com/conero/uymas` 调整为 `gitee.com/conero/uymas/v2`，使v2与旧版本可并行运行
-- pref!: 移除`Deprecated:`标注的代码
+- **rock**
+  - pref: 将原 `util/rock` 迁移到 `rock`类
+- **rock/constraints**
+  - pref: 将原 `util/rock/constraints` 迁移到 `rock/constraints`类
