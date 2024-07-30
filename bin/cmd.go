@@ -3,7 +3,7 @@ package bin
 import (
 	"errors"
 	"fmt"
-	"gitee.com/conero/uymas/v2/util"
+	"gitee.com/conero/uymas/v2/rock"
 	"reflect"
 	"strings"
 )
@@ -217,7 +217,7 @@ func (c *AppOptionGroup) OptionSearchAlias(name string) *AppOption {
 			if k == name {
 				return opt
 			}
-			if util.ListIndex(opt.Alias, name) > -1 {
+			if rock.ListIndex(opt.Alias, name) > -1 {
 				return opt
 			}
 		}

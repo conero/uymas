@@ -1,4 +1,4 @@
-package util
+package rock
 
 import "gitee.com/conero/uymas/v2/rock/constraints"
 
