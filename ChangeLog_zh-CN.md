@@ -32,6 +32,7 @@
 
 - pref!: 将应用由 `gitee.com/conero/uymas` 调整为 `gitee.com/conero/uymas/v2`，使v2与旧版本可并行运行
 - pref!: 移除`Deprecated:`标注的代码
+- pref!: 调整go最小支持版本为 1.20，使其支持对 window7相关设备的支持
 - **cli**
   - feat: 命令行包初步搭建
 - **data/input**
