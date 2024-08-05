@@ -39,5 +39,6 @@
   - feat: 初步创建字符串输入解析器
 - **rock**
   - pref: 将原 `util/rock` 迁移到 `rock`类
+  - feat: 新增方法 `InList` 用于判断值是否存在列表中
 - **rock/constraints**
   - pref: 将原 `util/rock/constraints` 迁移到 `rock/constraints`类

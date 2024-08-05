@@ -17,6 +17,11 @@ func ListIndex[T constraints.Equable](list []T, value T) (index int) {
 	return
 }
 
+// InList determines whether a key value exists in the list
+func InList[T constraints.Equable](list []T, value T) bool {
+	return ListIndex(list, value) >= -1
+}
+
 // ExtractArrUnique extracting array elements with loss (non-repeatable) from an array
 func ExtractArrUnique[T constraints.ValueIterable](count int, arr []T) []T {
 	vLen := len(arr)
