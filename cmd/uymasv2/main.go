@@ -1,6 +1,8 @@
 package main
 
 import (
+	"flag"
+	"fmt"
 	"gitee.com/conero/uymas/v2/cli"
 	"log"
 )
@@ -9,6 +11,12 @@ import (
 //
 // @todo 后期移除（稳定后）
 func main() {
+	// 系统内容分命令行测试
+	check := flag.Bool("check", false, "A boolean flag")
+	flag.Parse()
+	fmt.Printf("bool: %v\n", *check)
+	fmt.Println()
+
 	app := cli.NewCli()
 	err := app.Run()
 	if err != nil {
