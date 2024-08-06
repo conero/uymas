@@ -18,6 +18,8 @@ type ArgsParser interface {
 	Switch(keys ...string) bool
 	// Command get the command of the command line program
 	Command() string
+	Option() []string
+	CommandList() []string
 }
 
 type ArgsConfig struct {
@@ -54,7 +56,7 @@ func (c *Args) parse() {
 		for _, eq := range config.EqualSigner {
 			idx := strings.Index(opt, eq)
 			if idx > -1 {
-				return []string{opt[:idx], opt[idx:]}
+				return []string{opt[:idx], opt[idx+1:]}
 			}
 		}
 		return nil
@@ -68,11 +70,15 @@ func (c *Args) parse() {
 		}
 		vLen := len(opts)
 		if vLen == 1 {
+			// --xy=222222222222, -xxxx=cvy
 			pair := optionSplitFn(opts[0])
 			if len(pair) > 0 {
-				var values = c.values[pair[0]]
+				lastKey = pair[0]
+				var values = c.values[lastKey]
 				values = append(values, pair[1])
 				c.values[lastKey] = values
+				c.option = append(c.option, lastKey)
+				return
 			}
 		}
 		c.option = append(c.option, opts...)
@@ -167,6 +173,14 @@ func (c *Args) Switch(keys ...string) bool {
 
 func (c *Args) Command() string {
 	return c.command
+}
+
+func (c *Args) Option() []string {
+	return c.option
+}
+
+func (c *Args) CommandList() []string {
+	return c.commandList
 }
 
 func NewArgs(args ...string) ArgsParser {

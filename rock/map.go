@@ -5,7 +5,7 @@ import "gitee.com/conero/uymas/v2/rock/constraints"
 // MapAssign Merge multiple map parameters, where the same key value is the forward overwrite value.
 //
 // And never return nil.
-func MapAssign[K constraints.KeyIterable, V constraints.ValueIterable](source map[K]V, more ...map[K]V) map[K]V {
+func MapAssign[K constraints.KeyIterable, V any](source map[K]V, more ...map[K]V) map[K]V {
 	if source == nil {
 		source = map[K]V{}
 	}

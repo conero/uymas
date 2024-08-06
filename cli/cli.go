@@ -3,7 +3,10 @@
 // Simple command lines that do not apply to package reflect, only functional route definition is supported.
 package cli
 
-import "fmt"
+import (
+	"fmt"
+	"gitee.com/conero/uymas/v2"
+)
 
 // Application the command line program routes or parses the interface
 type Application[T any] interface {
@@ -24,11 +27,17 @@ type Application[T any] interface {
 type Fn = func(...ArgsParser)
 
 func entryFn(...ArgsParser) {
-	fmt.Println("-------------- Welcome to our world -----------------")
+	fmt.Println()
+	fmt.Println("-------------- Uymas -----------------")
+	fmt.Println("Welcome to our world")
+	fmt.Printf(":)- %s/%s\n", uymas.Version, uymas.Release)
+	fmt.Println()
 }
 func lostFn(args ...ArgsParser) {
 	arg := args[0]
-	fmt.Printf("%s: We gotta lost, honey!\n", arg.Command())
+	fmt.Println()
+	fmt.Printf("%s: We gotta lost, honey!\n    Uymas@%s/%s\n", arg.Command(), uymas.Version, uymas.Release)
+	fmt.Println()
 }
 
 // Cli command line struct
