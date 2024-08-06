@@ -18,6 +18,9 @@ func main() {
 	fmt.Println()
 
 	app := cli.NewCli()
+	app.Index(func(parser ...cli.ArgsParser) {
+		fmt.Println("欢饮您使用 Uymas v2")
+	})
 	err := app.Run()
 	if err != nil {
 		log.Fatalf("命令行执行错误，%v", err)

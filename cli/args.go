@@ -33,11 +33,12 @@ var DefArgsConfig = ArgsConfig{
 
 // Args command line program parameters
 type Args struct {
-	raw     []string
-	command string
-	option  []string
-	values  map[string][]string
-	config  ArgsConfig
+	raw         []string
+	command     string
+	commandList []string
+	option      []string
+	values      map[string][]string
+	config      ArgsConfig
 	ArgsParser
 }
 
@@ -99,13 +100,16 @@ func (c *Args) parse() {
 		}
 		if i == 0 {
 			c.command = arg
+			c.commandList = append(c.commandList, arg)
 			continue
 		}
 		if lastKey != "" {
 			var values = c.values[lastKey]
 			values = append(values, arg)
 			c.values[lastKey] = values
+			continue
 		}
+		c.commandList = append(c.commandList, arg)
 	}
 }
 

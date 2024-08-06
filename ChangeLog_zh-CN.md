@@ -34,7 +34,7 @@
 - pref!: 移除`Deprecated:`标注的代码
 - pref!: 调整go最小支持版本为 1.20，使其支持对 window7相关设备的支持
 - **cli**
-  - feat: 命令行包初步搭建
+  - feat: 实现基于函数式的最小命令行程序解析
 - **data/input**
   - feat: 初步创建字符串输入解析器
 - **rock**
