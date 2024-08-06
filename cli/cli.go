@@ -19,6 +19,10 @@ type Application[T any] interface {
 	// Lost command line arguments cannot be routed to
 	Lost(t T) Application[T]
 
+	Before(t T) Application[T]
+
+	End(t T) Application[T]
+
 	// Run execute the command parser
 	Run(args ...string) error
 }
@@ -46,6 +50,8 @@ type Cli struct {
 	args       ArgsParser
 	entryFn    Fn
 	lostFn     Fn
+	beforeFn   Fn
+	endFn      Fn
 	registerFn map[string]Fn
 }
 
@@ -63,6 +69,16 @@ func (c *Cli) Index(t Fn) Application[Fn] {
 
 func (c *Cli) Lost(t Fn) Application[Fn] {
 	c.lostFn = t
+	return c
+}
+
+func (c *Cli) Before(t Fn) Application[Fn] {
+	c.beforeFn = t
+	return c
+}
+
+func (c *Cli) End(t Fn) Application[Fn] {
+	c.endFn = t
 	return c
 }
 
@@ -84,7 +100,13 @@ func (c *Cli) router() error {
 	if command != "" {
 		fn, match := c.registerFn[args.Command()]
 		if match {
+			if c.beforeFn != nil {
+				c.beforeFn(args)
+			}
 			fn(args)
+			if c.endFn != nil {
+				c.endFn(args)
+			}
 		} else {
 			c.lostFn(args)
 		}
