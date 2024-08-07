@@ -3,7 +3,7 @@ package bin
 import (
 	"bufio"
 	"fmt"
-	"gitee.com/conero/uymas/bin/parser"
+	"gitee.com/conero/uymas/v2/bin/parser"
 	"os"
 	"strings"
 	"testing"
