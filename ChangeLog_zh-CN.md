@@ -35,6 +35,8 @@
 - pref!: 调整go最小支持版本为 1.20，使其支持对 window7相关设备的支持
 - **cli**
   - feat: 实现基于函数式的最小命令行程序解析
+- **cli/evolve**
+  - feat: 新增 evolve 包用于表示功能更全的命令解析程序
 - **data/input**
   - feat: 初步创建字符串输入解析器
 - **rock**

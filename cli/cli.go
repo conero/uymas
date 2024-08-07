@@ -19,8 +19,10 @@ type Application[T any] interface {
 	// Lost command line arguments cannot be routed to
 	Lost(t T) Application[T]
 
+	// Before hook for command line run command to do something before
 	Before(t T) Application[T]
 
+	// End hook for command line run command to do something in end
 	End(t T) Application[T]
 
 	// Run execute the command parser
