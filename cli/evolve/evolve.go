@@ -90,10 +90,28 @@ func (e *Evolve[T]) runIndex() {
 func (e *Evolve[T]) routerCli() error {
 	param := e.param
 	command := param.Command()
+	fmt.Printf("command: %s\n", command)
 	if command == "" {
 		e.runIndex()
 		return nil
 	}
+
+	rg, match := e.registerMap[command]
+	if match {
+		e.toRunRg(e.beforeHook)
+		if e.toRunRg(rg) {
+			e.toRunRg(e.endHook)
+		}
+		return nil
+	}
+
+	if e.toRunRg(e.lostTodo) {
+		return nil
+	}
+
+	fmt.Println()
+	fmt.Printf("%s: We gotta lost, honey!\n    Uymas@%s/%s\n", command, uymas.Version, uymas.Release)
+	fmt.Println()
 	return nil
 }
 
