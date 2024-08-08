@@ -18,6 +18,7 @@ type ArgsParser interface {
 	Switch(keys ...string) bool
 	// Command get the command of the command line program
 	Command() string
+	SubCommand() string
 	Option() []string
 	CommandList() []string
 }
@@ -37,6 +38,7 @@ var DefArgsConfig = ArgsConfig{
 type Args struct {
 	raw         []string
 	command     string
+	subCommand  string
 	commandList []string
 	option      []string
 	values      map[string][]string
@@ -108,6 +110,10 @@ func (c *Args) parse() {
 			c.command = arg
 			c.commandList = append(c.commandList, arg)
 			continue
+		} else if i == 1 && c.command != "" {
+			c.subCommand = arg
+			c.commandList = append(c.commandList, arg)
+			continue
 		}
 		if lastKey != "" {
 			var values = c.values[lastKey]
@@ -173,6 +179,10 @@ func (c *Args) Switch(keys ...string) bool {
 
 func (c *Args) Command() string {
 	return c.command
+}
+
+func (c *Args) SubCommand() string {
+	return c.subCommand
 }
 
 func (c *Args) Option() []string {

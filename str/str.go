@@ -111,6 +111,24 @@ func (s Str) CamelCase() string {
 	return vStr
 }
 
+// Ucfirst converts the first character of each word in a string to uppercase.
+func (s Str) Ucfirst() string {
+	str := string(s)
+	idx := strings.Index(str, " ")
+	if idx > -1 {
+		var newStr []string
+		for _, es := range strings.Split(str, " ") {
+			newStr = append(newStr, Str(es).Ucfirst())
+		}
+		str = strings.Join(newStr, "")
+	} else {
+		if len(str) > 0 {
+			str = strings.ToUpper(str[0:1]) + str[1:]
+		}
+	}
+	return str
+}
+
 // SplitSafe split safe string
 func SplitSafe(s, sep string) []string {
 	var dd []string
