@@ -5,19 +5,19 @@ import (
 )
 
 type Param struct {
-	cli.Args
+	Args cli.ArgsParser
 }
 
-func NewParam(args ...string) cli.ArgsParser {
+func NewParam(args ...string) *Param {
 	arg := cli.NewArgs(args...)
 	param := &Param{}
-	param.ArgsParser = arg
+	param.Args = arg
 	return param
 }
 
-func NewParamWith(config cli.ArgsConfig, args ...string) cli.ArgsParser {
+func NewParamWith(config cli.ArgsConfig, args ...string) *Param {
 	arg := cli.NewArgsWith(config, args...)
 	param := &Param{}
-	param.ArgsParser = arg
+	param.Args = arg
 	return param
 }

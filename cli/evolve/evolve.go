@@ -14,7 +14,7 @@ type Evolve[T any] struct {
 	beforeHook  T
 	endHook     T
 	registerMap map[string]T
-	param       cli.ArgsParser
+	param       *Param
 }
 
 func (e *Evolve[T]) Command(t T, commands ...string) cli.Application[T] {
@@ -66,10 +66,10 @@ func (e *Evolve[T]) toRunRg(rg T) bool {
 		vAny.(func())()
 		isRun = true
 	case func(cli.ArgsParser):
-		vAny.(func(cli.ArgsParser))(e.param)
+		vAny.(func(cli.ArgsParser))(e.param.Args)
 		isRun = true
 	case func(...cli.ArgsParser):
-		vAny.(func(...cli.ArgsParser))(e.param)
+		vAny.(func(...cli.ArgsParser))(e.param.Args)
 		isRun = true
 	}
 	return isRun
@@ -89,8 +89,7 @@ func (e *Evolve[T]) runIndex() {
 
 func (e *Evolve[T]) routerCli() error {
 	param := e.param
-	command := param.Command()
-	fmt.Printf("command: %s\n", command)
+	command := param.Args.Command()
 	if command == "" {
 		e.runIndex()
 		return nil
