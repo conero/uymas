@@ -44,3 +44,5 @@
   - feat: 新增方法 `InList` 用于判断值是否存在列表中
 - **rock/constraints**
   - pref: 将原 `util/rock/constraints` 迁移到 `rock/constraints`类
+- **str**
+  - pref!: 将原如 `Fn(s)` 转化为 `Str(s).Fn()`，使其便于连贯操作

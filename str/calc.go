@@ -441,7 +441,7 @@ func (c *Calc) clearEq(eq string) string {
 
 func (c *Calc) Count(args ...string) float64 {
 	c.accuracyStr = "%." + fmt.Sprintf("%d", c.Accuracy) + "f"
-	equality := rock.ExtractParam(c.equality, args...)
+	equality := rock.Param(c.equality, args...)
 	eq := strings.TrimSpace(equality)
 
 	// Clear interfering characters

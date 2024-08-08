@@ -38,7 +38,7 @@ simple 与 full 的api尽可能保持一致，可用在cli中声明interface接�
 
 
 
-> **full**
+> **evolve**
 
 - [ ] 根据 struct 的tag解析，生成相关的 doc文档。并将文档缓存为文件，及一般编译后option等是不会改变的
 

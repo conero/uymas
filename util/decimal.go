@@ -45,7 +45,7 @@ func (d *Decimal) ToN(base int) string {
 		for _, n := range bits {
 			nBits = append(nBits, nRefBits[n])
 		}
-		value = str.Reverse(strings.Join(nBits, ""))
+		value = str.Str(strings.Join(nBits, "")).Reverse()
 	}
 	return value
 }

@@ -438,7 +438,7 @@ func StructToMapLStyle(value any, ignoreKeys ...string) map[string]any {
 						name = tagName
 					}
 				} else {
-					name = str.LowerStyle(name)
+					name = str.Str(name).LowerStyle()
 				}
 				vMap[name] = field.Interface()
 			}
@@ -482,7 +482,7 @@ func ToMapLStyleIgnoreEmpty(value any, ignoreKeys ...string) map[string]any {
 							name = tagName
 						}
 					} else {
-						name = str.LowerStyle(name)
+						name = str.Str(name).LowerStyle()
 					}
 					vMap[name] = field.Interface()
 				}

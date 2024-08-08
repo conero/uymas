@@ -22,13 +22,16 @@ const (
 	UpperStr  = "ABCDEFGHJIKLMNOPQRSTUVWXYZ"
 )
 
+type Str string
+
 // Lcfirst converts the first character of each word in a string to lowercase.
-func Lcfirst(str string) string {
+func (s Str) Lcfirst() string {
+	str := string(s)
 	idx := strings.Index(str, " ")
 	if idx > -1 {
 		var newStr []string
 		for _, s := range strings.Split(str, " ") {
-			newStr = append(newStr, Lcfirst(s))
+			newStr = append(newStr, Str(s).Lcfirst())
 		}
 		str = strings.Join(newStr, "")
 	} else {
@@ -39,8 +42,8 @@ func Lcfirst(str string) string {
 	return str
 }
 
-func IsLatinAlpha(alpha string) bool {
-	return strings.Index(LowerStr, strings.ToLower(alpha)) > -1
+func (s Str) IsLatinAlpha() bool {
+	return strings.Index(LowerStr, strings.ToLower(string(s))) > -1
 }
 
 // LowerStyle camelcase --> snake case
@@ -48,14 +51,15 @@ func IsLatinAlpha(alpha string) bool {
 //
 //	`FirstName` 			-> `first_name`,
 //	`getHeightWidthRate` 	-> `get_height_width_rate`
-func LowerStyle(vStr string) string {
+func (s Str) LowerStyle() string {
+	vStr := string(s)
 	vLen := len(vStr)
 	if vLen > 0 {
 		bys := []byte(vStr)
 		var upperQueue []int
 		for i := 0; i < vLen; i++ {
-			alpha := vStr[i : i+1]
-			if IsLatinAlpha(alpha) && alpha == strings.ToUpper(alpha) {
+			alpha := Str(vStr[i : i+1])
+			if alpha.IsLatinAlpha() && string(alpha) == strings.ToUpper(string(alpha)) {
 				upperQueue = append(upperQueue, i)
 			}
 		}
@@ -90,7 +94,8 @@ func LowerStyle(vStr string) string {
 //	`get_height_width_rate` 	-> `GetHeightWidthRate`
 //
 // snake case --> camelcase
-func CamelCase(vStr string) string {
+func (s Str) CamelCase() string {
+	vStr := string(s)
 	if vLen := len(vStr); vLen > 0 {
 		vQueue := strings.Split(vStr, "_")
 		var newQue []string
@@ -109,19 +114,20 @@ func CamelCase(vStr string) string {
 // SplitSafe split safe string
 func SplitSafe(s, sep string) []string {
 	var dd []string
-	s = ClearSpace(s)
+	s = Str(s).ClearSpace()
 	dd = strings.Split(s, sep)
 	return dd
 }
 
 // ClearSpace clear string space
-func ClearSpace(s string) string {
-	s = strings.TrimSpace(s)
-	if strings.Index(s, " ") > -1 {
+func (s Str) ClearSpace() string {
+	vStr := string(s)
+	vStr = strings.TrimSpace(vStr)
+	if strings.Index(vStr, " ") > -1 {
 		spaceReg := regexp.MustCompile("\\s")
-		s = spaceReg.ReplaceAllString(s, "")
+		vStr = spaceReg.ReplaceAllString(vStr, "")
 	}
-	return s
+	return vStr
 }
 
 // Render 根据 go template 模板编译后返回数据
@@ -141,8 +147,9 @@ func Render(tpl string, data any) (string, error) {
 }
 
 // Reverse string reverse
-func Reverse(s string) string {
-	sQue := strings.Split(s, "")
+func (s Str) Reverse() string {
+	vStr := string(s)
+	sQue := strings.Split(vStr, "")
 	sQueLen := len(sQue)
 	var sNewQue []string
 	for i := sQueLen - 1; i > -1; i-- {

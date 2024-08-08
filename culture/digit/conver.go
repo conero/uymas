@@ -88,7 +88,7 @@ func NumberCover(latest float64, vMap map[uint32]string) (dgt string, err error)
 
 // NumberCoverChnDigit Arabic numerals to Chinese numerals, supporting uppercase and lowercase
 func NumberCoverChnDigit(latest float64, isUpperDef ...bool) string {
-	isUpper := rock.ExtractParam(true, isUpperDef...)
+	isUpper := rock.Param(true, isUpperDef...)
 	var vMap = vUpperMap
 	if !isUpper {
 		vMap = vLowerMap
@@ -105,7 +105,7 @@ func NumberCoverChnDigit(latest float64, isUpperDef ...bool) string {
 
 // NumberCoverRmb Transforming Numbers into People's Digital Writing
 func NumberCoverRmb(amount float64, isUpperDef ...bool) string {
-	isUpper := rock.ExtractParam(true, isUpperDef...)
+	isUpper := rock.Param(true, isUpperDef...)
 	val, _ := math.Modf(amount)
 
 	// Processing decimals

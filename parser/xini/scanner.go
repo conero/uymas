@@ -47,7 +47,7 @@ type Scanner struct {
 
 func NewScanner(args ...string) *Scanner {
 	return &Scanner{
-		filename: rock.ExtractParam("", args...),
+		filename: rock.Param("", args...),
 	}
 }
 
@@ -312,7 +312,7 @@ func (c *Scanner) parseInclude(hdlLn string) (isSkip bool) {
 // Scan start to scan file
 func (c *Scanner) Scan(args ...string) error {
 	// 新输入文件时才进行重置操作，支持重复处理
-	flName := rock.ExtractParam("", args...)
+	flName := rock.Param("", args...)
 	if flName != "" && c.filename != "" && c.filename != flName {
 		c.filename = flName
 		c.resetData()
