@@ -74,11 +74,12 @@ func (e *Evolve[T]) toRunRg(rg T) bool {
 		return false
 	}
 
+	vStruct := rv
 	if rv.Kind() == reflect.Ptr {
-		rv = rv.Elem()
+		vStruct = rv.Elem()
 	}
 
-	if rv.Kind() == reflect.Struct {
+	if vStruct.Kind() == reflect.Struct {
 		args := e.param.Args
 		sumCommand := args.SubCommand()
 		runMth := func(name string) bool {
@@ -90,13 +91,13 @@ func (e *Evolve[T]) toRunRg(rg T) bool {
 		}
 
 		// set field
-		field := rv.FieldByName(CmdFidX)
+		field := vStruct.FieldByName(CmdFidX)
 		if field.IsValid() {
 			field.Set(reflect.ValueOf(e.param))
 		}
 
 		runMth(CmdMtdInit)
-		if sumCommand == "help" || args.Switch("help", "h") {
+		if sumCommand == "help" || (sumCommand == "" && args.Switch("help", "h")) {
 			runMth(CmdMtdHelp)
 		} else if sumCommand == "" {
 			runMth(CmdMtdIndex)

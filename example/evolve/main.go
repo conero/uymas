@@ -19,5 +19,6 @@ func main() {
 		fmt.Println("Evolution For Index.")
 	}, "index")
 	evl.Command(new(test), "test", "t")
+	//evl.Run("test", "demo")
 	evl.Run()
 }
