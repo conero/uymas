@@ -35,6 +35,7 @@
 - pref!: 调整go最小支持版本为 1.20，使其支持对 window7相关设备的支持
 - **cli**
   - feat: 实现基于函数式的最小命令行程序解析
+  - feat: 支持自定义帮忙命令
 - **cli/evolve**
   - feat: 新增 evolve 包用于表示功能更全的命令解析程序
 - **data/input**
@@ -42,6 +43,7 @@
 - **rock**
   - pref: 将原 `util/rock` 迁移到 `rock`类
   - feat: 新增方法 `InList` 用于判断值是否存在列表中
+  - feat: 新增方式 `ParamIndex` 用于根据索引获取参数
 - **rock/constraints**
   - pref: 将原 `util/rock/constraints` 迁移到 `rock/constraints`类
 - **str**

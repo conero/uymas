@@ -5,23 +5,40 @@ import (
 	"gitee.com/conero/uymas/v2"
 	"gitee.com/conero/uymas/v2/cli"
 	"gitee.com/conero/uymas/v2/str"
+	"log"
 	"reflect"
 )
 
 type Evolve[T any] struct {
-	config      cli.Config
-	indexTodo   T
-	lostTodo    T
-	beforeHook  T
-	endHook     T
-	registerMap map[string]T
-	param       *Param
+	config        cli.Config
+	indexTodo     T
+	lostTodo      T
+	beforeHook    T
+	endHook       T
+	registerMap   map[string]T
+	registerAlias map[string][]string
+	param         *Param
 }
 
+// Command When registering a method you must specify commands to run more than one.
+// We agreed that the second and subsequent commands should be aliases for the first command.
 func (e *Evolve[T]) Command(t T, commands ...string) cli.Application[T] {
+	vNum := len(commands)
+	if vNum == 0 {
+		log.Fatal("Evolve.Command: when registering a method you must specify commands to run more than one. ")
+		return e
+	}
+
 	for _, cmd := range commands {
 		e.registerMap[cmd] = t
 	}
+	if vNum == 1 {
+		return e
+	}
+
+	// remember the command of alias.
+	mainCmd := commands[0]
+	e.registerAlias[mainCmd] = commands[1:]
 	return e
 }
 
@@ -97,7 +114,8 @@ func (e *Evolve[T]) toRunRg(rg T) bool {
 		}
 
 		runMth(CmdMtdInit)
-		if sumCommand == "help" || (sumCommand == "" && args.Switch("help", "h")) {
+		isHelpCmd := sumCommand == "help" || sumCommand == "?"
+		if isHelpCmd || (sumCommand == "" && args.Switch("help", "h", "?")) {
 			runMth(CmdMtdHelp)
 		} else if sumCommand == "" {
 			runMth(CmdMtdIndex)
@@ -158,7 +176,8 @@ func (e *Evolve[T]) routerCli() error {
 
 func NewEvolve() cli.Application[any] {
 	evl := &Evolve[any]{
-		registerMap: map[string]any{},
+		registerMap:   map[string]any{},
+		registerAlias: map[string][]string{},
 	}
 	return evl
 }

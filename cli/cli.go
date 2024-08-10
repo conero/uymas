@@ -46,6 +46,16 @@ func lostFn(args ...ArgsParser) {
 	fmt.Println()
 }
 
+func helpFn(args ...ArgsParser) {
+	arg := args[0]
+	command := arg.Command()
+	cmdName := arg.HelpCmd()
+	if cmdName != "" {
+		command = "<" + command + " " + cmdName + ">"
+	}
+	fmt.Printf("Default Help: we should add the help information for command %s here, honey!\n\n", command)
+}
+
 // Cli command line struct
 type Cli struct {
 	config     Config
@@ -54,6 +64,7 @@ type Cli struct {
 	lostFn     Fn
 	beforeFn   Fn
 	endFn      Fn
+	helpFn     Fn
 	registerFn map[string]Fn
 }
 
@@ -96,10 +107,25 @@ func (c *Cli) Run(args ...string) error {
 	return c.router()
 }
 
+func (c *Cli) Help(t Fn) Application[Fn] {
+	c.helpFn = t
+	return c
+}
+
 func (c *Cli) router() error {
 	args := c.args
 	command := args.Command()
-	if command != "" {
+	helpCall := c.helpFn
+	if helpCall == nil {
+		helpCall = helpFn
+	}
+	cfg := c.config
+	if !cfg.DisableHelp && command == "" && args.Switch("help", "h", "?") {
+		helpCall(args)
+	} else if !cfg.DisableHelp && (command == "help" || command == "?") {
+		helpCall(args)
+	} else if command != "" {
+
 		fn, match := c.registerFn[args.Command()]
 		if match {
 			if c.beforeFn != nil {

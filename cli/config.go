@@ -4,6 +4,8 @@ package cli
 type Config struct {
 	Title      string
 	ArgsConfig *ArgsConfig
+	// Disable the default help information
+	DisableHelp bool
 }
 
 // DefaultConfig default command line configuration

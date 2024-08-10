@@ -21,6 +21,12 @@ type ArgsParser interface {
 	SubCommand() string
 	Option() []string
 	CommandList() []string
+
+	// Next find command from `CommandList`
+	Next(cmds ...string) string
+
+	// HelpCmd get help command
+	HelpCmd(params ...[]string) string
 }
 
 type ArgsConfig struct {
@@ -191,6 +197,33 @@ func (c *Args) Option() []string {
 
 func (c *Args) CommandList() []string {
 	return c.commandList
+}
+
+func (c *Args) Next(cmds ...string) string {
+	vLen := len(c.commandList)
+	if vLen == 0 {
+		return ""
+	}
+
+	for _, cm := range cmds {
+		for i, refCmd := range c.commandList {
+			if cm == refCmd && i < vLen-1 {
+				return c.commandList[i+1]
+			}
+		}
+	}
+	return ""
+}
+
+func (c *Args) HelpCmd(params ...[]string) string {
+	cmds := rock.ParamIndex(1, []string{"help"}, params...)
+	command := c.Next(cmds...)
+	if command != "" {
+		return command
+	}
+
+	opts := rock.ParamIndex(2, []string{"help", "h"}, params...)
+	return c.Get(opts...)
 }
 
 func NewArgs(args ...string) ArgsParser {

@@ -1,6 +1,8 @@
 package evolve
 
-import "fmt"
+import (
+	"fmt"
+)
 
 const (
 	CmdMtdInit  = "Init"
@@ -27,8 +29,14 @@ func (c *Command) DefIndex() {
 }
 
 // DefHelp help/reference command definition
-func (c *Command) DefHelp() {
+//
+// support: `$ help [command]` or `$ -h [command]`
+func (c *Command) DefHelp(cmds ...string) {
 	command := c.X.Args.Command()
+	cmdName := c.X.Args.HelpCmd()
+	if cmdName != "" {
+		command = "<" + command + " " + cmdName + ">"
+	}
 	fmt.Printf("Default Help: we should add the help information for command %s here, honey!\n\n", command)
 }
 
