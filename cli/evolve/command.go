@@ -31,7 +31,7 @@ func (c *Command) DefIndex() {
 // DefHelp help/reference command definition
 //
 // support: `$ help [command]` or `$ -h [command]`
-func (c *Command) DefHelp(cmds ...string) {
+func (c *Command) DefHelp() {
 	command := c.X.Args.Command()
 	cmdName := c.X.Args.HelpCmd()
 	if cmdName != "" {

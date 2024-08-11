@@ -13,6 +13,7 @@ type Evolve[T any] struct {
 	config        cli.Config
 	indexTodo     T
 	lostTodo      T
+	helpTodo      T
 	beforeHook    T
 	endHook       T
 	registerMap   map[string]T
@@ -73,6 +74,9 @@ func (e *Evolve[T]) callFunc(fn reflect.Value) bool {
 	switch fnVal.(type) {
 	case func():
 		fnVal.(func())()
+		isSuccess = true
+	case func(...string):
+		fnVal.(func(...string))()
 		isSuccess = true
 	case func(cli.ArgsParser):
 		fnVal.(func(cli.ArgsParser))(e.param.Args)
@@ -149,7 +153,19 @@ func (e *Evolve[T]) runIndex() {
 
 func (e *Evolve[T]) routerCli() error {
 	param := e.param
-	command := param.Args.Command()
+	config := e.config
+	args := param.Args
+
+	if !config.DisableHelp {
+		command := args.Command()
+		isHelp := command == "help" || command == "?"
+		if isHelp || args.Switch("help", "h") {
+			e.runHelp()
+			return nil
+		}
+	}
+
+	command := args.Command()
 	if command == "" {
 		e.runIndex()
 		return nil
@@ -172,6 +188,25 @@ func (e *Evolve[T]) routerCli() error {
 	fmt.Printf("%s: We gotta lost, honey!\n    Uymas@%s/%s\n", command, uymas.Version, uymas.Release)
 	fmt.Println()
 	return nil
+}
+
+func (e *Evolve[T]) Help(t T) cli.Application[T] {
+	e.helpTodo = t
+	return e
+}
+
+func (e *Evolve[T]) runHelp() {
+	if e.toRunRg(e.helpTodo) {
+		return
+	}
+
+	args := e.param.Args
+	command := args.Command()
+	cmdName := args.HelpCmd()
+	if cmdName != "" {
+		command = "<" + command + " " + cmdName + ">"
+	}
+	fmt.Printf("Default Help: we should add the help information for command %s here, honey!\n\n", command)
 }
 
 func NewEvolve() cli.Application[any] {

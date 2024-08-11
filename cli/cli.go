@@ -25,6 +25,8 @@ type Application[T any] interface {
 	// End hook for command line run command to do something in end
 	End(t T) Application[T]
 
+	Help(t T) Application[T]
+
 	// Run execute the command parser
 	Run(args ...string) error
 }
