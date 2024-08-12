@@ -1,6 +1,7 @@
 package cli
 
 import (
+	"gitee.com/conero/uymas/v2/data/input"
 	"gitee.com/conero/uymas/v2/rock"
 	"os"
 	"strings"
@@ -12,8 +13,16 @@ type ArgsParser interface {
 	Values() map[string][]string
 	// Get command line data by key value
 	Get(keys ...string) string
-	// GetDef get command line data by key value and specify default values
-	GetDef(def string, keys ...string) string
+	Int(keys ...string) int
+	Int64(keys ...string) int64
+	F64(keys ...string) float64
+	Uint64(keys ...string) uint64
+	// Def get command line data by key value and specify default values
+	Def(def string, keys ...string) string
+	IntDef(def int, keys ...string) int
+	Int64Def(def int64, keys ...string) int64
+	Uint64Def(def uint64, keys ...string) uint64
+	F64Def(def float64, keys ...string) float64
 	// Switch determines whether the option specified by the key value exists
 	Switch(keys ...string) bool
 	// Command get the command of the command line program
@@ -166,9 +175,41 @@ func (c *Args) Get(keys ...string) string {
 	return c.GetValueJoin(" ", keys...)
 }
 
-func (c *Args) GetDef(def string, keys ...string) string {
+func (c *Args) Def(def string, keys ...string) string {
 	value := c.Get(keys...)
 	if value != "" {
+		return value
+	}
+	return def
+}
+
+func (c *Args) IntDef(def int, keys ...string) int {
+	value := c.Int(keys...)
+	if value != 0 {
+		return value
+	}
+	return def
+}
+
+func (c *Args) Int64Def(def int64, keys ...string) int64 {
+	value := c.Int64(keys...)
+	if value != 0 {
+		return value
+	}
+	return def
+}
+
+func (c *Args) Uint64Def(def uint64, keys ...string) uint64 {
+	value := c.Uint64(keys...)
+	if value != 0 {
+		return value
+	}
+	return def
+}
+
+func (c *Args) F64Def(def float64, keys ...string) float64 {
+	value := c.F64(keys...)
+	if value != 0 {
 		return value
 	}
 	return def
@@ -224,6 +265,38 @@ func (c *Args) HelpCmd(params ...[]string) string {
 
 	opts := rock.ParamIndex(2, []string{"help", "h"}, params...)
 	return c.Get(opts...)
+}
+
+func (c *Args) Int(keys ...string) int {
+	value := c.Get(keys...)
+	if value != "" {
+		return input.Stringer(value).Int()
+	}
+	return 0
+}
+
+func (c *Args) Int64(keys ...string) int64 {
+	value := c.Get(keys...)
+	if value != "" {
+		return input.Stringer(value).Int64()
+	}
+	return 0
+}
+
+func (c *Args) F64(keys ...string) float64 {
+	value := c.Get(keys...)
+	if value != "" {
+		return input.Stringer(value).Float()
+	}
+	return 0
+}
+
+func (c *Args) Uint64(keys ...string) uint64 {
+	value := c.Get(keys...)
+	if value != "" {
+		return input.Stringer(value).Uint64()
+	}
+	return 0
 }
 
 func NewArgs(args ...string) ArgsParser {
