@@ -38,6 +38,8 @@
   - feat: 支持自定义帮忙命令
 - **cli/evolve**
   - feat: 新增 evolve 包用于表示功能更全的命令解析程序
+- **cli/ansi**
+  - feat: 在 v1 中的 *bin/color* 基础上重写命令行字体颜色等风格，对原方法进行重写
 - **data/input**
   - feat: 初步创建字符串输入解析器
 - **rock**
