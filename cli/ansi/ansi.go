@@ -96,9 +96,10 @@ func Clear(ansiColor string) string {
 
 // ClearFn clear ansi with anonymous function
 func ClearFn() func(string) string {
-	reg := regexp.MustCompile(`\\033\[\d+(;\d+)*m.*(\\033\[0m){0, 1}`)
-	headReg := regexp.MustCompile(`\\033\[\d+(;\d+)*m`)
-	endReg := regexp.MustCompile(`(\\033\[0m)`)
+	// "\033[31mThis is red text.\033[0m"
+	reg := regexp.MustCompile(`((\\033)|(\\x1b))\[\d+(;\d+)*m.*(((\\033)|(\\x1b))\[0m){0, 1}`)
+	headReg := regexp.MustCompile(`((\\033)|(\\x1b))\[\d+(;\d+)*m`)
+	endReg := regexp.MustCompile(`((\\033)|(\\x1b))\[0m`)
 
 	return func(s string) string {
 		if s == "" {
