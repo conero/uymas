@@ -16,6 +16,15 @@
 // Link: https://worktile.com/kb/ask/452398.html, linux命令行输出颜色文本
 //
 // Link: http://blog.lujinkai.cn/%E8%BF%90%E7%BB%B4/%E5%9F%BA%E7%A1%80/%E6%96%87%E6%9C%AC%E5%A4%84%E7%90%86/ANSI%E8%BD%AC%E4%B9%89%E5%BA%8F%E5%88%97/
+//
+// 关于\033中的\0在ANSI颜色码中，\033是一个八进制转义序列，代表ASCII字符集中的ESC（Escape）字符。
+// 在ASCII表中，ESC字符的值为27（十进制），对应的八进制表示为033。因此，\033实际上是转义序列的一部分，用于引入ANSI颜色码。
+//
+//	 var s = "xxxx"
+//		for i, e := range []rune(s) {
+//		   fmt.Printf("%d -> %c\n", i, e)
+//		}
+//		\033 -> esc
 package ansi
 
 import (
@@ -97,9 +106,10 @@ func Clear(ansiColor string) string {
 // ClearFn clear ansi with anonymous function
 func ClearFn() func(string) string {
 	// "\033[31mThis is red text.\033[0m"
-	reg := regexp.MustCompile(`((\\033)|(\\x1b))\[\d+(;\d+)*m.*(((\\033)|(\\x1b))\[0m){0, 1}`)
-	headReg := regexp.MustCompile(`((\\033)|(\\x1b))\[\d+(;\d+)*m`)
-	endReg := regexp.MustCompile(`((\\033)|(\\x1b))\[0m`)
+	//reg := regexp.MustCompile(`((\\{0, 1}033)|(\\{0, 1}x1b))\[\d+(;\d+)*m.*(((\\{0, 1}033)|(\\{0, 1}x1b))\[0m){0, 1}`)
+	reg := regexp.MustCompile(`.*\033\[\d+(;\d+)*m.*(\033\[0m).*`)
+	headReg := regexp.MustCompile(`\033\[\d+(;\d+)*m`)
+	endReg := regexp.MustCompile(`\033\[0m`)
 
 	return func(s string) string {
 		if s == "" {
