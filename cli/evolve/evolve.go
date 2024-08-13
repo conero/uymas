@@ -1,3 +1,4 @@
+// Package evolve version Command line, which supports more registration types than cli. Adopting reflection.
 package evolve
 
 import (
