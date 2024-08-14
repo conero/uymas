@@ -11,6 +11,8 @@ import (
 type ArgsParser interface {
 	// Values The original data type of the command
 	Values() map[string][]string
+	List(keys ...string) []string
+	Join(seq string, keys ...string) string
 	// Get command line data by key value
 	Get(keys ...string) string
 	Int(keys ...string) int
@@ -144,7 +146,7 @@ func (c *Args) Values() map[string][]string {
 	return c.values
 }
 
-func (c *Args) GetValues(keys ...string) []string {
+func (c *Args) List(keys ...string) []string {
 	if c.values == nil {
 		return nil
 	}
@@ -159,12 +161,12 @@ func (c *Args) GetValues(keys ...string) []string {
 	return nil
 }
 
-func (c *Args) GetValueJoin(seq string, keys ...string) string {
+func (c *Args) Join(seq string, keys ...string) string {
 	if c.values == nil {
 		return ""
 	}
 
-	values := c.GetValues(keys...)
+	values := c.List(keys...)
 	if len(values) > 0 {
 		return strings.Join(values, seq)
 	}
@@ -172,7 +174,7 @@ func (c *Args) GetValueJoin(seq string, keys ...string) string {
 }
 
 func (c *Args) Get(keys ...string) string {
-	return c.GetValueJoin(" ", keys...)
+	return c.Join(" ", keys...)
 }
 
 func (c *Args) Def(def string, keys ...string) string {
