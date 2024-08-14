@@ -4,7 +4,6 @@ package util
 import (
 	"math"
 	"reflect"
-	"time"
 )
 
 // @Date：   2018/10/30 0030 13:26
@@ -49,14 +48,6 @@ func InQueAny(que any, keys ...any) int {
 	}
 
 	return idx
-}
-
-// SpendTimeDiff Get the program spend time for any format.
-func SpendTimeDiff() func() time.Duration {
-	now := time.Now()
-	return func() time.Duration {
-		return time.Now().Sub(now)
-	}
 }
 
 // Round String method processing float equal length data specified digits

@@ -8,7 +8,7 @@ import (
 	"gitee.com/conero/uymas/v2/logger/lgr"
 	"gitee.com/conero/uymas/v2/parser/xini"
 	"gitee.com/conero/uymas/v2/str"
-	"gitee.com/conero/uymas/v2/util"
+	"gitee.com/conero/uymas/v2/util/tm"
 	"math/rand"
 	"time"
 )
@@ -36,7 +36,7 @@ func (c *ActionIni) DefaultUnmatched() {
 	lgr.Info("正在读取文件 %s ……", file)
 	isSimple := c.Cc.CheckSetting("simple", "S")
 
-	timeTck := util.SpendTimeDiff()
+	timeTck := tm.SpendFn()
 	psr := xini.NewParser()
 	err, records := psr.OpenFile(file)
 	if err != nil {
@@ -80,7 +80,7 @@ func (c *ActionIni) DefaultUnmatched() {
 
 // Create 文件创建，用于测试
 func (c *ActionIni) Create() {
-	tmMark := util.SpendTimeDiff()
+	tmMark := tm.SpendFn()
 	number := c.Cc.ArgInt("num", "N")
 	if number < 1 {
 		number = 1000

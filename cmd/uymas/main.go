@@ -7,7 +7,7 @@ import (
 	"gitee.com/conero/uymas/v2/fs"
 	"gitee.com/conero/uymas/v2/number"
 	"gitee.com/conero/uymas/v2/storage"
-	"gitee.com/conero/uymas/v2/util"
+	"gitee.com/conero/uymas/v2/util/tm"
 	"strings"
 	"time"
 )
@@ -74,5 +74,5 @@ func getSpendStr() string {
 func init() {
 	//时间统计
 	gSpendMem = gMu.GetSysMemSub()
-	gSpendTm = util.SpendTimeDiff()
+	gSpendTm = tm.SpendFn()
 }
