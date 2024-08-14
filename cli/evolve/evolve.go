@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"gitee.com/conero/uymas/v2"
 	"gitee.com/conero/uymas/v2/cli"
+	"gitee.com/conero/uymas/v2/rock"
 	"gitee.com/conero/uymas/v2/str"
 	"log"
 	"reflect"
@@ -20,6 +21,7 @@ type Evolve[T any] struct {
 	registerMap   map[string]T
 	registerAlias map[string][]string
 	param         *Param
+	namingMap     map[string]any
 }
 
 // Command When registering a method you must specify commands to run more than one.
@@ -171,6 +173,10 @@ func (e *Evolve[T]) routerCli() error {
 		e.runIndex()
 		return nil
 	}
+	naming := e.NamingFind()
+	if naming != "" {
+		command = naming
+	}
 
 	rg, match := e.registerMap[command]
 	if match {
@@ -210,10 +216,44 @@ func (e *Evolve[T]) runHelp() {
 	fmt.Printf("Default Help: we should add the help information for command %s here, honey!\n\n", command)
 }
 
+// Naming manually set the named mapping to be non-alias, v support: `string`/`func(Param) string`
+func (e *Evolve[T]) Naming(name string, v any) *Evolve[T] {
+	e.namingMap[name] = v
+	return e
+}
+
+// NamingFind default (when no parameters are specified) top-level command level
+func (e *Evolve[T]) NamingFind(cmds ...string) string {
+	param := e.param
+	if param == nil {
+		return ""
+	}
+	args := param.Args
+	name := rock.Param(args.Command(), cmds...)
+	if name == "" {
+		return ""
+	}
+
+	value, exist := e.namingMap[name]
+	if !exist {
+		return ""
+	}
+
+	switch value.(type) {
+	case string:
+		return value.(string)
+	case func(Param) string:
+		return value.(func(Param) string)(*param)
+	}
+
+	return ""
+}
+
 func NewEvolve() cli.Application[any] {
 	evl := &Evolve[any]{
 		registerMap:   map[string]any{},
 		registerAlias: map[string][]string{},
+		namingMap:     map[string]any{},
 	}
 	return evl
 }
