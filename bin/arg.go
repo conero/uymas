@@ -12,7 +12,9 @@ import (
 )
 
 type ArgConfig struct {
-	// if it's support `--long` that is true, otherwise as `-long`
+	// If it's support `--long` that is true, otherwise as `-long`.
+	//
+	// And `-long` same as `-l -o -n -g`, otherwise `--long`.
 	LongOption bool
 	// support `:` as equity
 	EqualColon bool
@@ -342,12 +344,28 @@ func (app *Arg) parseArgs() {
 		} else {
 			markKeySuccess := false
 			if len(arg) > 1 && "-" == arg[0:1] {
-				if !config.LongOption { // support `-short`
+				if "--" == arg[0:2] { // --option
+					if config.LongOption { // support `-option`
+						arg = arg[2:]
+					} else { // support `option`
+						arg = arg[1:]
+					}
+					toSplitFn(arg)
+				} else { // -option
 					arg = arg[1:]
-					toSplitFn(arg)
-				} else { // support `--short`
-					arg = arg[2:]
-					toSplitFn(arg)
+					if config.LongOption {
+						tmpArr := strings.Split(arg, "")
+						optKey = ""
+						tmpArrLen := len(tmpArr)
+						if tmpArrLen > 0 {
+							toSplitFn(tmpArr[tmpArrLen-1])
+							tmpArr = tmpArr[:tmpArrLen-1]
+						}
+						app.Setting = append(app.Setting, tmpArr...)
+
+					} else {
+						toSplitFn(arg)
+					}
 				}
 				markKeySuccess = true
 			}
