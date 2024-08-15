@@ -36,6 +36,14 @@
 
 
 
+### v2.0.0-alpha.2/dev
+
+- todo
+
+
+
+
+
 ### v2.0.0-alpha.1/2024-08-15
 
 - pref!: 将应用由 `gitee.com/conero/uymas` 调整为 `gitee.com/conero/uymas/v2`，使v2与旧版本可并行运行
