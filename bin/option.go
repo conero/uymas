@@ -2,7 +2,7 @@ package bin
 
 import (
 	"fmt"
-	"gitee.com/conero/uymas/util"
+	"gitee.com/conero/uymas/util/rock"
 	"reflect"
 	"regexp"
 	"strconv"
@@ -36,7 +36,7 @@ func (c *Option) ExcludeReg(regs ...string) *Option {
 
 // check if it has been excluded
 func (c *Option) isExclude(optName string) bool {
-	if util.ListIndex(c.exclude, optName) > -1 {
+	if rock.ListIndex(c.exclude, optName) > -1 {
 		return true
 	}
 	for _, rg := range c.excludeReg {
@@ -114,7 +114,7 @@ func (c *Option) Unmarshal(v any) {
 func (c *Option) NotAllow() []string {
 	var unAllow []string
 	for _, set := range c.cc.Setting {
-		if util.ListIndex(c.allow, set) == -1 {
+		if rock.ListIndex(c.allow, set) == -1 {
 			if c.isExclude(set) {
 				continue
 			}
@@ -126,7 +126,7 @@ func (c *Option) NotAllow() []string {
 
 func (c *Option) CheckAllow() error {
 	for _, set := range c.cc.Setting {
-		if util.ListIndex(c.allow, set) == -1 {
+		if rock.ListIndex(c.allow, set) == -1 {
 			if c.isExclude(set) {
 				continue
 			}

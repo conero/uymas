@@ -36,6 +36,7 @@
 > 1.4 计划完成以及代码优化（向下兼容性）
 
 - fix: 修复使用工具*golangci-lint* 提示工具批量调整错误修复
+- move: 将包中 util.ListIndex 切换为 rock.ListIndex
 - **culture/pinyin**
   - feat: 新增 List.Polyphony 用于获取以多音字分割的多组拼音
   - feat: 新增 Pinyin.IsEmpty 判断是否为空

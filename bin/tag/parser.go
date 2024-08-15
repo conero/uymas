@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"gitee.com/conero/uymas/bin"
 	"gitee.com/conero/uymas/str"
-	"gitee.com/conero/uymas/util"
+	"gitee.com/conero/uymas/util/rock"
 	"reflect"
 	"strings"
 )
@@ -336,7 +336,7 @@ func (c *Parser) validCommand(cc *bin.Arg, tag Tag) bool {
 
 	// check not allow setting by register
 	for _, set := range cc.Setting {
-		if util.ListIndex(optionList, set) == -1 {
+		if rock.ListIndex(optionList, set) == -1 {
 			fmt.Printf("%v: 选项非法", set)
 			return false
 		}

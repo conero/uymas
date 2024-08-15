@@ -4,7 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"gitee.com/conero/uymas/bin/parser"
-	"gitee.com/conero/uymas/util"
+	"gitee.com/conero/uymas/util/rock"
 	"os"
 	"strings"
 )
@@ -53,7 +53,7 @@ func (c Repl) Run(cli *CLI) {
 		default:
 			if c.Exit == nil && text == "exit" {
 				toExit()
-			} else if util.ListIndex(c.Exit, text) > -1 {
+			} else if rock.ListIndex(c.Exit, text) > -1 {
 				toExit()
 			}
 

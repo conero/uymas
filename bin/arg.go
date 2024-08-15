@@ -5,7 +5,7 @@ import (
 	"gitee.com/conero/uymas/bin/butil"
 	"gitee.com/conero/uymas/bin/parser"
 	"gitee.com/conero/uymas/str"
-	"gitee.com/conero/uymas/util"
+	"gitee.com/conero/uymas/util/rock"
 	"os"
 	"reflect"
 	"strings"
@@ -45,7 +45,7 @@ type Arg struct {
 func (app *Arg) CheckSetting(sets ...string) bool {
 	has := false
 	for _, set := range sets {
-		if idx := util.ListIndex(app.Setting, set); idx > -1 {
+		if idx := rock.ListIndex(app.Setting, set); idx > -1 {
 			has = true
 			break
 		}
@@ -126,7 +126,7 @@ func (app *Arg) NextList(keys ...string) []string {
 
 		if isEmptyKey {
 			keyMatch = true
-		} else if !keyMatch && util.ListIndex(keys, arg) > -1 {
+		} else if !keyMatch && rock.ListIndex(keys, arg) > -1 {
 			keyMatch = true
 			continue
 		}
@@ -327,7 +327,7 @@ func (app *Arg) parseArgs() {
 			optKey = ""
 			k, v := s[0:idx], s[idx+1:]
 			app.saveOptionDick(k, v)
-			if util.ListIndex(app.Setting, k) == -1 {
+			if rock.ListIndex(app.Setting, k) == -1 {
 				app.Setting = append(app.Setting, k)
 			}
 		} else {

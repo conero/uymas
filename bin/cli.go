@@ -5,7 +5,7 @@ import (
 	"gitee.com/conero/uymas"
 	"gitee.com/conero/uymas/bin/parser"
 	"gitee.com/conero/uymas/str"
-	"gitee.com/conero/uymas/util"
+	"gitee.com/conero/uymas/util/rock"
 	"log"
 	"os"
 	"reflect"
@@ -347,7 +347,7 @@ func (cli *CLI) RegisterAny(action any) *CLI {
 		for i := 0; i < rv.NumMethod(); i++ {
 			vMth := rt.Method(i)
 			name := vMth.Name
-			if util.ListIndex(defMth, name) > -1 {
+			if rock.ListIndex(defMth, name) > -1 {
 				continue
 			}
 			cli.registerCmdList = append(cli.registerCmdList, strings.ToLower(name))
@@ -408,12 +408,12 @@ func (cli *CLI) CmdExist(cmds ...string) bool {
 	if !cmdExist {
 		for _, cm := range cli.cmdMap {
 			//KV: string->string
-			if cmStr, isStr := cm.(string); isStr && util.ListIndex(cmds, cmStr) > -1 {
+			if cmStr, isStr := cm.(string); isStr && rock.ListIndex(cmds, cmStr) > -1 {
 				cmdExist = true
 				break
 			} else if cmStrQue, isStrArray := cm.([]string); isStrArray {
 				for _, cStr := range cmds {
-					if util.ListIndex(cmStrQue, cStr) > -1 {
+					if rock.ListIndex(cmStrQue, cStr) > -1 {
 						cmdExist = true
 						break
 					}

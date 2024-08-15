@@ -8,7 +8,6 @@
 package doc
 
 import (
-	"gitee.com/conero/uymas/util"
 	"gitee.com/conero/uymas/util/rock"
 	"regexp"
 	"strings"
@@ -96,7 +95,7 @@ func FromLine(content string, langs ...string) *Doc {
 				flushCurHelpFn()
 			}
 			if pk == "lang" {
-				if util.ListIndex(doc.LangList, pv) == -1 {
+				if rock.ListIndex(doc.LangList, pv) == -1 {
 					doc.LangList = append(doc.LangList, pv)
 				}
 				curLang = pv
@@ -201,7 +200,7 @@ func (c *Doc) listAsHelp(list []HelpDick) string {
 
 // Support detect if the lang is supported
 func (c *Doc) Support(lng string) bool {
-	return util.ListIndex(c.LangList, lng) > -1
+	return rock.ListIndex(c.LangList, lng) > -1
 }
 
 // Search help by give command to search
@@ -212,7 +211,7 @@ func (c *Doc) Search(cs ...string) (string, bool) {
 	}
 	for _, vc := range cs {
 		for _, fd := range help {
-			if util.ListIndex(fd.Alias, vc) > -1 {
+			if rock.ListIndex(fd.Alias, vc) > -1 {
 				return fd.AllText, true
 			}
 		}

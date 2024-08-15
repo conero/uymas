@@ -4,7 +4,6 @@ package tag
 import (
 	"gitee.com/conero/uymas/bin"
 	"gitee.com/conero/uymas/bin/parser"
-	"gitee.com/conero/uymas/util"
 	"reflect"
 	"strings"
 )
@@ -182,7 +181,7 @@ func (c *Tag) Own(name string) bool {
 		return true
 	}
 	alias := c.Value(OptAlias)
-	if util.ListIndex(alias, name) > -1 {
+	if rock.ListIndex(alias, name) > -1 {
 		return true
 	}
 	return false

@@ -3,7 +3,7 @@ package main
 import (
 	"errors"
 	"fmt"
-	"gitee.com/conero/uymas/util"
+	"gitee.com/conero/uymas/util/rock"
 	"regexp"
 	"strconv"
 	"strings"
@@ -50,7 +50,7 @@ func baseTransfer(exp, base string) (string, error) {
 	case "0X", "X", "0H", "H", "16": // 八进制
 		return strconv.FormatInt(vNum, 16), nil
 	default:
-		if matchBase != "" && util.ListIndex([]string{"0D", "D", "10"}, matchBase) == -1 {
+		if matchBase != "" && rock.ListIndex([]string{"0D", "D", "10"}, matchBase) == -1 {
 			return "", errors.New("进制规则仅支持如：0b/2、0o/8、0d/10、0x/16(或0h)，不区分大小写")
 		}
 		return strconv.FormatInt(vNum, 10), nil
