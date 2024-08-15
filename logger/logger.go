@@ -7,7 +7,7 @@ import (
 	"errors"
 	"fmt"
 	"gitee.com/conero/uymas/v2/bin/butil"
-	"gitee.com/conero/uymas/v2/fs"
+	"gitee.com/conero/uymas/v2/util/fs"
 	"log"
 	"os"
 	"strings"

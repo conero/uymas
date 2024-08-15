@@ -10,46 +10,6 @@ import (
 // @Author:  Joshua Conero
 // @Name:    工具栏
 
-// InQue exist value exist in array, if not exists will return -1
-func InQue(val any, que []any) int {
-	idx := -1
-	if que != nil {
-		for i, v := range que {
-			if v == val {
-				idx = i
-				break
-			}
-		}
-	}
-	return idx
-}
-
-// InQueAny Check keys if exist in Array Or Slice.
-func InQueAny(que any, keys ...any) int {
-	idx := -1
-
-	vt := reflect.ValueOf(que)
-	//Only Array And Slice.
-	if vt.Kind() == reflect.Array || vt.Kind() == reflect.Slice {
-		vLen := vt.Len()
-		for i := 0; i < vLen; i++ {
-			value := vt.Index(i)
-			for j := 0; j < len(keys); j++ {
-				vsKey := keys[j]
-				if reflect.DeepEqual(value.Interface(), vsKey) {
-					idx = i
-					break
-				}
-			}
-			if idx != -1 {
-				break
-			}
-		}
-	}
-
-	return idx
-}
-
 // Round String method processing float equal length data specified digits
 func Round(num float64, b int) float64 {
 	if b == 0 {

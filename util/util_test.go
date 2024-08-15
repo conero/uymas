@@ -80,19 +80,3 @@ func TestValueNull(t *testing.T) {
 		}
 	}
 }
-
-func TestInQueAny(t *testing.T) {
-	queStr := []string{"I", "am", "Joshua", "Conero", "."}
-	testIdx := 1
-	index := InQueAny(queStr, "am")
-
-	//case 1
-	if index != testIdx {
-		t.Fatalf("am index(%v) is not %v", index, testIdx)
-	}
-	index = InQueAny(queStr, "Surong")
-	if index == testIdx {
-		t.Fatalf("Surong index is not %#v", queStr)
-	}
-
-}

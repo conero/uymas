@@ -38,7 +38,15 @@
 
 ### v2.0.0-alpha.2/dev
 
-- todo
+- **util**
+  - del: 删除 InQue， InQueAny等方法，可使用 rock.ListIndex代替。（此方法与 str 重复提供）
+
+- **util/fs**
+  - pref: 将 fs 包重命名为 util/fs
+
+- **str**
+  - del: 删除 InQue， InQueAny等方法，可使用 rock.ListIndex代替
+
 
 
 

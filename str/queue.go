@@ -1,26 +1,13 @@
 package str
 
 import (
+	"gitee.com/conero/uymas/v2/rock"
 	"strings"
 )
 
 // @Date：   2018/11/7 0007 11:38
 // @Author:  Joshua Conero
 // @Name:    字符互队列
-
-// InQue checkout substring exist in array
-//
-// Deprecated: As of Go 1.16, this function simply calls util.ListIndex.
-func InQue(s string, que []string) int {
-	idx := -1
-	for i, v := range que {
-		if s == v {
-			idx = i
-			break
-		}
-	}
-	return idx
-}
 
 // InQuei checkout substring exist in array that case insensitive
 func InQuei(s string, que []string) int {
@@ -40,7 +27,7 @@ func DelQue(que []string, ss ...string) []string {
 	var value []string
 	if que != nil && ss != nil {
 		for _, s := range que {
-			if InQue(s, ss) == -1 {
+			if rock.ListIndex(ss, s) == -1 {
 				if value == nil {
 					value = []string{}
 				}
