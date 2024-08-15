@@ -57,6 +57,7 @@
   - feat: 新增函数 *AnsiClearFn*、*AnsiClear* 使用清理验收码字符串
 - **util**
   - feat: 新增函数 *ListNoRepeat* 实现对数组重复元素的过滤
+  - del: 将泛型处理包转至 rock，并重名命名为别名 
 - **str**
   - feat: 新增函数 *ParseDuration* 实现对字符串时间的解析
 

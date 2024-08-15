@@ -12,6 +12,8 @@ import (
 // @Name:    工具栏
 
 // InQue exist value exist in array, if not exists will return -1
+//
+// Deprecated: As of Go 1.16, this function simply calls rock.ListIndex.
 func InQue(val any, que []any) int {
 	idx := -1
 	for i, v := range que {

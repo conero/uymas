@@ -1,6 +1,9 @@
 package str
 
-import "strings"
+import (
+	"gitee.com/conero/uymas/util/rock"
+	"strings"
+)
 
 // @Date：   2018/11/7 0007 11:38
 // @Author:  Joshua Conero
@@ -8,16 +11,9 @@ import "strings"
 
 // InQue checkout substring exist in array
 //
-// Deprecated: As of Go 1.16, this function simply calls util.ListIndex.
+// Deprecated: As of Go 1.16, this function simply calls rock.ListIndex.
 func InQue(s string, que []string) int {
-	idx := -1
-	for i, v := range que {
-		if s == v {
-			idx = i
-			break
-		}
-	}
-	return idx
+	return rock.ListIndex(que, s)
 }
 
 // InQuei checkout substring exist in array that case insensitive

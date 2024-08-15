@@ -2,112 +2,61 @@ package util
 
 import (
 	"gitee.com/conero/uymas/util/constraints"
-	"math/rand"
+	"gitee.com/conero/uymas/util/rock"
 )
 
 // ListIndex get index by search value from list
+//
+// Deprecated: only as a copy, has been moved to package util/rock, later deleted
 func ListIndex[T constraints.Equable](list []T, value T) (index int) {
-	index = -1
-	for i, v := range list {
-		if v == value {
-			index = i
-			break
-		}
-	}
-	return
+	return rock.ListIndex(list, value)
 }
 
 // ListNoRepeat filter duplicate elements in list
+//
+// Deprecated: only as a copy, has been moved to package util/rock, later deleted
 func ListNoRepeat[T constraints.Equable](list []T) []T {
-	var noRepeat []T
-	var tmpMap = map[T]bool{}
-
-	for _, v := range list {
-		if _, exist := tmpMap[v]; exist {
-			continue
-		}
-
-		noRepeat = append(noRepeat, v)
-		tmpMap[v] = true
-	}
-	return noRepeat
+	return rock.ListNoRepeat(list)
 }
 
 // ExtractArrUnique extracting array elements with loss (non-repeatable) from an array
+//
+// Deprecated: only as a copy, has been moved to package util/rock, later deleted
 func ExtractArrUnique[T constraints.ValueIterable](count int, arr []T) []T {
-	vLen := len(arr)
-	if vLen <= count {
-		return arr
-	}
-
-	var extArr []T
-	for j := 1; j <= count; j++ {
-		vl := len(arr)
-		if vl < 1 {
-			break
-		}
-
-		idx := rand.Intn(vl)
-		extArr = append(extArr, arr[idx])
-		rpl := arr[:idx]
-		rpl = append(rpl, arr[idx+1:]...)
-		arr = rpl
-	}
-
-	return extArr
+	return rock.ExtractArrUnique(count, arr)
 }
 
 // MapKeys Extract the key name array of the dictionary
+//
+// Deprecated: only as a copy, has been moved to package util/rock, later deleted
 func MapKeys[T constraints.KeyIterable, X constraints.ValueIterable](vMap map[T]X) (keys []T) {
-	for k := range vMap {
-		keys = append(keys, k)
-	}
-	return
+	return rock.MapKeys(vMap)
 }
 
 // MapValues Extract the values name array of the dictionary
+//
+// Deprecated: only as a copy, has been moved to package util/rock, later deleted
 func MapValues[T constraints.KeyIterable, X constraints.KeyIterable](vMap map[T]X) (values []X) {
-	for _, v := range vMap {
-		values = append(values, v)
-	}
-	return
+	return rock.MapValues(vMap)
 }
 
 // MapGenByKv Create dictionary by key value pair array combination
+//
+// Deprecated: only as a copy, has been moved to package util/rock, later deleted
 func MapGenByKv[K constraints.KeyIterable, V constraints.ValueIterable](keys []K, values []V) (kv map[K]V) {
-	vLen := len(values)
-	for i, k := range keys {
-		if i == vLen {
-			break
-		}
-		if kv == nil {
-			kv = map[K]V{}
-		}
-		kv[k] = values[i]
-	}
-
-	return
+	return rock.MapGenByKv(keys, values)
 }
 
 // MapFilter use the keys of map to filter itself
+//
+// Deprecated: only as a copy, has been moved to package util/rock, later deleted
 func MapFilter[K constraints.KeyIterable, V constraints.ValueIterable](kv map[K]V, filter []K) map[K]V {
-	var newMap = map[K]V{}
-	for kVal, value := range kv {
-		if ListIndex(filter, kVal) > -1 {
-			newMap[kVal] = value
-		}
-	}
-	return newMap
+	return rock.MapFilter(kv, filter)
 }
 
 // MapSlice use the keys of map to slice itself
+//
+// Deprecated: only as a copy, has been moved to package util/rock, later deleted
 func MapSlice[K constraints.KeyIterable, V constraints.ValueIterable](kv map[K]V, filter []K) map[K]V {
-	var newMap = map[K]V{}
-	for kVal, value := range kv {
-		if ListIndex(filter, kVal) > -1 {
-			continue
-		}
-		newMap[kVal] = value
-	}
-	return newMap
+	return rock.MapSlice(kv, filter)
 }
