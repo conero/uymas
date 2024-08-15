@@ -74,18 +74,18 @@ func (e *Evolve[T]) Run(args ...string) error {
 func (e *Evolve[T]) callFunc(fn reflect.Value) bool {
 	fnVal := fn.Interface()
 	isSuccess := false
-	switch fnVal.(type) {
+	switch callValue := fnVal.(type) {
 	case func():
-		fnVal.(func())()
+		callValue()
 		isSuccess = true
 	case func(...string):
-		fnVal.(func(...string))()
+		callValue()
 		isSuccess = true
 	case func(cli.ArgsParser):
-		fnVal.(func(cli.ArgsParser))(e.param.Args)
+		callValue(e.param.Args)
 		isSuccess = true
 	case func(...cli.ArgsParser):
-		fnVal.(func(...cli.ArgsParser))(e.param.Args)
+		callValue(e.param.Args)
 		isSuccess = true
 	}
 	return isSuccess
@@ -239,11 +239,11 @@ func (e *Evolve[T]) NamingFind(cmds ...string) string {
 		return ""
 	}
 
-	switch value.(type) {
+	switch vRel := value.(type) {
 	case string:
-		return value.(string)
+		return vRel
 	case func(Param) string:
-		return value.(func(Param) string)(*param)
+		return vRel(*param)
 	}
 
 	return ""
