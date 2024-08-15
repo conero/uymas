@@ -17,6 +17,7 @@ import (
 	"gitee.com/conero/uymas/number"
 	"gitee.com/conero/uymas/str"
 	"gitee.com/conero/uymas/util"
+	"gitee.com/conero/uymas/util/rock"
 	"io"
 	"math/rand"
 	"net/http"
@@ -247,7 +248,7 @@ func (c *defaultApp) Pinyin() {
 				line += fmt.Sprintf("\n  多音字共 %d 组，详细如：\n原始拼音组：\n%s\n数字拼音组：\n%s\n字母拼音组：\n%s\n",
 					pyCount, bin.FormatQue(pyList, "  "),
 					bin.FormatQue(vList.Polyphony(pinyin.PinyinNumber), "  "),
-					bin.FormatQue(util.ListNoRepeat(vList.Polyphony(pinyin.PinyinAlpha)), "  "))
+					bin.FormatQue(rock.ListNoRepeat(vList.Polyphony(pinyin.PinyinAlpha)), "  "))
 			}
 		}
 	} else {
