@@ -223,7 +223,7 @@ func plgCmdListLinux() []string {
 				continue
 			}
 			rtStr := string(rtBy)
-			if strings.Index(rtStr, "ELF") > -1 && strings.Index(rtStr, "LSB executable") > -1 {
+			if strings.Contains(rtStr, "ELF") && strings.Contains(rtStr, "LSB executable") {
 				plugName := name
 				plugName = strings.ReplaceAll(plugName, appName+"-", "")
 				plugName = strings.ReplaceAll(plugName, appName+"_", "")

@@ -50,7 +50,7 @@ func NumberOpera(equation string) float64 {
 				}
 				equation = strings.ReplaceAll(equation, mul, tV)
 			}
-			if strings.Index(equation, "*") < 0 {
+			if strings.Contains(equation, "*") {
 				break
 			}
 		}
@@ -64,7 +64,7 @@ func NumberOpera(equation string) float64 {
 				}
 				equation = strings.ReplaceAll(equation, div, tV)
 			}
-			if strings.Index(equation, "*") < 0 {
+			if strings.Contains(equation, "*") {
 				break
 			}
 		}
@@ -74,7 +74,7 @@ func NumberOpera(equation string) float64 {
 			// `+`/`-`
 			for _, vAs := range subtractReg.FindAllString(equation, -1) {
 				var v float64 = 0
-				if strings.Index(vAs, "+") > -1 {
+				if strings.Contains(vAs, "+") {
 					queue := strings.Split(vAs, "+")
 					vqCk := len(queue)
 					if vqCk == 2 {
@@ -86,7 +86,7 @@ func NumberOpera(equation string) float64 {
 					//fmt.Println(" ~~ ", equation)
 					break
 				}
-				if strings.Index(vAs, "-") > -1 {
+				if strings.Contains(vAs, "-") {
 					queue := strings.Split(vAs, "-")
 					vqCk := len(queue)
 					if vqCk == 2 {
