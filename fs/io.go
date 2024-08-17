@@ -13,6 +13,8 @@ import (
 // @Name:    读写
 
 // FsReaderWriter [Experimental] file read interface
+//
+// Deprecated: next major version remove, because never use
 type FsReaderWriter struct {
 	content  []byte
 	dstFile  string
