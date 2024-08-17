@@ -1,8 +1,9 @@
-package fs
+package scan
 
 import (
 	"errors"
 	"fmt"
+	"gitee.com/conero/uymas/v2/util/fs"
 	"os"
 	"regexp"
 	"strings"
@@ -88,7 +89,7 @@ func (ds *DirScanner) Scan() error {
 	baseDir := ds.baseDir
 	ds.Runtime = time.Duration(0)
 	var err error = nil
-	if IsDir(baseDir) {
+	if fs.IsDir(baseDir) {
 		start := time.Now()
 		ds.scanRecursion(baseDir, 0)
 		ds.AllItem = ds.AllDirItem + ds.AllFileItem
@@ -114,7 +115,7 @@ func (ds *DirScanner) scanRecursion(vDir string, depth int) int64 {
 	var currentSize int64 = 0
 	for _, entry := range dirEntries {
 		name := entry.Name()
-		vPath := StdPathName(fmt.Sprintf("%v/%v", vDir, name))
+		vPath := fs.StdPathName(fmt.Sprintf("%v/%v", vDir, name))
 		var size int64
 		if entry.IsDir() {
 			ds.AllDirItem += 1
@@ -153,7 +154,7 @@ func (ds *DirScanner) ScanParallel() error {
 	baseDir := ds.baseDir
 	ds.Runtime = time.Duration(0)
 	var err error = nil
-	if IsDir(baseDir) {
+	if fs.IsDir(baseDir) {
 		start := time.Now()
 		//default channel cache
 		if ds.CddChanMax < 1 {
@@ -217,7 +218,7 @@ func (ds *DirScanner) scanRecursionParallel(vDir string, depth int) int64 {
 	var currentSize int64 = 0
 	for _, entry := range dirEntries {
 		name := entry.Name()
-		vPath := StdPathName(fmt.Sprintf("%v/%v", vDir, name))
+		vPath := fs.StdPathName(fmt.Sprintf("%v/%v", vDir, name))
 		var size int64
 		if entry.IsDir() {
 			ds.AllDirItem += 1
@@ -326,6 +327,6 @@ func (ds *DirScanner) ChanNumber() int {
 
 func NewDirScanner(vDir string) *DirScanner {
 	ds := &DirScanner{}
-	ds.baseDir = StdDir(vDir)
+	ds.baseDir = fs.StdDir(vDir)
 	return ds
 }
