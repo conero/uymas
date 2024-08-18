@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
+	storage2 "gitee.com/conero/uymas/v2/app/storage"
 	"gitee.com/conero/uymas/v2/bin"
 	"gitee.com/conero/uymas/v2/culture/pinyin"
 	"gitee.com/conero/uymas/v2/number"
-	"gitee.com/conero/uymas/v2/storage"
 	"gitee.com/conero/uymas/v2/util/fs"
 	"gitee.com/conero/uymas/v2/util/tm"
 	"strings"
@@ -43,7 +43,7 @@ func main() {
 }
 
 // 获取的缓存
-func getCache(key, value string) (bool, storage.Any) {
+func getCache(key, value string) (bool, storage2.Any) {
 	var namespace string
 	var nsSplit = "@"
 	if strings.Index(key, nsSplit) > -1 {
@@ -52,7 +52,7 @@ func getCache(key, value string) (bool, storage.Any) {
 		key = strings.TrimSpace(tapQueue[1])
 	}
 
-	store := storage.GetStorage(namespace)
+	store := storage2.GetStorage(namespace)
 	if value == "" {
 		if store != nil {
 			return true, store.GetValue(key)
@@ -60,9 +60,9 @@ func getCache(key, value string) (bool, storage.Any) {
 		return false, ""
 	} else {
 		if store == nil {
-			store = storage.NewStorage(namespace)
+			store = storage2.NewStorage(namespace)
 		}
-		return true, store.SetValue(key, storage.NewLite(value).GetAny())
+		return true, store.SetValue(key, storage2.NewLite(value).GetAny())
 	}
 }
 
