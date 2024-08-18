@@ -1,7 +1,9 @@
 package main
 
-import "gitee.com/conero/uymas/v2/bin/butil"
+import (
+	"gitee.com/conero/uymas/v2/cli/chest"
+)
 
 func main() {
-	butil.InputRequire("请您输入姓名（姓名）？", nil)
+	chest.InputRequire("请您输入姓名（姓名）？", nil)
 }

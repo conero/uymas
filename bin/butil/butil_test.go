@@ -1,6 +1,7 @@
 package butil
 
 import (
+	"gitee.com/conero/uymas/v2/util/fs"
 	"os"
 	"reflect"
 	"testing"
@@ -43,19 +44,19 @@ func TestDetectPath(t *testing.T) {
 	}
 
 	// case 2
-	ipt, want = "logs/230702", RootPath("logs/230702")
+	ipt, want = "logs/230702", fs.RootPath("logs/230702")
 	if realStr := DetectPath(ipt); realStr != want {
 		t.Errorf("请求错误, %v != %v", realStr, want)
 	}
 
 	// case 3
-	ipt, want = "", RootPath("")
+	ipt, want = "", fs.RootPath("")
 	if realStr := DetectPath(ipt); realStr != want {
 		t.Errorf("请求错误, %v != %v", realStr, want)
 	}
 
 	// case 3
-	ipt, want = ".gitignore", RootPath(".gitignore")
+	ipt, want = ".gitignore", fs.RootPath(".gitignore")
 	if realStr := DetectPath(ipt); realStr != want {
 		t.Errorf("请求错误, %v != %v", realStr, want)
 	}
