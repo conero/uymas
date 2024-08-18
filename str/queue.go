@@ -1,7 +1,6 @@
 package str
 
 import (
-	"gitee.com/conero/uymas/v2/rock"
 	"strings"
 )
 
@@ -22,23 +21,7 @@ func InQuei(s string, que []string) int {
 	return idx
 }
 
-// DelQue del queue from array
-func DelQue(que []string, ss ...string) []string {
-	var value []string
-	if que != nil && ss != nil {
-		for _, s := range que {
-			if rock.ListIndex(ss, s) == -1 {
-				if value == nil {
-					value = []string{}
-				}
-				value = append(value, s)
-			}
-		}
-	}
-	return value
-}
-
-// StrQueueToAny string slice convert to nany slice
+// StrQueueToAny string slice convert to any slice
 func StrQueueToAny(args []string) []any {
 	var anyQueue []any
 	for _, s := range args {

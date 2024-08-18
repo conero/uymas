@@ -22,6 +22,18 @@ func InList[T constraints.Equable](list []T, value T) bool {
 	return ListIndex(list, value) > -1
 }
 
+// ListRemove removes the specified element from the list
+func ListRemove[T constraints.Equable](list []T, removes ...T) []T {
+	var newList []T
+	for _, v := range list {
+		if InList(list, v) {
+			continue
+		}
+		newList = append(newList, v)
+	}
+	return newList
+}
+
 // ExtractArrUnique extracting array elements with loss (non-repeatable) from an array
 func ExtractArrUnique[T constraints.ValueIterable](count int, arr []T) []T {
 	vLen := len(arr)
