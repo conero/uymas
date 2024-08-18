@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
+	"gitee.com/conero/uymas/v2/app/calc"
 	"gitee.com/conero/uymas/v2/bin"
 	"gitee.com/conero/uymas/v2/logger/lgr"
-	"gitee.com/conero/uymas/v2/str"
 	"regexp"
 )
 
@@ -32,7 +32,7 @@ func (c *defaultApp) Cal() {
 		return
 	}
 
-	calc := str.NewCalc(equal)
+	calc := calc.NewCalc(equal)
 	calc.Count()
 
 	if c.Cc.CheckSetting("V", "verbose") {

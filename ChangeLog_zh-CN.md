@@ -50,6 +50,10 @@
   
   - feat: 从 fs 包中分离 DirScanner 作为单独包
   
+- **app/calc**
+  
+  - feat: 将 `str.Calc` 升级为读取的引用包
+  
 - **cli/chest**
 
   - feat: 将原 butil.InputRequire 相关方法迁移到此包

@@ -1,7 +1,8 @@
-package str
+package calc
 
 import (
 	"fmt"
+	"gitee.com/conero/uymas/v2/str"
 )
 
 /**
@@ -11,7 +12,7 @@ import (
  **/
 
 func ExampleUrl_AbsHref() {
-	var u Url
+	var u str.Url
 	// "joshua/conero" 与 "./joshua/conero" 效果相同
 	fmt.Println(u.AbsHref("joshua/conero", "https://www.about.me/url/example/test"))
 
