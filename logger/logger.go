@@ -6,7 +6,6 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"gitee.com/conero/uymas/v2/bin/butil"
 	"gitee.com/conero/uymas/v2/util/fs"
 	"log"
 	"os"
@@ -206,10 +205,10 @@ func NewLogger(cfgs ...Config) *Logger {
 			if cfg.Driver == DriverFile {
 				output := cfg.OutputDir
 				if output == "" {
-					output = butil.RootPath("/.runtime")
+					output = fs.RootPath("/.runtime")
 				} else {
 					if !fs.ExistPath(output) {
-						output = butil.RootPath(output)
+						output = fs.RootPath(output)
 					}
 				}
 				now := time.Now()

@@ -1,7 +1,6 @@
 package data
 
 import (
-	"gitee.com/conero/uymas/v2/bin/butil"
 	"gitee.com/conero/uymas/v2/util/fs"
 	"path"
 )
@@ -27,7 +26,7 @@ func (c *Manager) Dir() string {
 	return c.basedir
 }
 func CliManager() *Manager {
-	name := "." + butil.AppName() + "-runtime"
-	basedir := butil.RootPath(name)
+	name := "." + fs.AppName() + "-runtime"
+	basedir := fs.RootPath(name)
 	return NewManager(basedir)
 }

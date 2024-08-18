@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"gitee.com/conero/uymas/v2/bin/butil"
+	"gitee.com/conero/uymas/v2/util/fs"
 	"os"
 	"os/exec"
 	"path"
@@ -79,7 +79,7 @@ func plgCmdDetect(cc *Arg) *PlgCProfile {
 	}
 
 	// $name
-	pBin := butil.RootPath(name)
+	pBin := fs.RootPath(name)
 	cmd := exec.Command(pBin, PlgCmdGetProfile)
 	rtBy, err := cmd.CombinedOutput()
 	var plg *PlgCProfile
@@ -92,7 +92,7 @@ func plgCmdDetect(cc *Arg) *PlgCProfile {
 	}
 
 	// plg/$name
-	pBin = butil.RootPath(fmt.Sprintf("plg/%s", name))
+	pBin = fs.RootPath(fmt.Sprintf("plg/%s", name))
 	cmd = exec.Command(pBin, PlgCmdGetProfile)
 	rtBy, err = cmd.CombinedOutput()
 	if err == nil {
@@ -103,10 +103,10 @@ func plgCmdDetect(cc *Arg) *PlgCProfile {
 		}
 	}
 
-	appName := butil.AppName()
+	appName := fs.AppName()
 
 	// name-$name
-	pBin = butil.RootPath(fmt.Sprintf("%s-%s", appName, name))
+	pBin = fs.RootPath(fmt.Sprintf("%s-%s", appName, name))
 	cmd = exec.Command(pBin, PlgCmdGetProfile)
 	rtBy, err = cmd.CombinedOutput()
 	if err == nil {
@@ -118,7 +118,7 @@ func plgCmdDetect(cc *Arg) *PlgCProfile {
 	}
 
 	// name_$name
-	pBin = butil.RootPath(fmt.Sprintf("%s_%s", appName, name))
+	pBin = fs.RootPath(fmt.Sprintf("%s_%s", appName, name))
 	cmd = exec.Command(pBin, PlgCmdGetProfile)
 	rtBy, err = cmd.CombinedOutput()
 	if err == nil {
@@ -135,8 +135,8 @@ func plgCmdDetect(cc *Arg) *PlgCProfile {
 // Dependent on suffix, like exe, bat, cmd.
 func plgCmdListWindows() []string {
 	var plugs []string
-	rootName := butil.Basedir()
-	appName := butil.AppName()
+	rootName := fs.RootPath()
+	appName := fs.AppName()
 
 	// to scan file
 	toScan := func(vDir string) {
@@ -166,7 +166,7 @@ func plgCmdListWindows() []string {
 	}
 
 	toScan(rootName)
-	toScan(butil.RootPath("plg/"))
+	toScan(fs.RootPath("plg/"))
 
 	return plugs
 }
@@ -174,8 +174,8 @@ func plgCmdListWindows() []string {
 // Dependent on `file` that use to detect.
 func plgCmdListLinux() []string {
 	var plugs []string
-	rootName := butil.Basedir()
-	appName := butil.AppName()
+	rootName := fs.RootPath()
+	appName := fs.AppName()
 
 	// to scan file
 	toScan := func(vDir string) {
@@ -212,7 +212,7 @@ func plgCmdListLinux() []string {
 	}
 
 	toScan(rootName)
-	toScan(butil.RootPath("plg/"))
+	toScan(fs.RootPath("plg/"))
 
 	return plugs
 }

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"gitee.com/conero/uymas/v2/cli/evolve"
+	"gitee.com/conero/uymas/v2/util/fs"
 )
 
 type test struct {
@@ -11,6 +12,9 @@ type test struct {
 
 func (c *test) Demo() {
 	fmt.Println("test demo, ha!")
+	fmt.Println()
+	fmt.Println("rootPath: " + fs.RootDir())
+	fmt.Println("rootApp: " + fs.AppName())
 }
 
 func main() {

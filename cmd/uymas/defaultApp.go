@@ -11,6 +11,7 @@ import (
 	"gitee.com/conero/uymas/v2/logger/lgr"
 	"gitee.com/conero/uymas/v2/number"
 	"gitee.com/conero/uymas/v2/str"
+	"gitee.com/conero/uymas/v2/util/fs"
 	"gitee.com/conero/uymas/v2/util/fs/scan"
 	"os"
 	"regexp"
@@ -52,7 +53,7 @@ func (c *defaultApp) DefaultIndex() {
 
 	fmt.Printf(" wecolme use the <%v>. \n", uymas.Name)
 	fmt.Println()
-	fmt.Printf(" %v [comand] [option]    执行应用命令\n", butil.AppName())
+	fmt.Printf(" %v [comand] [option]    执行应用命令\n", fs.AppName())
 	fmt.Println()
 	fmt.Printf(" v%v/%v\n", uymas.Version, uymas.Release)
 	fmt.Printf(" Power by %v.\n", uymas.Author)
@@ -85,6 +86,7 @@ func (c *defaultApp) Test() {
 	fmt.Printf("  Data: %#v \n", cc.Data)
 	fmt.Printf("  Input: %#v \n", strings.Join(cc.Raw, " "))
 	fmt.Printf("  Basedir : %v \n", butil.Basedir())
+	fmt.Printf("  AppName : %v \n", fs.AppName())
 	fmt.Printf("  DataManager : %v \n", dataMng.Dir())
 	fmt.Printf("  PWD : %v \n", pwd)
 	fmt.Printf("  NextLing : %#v \n", cc.NextList())
