@@ -46,6 +46,10 @@
   
   - pref: 将 storage 包重命名
   
+- **app/scan**
+  
+  - feat: 从 fs 包中分离 DirScanner 作为单独包
+  
 - **cli/chest**
 
   - feat: 将原 butil.InputRequire 相关方法迁移到此包
@@ -56,9 +60,6 @@
 - **util/fs**
   - pref: 将 fs 包重命名为 util/fs
   - break: 移除 FsReaderWriter 接口（原实验性的）
-
-- **util/fs/scan**
-  - feat: 从 fs 包中分离 DirScanner 作为单独包
 
 - **util/xsql**
 

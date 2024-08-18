@@ -1,3 +1,4 @@
+// Package scan directory resource scanner
 package scan
 
 import (

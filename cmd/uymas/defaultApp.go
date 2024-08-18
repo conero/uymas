@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"gitee.com/conero/uymas/v2"
+	"gitee.com/conero/uymas/v2/app/scan"
 	"gitee.com/conero/uymas/v2/bin"
 	"gitee.com/conero/uymas/v2/bin/butil"
 	"gitee.com/conero/uymas/v2/bin/data"
@@ -12,7 +13,6 @@ import (
 	"gitee.com/conero/uymas/v2/number"
 	"gitee.com/conero/uymas/v2/str"
 	"gitee.com/conero/uymas/v2/util/fs"
-	"gitee.com/conero/uymas/v2/util/fs/scan"
 	"os"
 	"regexp"
 	"strconv"
