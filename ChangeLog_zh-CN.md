@@ -40,18 +40,29 @@
 
 - **cli/chest**
   - feat: 将原 butil.InputRequire 相关方法迁移到此包
+
 - **util**
   - del: 删除 InQue， InQueAny等方法，可使用 rock.ListIndex代替。（此方法与 str 重复提供）
+  
 - **util/fs**
   - pref: 将 fs 包重命名为 util/fs
   - break: 移除 FsReaderWriter 接口（原实验性的）
+  
 - **util/fs/scan**
   - feat: 从 fs 包中分离 DirScanner 作为单独包
+
+- **util/xsql**
+  
+  - pref: 将 xsql 包重命名为此包名
+  
 - **str**
   - del: 删除 InQue， InQueAny等方法，可使用 rock.ListIndex代替
+
 - **rock**
+
   - feat: 新增方法 ListRemove，由 str.DelQue 泛型化改进而来
 
+  
 
 
 
