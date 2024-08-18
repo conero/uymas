@@ -23,34 +23,34 @@ func compareStrFunc(expect func() string, real string) bool {
 	return compareStr(s, real)
 }
 
-func TestLcfirst(t *testing.T) {
+func TestStr_Lcfirst(t *testing.T) {
 	fn := func(s, sT string) {
-		if ClearSpace(s) != sT {
+		if Str(s).ClearSpace() != sT {
 			fmt.Println(s + " VS " + sT)
 			t.Fail()
 		}
 	}
-	fn(Lcfirst("Joshua Conero"), "joshuaconero")
-	fn(Lcfirst("JOSHUA"), "jOSHUA")
-	fn(Lcfirst("AA BB C D E"), "aAbBcde")
+	fn(Str("Joshua Conero").Lcfirst(), "joshuaconero")
+	fn(Str("JOSHUA").Lcfirst(), "jOSHUA")
+	fn(Str("AA BB C D E").Lcfirst(), "aAbBcde")
 }
 
 // 项目测试
-func TestClearSpace(t *testing.T) {
+func TestStr_ClearSpace(t *testing.T) {
 	s := " s p a c e"
 	sT := "space"
-	if ClearSpace(s) != sT {
+	if Str(s).ClearSpace() != sT {
 		t.Fail()
 	}
 	s = " "
 	sT = ""
-	if ClearSpace(s) != sT {
+	if Str(s).ClearSpace() != sT {
 		t.Fail()
 	}
 
 	s = ""
 	sT = ""
-	if ClearSpace(s) != sT {
+	if Str(s).ClearSpace() != sT {
 		t.Fail()
 	}
 }
@@ -84,16 +84,16 @@ func TestRender(t *testing.T) {
 }
 
 // 反转测试
-func TestReverse(t *testing.T) {
+func TestStr_Reverse(t *testing.T) {
 	tc := [][]string{
-		[]string{"Joshua Conero.", ".orenoC auhsoJ"},
-		[]string{"JoJ", "JoJ"},
-		[]string{"", ""},
+		{"Joshua Conero.", ".orenoC auhsoJ"},
+		{"JoJ", "JoJ"},
+		{"", ""},
 	}
 	for _, ts := range tc {
 		ref := ts[0]
 		xs := ts[1]
-		ys := Reverse(xs)
+		ys := Str(xs).Reverse()
 		if ref != ys {
 			t.Fatal(fmt.Sprintf("%s != [Reverse(%s)] => %s", ref, xs, ys))
 		}
@@ -126,11 +126,11 @@ func TestPadRight(t *testing.T) {
 	}, t)
 }
 
-func TestLowerStyle(t *testing.T) {
+func TestStr_LowerStyle(t *testing.T) {
 	// Case 1
 	vStr := "FirstName"
 	rStr := "first_name"
-	gStr := LowerStyle(vStr)
+	gStr := Str(vStr).LowerStyle()
 	if gStr != rStr {
 		t.Fatalf("%v --> %v VS %v", vStr, gStr, rStr)
 	}
@@ -138,7 +138,7 @@ func TestLowerStyle(t *testing.T) {
 	// Case 2
 	vStr = "getHeightWidthRate"
 	rStr = "get_height_width_rate"
-	gStr = LowerStyle(vStr)
+	gStr = Str(vStr).LowerStyle()
 	if gStr != rStr {
 		t.Fatalf("%v --> %v VS %v", vStr, gStr, rStr)
 	}
@@ -146,7 +146,7 @@ func TestLowerStyle(t *testing.T) {
 	// Case 2
 	vStr = "_stringIsLowerStyleAndNeedTrimWithoutFuncButFieldIsAlpha2Email0519"
 	rStr = "_string_is_lower_style_and_need_trim_without_func_but_field_is_alpha2_email0519"
-	gStr = LowerStyle(vStr)
+	gStr = Str(vStr).LowerStyle()
 	if gStr != rStr {
 		t.Fatalf("%v --> %v VS %v", vStr, gStr, rStr)
 	}
@@ -154,11 +154,11 @@ func TestLowerStyle(t *testing.T) {
 
 // `first_name` 			-> `FirstName`,
 // `get_height_width_rate` 	-> `GetHeightWidthRate`
-func TestCamelCase(t *testing.T) {
+func TestStr_CamelCase(t *testing.T) {
 	// Case 1
 	vStr := "first_name"
 	rStr := "FirstName"
-	gStr := CamelCase(vStr)
+	gStr := Str(vStr).CamelCase()
 	if gStr != rStr {
 		t.Fatalf("%v --> %v VS %v", vStr, gStr, rStr)
 	}
@@ -166,7 +166,7 @@ func TestCamelCase(t *testing.T) {
 	// Case 2
 	vStr = "get_height_width_rate"
 	rStr = "GetHeightWidthRate"
-	gStr = CamelCase(vStr)
+	gStr = Str(vStr).CamelCase()
 	if gStr != rStr {
 		t.Fatalf("%v --> %v VS %v", vStr, gStr, rStr)
 	}
