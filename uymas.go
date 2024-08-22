@@ -19,3 +19,25 @@ const (
 	PkgName        = "conero/uymas"
 	TimeLayoutDate = "20060102" // date layout-20060102
 )
+
+// Data for injection
+// # go build -ldflags "-s -w -X 'gitee.com/conero/uymas.gitHash=$gitHash' -X 'gitee.com/conero/uymas.buildData=$buildData' -X 'gitee.com/conero/uymas.buildAuthor=$buildAuthor'" ./cmd/...
+var (
+	gitHash     string
+	buildData   string
+	buildAuthor string
+)
+
+func GetBuildInfo() string {
+	info := ""
+	if gitHash != "" && buildData != "" {
+		info = "(" + buildData + " " + gitHash + ")"
+	}
+	if buildAuthor != "" {
+		if info != "" {
+			info += "    "
+		}
+		info += "Power by " + buildAuthor
+	}
+	return info
+}

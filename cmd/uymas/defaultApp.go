@@ -23,6 +23,7 @@ import (
 	"net/http"
 	"os"
 	"regexp"
+	"runtime"
 	"strconv"
 	"strings"
 	"time"
@@ -66,8 +67,13 @@ func (c *defaultApp) DefaultIndex() {
 	fmt.Println()
 	fmt.Printf(" %v [comand] [option]    执行应用命令\n", butil.AppName())
 	fmt.Println()
-	fmt.Printf(" v%v/%v\n", uymas.Version, uymas.Release)
+	bInfo := uymas.GetBuildInfo()
+	if bInfo != "" {
+		bInfo = "  " + bInfo
+	}
+	fmt.Printf(" v%s/%s%s\n", uymas.Version, uymas.Release, bInfo)
 	fmt.Printf(" Power by %v.\n", uymas.Author)
+	fmt.Printf(" Build on %s.\n", runtime.Version())
 	fmt.Println()
 	fmt.Println(" 命令行设置，通环境变量如:")
 	fmt.Println("   UYMAS_CMD_UYMAS_COLON=false # 支持 ':' 等式，或者0/1")

@@ -37,6 +37,7 @@
 
 - fix: 修复使用工具*golangci-lint* 提示工具批量调整错误修复
 - move: 将包中 util.ListIndex 切换为 rock.ListIndex
+- feat: 新增函数 `GetBuildInfo` 以支持 go build的 `-ldflags`实现参数注入
 - **culture/pinyin**
   - feat: 新增 List.Polyphony 用于获取以多音字分割的多组拼音
   - feat: 新增 Pinyin.IsEmpty 判断是否为空
