@@ -8,6 +8,7 @@ import (
 	"gitee.com/conero/uymas/bin/butil"
 	"gitee.com/conero/uymas/bin/color"
 	"gitee.com/conero/uymas/fs"
+	"gitee.com/conero/uymas/util/rock"
 	"log"
 	"os"
 	"strings"
@@ -245,49 +246,38 @@ func ShortCover(short string) (lvlStr string) {
 
 // NewLogger build a simple logger user it.
 func NewLogger(cfgs ...Config) *Logger {
-	var cfg Config
-	if len(cfgs) > 0 {
-		cfg = cfgs[0]
-	} else {
-		cfg = DefaultConfig
-	}
-	logging := &Logger{
-		cfg: cfg,
-	}
+	cfg := rock.ExtractParam(DefaultConfig, cfgs...)
+	logging := &Logger{}
 	// default base log level is `Warn`
 	lv, er := ToLevel(cfg.Level, LogWarn)
 	if er != nil {
 		panic(er)
 	}
-	if cfg.Log == nil { // 默认日志
-		if lv != LogNone {
-			if cfg.Driver == DriverFile {
-				output := cfg.OutputDir
-				if output == "" {
-					output = butil.RootPath("/.runtime")
-				} else {
-					if !fs.ExistPath(output) {
-						output = butil.RootPath(output)
-					}
-				}
-				now := time.Now()
-				output = fs.CheckDir(fmt.Sprintf("%v/%v", output, now.Format("2006/01")))
-				fl, er := os.OpenFile(fmt.Sprintf("%v/%v.log", output, now.Format("02")),
-					os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0777)
-				if er == nil {
-					cfg.Log = log.New(fl, "", log.Ltime)
-				}
-			} else if cfg.Driver == DriverBuffer {
-				var buf bytes.Buffer
-				cfg.Log = log.New(&buf, "", log.Ltime)
-				logging.bufDriver = &buf
+	if cfg.Log == nil && lv != LogNone { // 默认日志
+		if cfg.Driver == DriverFile {
+			output := cfg.OutputDir
+			if output == "" {
+				output = butil.RootPath("/.runtime")
+			} else if !fs.ExistPath(output) {
+				output = butil.RootPath(output)
 			}
+			now := time.Now()
+			output = fs.CheckDir(fmt.Sprintf("%v/%v", output, now.Format("2006/01")))
+			fl, er := os.OpenFile(fmt.Sprintf("%v/%v.log", output, now.Format("02")),
+				os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0666)
+			if er == nil {
+				cfg.Log = log.New(fl, "", log.Ltime)
+			}
+		} else if cfg.Driver == DriverBuffer {
+			var buf bytes.Buffer
+			cfg.Log = log.New(&buf, "", log.Ltime)
+			logging.bufDriver = &buf
 		}
+	}
 
-		// 降级处理，所有驱动解析失败的使用控制台
-		if cfg.Log == nil {
-			cfg.Log = log.New(os.Stdout, "", log.Ltime)
-		}
+	// Demoted processing, all driver parsing failed using the console
+	if cfg.Log == nil {
+		cfg.Log = log.New(os.Stdout, "", log.Ltime)
 	}
 
 	logging.Level = lv

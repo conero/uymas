@@ -60,8 +60,12 @@
 - **util**
   - feat: 新增函数 *ListNoRepeat* 实现对数组重复元素的过滤
   - del: 将泛型处理包转至 rock，并重名命名为别名 
+  - pref: 扩展对函数 ExtractParam、ExtractParamFunc、ExtractParamIndex泛型的支持，使其支持所有类型
 - **str**
   - feat: 新增函数 *ParseDuration* 实现对字符串时间的解析
+- **logger**
+  - pref: 优化函数 NewLogger 降低 if 语句的层数
+
 
 
 
