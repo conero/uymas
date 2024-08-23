@@ -247,7 +247,9 @@ func ShortCover(short string) (lvlStr string) {
 // NewLogger build a simple logger user it.
 func NewLogger(cfgs ...Config) *Logger {
 	cfg := rock.ExtractParam(DefaultConfig, cfgs...)
-	logging := &Logger{}
+	logging := &Logger{
+		cfg: cfg,
+	}
 	// default base log level is `Warn`
 	lv, er := ToLevel(cfg.Level, LogWarn)
 	if er != nil {
