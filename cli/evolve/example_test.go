@@ -22,3 +22,7 @@ func ExampleNewEvolve() {
 	evl.Command(new(test), "test", "t")
 	log.Fatal(evl.Run())
 }
+
+//func TestExample(t *testing.T) {
+//	ExampleNewEvolve()
+//}

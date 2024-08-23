@@ -2,7 +2,7 @@
 
 Golang 常用包，快速实现命令行程序开发、struct合并、随机数等生成.
 
-[![Go.Dev reference](https://img.shields.io/badge/go.dev-reference-blue?logo=go&logoColor=white)](https://pkg.go.dev/gitee.com/conero/uymas?tab=doc)  [![Goproxy.cn](https://goproxy.cn/stats/gitee.com/conero/uymas/badges/download-count.svg)](https://goproxy.cn)  [![](https://goreportcard.com/badge/gitee.com/uymas/conero)](https://goreportcard.com/report/gitee.com/conero/uymas)  [![Go](https://github.com/conero/uymas/actions/workflows/go.yml/badge.svg)](https://github.com/conero/uymas/actions/workflows/go.yml)
+[![Go.Dev reference](https://img.shields.io/badge/go.dev-reference-blue?logo=go&logoColor=white)](https://pkg.go.dev/gitee.com/conero/uymas/v2?tab=doc)  [![Goproxy.cn](https://goproxy.cn/stats/gitee.com/conero/uymas/v2/badges/download-count.svg)](https://goproxy.cn)  [![](https://goreportcard.com/badge/gitee.com/uymas/conero)](https://goreportcard.com/report/gitee.com/conero/uymas)  [![Go](https://github.com/conero/uymas/actions/workflows/go.yml/badge.svg)](https://github.com/conero/uymas/actions/workflows/go.yml)
 
 
 
@@ -16,7 +16,7 @@ Golang 常用包，快速实现命令行程序开发、struct合并、随机数�
 
 ### 项目介绍
 go 语言工具库
-go-version： *v1.11.1*
+go-version： *v1.20* （使其兼容 windows7）
 
 - source
     - bin    命令行解析工具
@@ -44,7 +44,7 @@ nestling --> develop -->master
 
 ```ini
 # github
-$ go get -u gitee.com/conero/uymas
+$ go get -u gitee.com/conero/uymas/v2
 
 ```
 
@@ -119,41 +119,25 @@ package main
 
 import (
 	"fmt"
-	"gitee.com/conero/uymas/bin"
+	"gitee.com/conero/uymas/v2/cli/evolve"
 )
-// 命令 test
-type Test struct {
-	bin.Command
-}
-// 项目初始化
-func (a *Test) Init ()  {
-    // 重写方法时必先系统父结构体方法[!!]
-    a.Command.Init()
-    
-    // todo ....
-}
-// 运行，执行内二级命令分发
-func (a *Test) Run ()  {
-	fmt.Println("ffff.")
-}
 
-// 命令 yang
-type Yang struct {
-	bin.Command
+// command struct
+type test struct {
+    Command
 }
-
 
 func main() {
-	//router := &bin.Router{}
-	//bin.Register("test", &Test{})
-	//bin.Register("yang", &Yang{})
-	//bin.Adapter(router)
-	bin.RegisterApps(map[string]interface{}{
-		"test": &Test{},
-		"yang": &Yang{},
-	})
-	bin.Run()
-}
+	evl := evolve.NewEvolve()
 
+    // register func
+    evl.Command(func() {
+        fmt.Println("Evolution For Index.")
+    }, "index")
+
+    // register struct
+    evl.Command(new(test), "test", "t")
+    log.Fatal(evl.Run())
+}
 ```
 
