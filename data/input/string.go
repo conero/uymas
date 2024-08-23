@@ -32,5 +32,11 @@ func (s Stringer) Uint64() uint64 {
 }
 
 func (s Stringer) Int() int {
-	return int(s.Int64())
+	iVal, _ := strconv.Atoi(string(s))
+	return iVal
+}
+
+func (s Stringer) Bool() bool {
+	bVal, _ := strconv.ParseBool(string(s))
+	return bVal
 }

@@ -76,6 +76,11 @@
 
   - feat: 新增方法 ListRemove，由 str.DelQue 泛型化改进而来
 
+- **data/input**
+  
+  - feat: 新增方法 Stringer.Bool 用于解析bool数据
+  - pref: 方法 Stringer.Int 调整基于 strconv.Atoi
+  
   
 
 
