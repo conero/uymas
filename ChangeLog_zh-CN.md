@@ -36,44 +36,60 @@
 - **app/svn**
   
   - pref: 将 svn 包重命名
+  
 - **app/storage**
   
   - pref: 将 storage 包重命名
+  
 - **app/scan**
   
   - feat: 从 fs 包中分离 DirScanner 作为单独包
+  
 - **app/calc**
   
   - feat: 将 `str.Calc` 升级为读取的引用包
+  
 - **cli/chest**
 
   - feat: 将原 butil.InputRequire 相关方法迁移到此包
   - feat: 新增 CmdExist/CmdAble 用于判别命令是否存在
+  
 - **util**
   - del: 删除 InQue， InQueAny等方法，可使用 rock.ListIndex代替。（此方法与 str 重复提供）
+  
 - **util/fs**
   - pref: 将 fs 包重命名为 util/fs
   - break: 移除 FsReaderWriter 接口（原实验性的）
+  
 - **util/xsql**
 
   - pref: 将 xsql 包重命名为此包名
+  
 - **str**
   
   - del: 删除 InQue， InQueAny等方法，可使用 rock.ListIndex代替
+  
 - **rock**
 
   - feat: 新增方法 ListRemove，由 str.DelQue 泛型化改进而来
   - feat: 新增方法 ListAny，由 str.StrQueueToAny 泛型化改进而来
   - feat: 新增方法 FormatList，由bin.FormatQue 改进而来
+  
 - **data/input**
   
   - feat: 新增方法 Stringer.Bool 用于解析bool数据
   - pref: 方法 Stringer.Int 调整基于 strconv.Atoi
-- **logger**
-  - pref: 优化函数 NewLogger 降低 if 语句的层数
-
-
   
+- **logger**
+  
+  - feat: 加入对 Trace 级别的支持，并且实现日志颜色码（合并v1.4.1/bf985c965ec70638684106931529eab9d62a70）
+  
+  - pref: 优化函数 NewLogger 降低 if 语句的层数
+  
+    
+
+
+
 
 
 

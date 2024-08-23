@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"gitee.com/conero/uymas/v2/cli/ansi"
 	"gitee.com/conero/uymas/v2/rock"
 	"gitee.com/conero/uymas/v2/util/fs"
 	"log"
@@ -19,6 +20,7 @@ type Level int8
 // logging Level constant
 const (
 	LogAll Level = iota
+	LogTrace
 	LogDebug
 	LogInfo
 	LogWarn
@@ -33,6 +35,7 @@ const (
 	LevelWarn  = "warn"
 	LevelInfo  = "info"
 	LevelDebug = "debug"
+	LevelTrace = "trace"
 	LevelNone  = "none"
 )
 
@@ -48,6 +51,8 @@ func Prefix(level Level) string {
 	switch level {
 	case LogAll:
 		prefix = "ALL"
+	case LogTrace:
+		prefix = "TRACE"
 	case LogDebug:
 		prefix = "DEBUG"
 	case LogInfo:
@@ -61,9 +66,41 @@ func Prefix(level Level) string {
 }
 
 type Logger struct {
-	bufDriver *bytes.Buffer // only when Config.Driver is `buffer`
-	logger    *log.Logger
-	Level     Level
+	bufDriver    *bytes.Buffer // only when Config.Driver is `buffer`
+	logger       *log.Logger
+	Level        Level
+	cfg          Config
+	DisableColor bool
+}
+
+func (l *Logger) autoColor(prefix string, level Level) string {
+	if l.cfg.Driver != "" && l.cfg.Driver != DriverStdout {
+		return prefix
+	}
+
+	if l.DisableColor {
+		return prefix
+	}
+
+	var ansiVal int
+	switch level {
+	case LogError:
+		ansiVal = ansi.RedBr
+	case LogWarn:
+		ansiVal = ansi.YellowBr
+	case LogInfo:
+		ansiVal = ansi.GreenBr
+	case LogDebug:
+		ansiVal = ansi.CyanBr
+	case LogTrace:
+		ansiVal = ansi.BlackBr
+	}
+
+	if ansiVal < 1 {
+		return prefix
+	}
+
+	return ansi.Style(prefix, ansiVal)
 }
 
 func (l *Logger) Format(prefix, message string, args ...any) {
@@ -75,7 +112,7 @@ func (l *Logger) formatLevel(level Level, message string, args ...any) {
 	if l.Level > level {
 		return
 	}
-	l.Format(Prefix(level), message, args...)
+	l.Format(l.autoColor(Prefix(level), level), message, args...)
 }
 
 // output logging with callback, logging creator
@@ -84,6 +121,10 @@ func (l *Logger) outputFunc(level Level, callback func() string) {
 		return
 	}
 	l.formatLevel(level, callback())
+}
+
+func (l *Logger) Tracef(message string, args ...any) {
+	l.formatLevel(LogTrace, message, args...)
 }
 
 func (l *Logger) Debugf(message string, args ...any) {
@@ -190,7 +231,9 @@ func ShortCover(short string) (lvlStr string) {
 // NewLogger build a simple logger user it.
 func NewLogger(cfgs ...Config) *Logger {
 	cfg := rock.Param(DefaultConfig, cfgs...)
-	logging := &Logger{}
+	logging := &Logger{
+		cfg: cfg,
+	}
 	// default base log level is `Warn`
 	lv, er := ToLevel(cfg.Level, LogWarn)
 	if er != nil {
