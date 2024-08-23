@@ -20,12 +20,3 @@ func InQuei(s string, que []string) int {
 	}
 	return idx
 }
-
-// StrQueueToAny string slice convert to any slice
-func StrQueueToAny(args []string) []any {
-	var anyQueue []any
-	for _, s := range args {
-		anyQueue = append(anyQueue, s)
-	}
-	return anyQueue
-}

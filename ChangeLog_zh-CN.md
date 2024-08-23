@@ -75,6 +75,7 @@
 - **rock**
 
   - feat: 新增方法 ListRemove，由 str.DelQue 泛型化改进而来
+  - feat: 新增方法 ListAny，由 str.StrQueueToAny 泛型化改进而来
 
 - **data/input**
   

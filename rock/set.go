@@ -112,3 +112,12 @@ func MapSlice[K constraints.KeyIterable, V constraints.ValueIterable](kv map[K]V
 	}
 	return newMap
 }
+
+// ListAny data slice convert to any slice
+func ListAny[T constraints.KeyIterable](vList []T) []any {
+	var anyList []any
+	for _, v := range vList {
+		anyList = append(anyList, v)
+	}
+	return anyList
+}
