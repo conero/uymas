@@ -117,3 +117,5 @@
   - feat: 新增方法 UcFirst
 - **util/tm**
   - feat: 新增与时间相关的操作处理包
+- **uymas**
+  - feat: 新增函数 GetBuildInfo 支持  `-ldflags` 参数注入

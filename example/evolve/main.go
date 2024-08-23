@@ -2,10 +2,12 @@ package main
 
 import (
 	"fmt"
+	"gitee.com/conero/uymas/v2"
 	"gitee.com/conero/uymas/v2/cli/ansi"
 	"gitee.com/conero/uymas/v2/cli/chest"
 	"gitee.com/conero/uymas/v2/cli/evolve"
 	"gitee.com/conero/uymas/v2/util/fs"
+	"runtime"
 )
 
 type test struct {
@@ -44,9 +46,19 @@ func (c *test) DefIndex() {
 
 func main() {
 	evl := evolve.NewEvolve()
-	evl.Command(func() {
+	testCmd := func() {
 		fmt.Println("Evolution For Index.")
-	}, "index")
+		fmt.Println()
+		buildInfo := uymas.GetBuildInfo()
+		if buildInfo != "" {
+			buildInfo = "  " + buildInfo
+		}
+		fmt.Printf("版本信息 v%s/%s%s\n", uymas.Version, uymas.Release, buildInfo)
+		fmt.Printf("build by %s\n", runtime.Version())
+	}
+
+	evl.Index(testCmd)
+	evl.Command(testCmd, "index")
 	evl.Command(new(test), "test", "t")
 	//evl.Run("test", "demo")
 	evl.Run()
