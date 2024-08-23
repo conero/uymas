@@ -25,7 +25,7 @@ func (c *Command) DefIndex() {
 	args := c.X.Args
 	command := args.Command()
 	fmt.Println()
-	fmt.Printf("%s: help information for command  here\n", command)
+	fmt.Printf("%s: help information for command here\n", command)
 }
 
 // DefHelp help/reference command definition
@@ -37,7 +37,10 @@ func (c *Command) DefHelp() {
 	if cmdName != "" {
 		command = "<" + command + " " + cmdName + ">"
 	}
-	fmt.Printf("Default Help: we should add the help information for command %s here, honey!\n\n", command)
+	if command != "" {
+		command += " "
+	}
+	fmt.Printf("Default Help: we should add the help information for command %shere, honey!\n\n", command)
 }
 
 // DefLost No command definition exists

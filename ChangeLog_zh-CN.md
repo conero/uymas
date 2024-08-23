@@ -57,6 +57,7 @@
 - **cli/chest**
 
   - feat: 将原 butil.InputRequire 相关方法迁移到此包
+  - feat: 新增 CmdExist/CmdAble 用于判别命令是否存在
 
 - **util**
   - del: 删除 InQue， InQueAny等方法，可使用 rock.ListIndex代替。（此方法与 str 重复提供）

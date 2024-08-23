@@ -213,7 +213,13 @@ func (e *Evolve[T]) runHelp() {
 	if cmdName != "" {
 		command = "<" + command + " " + cmdName + ">"
 	}
-	fmt.Printf("Default Help: we should add the help information for command %s here, honey!\n\n", command)
+	if command != "" {
+		command += " "
+	}
+	if command != "" {
+		command += " "
+	}
+	fmt.Printf("Default Help: we should add the help information for command %shere, honey!\n\n", command)
 }
 
 // Naming manually set the named mapping to be non-alias, v support: `string`/`func(Param) string`

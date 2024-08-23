@@ -55,7 +55,10 @@ func helpFn(args ...ArgsParser) {
 	if cmdName != "" {
 		command = "<" + command + " " + cmdName + ">"
 	}
-	fmt.Printf("Default Help: we should add the help information for command %s here, honey!\n\n", command)
+	if command != "" {
+		command += " "
+	}
+	fmt.Printf("Default Help: we should add the help information for command %shere, honey!\n\n", command)
 }
 
 // Cli command line struct
