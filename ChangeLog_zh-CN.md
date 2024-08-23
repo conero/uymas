@@ -70,12 +70,14 @@
   - pref: 将 xsql 包重命名为此包名
 
 - **str**
+  
   - del: 删除 InQue， InQueAny等方法，可使用 rock.ListIndex代替
-
+  
 - **rock**
 
   - feat: 新增方法 ListRemove，由 str.DelQue 泛型化改进而来
   - feat: 新增方法 ListAny，由 str.StrQueueToAny 泛型化改进而来
+  - feat: 新增方法 FormatList，由bin.FormatQue 改进而来
 
 - **data/input**
   

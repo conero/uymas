@@ -13,7 +13,7 @@ type test struct {
 func (c *test) Demo() {
 	fmt.Println("test demo, ha!")
 	fmt.Println()
-	fmt.Println("rootPath: " + fs.RootDir())
+	fmt.Println("rootPath: " + fs.RootPath())
 	fmt.Println("rootApp: " + fs.AppName())
 }
 

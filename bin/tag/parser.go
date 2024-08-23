@@ -3,8 +3,8 @@ package tag
 import (
 	"fmt"
 	"gitee.com/conero/uymas/v2/bin"
+	"gitee.com/conero/uymas/v2/rock"
 	"gitee.com/conero/uymas/v2/str"
-	"gitee.com/conero/uymas/v2/util"
 	"reflect"
 	"strings"
 )
@@ -60,7 +60,7 @@ func (c *Parser) parse() bool {
 			if fv != nil && field.Kind() == reflect.Struct {
 				if name, matched := fv.(Name); matched {
 					if name.Name == "" {
-						name.Name = str.Lcfirst(sf.Name)
+						name.Name = str.Str(sf.Name).Lcfirst()
 						field.Set(reflect.ValueOf(name))
 					}
 					c.appName = name
@@ -76,7 +76,7 @@ func (c *Parser) parse() bool {
 						if vs := tg.ValueString(TyAppName); vs != "" {
 							vName = vs
 						} else {
-							str.Lcfirst(sf.Name)
+							str.Str(sf.Name).Lcfirst()
 						}
 						name.Name = vName
 					}
@@ -109,7 +109,7 @@ func (c *Parser) parse() bool {
 
 		tg := ParseTag(cmdStr)
 		if tg != nil {
-			tg.Name = str.Lcfirst(sf.Name)
+			tg.Name = str.Str(sf.Name).Lcfirst()
 			if tg.Type == CmdCommand {
 				c.parseRunnable(tg, field)
 				//fmt.Printf("%v:%#v\n", tg.Name, *tg)
@@ -179,7 +179,7 @@ func (c *Parser) parseCommandTags(tg *Tag, field reflect.Value) {
 			if cTg.Name == "" {
 				name := cTg.ValueString(TyOptionName)
 				if name == "" {
-					name = str.Lcfirst(cSf.Name)
+					name = str.Str(cSf.Name).Lcfirst()
 				}
 				cTg.Name = name
 				if cTg.CheckOption(TyOptionName) {
@@ -336,7 +336,7 @@ func (c *Parser) validCommand(cc *bin.Arg, tag Tag) bool {
 
 	// check not allow setting by register
 	for _, set := range cc.Setting {
-		if util.ListIndex(optionList, set) == -1 {
+		if rock.InList(optionList, set) {
 			fmt.Printf("%v: 选项非法", set)
 			return false
 		}

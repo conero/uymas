@@ -12,7 +12,7 @@ import (
 // NumberOpera @TODO Need to do more optimize.
 // NumberOpera parse string equation for number digital.
 func NumberOpera(equation string) float64 {
-	equation = str.ClearSpace(equation)
+	equation = str.Str(equation).ClearSpace()
 	var result float64
 	// equation contain `()`
 	reg := regexp.MustCompile(`^\([^(]+\)+`)
@@ -119,7 +119,7 @@ func NumberOpera(equation string) float64 {
 
 // string cover float64
 func stringToF64(vStr string) float64 {
-	vStr = str.ClearSpace(vStr)
+	vStr = str.Str(vStr).ClearSpace()
 	if v, er := strconv.ParseFloat(vStr, 64); er == nil {
 		return v
 	}

@@ -119,40 +119,6 @@ func FormatKvSort(kv any, params ...string) string {
 	return s
 }
 
-// FormatQue format the string array, using for cli output pretty.
-// where prefs is empty default use the array index
-func FormatQue(que any, prefs ...string) string {
-	pref := ""  // 开头符号
-	dter := " " // 空格
-	if prefs != nil && len(prefs) > 0 {
-		pref = prefs[0]
-		if len(prefs) > 1 {
-			dter = prefs[1]
-		}
-	}
-	s := ""
-	vt := reflect.ValueOf(que)
-	var queLen int
-	//Only Support Array/Slice, other output itself.
-	if vt.Kind() == reflect.Array || vt.Kind() == reflect.Slice {
-		queLen = vt.Len()
-	} else {
-		return fmt.Sprintf("%v", que)
-	}
-
-	mdLen := 4 + len(strconv.Itoa(queLen))
-	for i := 0; i < queLen; i++ {
-		qVal := vt.Index(i).Interface()
-		if pref == "" {
-			iStr := strconv.Itoa(i) + "."
-			s += iStr + strings.Repeat(dter, mdLen-len(iStr)) + fmt.Sprintf(" %v\n", qVal)
-		} else {
-			s += pref + strings.Repeat(dter, mdLen-len(pref)) + fmt.Sprintf(" %v\n", qVal)
-		}
-	}
-	return s
-}
-
 // FormatTable Table format output by slice:
 //
 //	(table, bool) if is use the idx, table is 2 dimensional array.

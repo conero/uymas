@@ -97,3 +97,32 @@ simple 与 full 的api尽可能保持一致，可用在cli中声明interface接�
   - [ ] 解析输入的字符串为任意用户需要的类型，原始为字符串。`字符串  --> type`
 - [ ] Option 选项
 
+
+
+doc 自动文档设计，使其支持单页动态搜索
+
+```yaml
+# 一级
+- title
+- option       description text,     require,  default
+
+# 支持分组
+- group    
+  - command      description text
+    - option     description text,     require,  default
+    - ...
+    - subCommand      description text
+      - option     description text,     require,  default
+      - ...
+
+# 命令以及选项文档
+- command      description text
+  - option     description text,     require,  default
+  - ...
+  - subCommand      description text
+    - option     description text,     require,  default
+    - ...
+```
+
+
+
