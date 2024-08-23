@@ -14,19 +14,14 @@
 
 ## future
 
-- **bin**
-  - [ ] 是否增加可选的 *cache* 选项，实现对命令行程序缓存，增加程序响应。
-- [ ] 包支持 1.18并使用范类重写方法。(maybe v2.0.0）
+> v2.0.0 开发实现中
 
 
 
 ### todo
 
-- [ ] xini 库的测试，使其可用常规使用
-  - [x] 支持指令，如导入文件
-  - [ ] 是否支持条件，如三元符号或`if-else`
-- [ ] bin 重复注册命令式，提供可选的panic。即提前预知错误（错误检测）
-- [ ] v2.0 为旧版本v1.x的重大重构版本，包结构等进行重
+- [x] v2.0 为旧版本v1.x的重大重构版本，包结构等进行重
+- [ ] doc 自动文档设计，计划在 v2.0.0-alpha.3 中实现 `#240824`
 
 
 
@@ -41,50 +36,43 @@
 - **app/svn**
   
   - pref: 将 svn 包重命名
-  
 - **app/storage**
   
   - pref: 将 storage 包重命名
-  
 - **app/scan**
   
   - feat: 从 fs 包中分离 DirScanner 作为单独包
-  
 - **app/calc**
   
   - feat: 将 `str.Calc` 升级为读取的引用包
-  
 - **cli/chest**
 
   - feat: 将原 butil.InputRequire 相关方法迁移到此包
   - feat: 新增 CmdExist/CmdAble 用于判别命令是否存在
-
 - **util**
   - del: 删除 InQue， InQueAny等方法，可使用 rock.ListIndex代替。（此方法与 str 重复提供）
-
 - **util/fs**
   - pref: 将 fs 包重命名为 util/fs
   - break: 移除 FsReaderWriter 接口（原实验性的）
-
 - **util/xsql**
 
   - pref: 将 xsql 包重命名为此包名
-
 - **str**
   
   - del: 删除 InQue， InQueAny等方法，可使用 rock.ListIndex代替
-  
 - **rock**
 
   - feat: 新增方法 ListRemove，由 str.DelQue 泛型化改进而来
   - feat: 新增方法 ListAny，由 str.StrQueueToAny 泛型化改进而来
   - feat: 新增方法 FormatList，由bin.FormatQue 改进而来
-
 - **data/input**
   
   - feat: 新增方法 Stringer.Bool 用于解析bool数据
   - pref: 方法 Stringer.Int 调整基于 strconv.Atoi
-  
+- **logger**
+  - pref: 优化函数 NewLogger 降低 if 语句的层数
+
+
   
 
 
