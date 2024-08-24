@@ -4,8 +4,10 @@ import (
 	"fmt"
 	"gitee.com/conero/uymas/v2"
 	"gitee.com/conero/uymas/v2/cli"
+	"gitee.com/conero/uymas/v2/logger/lgr"
 	"log"
 	"runtime"
+	"time"
 )
 
 // v2 版本临时程序
@@ -33,6 +35,17 @@ func main() {
 		fmt.Printf("CommandList: %v\n", arg.CommandList())
 		fmt.Println()
 	}, "test")
+	app.Command(func(parser ...cli.ArgsParser) {
+		arg := parser[0]
+		data := arg.SubCommand()
+		if data == "" {
+			data = "日志测试工具，" + time.Now().Format(time.DateTime) + "\n 命令格式 log [data]"
+		}
+		lgr.Trace(data)
+		lgr.Debug(data)
+		lgr.Warn(data)
+		lgr.Error(data)
+	}, "log")
 	err := app.Run()
 	if err != nil {
 		log.Fatalf("命令行执行错误，%v", err)

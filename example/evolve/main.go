@@ -6,8 +6,10 @@ import (
 	"gitee.com/conero/uymas/v2/cli/ansi"
 	"gitee.com/conero/uymas/v2/cli/chest"
 	"gitee.com/conero/uymas/v2/cli/evolve"
+	"gitee.com/conero/uymas/v2/logger/lgr"
 	"gitee.com/conero/uymas/v2/util/fs"
 	"runtime"
+	"time"
 )
 
 type test struct {
@@ -60,6 +62,16 @@ func main() {
 	evl.Index(testCmd)
 	evl.Command(testCmd, "index")
 	evl.Command(new(test), "test", "t")
+	evl.Command(func(arg evolve.Param) {
+		data := arg.Args.SubCommand()
+		if data == "" {
+			data = "日志测试工具，" + time.Now().Format(time.DateTime) + "\n 命令格式 log [data]"
+		}
+		lgr.Trace(data)
+		lgr.Debug(data)
+		lgr.Warn(data)
+		lgr.Error(data)
+	}, "log")
 	//evl.Run("test", "demo")
 	evl.Run()
 }
