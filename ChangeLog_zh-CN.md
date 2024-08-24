@@ -31,6 +31,14 @@
 
 
 
+### v2.0.0-alpha.3/dev
+
+> 移除 cli 包，并优化 cli 命令行解析
+
+- del: 移除包 bin 以及，cmd 下原 uymas 以及uymasDemo等应用
+
+
+
 ### v2.0.0-alpha.2/2024-08-24
 
 - **app/svn**
