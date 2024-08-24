@@ -33,9 +33,13 @@
 
 ### v2.0.0-alpha.3/dev
 
-> 移除 cli 包，并优化 cli 命令行解析
+> 移除 bin 包，并优化 cli 命令行解析
 
 - del: 移除包 bin 以及，cmd 下原 uymas 以及uymasDemo等应用
+- **cli**
+  - feat: Application 新增 CommandList 方法用于注册组数（含别名）
+  - break: 调整 Fn 为 func(ArgsParser)，固定格式使其更统一
+  - break: Application.Command 注册命令时固定为单个参数
 
 
 

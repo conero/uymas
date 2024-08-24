@@ -15,7 +15,7 @@ import (
 // @todo 后期移除（稳定后）
 func main() {
 	app := cli.NewCli()
-	app.Index(func(parser ...cli.ArgsParser) {
+	app.Index(func(cli.ArgsParser) {
 		fmt.Println("欢饮您使用 Uymas v2")
 		fmt.Println()
 		buildInfo := uymas.GetBuildInfo()
@@ -25,8 +25,7 @@ func main() {
 		fmt.Printf("版本信息 v%s/%s%s\n", uymas.Version, uymas.Release, buildInfo)
 		fmt.Printf("build by %s\n", runtime.Version())
 	})
-	app.Command(func(parser ...cli.ArgsParser) {
-		arg := parser[0]
+	app.Command(func(arg cli.ArgsParser) {
 		fmt.Println()
 		fmt.Println("参数解析，数据如下")
 		fmt.Println()
@@ -35,8 +34,7 @@ func main() {
 		fmt.Printf("CommandList: %v\n", arg.CommandList())
 		fmt.Println()
 	}, "test")
-	app.Command(func(parser ...cli.ArgsParser) {
-		arg := parser[0]
+	app.Command(func(arg cli.ArgsParser) {
 		data := arg.SubCommand()
 		if data == "" {
 			data = "日志测试工具，" + time.Now().Format(time.DateTime) + "\n 命令格式 log [data]"

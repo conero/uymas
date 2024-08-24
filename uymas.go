@@ -28,6 +28,9 @@ var (
 	buildAuthor string
 )
 
+// GetBuildInfo Get the relevant version information after injection with the -ldflags parameters gitHash, buildData, buildAuthor.
+//
+// Output format such as: "(buildData gitHash)"
 func GetBuildInfo() string {
 	info := ""
 	if gitHash != "" && buildData != "" {

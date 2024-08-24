@@ -11,7 +11,8 @@ import (
 // Application the command line program routes or parses the interface
 type Application[T any] interface {
 	// Command add command line
-	Command(t T, commands ...string) Application[T]
+	Command(t T, command string) Application[T]
+	CommandList(t T, commands []string) Application[T]
 
 	// Index command line entry method
 	Index(t T) Application[T]
@@ -32,24 +33,22 @@ type Application[T any] interface {
 }
 
 // Fn command line registration function
-type Fn = func(...ArgsParser)
+type Fn = func(ArgsParser)
 
-func entryFn(...ArgsParser) {
+func entryFn(ArgsParser) {
 	fmt.Println()
 	fmt.Println("-------------- Uymas -----------------")
 	fmt.Println("Welcome to our world")
 	fmt.Printf(":)- %s/%s\n", uymas.Version, uymas.Release)
 	fmt.Println()
 }
-func lostFn(args ...ArgsParser) {
-	arg := args[0]
+func lostFn(arg ArgsParser) {
 	fmt.Println()
 	fmt.Printf("%s: We gotta lost, honey!\n    Uymas@%s/%s\n", arg.Command(), uymas.Version, uymas.Release)
 	fmt.Println()
 }
 
-func helpFn(args ...ArgsParser) {
-	arg := args[0]
+func helpFn(arg ArgsParser) {
 	command := arg.Command()
 	cmdName := arg.HelpCmd()
 	if cmdName != "" {
@@ -73,7 +72,12 @@ type Cli struct {
 	registerFn map[string]Fn
 }
 
-func (c *Cli) Command(t Fn, commands ...string) Application[Fn] {
+func (c *Cli) Command(t Fn, cmd string) Application[Fn] {
+	c.CommandList(t, []string{cmd})
+	return c
+}
+
+func (c *Cli) CommandList(t Fn, commands []string) Application[Fn] {
 	for _, cmd := range commands {
 		c.registerFn[cmd] = t
 	}
