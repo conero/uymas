@@ -1,7 +1,7 @@
 package util
 
 import (
-	"gitee.com/conero/uymas/v2/unit"
+	"gitee.com/conero/uymas/v2/util/unit"
 	"testing"
 )
 

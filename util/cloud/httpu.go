@@ -1,4 +1,4 @@
-// Package netutil net util
+// Package netutil net util, Web related assistant tools
 package netutil
 
 import (

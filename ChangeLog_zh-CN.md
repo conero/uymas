@@ -65,27 +65,35 @@
 
   - pref: 将 xsql 包重命名为此包名
   
+- **util/cloud**
+
+  - pref: 将 netutil 重命名为此包
+  
+- **util/unit**
+
+  - pref: 将 unit 包命名为此包
+  
 - **str**
-  
+
   - del: 删除 InQue， InQueAny等方法，可使用 rock.ListIndex代替
-  
+
 - **rock**
 
   - feat: 新增方法 ListRemove，由 str.DelQue 泛型化改进而来
   - feat: 新增方法 ListAny，由 str.StrQueueToAny 泛型化改进而来
   - feat: 新增方法 FormatList，由bin.FormatQue 改进而来
-  
+
 - **data/input**
-  
+
   - feat: 新增方法 Stringer.Bool 用于解析bool数据
   - pref: 方法 Stringer.Int 调整基于 strconv.Atoi
-  
+
 - **logger**
-  
-  - feat: 加入对 Trace 级别的支持，并且实现日志颜色码（合并v1.4.1/bf985c965ec70638684106931529eab9d62a70）
-  
+
+  - feat: 加入对 Trace 级别的支持，并且实现日志颜色码（合并v1.4.1/bf985c）
+
   - pref: 优化函数 NewLogger 降低 if 语句的层数
-  
+
     
 
 
