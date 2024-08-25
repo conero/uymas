@@ -38,7 +38,7 @@ func (c CommandOptional) OptionHelpMsg() string {
 			optList = optList[2:]
 		}
 
-		help := c.Help
+		help := opt.Help
 		if help == "" {
 			help = "为选择参数"
 		}
