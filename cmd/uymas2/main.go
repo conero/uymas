@@ -25,6 +25,7 @@ func main() {
 		fmt.Printf("版本信息 v%s/%s%s\n", uymas.Version, uymas.Release, buildInfo)
 		fmt.Printf("build by %s\n", runtime.Version())
 	})
+
 	app.Command(func(arg cli.ArgsParser) {
 		fmt.Println()
 		fmt.Println("参数解析，数据如下")
@@ -33,7 +34,8 @@ func main() {
 		fmt.Printf("option: %v\n", arg.Option())
 		fmt.Printf("CommandList: %v\n", arg.CommandList())
 		fmt.Println()
-	}, "test")
+	}, "test", cli.Help("参数解析测试命令"))
+
 	app.Command(func(arg cli.ArgsParser) {
 		data := arg.SubCommand()
 		if data == "" {
@@ -43,7 +45,26 @@ func main() {
 		lgr.Debug(data)
 		lgr.Warn(data)
 		lgr.Error(data)
-	}, "log")
+	}, "log", cli.Help("日志输出测试"))
+
+	app.Command(func(parser cli.ArgsParser) {
+		if parser.Switch("simple", "s") {
+			fmt.Println("v" + uymas.Version)
+			return
+		}
+		buildInfo := uymas.GetBuildInfo()
+		if buildInfo != "" {
+			buildInfo = "  " + buildInfo
+		}
+		fmt.Printf("版本信息 v%s/%s%s\n", uymas.Version, uymas.Release, buildInfo)
+		fmt.Printf("build by %s\n", runtime.Version())
+
+	}, "version", cli.Help("版本信息", cli.Option{
+		Name:  "simple",
+		Help:  "输出简单版本",
+		Alias: []string{"s"},
+	}))
+
 	err := app.Run()
 	if err != nil {
 		log.Fatalf("命令行执行错误，%v", err)

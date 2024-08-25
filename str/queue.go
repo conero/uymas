@@ -20,3 +20,14 @@ func InQuei(s string, que []string) int {
 	}
 	return idx
 }
+
+func QueueMaxLen(vList []string) int {
+	var maxLen = 0
+	for _, s := range vList {
+		vLen := len(s)
+		if vLen > maxLen {
+			maxLen = vLen
+		}
+	}
+	return maxLen
+}

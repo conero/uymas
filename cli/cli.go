@@ -6,7 +6,10 @@ package cli
 import (
 	"fmt"
 	"gitee.com/conero/uymas/v2"
+	"gitee.com/conero/uymas/v2/logger/lgr"
 	"gitee.com/conero/uymas/v2/rock"
+	"gitee.com/conero/uymas/v2/str"
+	"strings"
 )
 
 // Application the command line program routes or parses the interface
@@ -47,18 +50,6 @@ func lostFn(arg ArgsParser) {
 	fmt.Println()
 	fmt.Printf("%s: We gotta lost, honey!\n    Uymas@%s/%s\n", arg.Command(), uymas.Version, uymas.Release)
 	fmt.Println()
-}
-
-func helpFn(arg ArgsParser) {
-	command := arg.Command()
-	cmdName := arg.HelpCmd()
-	if cmdName != "" {
-		command = "<" + command + " " + cmdName + ">"
-	}
-	if command != "" {
-		command += " "
-	}
-	fmt.Printf("Default Help: we should add the help information for command %shere, honey!\n\n", command)
 }
 
 type registerMap[T any] struct {
@@ -150,12 +141,80 @@ func (c *Cli) getCall(name string) Fn {
 	return nil
 }
 
+func (c *Cli) generateHelpFn(arg ArgsParser) {
+	cmdName := arg.HelpCmd()
+	helpMsg, isFind := c.GetHelp(cmdName)
+	if isFind {
+		fmt.Println(helpMsg)
+		fmt.Println()
+		return
+	}
+
+	if cmdName != "" {
+		lgr.Warn("命令 " + cmdName + " 不存在")
+	}
+}
+
+func (c *Cli) GetHelp(cmd string) (helpMsg string, exits bool) {
+	if cmd == "" {
+		var lines []string
+		keys := rock.MapKeys(c.registerMap)
+		maxLen := str.QueueMaxLen(keys)
+		for name, reg := range c.registerMap {
+			cmdHelp := reg.Help
+			if cmdHelp == "" {
+				cmdHelp = "这是 " + name + " 命令（默认）"
+			}
+			if len(reg.Alias) > 0 {
+				cmdHelp += "，别名支持 " + strings.Join(reg.Alias, ",")
+			}
+			line := fmt.Sprintf("%-"+(fmt.Sprintf("%d", maxLen+8))+"s", name) + cmdHelp
+			optionHelp := reg.OptionHelpMsg()
+			if optionHelp != "" {
+				line += "\n" + optionHelp
+			}
+			lines = append(lines, line)
+		}
+
+		helpMsg = strings.Join(lines, "\n")
+		exits = true
+		return
+	}
+	reg, hasCmd := c.registerMap[cmd]
+	if !hasCmd {
+		for fName, fReg := range c.registerMap {
+			if rock.InList(fReg.Alias, cmd) {
+				reg = fReg
+				cmd = fName
+				break
+			}
+		}
+	}
+	if !hasCmd {
+		return
+	}
+
+	helpMsg = "命令 " + cmd + "，帮助信息如下：\n\n" + reg.Help
+	if helpMsg == "" {
+		helpMsg = "这是命令"
+	}
+	if len(reg.Alias) > 0 {
+		helpMsg += "，别名 " + strings.Join(reg.Alias, ",")
+	}
+	optionHelp := reg.OptionHelpMsg()
+	if optionHelp != "" {
+		helpMsg += "\n" + optionHelp
+	}
+	exits = true
+	return
+}
+
 func (c *Cli) router() error {
 	args := c.args
 	command := args.Command()
 	helpCall := c.helpFn
 	if helpCall == nil {
-		helpCall = helpFn
+		helpCall = c.generateHelpFn
 	}
 	cfg := c.config
 	if !cfg.DisableHelp && command == "" && args.Switch("help", "h", "?") {
@@ -163,7 +222,6 @@ func (c *Cli) router() error {
 	} else if !cfg.DisableHelp && (command == "help" || command == "?") {
 		helpCall(args)
 	} else if command != "" {
-
 		fn := c.getCall(command)
 		if fn != nil {
 			if c.beforeFn != nil {
@@ -185,12 +243,8 @@ func (c *Cli) router() error {
 
 // NewCli the command line program is instantiated and the driver is as light as possible
 func NewCli(cfgs ...Config) *Cli {
-	config := DefaultConfig
-	if len(cfgs) > 0 {
-		config = cfgs[0]
-	}
 	app := &Cli{
-		config:      config,
+		config:      rock.Param(DefaultConfig, cfgs...),
 		entryFn:     entryFn,
 		lostFn:      lostFn,
 		registerMap: map[string]registerMap[Fn]{},
