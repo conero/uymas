@@ -40,6 +40,7 @@
   - feat: Application 新增 CommandList 方法用于注册组数（含别名）
   - break: 调整 Fn 为 func(ArgsParser)，固定格式使其更统一
   - break: Application.Command 注册命令时固定为单个参数
+  - break: 重构 Cli 结构体，使其支持传统帮助信息等
 
 
 

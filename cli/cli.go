@@ -6,13 +6,14 @@ package cli
 import (
 	"fmt"
 	"gitee.com/conero/uymas/v2"
+	"gitee.com/conero/uymas/v2/rock"
 )
 
 // Application the command line program routes or parses the interface
 type Application[T any] interface {
 	// Command add command line
-	Command(t T, command string) Application[T]
-	CommandList(t T, commands []string) Application[T]
+	Command(t T, command string, optionals ...CommandOptional) Application[T]
+	CommandList(t T, commands []string, optionals ...CommandOptional) Application[T]
 
 	// Index command line entry method
 	Index(t T) Application[T]
@@ -60,26 +61,39 @@ func helpFn(arg ArgsParser) {
 	fmt.Printf("Default Help: we should add the help information for command %shere, honey!\n\n", command)
 }
 
-// Cli command line struct
-type Cli struct {
-	config     Config
-	args       ArgsParser
-	entryFn    Fn
-	lostFn     Fn
-	beforeFn   Fn
-	endFn      Fn
-	helpFn     Fn
-	registerFn map[string]Fn
+type registerMap[T any] struct {
+	CommandOptional
+	runnable T
 }
 
-func (c *Cli) Command(t Fn, cmd string) Application[Fn] {
-	c.CommandList(t, []string{cmd})
+// Cli command line struct
+type Cli struct {
+	config      Config
+	args        ArgsParser
+	entryFn     Fn
+	lostFn      Fn
+	beforeFn    Fn
+	endFn       Fn
+	helpFn      Fn
+	registerMap map[string]registerMap[Fn]
+}
+
+func (c *Cli) Command(t Fn, cmd string, optionals ...CommandOptional) Application[Fn] {
+	c.CommandList(t, []string{cmd}, optionals...)
 	return c
 }
 
-func (c *Cli) CommandList(t Fn, commands []string) Application[Fn] {
-	for _, cmd := range commands {
-		c.registerFn[cmd] = t
+func (c *Cli) CommandList(t Fn, commands []string, optionals ...CommandOptional) Application[Fn] {
+	if len(commands) == 0 {
+		panic("CommandList: a valid parameter commands must be specified, but you provided an empty array")
+	}
+	name := commands[0]
+	optional := rock.Param(CommandOptional{}, optionals...)
+	optional.Alias = commands[1:]
+
+	c.registerMap[name] = registerMap[Fn]{
+		CommandOptional: optional,
+		runnable:        t,
 	}
 	return c
 }
@@ -121,6 +135,21 @@ func (c *Cli) Help(t Fn) Application[Fn] {
 	return c
 }
 
+func (c *Cli) getCall(name string) Fn {
+	register, isMatch := c.registerMap[name]
+	if isMatch {
+		return register.runnable
+	}
+
+	for _, reg := range c.registerMap {
+		if rock.InList(reg.Alias, name) {
+			return reg.runnable
+		}
+	}
+
+	return nil
+}
+
 func (c *Cli) router() error {
 	args := c.args
 	command := args.Command()
@@ -135,8 +164,8 @@ func (c *Cli) router() error {
 		helpCall(args)
 	} else if command != "" {
 
-		fn, match := c.registerFn[args.Command()]
-		if match {
+		fn := c.getCall(command)
+		if fn != nil {
 			if c.beforeFn != nil {
 				c.beforeFn(args)
 			}
@@ -161,10 +190,10 @@ func NewCli(cfgs ...Config) *Cli {
 		config = cfgs[0]
 	}
 	app := &Cli{
-		config:     config,
-		entryFn:    entryFn,
-		lostFn:     lostFn,
-		registerFn: map[string]Fn{},
+		config:      config,
+		entryFn:     entryFn,
+		lostFn:      lostFn,
+		registerMap: map[string]registerMap[Fn]{},
 	}
 	return app
 }
