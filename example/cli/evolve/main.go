@@ -61,7 +61,7 @@ func main() {
 
 	evl.Index(testCmd)
 	evl.Command(testCmd, "index")
-	evl.Command(new(test), "test", "t")
+	evl.CommandList(new(test), []string{"test", "t"})
 	evl.Command(func(arg evolve.Param) {
 		data := arg.Args.SubCommand()
 		if data == "" {

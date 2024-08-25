@@ -43,7 +43,9 @@
   - break: 调整 Fn 为 func(ArgsParser)，固定格式使其更统一
   - break: Application.Command 注册命令时固定为单个参数
   - break: 重构 Cli 结构体，使其支持传统帮助信息等
-- **str**
+- **cli/evolve**
+  - pref: 根据 cli.Application 的调整实现适应性变更
+- ·**str**
   - feat: 新增 QueueMaxLen 函数用于统计数据中长度最大值
 
 

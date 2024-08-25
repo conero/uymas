@@ -22,6 +22,7 @@ type CommandOptional struct {
 	Options []Option
 }
 
+// OptionHelpMsg generate an options help document through the options parameters you set
 func (c CommandOptional) OptionHelpMsg() string {
 	var lines []string
 	for _, opt := range c.Options {
@@ -51,6 +52,7 @@ func (c CommandOptional) OptionHelpMsg() string {
 	return strings.Join(lines, "\n")
 }
 
+// InvalidMsg Determine whether an option is valid by validating the option
 func (c CommandOptional) InvalidMsg(args ArgsParser) string {
 	for _, opt := range c.Options {
 		if opt.ValidFn != nil {
@@ -78,6 +80,7 @@ func (c CommandOptional) InvalidMsg(args ArgsParser) string {
 	return ""
 }
 
+// Help Used to set help information
 func Help(help string, options ...Option) CommandOptional {
 	return CommandOptional{Help: help, Options: options}
 }
