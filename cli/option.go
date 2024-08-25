@@ -10,6 +10,7 @@ type Option struct {
 	Name     string
 	Alias    []string
 	Require  bool
+	ValidFn  func(ArgsParser) string
 	DefValue string
 	Help     string
 }
@@ -48,6 +49,33 @@ func (c CommandOptional) OptionHelpMsg() string {
 
 	}
 	return strings.Join(lines, "\n")
+}
+
+func (c CommandOptional) InvalidMsg(args ArgsParser) string {
+	for _, opt := range c.Options {
+		if opt.ValidFn != nil {
+			invalidMsg := opt.ValidFn(args)
+			if invalidMsg != "" {
+				return invalidMsg
+			}
+		}
+		if !opt.Require {
+			continue
+		}
+
+		alias := []string{opt.Name}
+		alias = append(alias, opt.Alias...)
+		if opt.DefValue != "" || args.Switch(alias...) {
+			continue
+		}
+
+		value := args.Get(alias...)
+		if value == "" {
+			return strings.Join(optionRecoverRawList(alias), ",") + "  必须为选项设置值"
+		}
+
+	}
+	return ""
 }
 
 func Help(help string, options ...Option) CommandOptional {

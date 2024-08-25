@@ -7,6 +7,8 @@ type Config struct {
 	ArgsConfig *ArgsConfig
 	// Disable the default help information
 	DisableHelp bool
+	// In base authentication, the option does not update the option configuration for authentication
+	DisableVerify bool
 }
 
 // DefaultConfig default command line configuration

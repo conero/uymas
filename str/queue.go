@@ -21,6 +21,7 @@ func InQuei(s string, que []string) int {
 	return idx
 }
 
+// QueueMaxLen gets the maximum length of a value in an array
 func QueueMaxLen(vList []string) int {
 	var maxLen = 0
 	for _, s := range vList {

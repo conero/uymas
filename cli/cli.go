@@ -141,6 +141,21 @@ func (c *Cli) getCall(name string) Fn {
 	return nil
 }
 
+func (c *Cli) getRegister(name string) (registerMap[Fn], bool) {
+	register, isMatch := c.registerMap[name]
+	if isMatch {
+		return register, true
+	}
+
+	for _, reg := range c.registerMap {
+		if rock.InList(reg.Alias, name) {
+			return reg, true
+		}
+	}
+
+	return registerMap[Fn]{}, false
+}
+
 func (c *Cli) generateHelpFn(arg ArgsParser) {
 	cmdName := arg.HelpCmd()
 	helpMsg, isFind := c.GetHelp(cmdName)
@@ -222,12 +237,19 @@ func (c *Cli) router() error {
 	} else if !cfg.DisableHelp && (command == "help" || command == "?") {
 		helpCall(args)
 	} else if command != "" {
-		fn := c.getCall(command)
-		if fn != nil {
+		reg, isFind := c.getRegister(command)
+		if isFind {
 			if c.beforeFn != nil {
 				c.beforeFn(args)
 			}
-			fn(args)
+			if !cfg.DisableHelp {
+				invalidMsg := reg.InvalidMsg(args)
+				if invalidMsg != "" {
+					lgr.Error(invalidMsg)
+					return nil
+				}
+			}
+			reg.runnable(args)
 			if c.endFn != nil {
 				c.endFn(args)
 			}

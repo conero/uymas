@@ -60,12 +60,13 @@ func main() {
 		fmt.Printf("build by %s\n", runtime.Version())
 
 	}, "version", cli.Help("版本信息", cli.Option{
-		Name:  "simple",
-		Help:  "输出简单版本",
-		Alias: []string{"s"},
+		Name:    "simple",
+		Help:    "输出简单版本",
+		Require: true,
+		Alias:   []string{"s"},
 	}))
 
-	err := app.Run()
+	err := app.Run("version")
 	if err != nil {
 		log.Fatalf("命令行执行错误，%v", err)
 	}
