@@ -15,6 +15,18 @@ type Option struct {
 	Help     string
 }
 
+// GetName Gets option names automatically compatible with aliases or actual names
+func (c Option) GetName() string {
+	if c.Name != "" {
+		return c.Name
+	}
+
+	if len(c.Alias) > 0 {
+		return c.Alias[0]
+	}
+	return ""
+}
+
 // CommandOptional Used for command registration as a parameter option
 type CommandOptional struct {
 	Help    string
@@ -26,7 +38,11 @@ type CommandOptional struct {
 func (c CommandOptional) OptionHelpMsg() string {
 	var lines []string
 	for _, opt := range c.Options {
-		optList := append([]string{opt.Name}, opt.Alias...)
+		var optList []string
+		if opt.Name != "" {
+			optList = append(optList, opt.Name)
+		}
+		optList = append(optList, opt.Alias...)
 		optList = optionRecoverRawList(optList)
 		var name string
 		var optNum = len(optList)

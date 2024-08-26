@@ -8,7 +8,9 @@ import (
 	"gitee.com/conero/uymas/v2/cli/chest"
 	"gitee.com/conero/uymas/v2/cli/evolve"
 	"gitee.com/conero/uymas/v2/logger/lgr"
+	"gitee.com/conero/uymas/v2/number"
 	"gitee.com/conero/uymas/v2/util/fs"
+	"os"
 	"runtime"
 	"time"
 )
@@ -76,10 +78,29 @@ func main() {
 		lgr.Warn(data)
 		lgr.Error(data)
 	}, "log", cli.Help("日志测试工具", cli.Option{
-		Name:  "name",
-		Alias: []string{"d"},
+		Alias: []string{"data", "d"},
 		Help:  "设置日志输出内容",
 	}))
+
+	evl.Command(func(arg evolve.Param) {
+		flName := arg.Args.Get("file", "f")
+		fi, err := os.Stat(flName)
+		if err != nil {
+			lgr.Error("文件读取错误，%s", err)
+			return
+		}
+		lgr.Info("文件读取成功，主要信息如下：\n"+
+			"文件大小：%s\n"+"mode：%s\n"+"修改日期：%s",
+			number.Bytes(fi.Size()), fi.Mode(), fi.ModTime().Format(time.DateTime))
+	}, "stat", cli.Help("文件信息查看",
+		cli.Option{
+			Name:    "file",
+			Alias:   []string{"f"},
+			Require: true,
+			Help:    "指定文件名称",
+		},
+	))
+
 	//evl.Run("test", "demo")
 	evl.Run()
 }

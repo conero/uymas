@@ -44,6 +44,7 @@
   - break: Application.Command 注册命令时固定为单个参数
   - break: 重构 Cli 结构体，使其支持传统帮助信息等
 - **cli/evolve**
+  - feat: 添加对文档自动生成，选项自动验证的支持
   - pref: 根据 cli.Application 的调整实现适应性变更
 - ·**str**
   - feat: 新增 QueueMaxLen 函数用于统计数据中长度最大值

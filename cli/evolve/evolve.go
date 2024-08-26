@@ -5,10 +5,12 @@ import (
 	"fmt"
 	"gitee.com/conero/uymas/v2"
 	"gitee.com/conero/uymas/v2/cli"
+	"gitee.com/conero/uymas/v2/logger/lgr"
 	"gitee.com/conero/uymas/v2/rock"
 	"gitee.com/conero/uymas/v2/str"
 	"log"
 	"reflect"
+	"strings"
 )
 
 type Evolve[T any] struct {
@@ -18,10 +20,15 @@ type Evolve[T any] struct {
 	helpTodo      T
 	beforeHook    T
 	endHook       T
-	registerMap   map[string]T
+	registerAttr  map[string]registerEvolveAttr[T]
 	registerAlias map[string][]string
 	param         *Param
 	namingMap     map[string]any
+}
+
+type registerEvolveAttr[T any] struct {
+	cli.CommandOptional
+	runnable T
 }
 
 // Command When registering a method you must specify commands to run more than one.
@@ -40,8 +47,13 @@ func (e *Evolve[T]) CommandList(t T, commands []string, optionals ...cli.Command
 		return e
 	}
 
+	optional := rock.Param(cli.CommandOptional{}, optionals...)
+	attr := registerEvolveAttr[T]{
+		CommandOptional: optional,
+		runnable:        t,
+	}
 	for _, cmd := range commands {
-		e.registerMap[cmd] = t
+		e.registerAttr[cmd] = attr
 	}
 	if vNum == 1 {
 		return e
@@ -185,10 +197,17 @@ func (e *Evolve[T]) routerCli() error {
 		command = naming
 	}
 
-	rg, match := e.registerMap[command]
+	rg, match := e.registerAttr[command]
 	if match {
 		e.toRunRg(e.beforeHook)
-		if e.toRunRg(rg) {
+		if !config.DisableHelp {
+			invalidMsg := rg.InvalidMsg(args)
+			if invalidMsg != "" {
+				lgr.Error(invalidMsg)
+				return nil
+			}
+		}
+		if e.toRunRg(rg.runnable) {
 			e.toRunRg(e.endHook)
 		}
 		return nil
@@ -214,19 +233,17 @@ func (e *Evolve[T]) runHelp() {
 		return
 	}
 
-	args := e.param.Args
-	command := args.Command()
-	cmdName := args.HelpCmd()
+	cmdName := e.param.Args.HelpCmd()
+	helpMsg, isFind := e.GetHelp(cmdName)
+	if isFind {
+		fmt.Println(helpMsg)
+		fmt.Println()
+		return
+	}
+
 	if cmdName != "" {
-		command = "<" + command + " " + cmdName + ">"
+		lgr.Warn("命令 " + cmdName + " 不存在")
 	}
-	if command != "" {
-		command += " "
-	}
-	if command != "" {
-		command += " "
-	}
-	fmt.Printf("Default Help: we should add the help information for command %shere, honey!\n\n", command)
 }
 
 // Naming manually set the named mapping to be non-alias, v support: `string`/`func(Param) string`
@@ -262,10 +279,64 @@ func (e *Evolve[T]) NamingFind(cmds ...string) string {
 	return ""
 }
 
+func (e *Evolve[T]) GetHelp(cmd string) (helpMsg string, exits bool) {
+	if cmd == "" {
+		var lines []string
+		keys := rock.MapKeys(e.registerAttr)
+		maxLen := str.QueueMaxLen(keys)
+		for name, reg := range e.registerAttr {
+			cmdHelp := reg.Help
+			if cmdHelp == "" {
+				cmdHelp = "这是 " + name + " 命令（默认）"
+			}
+			if len(reg.Alias) > 0 {
+				cmdHelp += "，别名支持 " + strings.Join(reg.Alias, ",")
+			}
+			line := fmt.Sprintf("%-"+(fmt.Sprintf("%d", maxLen+8))+"s", name) + cmdHelp
+			optionHelp := reg.OptionHelpMsg()
+			if optionHelp != "" {
+				line += "\n" + optionHelp
+			}
+			lines = append(lines, line)
+		}
+
+		helpMsg = strings.Join(lines, "\n")
+		exits = true
+		return
+	}
+	reg, hasCmd := e.registerAttr[cmd]
+	if !hasCmd {
+		for fName, fReg := range e.registerAttr {
+			if rock.InList(fReg.Alias, cmd) {
+				reg = fReg
+				cmd = fName
+				break
+			}
+		}
+	}
+	if !hasCmd {
+		return
+	}
+
+	helpMsg = "命令 " + cmd + "，帮助信息如下：\n\n" + reg.Help
+	if helpMsg == "" {
+		helpMsg = "这是命令"
+	}
+	if len(reg.Alias) > 0 {
+		helpMsg += "，别名 " + strings.Join(reg.Alias, ",")
+	}
+	optionHelp := reg.OptionHelpMsg()
+	if optionHelp != "" {
+		helpMsg += "\n" + optionHelp
+	}
+	exits = true
+	return
+}
+
 func NewEvolve() cli.Application[any] {
 	evl := &Evolve[any]{
-		registerMap:   map[string]any{},
 		registerAlias: map[string][]string{},
+		registerAttr:  map[string]registerEvolveAttr[any]{},
 		namingMap:     map[string]any{},
 	}
 	return evl

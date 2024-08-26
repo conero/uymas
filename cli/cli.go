@@ -52,21 +52,21 @@ func lostFn(arg ArgsParser) {
 	fmt.Println()
 }
 
-type registerMap[T any] struct {
+type registerAttr[T any] struct {
 	CommandOptional
 	runnable T
 }
 
 // Cli command line struct
 type Cli struct {
-	config      Config
-	args        ArgsParser
-	entryFn     Fn
-	lostFn      Fn
-	beforeFn    Fn
-	endFn       Fn
-	helpFn      Fn
-	registerMap map[string]registerMap[Fn]
+	config       Config
+	args         ArgsParser
+	entryFn      Fn
+	lostFn       Fn
+	beforeFn     Fn
+	endFn        Fn
+	helpFn       Fn
+	registerAttr map[string]registerAttr[Fn]
 }
 
 func (c *Cli) Command(t Fn, cmd string, optionals ...CommandOptional) Application[Fn] {
@@ -82,7 +82,7 @@ func (c *Cli) CommandList(t Fn, commands []string, optionals ...CommandOptional)
 	optional := rock.Param(CommandOptional{}, optionals...)
 	optional.Alias = commands[1:]
 
-	c.registerMap[name] = registerMap[Fn]{
+	c.registerAttr[name] = registerAttr[Fn]{
 		CommandOptional: optional,
 		runnable:        t,
 	}
@@ -127,12 +127,12 @@ func (c *Cli) Help(t Fn) Application[Fn] {
 }
 
 func (c *Cli) getCall(name string) Fn {
-	register, isMatch := c.registerMap[name]
+	register, isMatch := c.registerAttr[name]
 	if isMatch {
 		return register.runnable
 	}
 
-	for _, reg := range c.registerMap {
+	for _, reg := range c.registerAttr {
 		if rock.InList(reg.Alias, name) {
 			return reg.runnable
 		}
@@ -141,19 +141,19 @@ func (c *Cli) getCall(name string) Fn {
 	return nil
 }
 
-func (c *Cli) getRegister(name string) (registerMap[Fn], bool) {
-	register, isMatch := c.registerMap[name]
+func (c *Cli) getRegister(name string) (registerAttr[Fn], bool) {
+	register, isMatch := c.registerAttr[name]
 	if isMatch {
 		return register, true
 	}
 
-	for _, reg := range c.registerMap {
+	for _, reg := range c.registerAttr {
 		if rock.InList(reg.Alias, name) {
 			return reg, true
 		}
 	}
 
-	return registerMap[Fn]{}, false
+	return registerAttr[Fn]{}, false
 }
 
 func (c *Cli) generateHelpFn(arg ArgsParser) {
@@ -173,9 +173,9 @@ func (c *Cli) generateHelpFn(arg ArgsParser) {
 func (c *Cli) GetHelp(cmd string) (helpMsg string, exits bool) {
 	if cmd == "" {
 		var lines []string
-		keys := rock.MapKeys(c.registerMap)
+		keys := rock.MapKeys(c.registerAttr)
 		maxLen := str.QueueMaxLen(keys)
-		for name, reg := range c.registerMap {
+		for name, reg := range c.registerAttr {
 			cmdHelp := reg.Help
 			if cmdHelp == "" {
 				cmdHelp = "这是 " + name + " 命令（默认）"
@@ -195,9 +195,9 @@ func (c *Cli) GetHelp(cmd string) (helpMsg string, exits bool) {
 		exits = true
 		return
 	}
-	reg, hasCmd := c.registerMap[cmd]
+	reg, hasCmd := c.registerAttr[cmd]
 	if !hasCmd {
-		for fName, fReg := range c.registerMap {
+		for fName, fReg := range c.registerAttr {
 			if rock.InList(fReg.Alias, cmd) {
 				reg = fReg
 				cmd = fName
@@ -266,10 +266,10 @@ func (c *Cli) router() error {
 // NewCli the command line program is instantiated and the driver is as light as possible
 func NewCli(cfgs ...Config) *Cli {
 	app := &Cli{
-		config:      rock.Param(DefaultConfig, cfgs...),
-		entryFn:     entryFn,
-		lostFn:      lostFn,
-		registerMap: map[string]registerMap[Fn]{},
+		config:       rock.Param(DefaultConfig, cfgs...),
+		entryFn:      entryFn,
+		lostFn:       lostFn,
+		registerAttr: map[string]registerAttr[Fn]{},
 	}
 	return app
 }
