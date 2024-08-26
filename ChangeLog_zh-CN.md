@@ -47,8 +47,15 @@
 - **cli/evolve**
   - feat: 添加对文档自动生成，选项自动验证的支持
   - pref: 根据 cli.Application 的调整实现适应性变更
+- **cli/gen**
+  - feat: 新增包用于实现命令行下数据生成如值转变
+  - feat: 新增函数  ArgsDress 实现命令行参数到结构体值的装扮
+
 - ·**str**
   - feat: 新增 QueueMaxLen 函数用于统计数据中长度最大值
+- **data/convert**
+  - feat: 新增方法 SetByStr、SetByStrSlice实现字符串到其他基础类型的赋值
+
 
 
 
