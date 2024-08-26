@@ -38,6 +38,7 @@ type ArgsParser interface {
 
 	// HelpCmd get help command
 	HelpCmd(params ...[]string) string
+	SetOptional(*CommandOptional) ArgsParser
 }
 
 type ArgsConfig struct {
@@ -60,6 +61,7 @@ type Args struct {
 	option      []string
 	values      map[string][]string
 	config      ArgsConfig
+	optional    *CommandOptional
 	ArgsParser
 }
 
@@ -170,6 +172,11 @@ func (c *Args) Join(seq string, keys ...string) string {
 	if len(values) > 0 {
 		return strings.Join(values, seq)
 	}
+
+	if c.optional != nil {
+		return c.optional.GetDefault(keys...)
+	}
+
 	return ""
 }
 
@@ -299,6 +306,11 @@ func (c *Args) Uint64(keys ...string) uint64 {
 		return input.Stringer(value).Uint64()
 	}
 	return 0
+}
+
+func (c *Args) SetOptional(optional *CommandOptional) ArgsParser {
+	c.optional = optional
+	return c
 }
 
 func NewArgs(args ...string) ArgsParser {

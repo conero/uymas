@@ -2,6 +2,7 @@ package cli
 
 import (
 	"fmt"
+	"gitee.com/conero/uymas/v2/rock"
 	"strings"
 )
 
@@ -27,11 +28,24 @@ func (c Option) GetName() string {
 	return ""
 }
 
+func (c Option) GetKeys() []string {
+	var keys []string
+	if c.Name != "" {
+		keys = append(keys, c.Name)
+	}
+
+	if len(c.Alias) > 0 {
+		keys = append(keys, c.Alias...)
+	}
+	return keys
+}
+
 // CommandOptional Used for command registration as a parameter option
 type CommandOptional struct {
-	Help    string
-	Alias   []string
-	Options []Option
+	Help        string
+	Alias       []string
+	Options     []Option
+	SubCommands []CommandOptional
 }
 
 // OptionHelpMsg generate an options help document through the options parameters you set
@@ -92,6 +106,17 @@ func (c CommandOptional) InvalidMsg(args ArgsParser) string {
 			return strings.Join(optionRecoverRawList(alias), ",") + "  必须为选项设置值"
 		}
 
+	}
+	return ""
+}
+
+func (c CommandOptional) GetDefault(keys ...string) string {
+	for _, opt := range c.Options {
+		for _, key := range keys {
+			if rock.InList(opt.GetKeys(), key) {
+				return opt.DefValue
+			}
+		}
 	}
 	return ""
 }

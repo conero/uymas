@@ -33,8 +33,16 @@ func main() {
 		fmt.Printf("value: %v\n", arg.Values())
 		fmt.Printf("option: %v\n", arg.Option())
 		fmt.Printf("CommandList: %v\n", arg.CommandList())
+		option := arg.List("option", "O")
+		if len(option) > 0 {
+			fmt.Printf("Read option: %v\n", arg.Get(option...))
+		}
+
 		fmt.Println()
-	}, "test", cli.Help("参数解析测试命令"))
+	}, "test", cli.Help("参数解析测试命令", cli.Option{
+		Alias: []string{"option", "O"},
+		Help:  "测试读取选项值",
+	}))
 
 	app.Command(func(arg cli.ArgsParser) {
 		data := arg.SubCommand()
@@ -62,11 +70,11 @@ func main() {
 	}, "version", cli.Help("版本信息", cli.Option{
 		Name:    "simple",
 		Help:    "输出简单版本",
-		Require: true,
+		Require: false,
 		Alias:   []string{"s"},
 	}))
 
-	err := app.Run("version")
+	err := app.Run()
 	if err != nil {
 		log.Fatalf("命令行执行错误，%v", err)
 	}

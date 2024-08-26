@@ -237,6 +237,7 @@ func (c *Cli) router() error {
 	} else if command != "" {
 		reg, isFind := c.getRegister(command)
 		if isFind {
+			args.SetOptional(&reg.CommandOptional)
 			if c.beforeFn != nil {
 				c.beforeFn(args)
 			}

@@ -196,6 +196,7 @@ func (e *Evolve[T]) routerCli() error {
 
 	rg, match := e.registerAttr[command]
 	if match {
+		args.SetOptional(&rg.CommandOptional)
 		e.toRunRg(e.beforeHook)
 		if !config.DisableHelp {
 			invalidMsg := rg.InvalidMsg(args)
