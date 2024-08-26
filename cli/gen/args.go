@@ -6,6 +6,7 @@ import (
 	"gitee.com/conero/uymas/v2/data/convert"
 	"gitee.com/conero/uymas/v2/str"
 	"reflect"
+	"regexp"
 	"strings"
 )
 
@@ -14,12 +15,13 @@ import (
 //
 // json tag is also supported when cmd is not set.
 //
-// syntax rules: "cmd>>json>>FileName".
+// syntax rules of name: "cmd>>json>>FileName".
 const ArgsTagName = "cmd"
+const ArgsCmdRequired = "required"
+const ArgsCmdHelp = "help"
+const ArgsCmdDefault = "default"
 
-// ArgsDress Dress the command argument up on the specified data entity (struct)
-func ArgsDress(args cli.ArgsParser, data any) error {
-	ref := reflect.ValueOf(data)
+func argsValueCheck(ref reflect.Value) (reflect.Value, error) {
 	isStruct := ref.Kind() == reflect.Struct
 	isPtr := false
 	if ref.Kind() == reflect.Ptr {
@@ -28,13 +30,25 @@ func ArgsDress(args cli.ArgsParser, data any) error {
 	}
 
 	if !isStruct {
-		return errors.New("data: the param of ArgsDress only support struct")
+		return reflect.Value{}, errors.New("data: the param of ArgsDress only support struct")
 	}
 
-	rtp := ref.Type()
+	rValue := ref
 	if isPtr {
-		rtp = ref.Elem().Type()
+		rValue = ref.Elem()
 	}
+
+	return rValue, nil
+}
+
+// ArgsDress Dress the command argument up on the specified data entity (struct)
+func ArgsDress(args cli.ArgsParser, data any) error {
+	ref := reflect.ValueOf(data)
+	realValue, err := argsValueCheck(ref)
+	if err != nil {
+		return err
+	}
+	rtp := realValue.Type()
 
 	for i := 0; i < rtp.NumField(); i++ {
 		fieldType := rtp.Field(i)
@@ -47,11 +61,7 @@ func ArgsDress(args cli.ArgsParser, data any) error {
 		}
 
 		var vFiled reflect.Value
-		if isPtr {
-			vFiled = ref.Elem().Field(i)
-		} else {
-			vFiled = ref.Field(i)
-		}
+		vFiled = realValue.Field(i)
 
 		keys := strings.Split(str.Str(name).ClearSpace(), ",")
 		vfKind := vFiled.Kind()
@@ -74,7 +84,74 @@ func ArgsDress(args cli.ArgsParser, data any) error {
 
 // ArgsDecompose Decompose the structure into an option list
 // todo needTodo
-func ArgsDecompose(data any) []cli.Option {
-	panic("todo")
-	//return nil
+func ArgsDecompose(data any) ([]cli.Option, error) {
+	ref := reflect.ValueOf(data)
+	realValue, err := argsValueCheck(ref)
+	if err != nil {
+		return nil, err
+	}
+	rtp := realValue.Type()
+
+	var optionList []cli.Option
+	for i := 0; i < rtp.NumField(); i++ {
+		fieldType := rtp.Field(i)
+		cmdTag := fieldType.Tag.Get(ArgsTagName)
+		option := OptionTagParse(cmdTag)
+		var name string
+		if option == nil {
+			if name == "" {
+				name = fieldType.Tag.Get("json")
+			}
+			if name == "" {
+				name = str.Str(fieldType.Name).LowerStyle()
+			}
+			option = &cli.Option{
+				Alias: []string{name},
+			}
+		}
+
+		optionList = append(optionList, *option)
+	}
+	return optionList, nil
+}
+
+// OptionTagParse Resolves the value of the tag into an option object
+//
+// syntax rules of tag: `"name,n required default:111 help:help msg"`.
+func OptionTagParse(vTag string) *cli.Option {
+	if vTag == "" {
+		return nil
+	}
+	spaceList := regexp.MustCompile(`\s{2,}`)
+	vTag = spaceList.ReplaceAllString(vTag, " ")
+	vTag = strings.TrimSpace(vTag)
+	if vTag == "" {
+		return nil
+	}
+
+	option := &cli.Option{}
+	for i, s := range strings.Split(vTag, " ") {
+		if i == 0 && !strings.Contains(s, ":") {
+			option.Alias = strings.Split(str.Str(s).ClearSpace(), ",")
+			continue
+		}
+		if s == ArgsCmdRequired {
+			option.Require = true
+			continue
+		}
+
+		idx := strings.Index(s, ":")
+		if idx > 0 {
+			key := s[:idx]
+			value := s[idx+1:]
+			switch key {
+			case ArgsCmdHelp:
+				option.Help = value
+			case ArgsCmdDefault:
+				option.DefValue = value
+			}
+		}
+	}
+
+	return option
 }

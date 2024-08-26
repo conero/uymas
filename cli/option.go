@@ -8,12 +8,12 @@ import (
 
 // Option Used for command option parsing document generation, or value validation and retrieval
 type Option struct {
-	Name     string
-	Alias    []string
-	Require  bool
-	ValidFn  func(ArgsParser) string
-	DefValue string
-	Help     string
+	Name     string                  `json:"name"`
+	Alias    []string                `json:"alias"`
+	Require  bool                    `json:"require"`
+	ValidFn  func(ArgsParser) string `json:"-"`
+	DefValue string                  `json:"defValue"`
+	Help     string                  `json:"help"`
 }
 
 // GetName Gets option names automatically compatible with aliases or actual names
