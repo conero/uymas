@@ -1,5 +1,11 @@
 package cli
 
+import (
+	"fmt"
+	"gitee.com/conero/uymas/v2"
+	"gitee.com/conero/uymas/v2/util/fs"
+)
+
 // Config command line program configuration item
 type Config struct {
 	Title      string
@@ -13,5 +19,27 @@ type Config struct {
 
 // DefaultConfig default command line configuration
 var DefaultConfig = Config{
-	Title: "uymas",
+	DisableVerify: false,
+	DisableHelp:   false,
+}
+
+// IndexDoc Generate a default entry title
+func (c Config) IndexDoc() {
+	if c.Head != "" {
+		title := c.Title
+		if title == "" {
+			title = fs.AppName()
+		}
+		fmt.Println()
+		fmt.Println("-------------- " + title + " -----------------")
+		fmt.Println(c.Head)
+		fmt.Println()
+		return
+	}
+
+	fmt.Println()
+	fmt.Println("-------------- Uymas/Evolution -----------------")
+	fmt.Println("Welcome to our world")
+	fmt.Printf(":)- %s/%s\n", uymas.Version, uymas.Release)
+	fmt.Println()
 }

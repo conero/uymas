@@ -166,11 +166,8 @@ func (e *Evolve[T]) runIndex() {
 		return
 	}
 
-	fmt.Println()
-	fmt.Println("-------------- Uymas/Evolution -----------------")
-	fmt.Println("Welcome to our world")
-	fmt.Printf(":)- %s/%s\n", uymas.Version, uymas.Release)
-	fmt.Println()
+	config := e.config
+	config.IndexDoc()
 }
 
 func (e *Evolve[T]) routerCli() error {
@@ -333,8 +330,9 @@ func (e *Evolve[T]) GetHelp(cmd string) (helpMsg string, exits bool) {
 	return
 }
 
-func NewEvolve() cli.Application[any] {
+func NewEvolve(cfgs ...cli.Config) cli.Application[any] {
 	evl := &Evolve[any]{
+		config:        rock.Param(cli.DefaultConfig, cfgs...),
 		registerAlias: map[string][]string{},
 		registerAttr:  map[string]registerEvolveAttr[any]{},
 		namingMap:     map[string]any{},

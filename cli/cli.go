@@ -39,13 +39,6 @@ type Application[T any] interface {
 // Fn command line registration function
 type Fn = func(ArgsParser)
 
-func entryFn(ArgsParser) {
-	fmt.Println()
-	fmt.Println("-------------- Uymas -----------------")
-	fmt.Println("Welcome to our world")
-	fmt.Printf(":)- %s/%s\n", uymas.Version, uymas.Release)
-	fmt.Println()
-}
 func lostFn(arg ArgsParser) {
 	fmt.Println()
 	fmt.Printf("%s: We gotta lost, honey!\n    Uymas@%s/%s\n", arg.Command(), uymas.Version, uymas.Release)
@@ -170,6 +163,11 @@ func (c *Cli) generateHelpFn(arg ArgsParser) {
 	}
 }
 
+func (c *Cli) generateEntryFn(arg ArgsParser) {
+	config := c.config
+	config.IndexDoc()
+}
+
 func (c *Cli) GetHelp(cmd string) (helpMsg string, exits bool) {
 	if cmd == "" {
 		var lines []string
@@ -267,9 +265,9 @@ func (c *Cli) router() error {
 func NewCli(cfgs ...Config) *Cli {
 	app := &Cli{
 		config:       rock.Param(DefaultConfig, cfgs...),
-		entryFn:      entryFn,
 		lostFn:       lostFn,
 		registerAttr: map[string]registerAttr[Fn]{},
 	}
+	app.entryFn = app.generateEntryFn
 	return app
 }
