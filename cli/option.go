@@ -8,6 +8,7 @@ import (
 
 // Option Used for command option parsing document generation, or value validation and retrieval
 type Option struct {
+	//@todo Name and Alias will merge into single field: Keys
 	Name     string                  `json:"name"`
 	Alias    []string                `json:"alias"`
 	Require  bool                    `json:"require"`
