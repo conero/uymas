@@ -56,11 +56,12 @@ func main() {
 				}
 				mkOptionList = append(mkOptionList, mkQueue...)
 			}
-			lgr.Info("创建生成测试命令如下：\n%s", strings.Join(mkOptionList, " "))
+			lgr.Info("创建生成测试命令如下：\n%s\n\n", strings.Join(mkOptionList, " "))
 			fmt.Printf("消耗时间：%s\n", spendFn())
 			return
 		}
 
+		fmt.Println()
 		fmt.Println()
 		lgr.Info("使用时间：%s\n", spendFn())
 	}, "test", cli.Help("参数解析测试命令",
