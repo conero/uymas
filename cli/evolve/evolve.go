@@ -24,7 +24,7 @@ type Evolve[T any] struct {
 	namingMap     map[string]any
 }
 
-// CommandList When registering a method you must specify commands to run more than one.
+// Command When registering a method you must specify commands to run more than one.
 // We agreed that the second and subsequent commands should be aliases for the first command.
 func (e *Evolve[T]) Command(t T, command string, optionals ...cli.CommandOptional) cli.Application[T] {
 	e.CommandList(t, []string{command}, optionals...)

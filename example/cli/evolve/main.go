@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"gitee.com/conero/uymas/v2"
+	"gitee.com/conero/uymas/v2/cli"
 	"gitee.com/conero/uymas/v2/cli/ansi"
 	"gitee.com/conero/uymas/v2/cli/chest"
 	"gitee.com/conero/uymas/v2/cli/evolve"
@@ -60,10 +61,13 @@ func main() {
 	}
 
 	evl.Index(testCmd)
-	evl.Command(testCmd, "index")
-	evl.CommandList(new(test), []string{"test", "t"})
+	evl.Command(testCmd, "index", cli.Help("索引测试命令"))
+	evl.CommandList(new(test), []string{"test", "t"}, cli.Help("命令测试"))
 	evl.Command(func(arg evolve.Param) {
 		data := arg.Args.SubCommand()
+		if data == "" {
+			data = arg.Args.Get("data", "d")
+		}
 		if data == "" {
 			data = "日志测试工具，" + time.Now().Format(time.DateTime) + "\n 命令格式 log [data]"
 		}
@@ -71,7 +75,11 @@ func main() {
 		lgr.Debug(data)
 		lgr.Warn(data)
 		lgr.Error(data)
-	}, "log")
+	}, "log", cli.Help("日志测试工具", cli.Option{
+		Name:  "name",
+		Alias: []string{"d"},
+		Help:  "设置日志输出内容",
+	}))
 	//evl.Run("test", "demo")
 	evl.Run()
 }
