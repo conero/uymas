@@ -74,6 +74,7 @@ func (c *Cli) CommandList(t Fn, commands []string, optionals ...CommandOptional)
 	name := commands[0]
 	optional := rock.Param(CommandOptional{}, optionals...)
 	optional.Alias = commands[1:]
+	optional.Keys = commands
 
 	c.registerAttr[name] = registerAttr[Fn]{
 		CommandOptional: optional,

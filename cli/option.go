@@ -43,8 +43,11 @@ func (c Option) GetKeys() []string {
 
 // CommandOptional Used for command registration as a parameter option
 type CommandOptional struct {
-	Help        string
-	Alias       []string
+	Help  string
+	Name  string
+	Alias []string
+	// A command list that includes commands and aliases
+	Keys        []string
 	Options     []Option
 	SubCommands []CommandOptional
 }
@@ -85,6 +88,15 @@ func (c CommandOptional) OptionHelpMsg() string {
 
 // InvalidMsg Determine whether an option is valid by validating the option
 func (c CommandOptional) InvalidMsg(args ArgsParser) string {
+	subCommand := args.SubCommand()
+	if subCommand != "" && len(c.SubCommands) > 0 {
+		for _, sco := range c.SubCommands {
+			if rock.InList(sco.Keys, subCommand) {
+				return sco.InvalidMsg(args)
+			}
+		}
+	}
+
 	for _, opt := range c.Options {
 		if opt.ValidFn != nil {
 			invalidMsg := opt.ValidFn(args)
@@ -125,6 +137,11 @@ func (c CommandOptional) GetDefault(keys ...string) string {
 // Help Used to set help information
 func Help(help string, options ...Option) CommandOptional {
 	return CommandOptional{Help: help, Options: options}
+}
+
+// HelpSub Used to set help information for the subcommand for top command
+func HelpSub(help string, commands ...CommandOptional) CommandOptional {
+	return CommandOptional{Help: help, SubCommands: commands}
 }
 
 func optionRecoverRaw(option string) string {

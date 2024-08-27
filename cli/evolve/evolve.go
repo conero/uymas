@@ -48,6 +48,8 @@ func (e *Evolve[T]) CommandList(t T, commands []string, optionals ...cli.Command
 	}
 
 	optional := rock.Param(cli.CommandOptional{}, optionals...)
+	optional.Alias = commands[1:]
+	optional.Keys = commands
 	attr := registerEvolveAttr[T]{
 		CommandOptional: optional,
 		runnable:        t,
