@@ -41,6 +41,23 @@ func (c Option) GetKeys() []string {
 	return keys
 }
 
+func (c Option) IsRequire() Option {
+	c.Require = true
+	return c
+}
+
+func (c Option) Default(s string) Option {
+	c.DefValue = s
+	return c
+}
+
+func OptionHelp(help string, keys ...string) Option {
+	return Option{
+		Help:  help,
+		Alias: keys,
+	}
+}
+
 // CommandOptional Used for command registration as a parameter option
 type CommandOptional struct {
 	Help  string
@@ -50,10 +67,17 @@ type CommandOptional struct {
 	Keys        []string
 	Options     []Option
 	SubCommands []CommandOptional
+	// Whether the subcommand is an entry
+	IsEntry bool
 }
 
 // OptionHelpMsg generate an options help document through the options parameters you set
-func (c CommandOptional) OptionHelpMsg() string {
+func (c CommandOptional) OptionHelpMsg(levels ...int) string {
+	level := rock.Param(0, levels...)
+	pref := ""
+	if level > 0 {
+		pref = fmt.Sprintf("%-"+fmt.Sprintf("%d", level*4)+"s", " ")
+	}
 	var lines []string
 	for _, opt := range c.Options {
 		var optList []string
@@ -80,8 +104,46 @@ func (c CommandOptional) OptionHelpMsg() string {
 		if len(optList) > 0 {
 			line += "，支持别名 " + strings.Join(optList, ",")
 		}
-		lines = append(lines, line)
+		lines = append(lines, pref+line)
 
+	}
+	return strings.Join(lines, "\n")
+}
+
+func (c CommandOptional) SubCommandHelpMsg(levels ...int) string {
+	level := rock.Param(0, levels...)
+	pref := ""
+	if level > 0 {
+		pref = fmt.Sprintf("%-"+fmt.Sprintf("%d", level*4)+"s", " ")
+	}
+	var lines []string
+	for _, sub := range c.SubCommands {
+		if sub.IsEntry {
+			continue
+		}
+
+		keyNum := len(sub.Keys)
+		if keyNum == 0 {
+			continue
+		}
+		name := sub.Keys[0]
+		keys := sub.Keys[1:]
+		help := sub.Help
+		if help == "" {
+			help = "子命令"
+		}
+
+		alias := ""
+		if keyNum > 1 {
+			alias = "，支持别名 " + strings.Join(keys, ",")
+		}
+		line := name + "    " + help + alias
+		optHelp := sub.OptionHelpMsg(level)
+		if optHelp != "" {
+			line += "\n" + optHelp
+		}
+
+		lines = append(lines, pref+line)
 	}
 	return strings.Join(lines, "\n")
 }
@@ -132,6 +194,22 @@ func (c CommandOptional) GetDefault(keys ...string) string {
 		}
 	}
 	return ""
+}
+
+// NameAlias Set a command or alias, used for subcommand document registration
+func (c CommandOptional) NameAlias(name string, alias ...string) CommandOptional {
+	c.Name = name
+	c.Alias = append(c.Alias, alias...)
+	c.Keys = append(c.Keys, name)
+	c.Keys = append(c.Keys, alias...)
+	return c
+}
+
+// SubEntry Marked as a subcommand entry
+func (c CommandOptional) SubEntry() CommandOptional {
+	c.IsEntry = true
+	c.Name = ""
+	return c
 }
 
 // Help Used to set help information

@@ -104,7 +104,15 @@ func main() {
 
 	evl.Index(testCmd)
 	evl.Command(testCmd, "index", cli.Help("索引测试命令"))
-	evl.CommandList(new(test), []string{"test", "t"}, cli.Help("命令测试"))
+	evl.CommandList(new(test), []string{"test", "t"},
+		cli.HelpSub("命令测试",
+			cli.Help("测试工具",
+				cli.Option{Name: "verbose", Alias: []string{"V"}, Help: "详细输出内容"},
+				cli.OptionHelp("设置需读取选项名称", "option", "O"),
+				cli.OptionHelp("生成用于测试的命令选项数", "make-number", "M"),
+				cli.Option{}).NameAlias("test"),
+			cli.Help("命令示例").NameAlias("demo"),
+		))
 	evl.Command(func(arg evolve.Param) {
 		data := arg.Args.SubCommand()
 		if data == "" {

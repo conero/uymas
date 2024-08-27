@@ -297,6 +297,10 @@ func (e *Evolve[T]) GetHelp(cmd string) (helpMsg string, exits bool) {
 			if optionHelp != "" {
 				line += "\n" + optionHelp
 			}
+			subHelpMsg := reg.SubCommandHelpMsg(2)
+			if subHelpMsg != "" {
+				line += "\n" + subHelpMsg
+			}
 			lines = append(lines, line)
 		}
 
