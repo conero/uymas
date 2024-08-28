@@ -3,6 +3,7 @@ package number
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 )
 
@@ -135,4 +136,19 @@ func Factorial(n uint64) uint64 {
 		amass *= i
 	}
 	return amass
+}
+
+// Round String method processing float equal length data specified digits
+func Round(num float64, b int) float64 {
+	if b == 0 {
+		return float64(int(num))
+	}
+	n2t := int(num * math.Pow10(b))    //num转换数
+	base := int(num * math.Pow10(b+1)) //四舍五入的最后一位数
+	base = int(math.Abs(float64(base - n2t*10)))
+	if base > 5 {
+		n2t += 1
+	}
+	num = float64(int(num)) + float64(n2t)/math.Pow10(b)
+	return num
 }

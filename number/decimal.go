@@ -1,4 +1,4 @@
-package util
+package number
 
 import (
 	"gitee.com/conero/uymas/v2/str"
@@ -82,4 +82,14 @@ func (d *Decimal) T62() string {
 // NewDec decimal system
 func NewDec(dec int) *Decimal {
 	return &Decimal{dec}
+}
+
+// DecT36 Data conversion
+func DecT36(num int) string {
+	return (&Decimal{num}).T36()
+}
+
+// DecT62 Data conversion
+func DecT62(num int) string {
+	return (&Decimal{num}).T62()
 }

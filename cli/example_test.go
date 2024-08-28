@@ -4,7 +4,7 @@ import "fmt"
 
 func ExampleNewCli() {
 	cl := NewCli()
-	cl.Index(func(parser ...ArgsParser) {
+	cl.Index(func(args ArgsParser) {
 		fmt.Println("Hello World, Uymas")
 	})
 	err := cl.Run()

@@ -19,7 +19,7 @@ func ExampleNewEvolve() {
 	}, "index")
 
 	// register struct
-	evl.Command(new(test), "test", "t")
+	evl.CommandList(new(test), []string{"test", "t"})
 	log.Fatal(evl.Run())
 }
 

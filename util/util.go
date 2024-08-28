@@ -1,39 +1,15 @@
 // Package util implements other tool more, like type cover, type value check.
+//
+// Usually based on the reflection implementation
 package util
 
 import (
-	"math"
 	"reflect"
 )
 
 // @Date：   2018/10/30 0030 13:26
 // @Author:  Joshua Conero
 // @Name:    工具栏
-
-// Round String method processing float equal length data specified digits
-func Round(num float64, b int) float64 {
-	if b == 0 {
-		return float64(int(num))
-	}
-	n2t := int(num * math.Pow10(b))    //num转换数
-	base := int(num * math.Pow10(b+1)) //四舍五入的最后一位数
-	base = int(math.Abs(float64(base - n2t*10)))
-	if base > 5 {
-		n2t += 1
-	}
-	num = float64(int(num)) + float64(n2t)/math.Pow10(b)
-	return num
-}
-
-// DecT36 Data conversion
-func DecT36(num int) string {
-	return (&Decimal{num}).T36()
-}
-
-// DecT62 Data conversion
-func DecT62(num int) string {
-	return (&Decimal{num}).T62()
-}
 
 // NullDefault null value handler to default.
 func NullDefault(value, def any) any {
