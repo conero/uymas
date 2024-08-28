@@ -54,15 +54,13 @@ func (e *Evolve[T]) CommandList(t T, commands []string, optionals ...cli.Command
 		CommandOptional: optional,
 		runnable:        t,
 	}
-	for _, cmd := range commands {
-		e.registerAttr[cmd] = attr
-	}
+	// remember the command of alias.
+	mainCmd := commands[0]
+	e.registerAttr[mainCmd] = attr
 	if vNum == 1 {
 		return e
 	}
 
-	// remember the command of alias.
-	mainCmd := commands[0]
 	e.registerAlias[mainCmd] = commands[1:]
 	return e
 }
@@ -172,6 +170,23 @@ func (e *Evolve[T]) runIndex() {
 	config.IndexDoc()
 }
 
+// find reg support both name and alias.
+func (e *Evolve[T]) findReg(name string) (reg registerEvolveAttr[T], isFind bool) {
+	reg, isFind = e.registerAttr[name]
+	if isFind {
+		return
+	}
+
+	for key, alias := range e.registerAlias {
+		if rock.InList(alias, name) {
+			isFind = true
+			reg = e.registerAttr[key]
+			return
+		}
+	}
+	return
+}
+
 func (e *Evolve[T]) routerCli() error {
 	param := e.param
 	config := e.config
@@ -196,7 +211,7 @@ func (e *Evolve[T]) routerCli() error {
 		command = naming
 	}
 
-	rg, match := e.registerAttr[command]
+	rg, match := e.findReg(command)
 	if match {
 		args.SetOptional(&rg.CommandOptional)
 		e.toRunRg(e.beforeHook)
