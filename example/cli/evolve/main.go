@@ -7,6 +7,7 @@ import (
 	"gitee.com/conero/uymas/v2/cli/ansi"
 	"gitee.com/conero/uymas/v2/cli/chest"
 	"gitee.com/conero/uymas/v2/cli/evolve"
+	"gitee.com/conero/uymas/v2/cli/gen"
 	"gitee.com/conero/uymas/v2/logger/lgr"
 	"gitee.com/conero/uymas/v2/number"
 	"gitee.com/conero/uymas/v2/str"
@@ -18,6 +19,12 @@ import (
 	"strings"
 	"time"
 )
+
+type testArgs struct {
+	Port int    `cmd:"port,p default:8080 help:设置端口号"`
+	Addr string `cmd:"addr,a default::9000 help:设置外部请求地址"`
+	Host string `cmd:"host,h required help:设置服务地址"`
+}
 
 type test struct {
 	evolve.Command
@@ -89,6 +96,18 @@ func (c *test) DefIndex() {
 	fmt.Println("您在使用 test 命令")
 }
 
+func (c *test) Arg() {
+	param := testArgs{}
+	err := gen.ArgsDress(c.X.Args, &param)
+	if err != nil {
+		lgr.Info("解析值错误，%v", err)
+		return
+	}
+
+	lgr.Info("解析到的值如下：\n%#v", param)
+
+}
+
 func main() {
 	evl := evolve.NewEvolve()
 	testCmd := func() {
@@ -104,6 +123,7 @@ func main() {
 
 	evl.Index(testCmd)
 	evl.Command(testCmd, "index", cli.Help("索引测试命令"))
+	testArgsOpts, _ := gen.ArgsDecompose(testArgs{})
 	evl.CommandList(new(test), []string{"test", "t"},
 		cli.HelpSub("命令测试",
 			cli.Help("测试工具",
@@ -112,6 +132,7 @@ func main() {
 				cli.OptionHelp("生成用于测试的命令选项数", "make-number", "M"),
 				cli.Option{}).NameAlias("test"),
 			cli.Help("命令示例").NameAlias("demo"),
+			cli.Help("参数值测试", testArgsOpts...).NameAlias("arg"),
 		))
 	evl.Command(func(arg evolve.Param) {
 		data := arg.Args.SubCommand()

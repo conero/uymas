@@ -174,6 +174,13 @@ func (c *Args) Join(seq string, keys ...string) string {
 	}
 
 	if c.optional != nil {
+		subCommand := c.SubCommand()
+		if subCommand != "" {
+			subOptional, isFind := c.optional.SubCommand(subCommand)
+			if isFind {
+				return subOptional.GetDefault(keys...)
+			}
+		}
 		return c.optional.GetDefault(keys...)
 	}
 

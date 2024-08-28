@@ -42,6 +42,7 @@
   - feat: 实现命令行参数选项可配置的验证
   - feat: Args 读取参数是支持注册命令时选项默认值
   - feat: 新增函数 HelpSub 实现对子命令的帮助信息的注册
+  - feat: 新增方法 CommandOptional.SubCommand 用于获取子集 CommandOptional，实现递归
   - break: 调整 Fn 为 func(ArgsParser)，固定格式使其更统一
   - break: Application.Command 注册命令时固定为单个参数
   - break: 重构 Cli 结构体，使其支持传统帮助信息等
@@ -52,11 +53,13 @@
   - feat: 新增包用于实现命令行下数据生成如值转变
   - feat: 新增函数  ArgsDress 实现命令行参数到结构体值的装扮
   - feat: 新增函数 ArgsDecompose 、OptionTagParse实现对struct以及 tag 的解析
-
 - ·**str**
   - feat: 新增 QueueMaxLen 函数用于统计数据中长度最大值
 - **data/convert**
   - feat: 新增方法 SetByStr、SetByStrSlice实现字符串到其他基础类型的赋值
+- **example/cli/evolve**
+  - feat: 新增二级命令 test args 用于测试参数自动获取
+
 
 
 

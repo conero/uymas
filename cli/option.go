@@ -98,11 +98,17 @@ func (c CommandOptional) OptionHelpMsg(levels ...int) string {
 
 		help := opt.Help
 		if help == "" {
-			help = "为选择参数"
+			help = "支持参数选项"
+		}
+		if opt.Require {
+			help = "* " + help
 		}
 		line := "    " + name + "    " + help
 		if len(optList) > 0 {
 			line += "，支持别名 " + strings.Join(optList, ",")
+		}
+		if opt.DefValue != "" {
+			line += "，默认值“" + opt.DefValue + "”"
 		}
 		lines = append(lines, pref+line)
 
@@ -170,7 +176,10 @@ func (c CommandOptional) InvalidMsg(args ArgsParser) string {
 			continue
 		}
 
-		alias := []string{opt.Name}
+		var alias []string
+		if opt.Name != "" {
+			alias = append(alias, opt.Name)
+		}
 		alias = append(alias, opt.Alias...)
 		if opt.DefValue != "" || args.Switch(alias...) {
 			continue
@@ -210,6 +219,17 @@ func (c CommandOptional) SubEntry() CommandOptional {
 	c.IsEntry = true
 	c.Name = ""
 	return c
+}
+
+func (c CommandOptional) SubCommand(subName string) (optional CommandOptional, isFind bool) {
+	for _, co := range c.SubCommands {
+		if rock.InList(co.Keys, subName) {
+			optional = co
+			isFind = true
+			return
+		}
+	}
+	return
 }
 
 // Help Used to set help information
