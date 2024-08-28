@@ -1,3 +1,4 @@
+// Package calc enter string equations to implement numeric arithmetic
 package calc
 
 import (

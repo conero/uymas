@@ -1,3 +1,4 @@
+// Package constraints The stereotype extension type definition is used for function /type annotations
 package constraints
 
 type SignedInteger interface {

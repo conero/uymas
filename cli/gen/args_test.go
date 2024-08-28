@@ -9,11 +9,11 @@ import (
 
 type dressData struct {
 	Off        bool   `cmd:"off,O,close required help:请求数据关闭"`
-	Name       string `json:"name,N"`
+	Name       string `cmd:"name,N"`
 	Score      float32
 	Age        int
 	SupportExt []string
-	Rates      []float32 `json:"rates,rate,R"`
+	Rates      []float32 `cmd:"rates,rate,R"`
 	Data       []string  `cmd:"data,d required help:输入数组列表，支持列表"`
 }
 
