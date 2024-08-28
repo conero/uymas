@@ -4,6 +4,7 @@ import (
 	"errors"
 	"gitee.com/conero/uymas/v2/cli"
 	"gitee.com/conero/uymas/v2/data/convert"
+	"gitee.com/conero/uymas/v2/rock"
 	"gitee.com/conero/uymas/v2/str"
 	"reflect"
 	"regexp"
@@ -83,7 +84,7 @@ func ArgsDress(args cli.ArgsParser, data any) error {
 }
 
 // ArgsDecompose Decompose the structure into an option list
-func ArgsDecompose(data any) ([]cli.Option, error) {
+func ArgsDecompose(data any, excludes ...string) ([]cli.Option, error) {
 	ref := reflect.ValueOf(data)
 	realValue, err := argsValueCheck(ref)
 	if err != nil {
@@ -104,9 +105,14 @@ func ArgsDecompose(data any) ([]cli.Option, error) {
 			if name == "" {
 				name = str.Str(fieldType.Name).LowerStyle()
 			}
+			if rock.InList(excludes, name) {
+				continue
+			}
 			option = &cli.Option{
 				Alias: []string{name},
 			}
+		} else if rock.InList(excludes, option.Name) {
+			continue
 		}
 
 		optionList = append(optionList, *option)
