@@ -10,6 +10,18 @@ func ExampleFormatList() {
 	fmt.Println("列表输出如下：\n" + s)
 }
 
+func ExampleFormatKv() {
+	s := FormatKv(map[string]any{
+		"name":    "Joshua Conero",
+		"meeting": 20.1,
+	})
+	fmt.Println("列表输出如下：\n" + s)
+
+	// Output:
+	// name       Joshua Conero
+	// meeting    20.1
+}
+
 // 用于执行 Example 用例
 //func TestExample(t *testing.T) {
 //	ExampleFormatList()
