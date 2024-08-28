@@ -147,3 +147,30 @@ doc 自动文档设计，使其支持单页动态搜索
 
 
 
+##### 帮助命令
+
+支持帮助命令
+
+```shell
+# 全局命令行
+$ --help
+$ -h
+
+# 查看 command 命令的帮助信息
+$ --help command
+# 查看 command 命令的帮助信息
+$ -h command
+
+#
+$ command --help
+$ command -h
+
+# ?
+$ command --help sub-command
+$ command -h sub-command
+
+# ?
+$ help sub-command
+$ ? sub-command
+```
+

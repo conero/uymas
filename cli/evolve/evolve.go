@@ -195,7 +195,11 @@ func (e *Evolve[T]) routerCli() error {
 	if !config.DisableHelp {
 		command := args.Command()
 		isHelp := command == "help" || command == "?"
-		if isHelp || args.Switch("help", "h") {
+		if !isHelp {
+			helpSwitch := args.Switch("help", "h", "?")
+			isHelp = command == "" && helpSwitch
+		}
+		if isHelp {
 			e.runHelp()
 			return nil
 		}
