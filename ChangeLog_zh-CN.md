@@ -60,6 +60,10 @@
 - **example/cli/evolve**
   - feat: 新增二级命令 test args 用于测试参数自动获取
 
+- **rock**
+  - feat: 新增函数 MapKeysString 用于map提取keys为字符串数组
+  - feat: 实现 FormatKv 函数逻辑
+
 
 
 
@@ -67,7 +71,6 @@
 ### v2.0.0-alpha.2/2024-08-24
 
 - **app/svn**
-  
   - pref: 将 svn 包重命名
 - **app/storage**
   

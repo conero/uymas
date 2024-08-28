@@ -1,6 +1,9 @@
 package rock
 
-import "gitee.com/conero/uymas/v2/rock/constraints"
+import (
+	"fmt"
+	"gitee.com/conero/uymas/v2/rock/constraints"
+)
 
 // MapAssign Merge multiple map parameters, where the same key value is the forward overwrite value.
 //
@@ -15,4 +18,12 @@ func MapAssign[K constraints.KeyIterable, V any](source map[K]V, more ...map[K]V
 		}
 	}
 	return source
+}
+
+func MapKeysString[K constraints.KeyIterable, V any](data map[K]V) []string {
+	var keys []string
+	for k, _ := range data {
+		keys = append(keys, fmt.Sprintf("%v", k))
+	}
+	return keys
 }
