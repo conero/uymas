@@ -151,9 +151,9 @@ func OptionTagParse(vTag string) *cli.Option {
 			value := s[idx+1:]
 			switch key {
 			case ArgsCmdHelp:
-				option.Help = value
+				option.Help = str.Str(value).Unescape()
 			case ArgsCmdDefault:
-				option.DefValue = value
+				option.DefValue = str.Str(value).Unescape()
 			}
 		}
 	}
