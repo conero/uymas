@@ -55,6 +55,7 @@
   - feat: 新增函数 ArgsDecompose 、OptionTagParse实现对struct以及 tag 的解析
 - ·**str**
   - feat: 新增 QueueMaxLen 函数用于统计数据中长度最大值
+  - feat: 新增函数 str.Unescape 用于将转移符号进行处理
 - **data/convert**
   - feat: 新增方法 SetByStr、SetByStrSlice实现字符串到其他基础类型的赋值
 - **example/cli/evolve**

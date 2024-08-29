@@ -14,7 +14,7 @@ type dressData struct {
 	Age        int
 	SupportExt []string
 	Rates      []float32 `cmd:"rates,rate,R"`
-	Data       []string  `cmd:"data,d required help:输入数组列表，支持列表"`
+	Data       []string  `cmd:"data,d required help:输入数组列表，\\s\\s支持列表"`
 }
 
 func TestArgsDress(t *testing.T) {
@@ -47,5 +47,6 @@ func TestArgsDecompose(t *testing.T) {
 	} else {
 		bys, _ := json.Marshal(optionsList)
 		t.Logf("解析后的数据：\n%s", string(bys))
+		t.Logf("%#v", optionsList[len(optionsList)-1])
 	}
 }

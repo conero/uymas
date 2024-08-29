@@ -176,6 +176,39 @@ func (s Str) Reverse() string {
 	return strings.Join(sNewQue, "")
 }
 
+// Unescape Parses transcoding symbols in strings, support \s|\n
+func (s Str) Unescape() string {
+	vLen := len(s)
+	var newString []rune
+	nextDiscard := false
+	for i, c := range s {
+		if nextDiscard {
+			nextDiscard = false
+			continue
+		}
+		if c != '\\' {
+			newString = append(newString, c)
+			continue
+		}
+		if i == vLen-1 {
+			newString = append(newString, c)
+			continue
+		}
+		next := s[i+1]
+		if next == 's' {
+			newString = append(newString, ' ')
+			nextDiscard = true
+			continue
+		} else if next == 'n' {
+			newString = append(newString, '\n')
+			nextDiscard = true
+			continue
+		}
+	}
+	return string(newString)
+
+}
+
 // PadLeft string pad substring from left.
 func PadLeft(s string, pad string, le int) string {
 	sLen := len(s)

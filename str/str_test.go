@@ -173,6 +173,38 @@ func TestStr_CamelCase(t *testing.T) {
 
 }
 
+func TestStr_Unescape(t *testing.T) {
+	line := `空格字符测试\sj\so\ss\sh\su\sa\s.`
+	ref := `空格字符测试 j o s h u a .`
+	rel := Str(line).Unescape()
+
+	// case
+	testFn := func() {
+		if ref != rel {
+			t.Errorf("解析错误：%#v ≠ %#v", rel, ref)
+		}
+	}
+	testFn()
+
+	//case
+	line = `换行符 j\nc.`
+	ref = "换行符 j\nc."
+	rel = Str(line).Unescape()
+	testFn()
+
+	//case
+	line = `\s`
+	ref = " "
+	rel = Str(line).Unescape()
+	testFn()
+
+	//case
+	line = `\n`
+	ref = "\n"
+	rel = Str(line).Unescape()
+	testFn()
+}
+
 func BenchmarkRandString_SafeStr(b *testing.B) {
 	b.ResetTimer()
 	bit := 35
