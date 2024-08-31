@@ -78,7 +78,8 @@ func (c CommandOptional) OptionHelpMsg(levels ...int) string {
 	if level > 0 {
 		pref = fmt.Sprintf("%-"+fmt.Sprintf("%d", level*4)+"s", " ")
 	}
-	var lines []string
+	var pairList [][2]string
+	maxLen := 0
 	for _, opt := range c.Options {
 		var optList []string
 		if opt.Name != "" {
@@ -103,15 +104,23 @@ func (c CommandOptional) OptionHelpMsg(levels ...int) string {
 		if opt.Require {
 			help = "* " + help
 		}
-		line := "    " + name + "    " + help
+		line := help
 		if len(optList) > 0 {
 			line += "，支持别名 " + strings.Join(optList, ",")
 		}
 		if opt.DefValue != "" {
 			line += "，默认值“" + opt.DefValue + "”"
 		}
-		lines = append(lines, pref+line)
+		if nameLen := len(name); nameLen > maxLen {
+			maxLen = nameLen
+		}
+		pairList = append(pairList, [2]string{name, line})
+	}
 
+	var lines []string
+	for _, pair := range pairList {
+		line := pref + "    " + fmt.Sprintf("%-"+fmt.Sprintf("%d", maxLen+4)+"s", pair[0]) + pair[1]
+		lines = append(lines, line)
 	}
 	return strings.Join(lines, "\n")
 }
@@ -120,9 +129,11 @@ func (c CommandOptional) SubCommandHelpMsg(levels ...int) string {
 	level := rock.Param(0, levels...)
 	pref := ""
 	if level > 0 {
-		pref = fmt.Sprintf("%-"+fmt.Sprintf("%d", level*4)+"s", " ")
+		pref = fmt.Sprintf("%-"+fmt.Sprintf("%d", level*2)+"s", " ")
 	}
-	var lines []string
+
+	var pairList [][2]string
+	var maxLen = 0
 	for _, sub := range c.SubCommands {
 		if sub.IsEntry {
 			continue
@@ -143,13 +154,20 @@ func (c CommandOptional) SubCommandHelpMsg(levels ...int) string {
 		if keyNum > 1 {
 			alias = "，支持别名 " + strings.Join(keys, ",")
 		}
-		line := name + "    " + help + alias
+		line := help + alias
 		optHelp := sub.OptionHelpMsg(level)
 		if optHelp != "" {
 			line += "\n" + optHelp
 		}
+		if vLen := len(name); vLen > maxLen {
+			maxLen = vLen
+		}
+		pairList = append(pairList, [2]string{name, line})
+	}
 
-		lines = append(lines, pref+line)
+	var lines []string
+	for _, pair := range pairList {
+		lines = append(lines, pref+fmt.Sprintf("%-"+fmt.Sprintf("%d", maxLen+2)+"s", pair[0])+pair[1])
 	}
 	return strings.Join(lines, "\n")
 }
