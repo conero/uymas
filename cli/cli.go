@@ -221,6 +221,10 @@ func (c *Cli) GetHelp(cmd string) (helpMsg string, exits bool) {
 	if optionHelp != "" {
 		helpMsg += "\n" + optionHelp
 	}
+	commandHelp := reg.SubCommandHelpMsg()
+	if commandHelp != "" {
+		helpMsg += "\n\n子级命令菜单如下\n" + commandHelp
+	}
 	exits = true
 	return
 }
