@@ -38,7 +38,6 @@ func InputOption(title, def string) string {
 		if text == "" {
 			text = def
 		}
-		break
 	}
 	return text
 }

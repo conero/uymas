@@ -7,6 +7,6 @@ import "time"
 func SpendFn() func() time.Duration {
 	now := time.Now()
 	return func() time.Duration {
-		return time.Now().Sub(now)
+		return time.Since(now)
 	}
 }

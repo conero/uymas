@@ -19,7 +19,7 @@ func StrSingLine(data [][]string, args ...string) any {
 		input := ts[1]
 		output := ts[2]
 		if expected != output {
-			if args != nil && len(args) > 0 {
+			if len(args) > 0 {
 				return fmt.Sprintf(args[0], expected, input, output)
 			} else {
 				return false
