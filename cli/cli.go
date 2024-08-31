@@ -202,6 +202,7 @@ func (c *Cli) GetHelp(cmd string) (helpMsg string, exits bool) {
 			if rock.InList(fReg.Alias, cmd) {
 				reg = fReg
 				cmd = fName
+				hasCmd = true
 				break
 			}
 		}

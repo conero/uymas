@@ -332,9 +332,10 @@ func (e *Evolve[T]) GetHelp(cmd string) (helpMsg string, exits bool) {
 	reg, hasCmd := e.registerAttr[cmd]
 	if !hasCmd {
 		for fName, fReg := range e.registerAttr {
-			if rock.InList(fReg.Alias, cmd) {
+			if rock.InList(fReg.Keys, cmd) {
 				reg = fReg
 				cmd = fName
+				hasCmd = true
 				break
 			}
 		}
