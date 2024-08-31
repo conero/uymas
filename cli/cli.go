@@ -9,6 +9,7 @@ import (
 	"gitee.com/conero/uymas/v2/logger/lgr"
 	"gitee.com/conero/uymas/v2/rock"
 	"gitee.com/conero/uymas/v2/str"
+	"sort"
 	"strings"
 )
 
@@ -174,7 +175,9 @@ func (c *Cli) GetHelp(cmd string) (helpMsg string, exits bool) {
 		var lines []string
 		keys := rock.MapKeys(c.registerAttr)
 		maxLen := str.QueueMaxLen(keys)
-		for name, reg := range c.registerAttr {
+		sort.Strings(keys)
+		for _, name := range keys {
+			reg := c.registerAttr[name]
 			cmdHelp := reg.Help
 			if cmdHelp == "" {
 				cmdHelp = "这是 " + name + " 命令（默认）"
@@ -189,7 +192,6 @@ func (c *Cli) GetHelp(cmd string) (helpMsg string, exits bool) {
 			}
 			lines = append(lines, line)
 		}
-
 		helpMsg = strings.Join(lines, "\n")
 		exits = true
 		return

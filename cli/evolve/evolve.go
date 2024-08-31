@@ -10,6 +10,7 @@ import (
 	"gitee.com/conero/uymas/v2/str"
 	"log"
 	"reflect"
+	"sort"
 	"strings"
 )
 
@@ -303,15 +304,17 @@ func (e *Evolve[T]) GetHelp(cmd string) (helpMsg string, exits bool) {
 		var lines []string
 		keys := rock.MapKeys(e.registerAttr)
 		maxLen := str.QueueMaxLen(keys)
-		for name, reg := range e.registerAttr {
+		sort.Strings(keys)
+		for _, key := range keys {
+			reg := e.registerAttr[key]
 			cmdHelp := reg.Help
 			if cmdHelp == "" {
-				cmdHelp = "这是 " + name + " 命令（默认）"
+				cmdHelp = "这是 " + key + " 命令（默认）"
 			}
 			if len(reg.Alias) > 0 {
 				cmdHelp += "，别名支持 " + strings.Join(reg.Alias, ",")
 			}
-			line := fmt.Sprintf("%-"+(fmt.Sprintf("%d", maxLen+8))+"s", name) + cmdHelp
+			line := fmt.Sprintf("%-"+(fmt.Sprintf("%d", maxLen+8))+"s", key) + cmdHelp
 			optionHelp := reg.OptionHelpMsg()
 			if optionHelp != "" {
 				line += "\n" + optionHelp
@@ -322,7 +325,6 @@ func (e *Evolve[T]) GetHelp(cmd string) (helpMsg string, exits bool) {
 			}
 			lines = append(lines, line)
 		}
-
 		helpMsg = strings.Join(lines, "\n")
 		exits = true
 		return
