@@ -95,7 +95,7 @@ func TestStr_Reverse(t *testing.T) {
 		xs := ts[1]
 		ys := Str(xs).Reverse()
 		if ref != ys {
-			t.Fatal(fmt.Sprintf("%s != [Reverse(%s)] => %s", ref, xs, ys))
+			t.Fatalf("%s != [Reverse(%s)] => %s", ref, xs, ys)
 		}
 	}
 }
@@ -105,7 +105,7 @@ func _strTestCompare(data [][]string, t *testing.T) {
 		out := dd[1]
 		compare := dd[0]
 		if compare != out {
-			t.Fatal(fmt.Sprintf("%s != %s(compare vs out)", compare, out))
+			t.Fatalf("%s != %s(compare vs out)", compare, out)
 		}
 	}
 }

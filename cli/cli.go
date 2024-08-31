@@ -121,21 +121,6 @@ func (c *Cli) Help(t Fn) Application[Fn] {
 	return c
 }
 
-func (c *Cli) getCall(name string) Fn {
-	register, isMatch := c.registerAttr[name]
-	if isMatch {
-		return register.runnable
-	}
-
-	for _, reg := range c.registerAttr {
-		if rock.InList(reg.Alias, name) {
-			return reg.runnable
-		}
-	}
-
-	return nil
-}
-
 func (c *Cli) getRegister(name string) (registerAttr[Fn], bool) {
 	register, isMatch := c.registerAttr[name]
 	if isMatch {

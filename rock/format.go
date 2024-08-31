@@ -8,7 +8,6 @@ import (
 
 // FormatKv @todo neet to test
 func FormatKv[K constraints.KeyIterable, V any](data map[K]V) string {
-	var keys []string
 	var maxLen = 0
 	var stringMap = map[string]V{}
 	for k, v := range data {
@@ -17,7 +16,6 @@ func FormatKv[K constraints.KeyIterable, V any](data map[K]V) string {
 		if kLen > maxLen {
 			maxLen = kLen
 		}
-		keys = append(keys, kStr)
 		stringMap[kStr] = v
 	}
 

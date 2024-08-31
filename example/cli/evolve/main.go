@@ -171,5 +171,5 @@ func main() {
 	))
 
 	//evl.Run("test", "demo")
-	evl.Run()
+	_ = evl.Run()
 }

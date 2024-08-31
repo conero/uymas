@@ -2,7 +2,6 @@
 package scan
 
 import (
-	"errors"
 	"fmt"
 	"gitee.com/conero/uymas/v2/util/fs"
 	"os"
@@ -96,7 +95,7 @@ func (ds *DirScanner) Scan() error {
 		ds.AllItem = ds.AllDirItem + ds.AllFileItem
 		ds.Runtime = time.Since(start)
 	} else {
-		err = errors.New(fmt.Sprintf("%v is not a valid dir.", baseDir))
+		err = fmt.Errorf("%v is not a valid dir", baseDir)
 	}
 	return err
 }
@@ -199,7 +198,7 @@ func (ds *DirScanner) ScanParallel() error {
 		ds.AllItem = ds.AllDirItem + ds.AllFileItem
 		ds.Runtime = time.Since(start)
 	} else {
-		err = errors.New(fmt.Sprintf("%v is not a valid dir.", baseDir))
+		err = fmt.Errorf("%v is not a valid dir", baseDir)
 	}
 	return err
 }

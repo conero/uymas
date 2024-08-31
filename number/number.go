@@ -105,17 +105,17 @@ func SumQInt(data []int) int {
 func AnyInt64(v any) int64 {
 	var i64 int64
 	if v != nil {
-		switch v.(type) {
+		switch value := v.(type) {
 		case int64:
-			i64 = v.(int64)
+			i64 = value
 		case int32:
-			i64 = int64(v.(int32))
+			i64 = int64(value)
 		case int:
-			i64 = int64(v.(int))
+			i64 = int64(value)
 		case int16:
-			i64 = int64(v.(int16))
+			i64 = int64(value)
 		case int8:
-			i64 = int64(v.(int8))
+			i64 = int64(value)
 		default:
 			if i, er := strconv.ParseInt(fmt.Sprintf("%v", v), 10, 64); er == nil {
 				i64 = i

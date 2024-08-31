@@ -61,8 +61,7 @@ func ArgsDress(args cli.ArgsParser, data any) error {
 			name = str.Str(fieldType.Name).LowerStyle()
 		}
 
-		var vFiled reflect.Value
-		vFiled = realValue.Field(i)
+		var vFiled = realValue.Field(i)
 
 		keys := strings.Split(str.Str(name).ClearSpace(), ",")
 		vfKind := vFiled.Kind()

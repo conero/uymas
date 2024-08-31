@@ -258,7 +258,6 @@ func TestStructToMap(t *testing.T) {
 
 	// reflect.Ptr
 	ty := &Ty{}
-	ty = &tt
 	t.Logf("Ty -> %#v", ty)
 	t.Logf("%v", StructToMap(ty))
 

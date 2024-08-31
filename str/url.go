@@ -22,7 +22,7 @@ func (u Url) AbsHref(vpath, vurl string) string {
 	var href string
 
 	// 需要解析， vurl 含 http(s)://
-	if strings.Index(vurl, "http://") > -1 || strings.Index(vurl, "https://") > -1 {
+	if strings.Contains(vurl, "http://") || strings.Contains(vurl, "https://") {
 		if u, err := url.Parse(vurl); err == nil {
 			uHost := u.Scheme + "://" + u.Host
 
