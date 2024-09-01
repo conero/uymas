@@ -178,6 +178,24 @@ func main() {
 		},
 	))
 
+	evl.Lost(func(arg cli.ArgsParser) {
+		name := arg.Command()
+		raw := args.Raw()
+		raw = raw[1:]
+		output, isSearch, err := chest.CmdSearchRun(name, raw, "bin/")
+		if isSearch {
+			if err != nil {
+				lgr.Error(err.Error())
+				return
+			}
+			lgr.Info("子级命令搜索到，输入内容如下：")
+			fmt.Println(output)
+			return
+		}
+
+		lgr.Warn("%s: 命令不存在", name)
+	})
+
 	//evl.Run("test", "demo")
 	_ = evl.RunArgs(args)
 }

@@ -38,6 +38,7 @@ type ArgsParser interface {
 
 	// HelpCmd get help command
 	HelpCmd(params ...[]string) string
+	Raw() []string
 	SetOptional(*CommandOptional) ArgsParser
 }
 
@@ -318,6 +319,10 @@ func (c *Args) Uint64(keys ...string) uint64 {
 func (c *Args) SetOptional(optional *CommandOptional) ArgsParser {
 	c.optional = optional
 	return c
+}
+
+func (c *Args) Raw() []string {
+	return c.raw
 }
 
 func NewArgs(args ...string) ArgsParser {

@@ -26,7 +26,7 @@ func CmdAble(cmd string) bool {
 }
 
 // CmdSearchRun try the search command and execute it
-func CmdSearchRun(cmd string, args []string, children ...string) (output string, runErr error) {
+func CmdSearchRun(cmd string, args []string, children ...string) (output string, isSearch bool, runErr error) {
 	baseDir := fs.RootPath()
 	toRunFn := func(rlPath string) bool {
 		execPath, err := exec.LookPath(rlPath)
@@ -43,15 +43,17 @@ func CmdSearchRun(cmd string, args []string, children ...string) (output string,
 	}
 
 	if toRunFn(baseDir + cmd) {
+		isSearch = true
 		return
 	}
 
 	for _, child := range children {
 		rlPath := fs.StdPathName(baseDir + child + "/" + cmd)
 		if toRunFn(rlPath) {
+			isSearch = true
 			return
 		}
 	}
 
-	return "", fmt.Errorf("%s is not exist", cmd)
+	return "", false, fmt.Errorf("%s is not exist", cmd)
 }
