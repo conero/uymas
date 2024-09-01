@@ -112,6 +112,12 @@ func (e *Evolve[T]) callFunc(fn reflect.Value) bool {
 	case func(...cli.ArgsParser):
 		callValue(e.param.Args)
 		isSuccess = true
+	case func(Param):
+		callValue(*e.param)
+		isSuccess = true
+	case func(*Param):
+		callValue(e.param)
+		isSuccess = true
 	}
 	return isSuccess
 }
@@ -234,8 +240,9 @@ func (e *Evolve[T]) routerCli() error {
 		}
 		if e.toRunRg(rg.runnable) {
 			e.toRunRg(e.endHook)
+			return nil
 		}
-		return nil
+		return fmt.Errorf("%s: run register runnale failed", command)
 	}
 
 	if e.toRunRg(e.lostTodo) {

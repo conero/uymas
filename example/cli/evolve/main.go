@@ -197,5 +197,8 @@ func main() {
 	})
 
 	//evl.Run("test", "demo")
-	_ = evl.RunArgs(args)
+	err := evl.RunArgs(args)
+	if err != nil {
+		lgr.Error(err.Error())
+	}
 }
