@@ -56,3 +56,8 @@ func Warn(message string, args ...any) {
 func Error(message string, args ...any) {
 	vLgr.Errorf(message, args...)
 }
+
+func Pref(logPref string) logger.Logger {
+	vLgr.Pref(logPref)
+	return *vLgr
+}

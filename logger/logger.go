@@ -69,6 +69,7 @@ type Logger struct {
 	logger       *log.Logger
 	Level        Level
 	cfg          Config
+	logPref      string // Log message output prefix
 	DisableColor bool
 }
 
@@ -110,6 +111,7 @@ func (l *Logger) Format(prefix, message string, args ...any) {
 		infoText = message
 	}
 
+	infoText = l.logPref + infoText
 	l.logger.Printf("[%s] %s", prefix, infoText)
 }
 
@@ -172,6 +174,11 @@ func (l *Logger) Log() *log.Logger {
 
 func (l *Logger) Buffer() *bytes.Buffer {
 	return l.bufDriver
+}
+
+func (l *Logger) Pref(logPref string) *Logger {
+	l.logPref = logPref
+	return l
 }
 
 // ToLevel turn string to level

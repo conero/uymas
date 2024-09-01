@@ -66,6 +66,7 @@
 - **number**
   - feat: 将 util 中原数字相关函数及struct迁移到此（重新整合）
 - **logger**
+  - feat: 新增函数 Logger.Pref 用于设置日志消息前缀
   - pref: Logger.Format 函数未设置变量时使用非格式化函数
 
 
