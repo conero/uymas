@@ -60,13 +60,14 @@
   - feat: 新增方法 SetByStr、SetByStrSlice实现字符串到其他基础类型的赋值
 - **example/cli/evolve**
   - feat: 新增二级命令 test args 用于测试参数自动获取
-
 - **rock**
   - feat: 新增函数 MapKeysString 用于map提取keys为字符串数组
   - feat: 实现 FormatKv 函数逻辑
-
 - **number**
   - feat: 将 util 中原数字相关函数及struct迁移到此（重新整合）
+- **logger**
+  - pref: Logger.Format 函数未设置变量时使用非格式化函数
+
 
 
 

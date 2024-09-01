@@ -103,7 +103,14 @@ func (l *Logger) autoColor(prefix string, level Level) string {
 }
 
 func (l *Logger) Format(prefix, message string, args ...any) {
-	l.logger.Printf("[%v] %v", prefix, fmt.Sprintf(message, args...))
+	var infoText string
+	if len(args) > 0 {
+		infoText = fmt.Sprintf(message, args...)
+	} else {
+		infoText = message
+	}
+
+	l.logger.Printf("[%s] %s", prefix, infoText)
 }
 
 // format logging by level, logging creator

@@ -40,7 +40,7 @@ func CopyDir(dst, src string) {
 				s1 += "/"
 				CopyDir(d1, s1)
 			} else {
-				Copy(d1, s1)
+				_, _ = Copy(d1, s1)
 			}
 		}
 	}
@@ -90,7 +90,7 @@ func StdDir(d string) string {
 func StdPathName(vPath string) string {
 	if vPath != "" {
 		vPath = strings.Replace(vPath, "\\", "/", -1)
-		reg := regexp.MustCompile(`[/]{2,}`)
+		reg := regexp.MustCompile(`/{2,}`)
 		vPath = reg.ReplaceAllString(vPath, "/")
 	}
 	return vPath
