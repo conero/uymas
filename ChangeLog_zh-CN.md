@@ -54,6 +54,9 @@
   - feat: 新增包用于实现命令行下数据生成如值转变
   - feat: 新增函数  ArgsDress 实现命令行参数到结构体值的装扮
   - feat: 新增函数 ArgsDecompose 、OptionTagParse实现对struct以及 tag 的解析
+- **cli/chest**
+  - feat: 新增函数 CmdSearchRun 用于搜索名字并执行它
+
 - ·**str**
   - feat: 新增 QueueMaxLen 函数用于统计数据中长度最大值
   - feat: 新增函数 str.Unescape 用于将转移符号进行处理

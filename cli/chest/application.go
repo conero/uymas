@@ -1,6 +1,11 @@
 package chest
 
-import "os/exec"
+import (
+	"errors"
+	"fmt"
+	"gitee.com/conero/uymas/v2/util/fs"
+	"os/exec"
+)
 
 // CmdExist Used to check whether the command is available and to throw an exception.
 func CmdExist(cmd string) (bool, error) {
@@ -18,4 +23,35 @@ func CmdExist(cmd string) (bool, error) {
 func CmdAble(cmd string) bool {
 	able, _ := CmdExist(cmd)
 	return able
+}
+
+// CmdSearchRun try the search command and execute it
+func CmdSearchRun(cmd string, args []string, children ...string) (output string, runErr error) {
+	baseDir := fs.RootPath()
+	toRunFn := func(rlPath string) bool {
+		execPath, err := exec.LookPath(rlPath)
+		if err == nil {
+			runnable := exec.Command(execPath, args...)
+			byes, er := runnable.CombinedOutput()
+			if er != nil {
+				runErr = errors.Join(errors.New("command run error"), er)
+			}
+			output = string(byes)
+			return true
+		}
+		return false
+	}
+
+	if toRunFn(baseDir + cmd) {
+		return
+	}
+
+	for _, child := range children {
+		rlPath := fs.StdPathName(baseDir + child + "/" + cmd)
+		if toRunFn(rlPath) {
+			return
+		}
+	}
+
+	return "", fmt.Errorf("%s is not exist", cmd)
 }

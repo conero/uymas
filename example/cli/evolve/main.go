@@ -126,7 +126,7 @@ func main() {
 		fmt.Printf("版本信息 v%s/%s%s\n", uymas.Version, uymas.Release, buildInfo)
 		fmt.Printf("build by %s\n", runtime.Version())
 		fmt.Println()
-		fmt.Println(" 环境变量 " + key + "=true   用于设置使其支持，短选项")
+		fmt.Println("环境变量 " + key + "=true   用于设置使其支持，短选项")
 	}
 
 	evl.Index(testCmd)
