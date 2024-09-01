@@ -109,6 +109,12 @@ func (c *test) Arg() {
 }
 
 func main() {
+	argsConfig := cli.DefArgsConfig
+	key := "UYMAS_CLI_SHORT"
+	cliShort := os.Getenv(key)
+
+	argsConfig.ShortOption = cliShort != ""
+	args := cli.NewArgsWith(argsConfig)
 	evl := evolve.NewEvolve()
 	testCmd := func() {
 		fmt.Println("Evolution For Index.")
@@ -119,6 +125,8 @@ func main() {
 		}
 		fmt.Printf("版本信息 v%s/%s%s\n", uymas.Version, uymas.Release, buildInfo)
 		fmt.Printf("build by %s\n", runtime.Version())
+		fmt.Println()
+		fmt.Println(" 环境变量 " + key + "=true   用于设置使其支持，短选项")
 	}
 
 	evl.Index(testCmd)
@@ -171,5 +179,5 @@ func main() {
 	))
 
 	//evl.Run("test", "demo")
-	_ = evl.Run()
+	_ = evl.RunArgs(args)
 }
