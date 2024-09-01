@@ -15,6 +15,12 @@ func NewParam(args ...string) *Param {
 	return param
 }
 
+func NewArgs(args cli.ArgsParser) *Param {
+	param := &Param{}
+	param.Args = args
+	return param
+}
+
 func NewParamWith(config cli.ArgsConfig, args ...string) *Param {
 	arg := cli.NewArgsWith(config, args...)
 	param := &Param{}

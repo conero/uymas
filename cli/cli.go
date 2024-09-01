@@ -35,6 +35,8 @@ type Application[T any] interface {
 
 	// Run execute the command parser
 	Run(args ...string) error
+	// RunArgs run the command line program by setting Args
+	RunArgs(args ArgsParser) error
 }
 
 // Fn command line registration function
@@ -113,6 +115,11 @@ func (c *Cli) Run(args ...string) error {
 		arg = NewArgs(args...)
 	}
 	c.args = arg
+	return c.router()
+}
+
+func (c *Cli) RunArgs(args ArgsParser) error {
+	c.args = args
 	return c.router()
 }
 

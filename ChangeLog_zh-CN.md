@@ -43,6 +43,7 @@
   - feat: Args 读取参数是支持注册命令时选项默认值
   - feat: 新增函数 HelpSub 实现对子命令的帮助信息的注册
   - feat: 新增方法 CommandOptional.SubCommand 用于获取子集 CommandOptional，实现递归
+  - feat: 新增方法 Application.RunArgs 实现传入 ArgParse 并执行命令行
   - break: 调整 Fn 为 func(ArgsParser)，固定格式使其更统一
   - break: Application.Command 注册命令时固定为单个参数
   - break: 重构 Cli 结构体，使其支持传统帮助信息等

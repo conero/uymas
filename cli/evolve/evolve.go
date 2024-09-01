@@ -91,6 +91,11 @@ func (e *Evolve[T]) Run(args ...string) error {
 	return e.routerCli()
 }
 
+func (e *Evolve[T]) RunArgs(args cli.ArgsParser) error {
+	e.param = NewArgs(args)
+	return e.routerCli()
+}
+
 func (e *Evolve[T]) callFunc(fn reflect.Value) bool {
 	fnVal := fn.Interface()
 	isSuccess := false
