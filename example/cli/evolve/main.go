@@ -127,6 +127,9 @@ func main() {
 		fmt.Printf("build by %s\n", runtime.Version())
 		fmt.Println()
 		fmt.Println("环境变量 " + key + "=true   用于设置使其支持，短选项")
+		fmt.Println()
+		fmt.Println("其他全局选项")
+		fmt.Println("  --support-bin   用于设置子命令路径")
 	}
 
 	evl.Index(testCmd)
@@ -182,7 +185,9 @@ func main() {
 		name := arg.Command()
 		raw := args.Raw()
 		raw = raw[1:]
-		output, isSearch, err := chest.CmdSearchRun(name, raw, "bin/")
+		supportBin := args.List("support-bin")
+		supportBin = append(supportBin, "bin")
+		output, isSearch, err := chest.CmdSearchRun(name, raw, supportBin...)
 		if isSearch {
 			if err != nil {
 				lgr.Error(err.Error())
