@@ -33,6 +33,7 @@ ls ./example/cli | foreach{tinygo build -o "./dist/tinygo/$($_.Name).exe" $_}
 - [x] v2.0.0-alpha.1 发布实现，初步实现主要库的转移
 - [x] v2.0.0-alpha.2 移除原包中遗弃的方法
 - [x] v2.0.0-alpha.3 cli 下命令行工具功能实现和完善（功能初步稳定）
+- [ ] v2.0.0-rc.1 功能程序优化
 
 
 
