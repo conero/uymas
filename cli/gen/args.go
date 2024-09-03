@@ -21,6 +21,7 @@ const ArgsTagName = "cmd"
 const ArgsCmdRequired = "required"
 const ArgsCmdHelp = "help"
 const ArgsCmdDefault = "default"
+const ArgsTagOmit = "-"
 
 func argsValueCheck(ref reflect.Value) (reflect.Value, error) {
 	isStruct := ref.Kind() == reflect.Struct
@@ -61,8 +62,12 @@ func ArgsDress(args cli.ArgsParser, data any) error {
 			name = str.Str(fieldType.Name).LowerStyle()
 		}
 
-		var vFiled = realValue.Field(i)
+		if name == ArgsTagOmit {
+			continue
+		}
 		keys := getNameByTag(name)
+
+		var vFiled = realValue.Field(i)
 		vfKind := vFiled.Kind()
 
 		if vfKind == reflect.Bool {
@@ -94,6 +99,9 @@ func ArgsDecompose(data any, excludes ...string) ([]cli.Option, error) {
 	for i := 0; i < rtp.NumField(); i++ {
 		fieldType := rtp.Field(i)
 		cmdTag := fieldType.Tag.Get(ArgsTagName)
+		if cmdTag == ArgsTagOmit {
+			continue
+		}
 		option := OptionTagParse(cmdTag)
 		var name string
 		if option == nil {

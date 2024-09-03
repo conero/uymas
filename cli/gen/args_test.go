@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"gitee.com/conero/uymas/v2/cli"
+	"gitee.com/conero/uymas/v2/rock"
+	"gitee.com/conero/uymas/v2/str"
 	"testing"
 )
 
@@ -48,5 +50,28 @@ func TestArgsDecompose(t *testing.T) {
 		bys, _ := json.Marshal(optionsList)
 		t.Logf("解析后的数据：\n%s", string(bys))
 		t.Logf("%#v", optionsList[len(optionsList)-1])
+	}
+}
+
+func TestOptionTagParse(t *testing.T) {
+	help := `输入用户指定命令`
+	name := `Joshua\sConero`
+	refDefault := str.Str(name).Unescape()
+	vTag := `name,n required help:` + help + ` default:` + name
+
+	// case 1
+	opt := OptionTagParse(vTag)
+	if opt == nil {
+		t.Errorf("tag 解析失败")
+	} else {
+		if opt.Help != help {
+			t.Errorf("help 解析失败")
+		}
+		if opt.DefValue != refDefault {
+			t.Errorf("name 解析失败，%#v", opt.DefValue)
+		}
+		if !rock.ListEq(opt.Alias, []string{"name", "n"}) {
+			t.Errorf("name 命令解析失败，%#v", opt.Alias)
+		}
 	}
 }

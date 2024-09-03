@@ -22,11 +22,34 @@ func InList[T constraints.Equable](list []T, value T) bool {
 	return ListIndex(list, value) > -1
 }
 
+// ListSubset determine whether the given subarray is accurate
+func ListSubset[T constraints.Equable](list []T, subset []T) bool {
+	for _, sub := range subset {
+		if !InList(list, sub) {
+			return false
+		}
+	}
+	return true
+}
+
+// ListEq Determines whether an array is equal
+func ListEq[T constraints.Equable](list []T, compare []T) bool {
+	if len(list) != len(compare) {
+		return false
+	}
+	for _, sub := range compare {
+		if !InList(list, sub) {
+			return false
+		}
+	}
+	return true
+}
+
 // ListRemove removes the specified element from the list
 func ListRemove[T constraints.Equable](list []T, removes ...T) []T {
 	var newList []T
 	for _, v := range list {
-		if InList(list, v) {
+		if InList(removes, v) {
 			continue
 		}
 		newList = append(newList, v)

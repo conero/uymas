@@ -35,9 +35,13 @@
 
 > cli 优化，并整合 cli/evolve 减少冗余
 
-**cli/gen**
+- **cli/gen**
+  - pref: ArgsDress 选项解析时，`-` 标识忽略
+  - fix: 修复 ArgsDress 解析命令选项不全
 
-- fix: 修复 ArgsDress 解析命令选项不全
+- **rock**
+  - feat: 新增函数 ListEq、ListSubset等判断数组是否包含或相等
+
 
 
 
