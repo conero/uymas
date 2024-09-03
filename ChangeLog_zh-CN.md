@@ -35,6 +35,10 @@
 
 > cli 优化，并整合 cli/evolve 减少冗余
 
+**cli/gen**
+
+- fix: 修复 ArgsDress 解析命令选项不全
+
 
 
 ### v2.0.0-alpha.3/2024-09-01

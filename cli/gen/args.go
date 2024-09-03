@@ -62,8 +62,7 @@ func ArgsDress(args cli.ArgsParser, data any) error {
 		}
 
 		var vFiled = realValue.Field(i)
-
-		keys := strings.Split(str.Str(name).ClearSpace(), ",")
+		keys := getNameByTag(name)
 		vfKind := vFiled.Kind()
 
 		if vfKind == reflect.Bool {
@@ -158,4 +157,31 @@ func OptionTagParse(vTag string) *cli.Option {
 	}
 
 	return option
+}
+
+// Get the name by parsing the tag of struct, format like `cmd:"name,n"`
+func getNameByTag(tag string) []string {
+	tag = strings.TrimSpace(tag)
+	if tag == "" {
+		return nil
+	}
+	var name string
+	for _, vs := range strings.Split(tag, " ") {
+		vs = strings.TrimSpace(vs)
+		if vs == "" {
+			continue
+		}
+		if strings.Contains(vs, ":") {
+			continue
+		}
+
+		name = vs
+		break
+
+	}
+
+	if len(name) > 0 {
+		return strings.Split(str.Str(name).ClearSpace(), ",")
+	}
+	return []string{tag}
 }
