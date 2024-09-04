@@ -44,6 +44,10 @@
 - **rock**
   - feat: 新增函数 ListEq、ListSubset等判断数组是否包含或相等
 
+- **util/fs**
+  - feat: 新增函数 RunDir 用于获取运行目录，优先工作目录、其次所在目录
+  - fix: 修复 RootPath 函数 `joins ...string` 参数无效的问题
+
 
 
 
