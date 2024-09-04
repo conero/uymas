@@ -38,6 +38,8 @@
 - **cli/gen**
   - pref: ArgsDress 选项解析时，`-` 标识忽略
   - fix: 修复 ArgsDress 解析命令选项不全
+- **cli/evolve**
+  - remove(break): 移除类型 Param，使用 cli.ArgsParser 代替以简化
 
 - **rock**
   - feat: 新增函数 ListEq、ListSubset等判断数组是否包含或相等

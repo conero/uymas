@@ -2,6 +2,7 @@ package evolve
 
 import (
 	"fmt"
+	"gitee.com/conero/uymas/v2/cli"
 )
 
 const (
@@ -9,12 +10,12 @@ const (
 	CmdMtdIndex = "DefIndex"
 	CmdMtdHelp  = "DefHelp"
 	CmdMtdLost  = "DefLost"
-	CmdFidX     = "X"
+	CmdFidArgs  = "Args"
 )
 
 // Command line basic (minimum) structure standard
 type Command struct {
-	X *Param
+	Args cli.ArgsParser
 }
 
 // Init command initialization
@@ -22,7 +23,7 @@ func (c *Command) Init() {}
 
 // DefIndex entry definition
 func (c *Command) DefIndex() {
-	args := c.X.Args
+	args := c.Args
 	command := args.Command()
 	fmt.Println()
 	fmt.Printf("%s: help information for command here\n", command)
@@ -32,8 +33,8 @@ func (c *Command) DefIndex() {
 //
 // support: `$ help [command]` or `$ -h [command]`
 func (c *Command) DefHelp() {
-	command := c.X.Args.Command()
-	cmdName := c.X.Args.HelpCmd()
+	command := c.Args.Command()
+	cmdName := c.Args.HelpCmd()
 	if cmdName != "" {
 		command = "<" + command + " " + cmdName + ">"
 	}
@@ -45,7 +46,7 @@ func (c *Command) DefHelp() {
 
 // DefLost No command definition exists
 func (c *Command) DefLost() {
-	args := c.X.Args
+	args := c.Args
 	command := args.SubCommand()
 	fmt.Println()
 	fmt.Printf("%s: sub-command is not exist\n", command)

@@ -256,8 +256,8 @@ func Help(help string, options ...Option) CommandOptional {
 }
 
 // HelpSub Used to set help information for the subcommand for top command
-func HelpSub(help string, commands ...CommandOptional) CommandOptional {
-	return CommandOptional{Help: help, SubCommands: commands}
+func HelpSub(help string, subs ...CommandOptional) CommandOptional {
+	return CommandOptional{Help: help, SubCommands: subs}
 }
 
 func optionRecoverRaw(option string) string {

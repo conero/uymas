@@ -23,7 +23,7 @@ type Evolve[T any] struct {
 	endHook       T
 	registerAttr  map[string]registerEvolveAttr[T]
 	registerAlias map[string][]string
-	param         *Param
+	args          cli.ArgsParser
 	namingMap     map[string]any
 }
 
@@ -87,12 +87,12 @@ func (e *Evolve[T]) End(t T) cli.Application[T] {
 }
 
 func (e *Evolve[T]) Run(args ...string) error {
-	e.param = NewParam(args...)
+	e.args = cli.NewArgs(args...)
 	return e.routerCli()
 }
 
 func (e *Evolve[T]) RunArgs(args cli.ArgsParser) error {
-	e.param = NewArgs(args)
+	e.args = args
 	return e.routerCli()
 }
 
@@ -107,16 +107,10 @@ func (e *Evolve[T]) callFunc(fn reflect.Value) bool {
 		callValue()
 		isSuccess = true
 	case func(cli.ArgsParser):
-		callValue(e.param.Args)
+		callValue(e.args)
 		isSuccess = true
 	case func(...cli.ArgsParser):
-		callValue(e.param.Args)
-		isSuccess = true
-	case func(Param):
-		callValue(*e.param)
-		isSuccess = true
-	case func(*Param):
-		callValue(e.param)
+		callValue(e.args)
 		isSuccess = true
 	}
 	return isSuccess
@@ -135,7 +129,7 @@ func (e *Evolve[T]) toRunRg(rg T) bool {
 	}
 
 	if vStruct.Kind() == reflect.Struct {
-		args := e.param.Args
+		args := e.args
 		sumCommand := args.SubCommand()
 		runMth := func(name string) bool {
 			mth := rv.MethodByName(name)
@@ -146,9 +140,9 @@ func (e *Evolve[T]) toRunRg(rg T) bool {
 		}
 
 		// set field
-		field := vStruct.FieldByName(CmdFidX)
+		field := vStruct.FieldByName(CmdFidArgs)
 		if field.IsValid() {
-			field.Set(reflect.ValueOf(e.param))
+			field.Set(reflect.ValueOf(e.args))
 		}
 
 		runMth(CmdMtdInit)
@@ -200,9 +194,8 @@ func (e *Evolve[T]) findReg(name string) (reg registerEvolveAttr[T], isFind bool
 }
 
 func (e *Evolve[T]) routerCli() error {
-	param := e.param
+	args := e.args
 	config := e.config
-	args := param.Args
 
 	if !config.DisableHelp {
 		command := args.Command()
@@ -265,7 +258,7 @@ func (e *Evolve[T]) runHelp() {
 		return
 	}
 
-	cmdName := e.param.Args.HelpCmd()
+	cmdName := e.args.HelpCmd()
 	helpMsg, isFind := e.GetHelp(cmdName)
 	if isFind {
 		fmt.Println(helpMsg)
@@ -286,11 +279,10 @@ func (e *Evolve[T]) Naming(name string, v any) *Evolve[T] {
 
 // NamingFind default (when no parameters are specified) top-level command level
 func (e *Evolve[T]) NamingFind(cmds ...string) string {
-	param := e.param
-	if param == nil {
+	args := e.args
+	if args == nil {
 		return ""
 	}
-	args := param.Args
 	name := rock.Param(args.Command(), cmds...)
 	if name == "" {
 		return ""
@@ -304,8 +296,8 @@ func (e *Evolve[T]) NamingFind(cmds ...string) string {
 	switch vRel := value.(type) {
 	case string:
 		return vRel
-	case func(Param) string:
-		return vRel(*param)
+	case func(parser cli.ArgsParser) string:
+		return vRel(args)
 	}
 
 	return ""

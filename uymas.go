@@ -21,7 +21,7 @@ const (
 )
 
 // Data for injection
-// # go build -ldflags "-s -w -X 'gitee.com/conero/uymas/v2.gitHash=$gitHash' -X 'gitee.com/conero/uymas/v2.buildData=$buildData' -X 'gitee.com/conero/uymas/v2.buildAuthor=$buildAuthor'" ./cmd/...
+// # go build -ldflags "-s -w -Args 'gitee.com/conero/uymas/v2.gitHash=$gitHash' -Args 'gitee.com/conero/uymas/v2.buildData=$buildData' -Args 'gitee.com/conero/uymas/v2.buildAuthor=$buildAuthor'" ./cmd/...
 var (
 	gitHash     string
 	buildData   string

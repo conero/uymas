@@ -39,7 +39,7 @@ func (c *test) Demo() {
 
 func (c *test) Test() {
 	spendFn := tm.SpendFn()
-	arg := c.X.Args
+	arg := c.Args
 	if arg.Switch("verbose", "V") {
 		fmt.Println()
 		fmt.Println("参数解析，数据如下")
@@ -81,7 +81,7 @@ func (c *test) DefHelp() {
 }
 
 func (c *test) DefIndex() {
-	command := c.X.Args.Get("cmd")
+	command := c.Args.Get("cmd")
 	if command != "" {
 		exist, err := chest.CmdExist(command)
 		if err != nil {
@@ -98,7 +98,7 @@ func (c *test) DefIndex() {
 
 func (c *test) Arg() {
 	param := testArgs{}
-	err := gen.ArgsDress(c.X.Args, &param)
+	err := gen.ArgsDress(c.Args, &param)
 	if err != nil {
 		lgr.Info("解析值错误，%v", err)
 		return
@@ -145,10 +145,10 @@ func main() {
 			cli.Help("命令示例").NameAlias("demo"),
 			cli.Help("参数值测试", testArgsOpts...).NameAlias("arg"),
 		))
-	evl.Command(func(arg evolve.Param) {
-		data := arg.Args.SubCommand()
+	evl.Command(func(arg cli.ArgsParser) {
+		data := arg.SubCommand()
 		if data == "" {
-			data = arg.Args.Get("data", "d")
+			data = arg.Get("data", "d")
 		}
 		if data == "" {
 			data = "日志测试工具，" + time.Now().Format(time.DateTime) + "\n 命令格式 log [data]"
@@ -162,8 +162,8 @@ func main() {
 		Help:  "设置日志输出内容",
 	}))
 
-	evl.Command(func(arg evolve.Param) {
-		flName := arg.Args.Get("file", "f")
+	evl.Command(func(arg cli.ArgsParser) {
+		flName := arg.Get("file", "f")
 		fi, err := os.Stat(flName)
 		if err != nil {
 			lgr.Error("文件读取错误，%s", err)
