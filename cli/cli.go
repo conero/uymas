@@ -79,6 +79,12 @@ func (c *Cli) CommandList(t Fn, commands []string, optionals ...CommandOptional)
 	optional.Alias = commands[1:]
 	optional.Keys = commands
 
+	// repetitive testing
+	_, exist := c.registerAttr[name]
+	if exist {
+		panic(fmt.Sprintf("%s: please do not repeat the registration command", name))
+	}
+
 	c.registerAttr[name] = registerAttr[Fn]{
 		CommandOptional: optional,
 		runnable:        t,

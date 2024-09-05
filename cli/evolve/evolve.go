@@ -57,6 +57,13 @@ func (e *Evolve[T]) CommandList(t T, commands []string, optionals ...cli.Command
 	}
 	// remember the command of alias.
 	mainCmd := commands[0]
+
+	// repetitive testing
+	_, exist := e.registerAttr[mainCmd]
+	if exist {
+		panic(fmt.Sprintf("%s: please do not repeat the registration command", mainCmd))
+	}
+
 	e.registerAttr[mainCmd] = attr
 	if vNum == 1 {
 		return e
