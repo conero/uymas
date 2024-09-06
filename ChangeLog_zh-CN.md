@@ -35,16 +35,17 @@
 
 > cli 优化，并整合 cli/evolve 减少冗余
 
+- **cli**
+  - feat: 实验性地添加 Register 用于处理 Cli 以及 evolve.Evolve 之间的重复处理
+
 - **cli/gen**
   - pref: ArgsDress 选项解析时，`-` 标识忽略
   - pref: 注册时加入简单的重复性检测（待完善）
   - fix: 修复 ArgsDress 解析命令选项不全
 - **cli/evolve**
   - remove(break): 移除类型 Param，使用 cli.ArgsParser 代替以简化
-
 - **rock**
   - feat: 新增函数 ListEq、ListSubset等判断数组是否包含或相等
-
 - **util/fs**
   - feat: 新增函数 RunDir 用于获取运行目录，优先工作目录、其次所在目录
   - fix: 修复 RootPath 函数 `joins ...string` 参数无效的问题
