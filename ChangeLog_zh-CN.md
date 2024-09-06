@@ -31,9 +31,9 @@
 
 
 
-### v2.0.0-rc.1/dev
+### v2.0.0-alpha.4/2024-09-01
 
-> cli 优化，并整合 cli/evolve 减少冗余
+> cli 优化，并整合 cli/evolve 减少冗余。因原 rc-1 计划版本发生非兼容新版本临时发布 a4 标签
 
 - **cli/gen**
   - pref: ArgsDress 选项解析时，`-` 标识忽略
