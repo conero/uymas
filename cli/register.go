@@ -34,11 +34,15 @@ type Register[T any] struct {
 	Call          func(T, ArgsParser)
 }
 
+// Command When registering a method you must specify commands to run more than one.
+// We agreed that the second and subsequent commands should be aliases for the first command.
 func (r *Register[T]) Command(t T, command string, optionals ...CommandOptional) Application[T] {
 	r.CommandList(t, []string{command}, optionals...)
 	return r
 }
 
+// CommandList When registering a method you must specify commands to run more than one.
+// We agreed that the second and subsequent commands should be aliases for the first command.
 func (r *Register[T]) CommandList(t T, commands []string, optionals ...CommandOptional) Application[T] {
 	vNum := len(commands)
 	if vNum == 0 {
@@ -123,6 +127,10 @@ func (r *Register[T]) GetHelp(cmd string) (helpMsg string, exits bool) {
 			optionHelp := reg.OptionHelpMsg()
 			if optionHelp != "" {
 				line += "\n" + optionHelp
+			}
+			subHelpMsg := reg.SubCommandHelpMsg(2)
+			if subHelpMsg != "" {
+				line += "\n" + subHelpMsg
 			}
 			lines = append(lines, line)
 		}

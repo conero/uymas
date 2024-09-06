@@ -97,5 +97,6 @@ func NewEvolve(cfgs ...cli.Config) cli.Application[any] {
 			return
 		}
 	}
+	evl.Help(evl.GenerateHelpFn)
 	return evl
 }
