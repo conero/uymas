@@ -46,6 +46,10 @@ func (r *Register[T]) CommandList(t T, commands []string, optionals ...CommandOp
 		return r
 	}
 
+	if r.register == nil {
+		r.register = map[string]RegisterMeta[T]{}
+	}
+
 	optional := rock.Param(CommandOptional{}, optionals...)
 	optional.Alias = commands[1:]
 	optional.Keys = commands
