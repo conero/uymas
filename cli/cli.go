@@ -64,5 +64,10 @@ func NewCli(cfgs ...Config) *Cli {
 			return
 		}
 	}
+	app.lostTodo = lostFn
+	app.indexTodo = func(parser ArgsParser) {
+		app.Config.IndexDoc()
+	}
+	app.helpTodo = app.GenerateHelpFn
 	return app
 }

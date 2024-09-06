@@ -49,6 +49,9 @@ func (r *Register[T]) CommandList(t T, commands []string, optionals ...CommandOp
 	if r.register == nil {
 		r.register = map[string]RegisterMeta[T]{}
 	}
+	if r.registerAlias == nil {
+		r.registerAlias = map[string][]string{}
+	}
 
 	optional := rock.Param(CommandOptional{}, optionals...)
 	optional.Alias = commands[1:]
@@ -163,7 +166,7 @@ func (r *Register[T]) GetHelp(cmd string) (helpMsg string, exits bool) {
 	return
 }
 
-func (r *Register[T]) generateHelpFn(arg ArgsParser) {
+func (r *Register[T]) GenerateHelpFn(arg ArgsParser) {
 	cmdName := arg.HelpCmd()
 	helpMsg, isFind := r.GetHelp(cmdName)
 	if isFind {
