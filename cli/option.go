@@ -183,6 +183,7 @@ func (c CommandOptional) InvalidMsg(args ArgsParser) string {
 		}
 	}
 
+	var allowOptions []string
 	for _, opt := range c.Options {
 		if opt.ValidFn != nil {
 			invalidMsg := opt.ValidFn(args)
@@ -190,6 +191,7 @@ func (c CommandOptional) InvalidMsg(args ArgsParser) string {
 				return invalidMsg
 			}
 		}
+		allowOptions = append(allowOptions, opt.GetKeys()...)
 		if !opt.Require {
 			continue
 		}
@@ -209,6 +211,15 @@ func (c CommandOptional) InvalidMsg(args ArgsParser) string {
 		}
 
 	}
+
+	if allowOptions != nil {
+		for _, iptOpt := range args.Option() {
+			if !rock.InList(allowOptions, iptOpt) {
+				return iptOpt + ": 选项不支持，请参考帮助文档"
+			}
+		}
+	}
+
 	return ""
 }
 

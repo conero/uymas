@@ -38,6 +38,7 @@
 **cli**
 
 - feat: 实验性地添加 Register 用于处理 Cli 以及 evolve.Evolve 之间的重复处理
+- pref: 完整 option 有效性验证，添加对不运行选项的验证支持
 
 
 

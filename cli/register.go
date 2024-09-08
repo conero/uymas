@@ -233,6 +233,13 @@ func (r *Register[T]) Run(args ...string) error {
 
 	if isFind {
 		r.Call(r.beforeHook, param)
+		if !r.Config.DisableVerify {
+			invalidMsg := meta.Command.InvalidMsg(param)
+			if invalidMsg != "" {
+				lgr.Error(invalidMsg)
+				return nil
+			}
+		}
 		r.Call(meta.Runnable, param)
 		r.Call(r.endHook, param)
 		return nil
