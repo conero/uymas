@@ -141,7 +141,7 @@ func main() {
 				cli.Option{Name: "verbose", Alias: []string{"V"}, Help: "详细输出内容"},
 				cli.OptionHelp("设置需读取选项名称", "option", "O"),
 				cli.OptionHelp("生成用于测试的命令选项数", "make-number", "M"),
-				cli.Option{}).NameAlias("test"),
+				cli.Option{}).NameAlias("test").NoValid(),
 			cli.Help("命令示例").NameAlias("demo"),
 			cli.Help("参数值测试", testArgsOpts...).NameAlias("arg"),
 		))

@@ -210,12 +210,16 @@ func (r *Register[T]) Run(args ...string) error {
 	isHelp := !cfg.DisableHelp && command == "" && param.Switch("help", "h", "?")
 	isHelp = isHelp || (!cfg.DisableHelp && (command == "help" || command == "?"))
 	if isHelp {
+		r.Call(r.beforeHook, param)
 		r.Call(helpCall, param)
+		r.Call(r.endHook, param)
 		return nil
 	}
 
 	if command == "" {
+		r.Call(r.beforeHook, param)
 		r.Call(r.indexTodo, param)
+		r.Call(r.endHook, param)
 		return nil
 	}
 
@@ -233,8 +237,9 @@ func (r *Register[T]) Run(args ...string) error {
 
 	if isFind {
 		r.Call(r.beforeHook, param)
-		if !r.Config.DisableVerify {
-			invalidMsg := meta.Command.InvalidMsg(param)
+		metaCmd := meta.Command
+		if !r.Config.DisableVerify && !metaCmd.OffValid {
+			invalidMsg := metaCmd.InvalidMsg(param)
 			if invalidMsg != "" {
 				lgr.Error(invalidMsg)
 				return nil

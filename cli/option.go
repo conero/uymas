@@ -68,7 +68,8 @@ type CommandOptional struct {
 	Options     []Option
 	SubCommands []CommandOptional
 	// Whether the subcommand is an entry
-	IsEntry bool
+	IsEntry  bool
+	OffValid bool // Turn off validation
 }
 
 // OptionHelpMsg generate an options help document through the options parameters you set
@@ -178,6 +179,9 @@ func (c CommandOptional) InvalidMsg(args ArgsParser) string {
 	if subCommand != "" && len(c.SubCommands) > 0 {
 		for _, sco := range c.SubCommands {
 			if rock.InList(sco.Keys, subCommand) {
+				if sco.OffValid {
+					return ""
+				}
 				return sco.InvalidMsg(args)
 			}
 		}
@@ -259,6 +263,11 @@ func (c CommandOptional) SubCommand(subName string) (optional CommandOptional, i
 		}
 	}
 	return
+}
+
+func (c CommandOptional) NoValid() CommandOptional {
+	c.OffValid = true
+	return c
 }
 
 // Help Used to set help information

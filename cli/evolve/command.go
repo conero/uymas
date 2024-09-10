@@ -3,6 +3,7 @@ package evolve
 import (
 	"fmt"
 	"gitee.com/conero/uymas/v2/cli"
+	"gitee.com/conero/uymas/v2/logger/lgr"
 )
 
 const (
@@ -48,6 +49,6 @@ func (c *Command) DefHelp() {
 func (c *Command) DefLost() {
 	args := c.Args
 	command := args.SubCommand()
+	lgr.Error("%s: sub-command is not exist", command)
 	fmt.Println()
-	fmt.Printf("%s: sub-command is not exist\n", command)
 }
