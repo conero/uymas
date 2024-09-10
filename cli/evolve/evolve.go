@@ -3,11 +3,23 @@ package evolve
 
 import (
 	"gitee.com/conero/uymas/v2/cli"
+	"gitee.com/conero/uymas/v2/logger/lgr"
 	"gitee.com/conero/uymas/v2/rock"
 	"gitee.com/conero/uymas/v2/str"
 	"reflect"
 )
 
+// Evolve The following registration types are supported:
+//
+// 1. struct(inherited Command)
+//
+// 2. func(cli.ArgsParser)
+//
+// 3. func(...cli.ArgsParser)
+//
+// 4. func()
+//
+// 5. func(...string)
 type Evolve[T any] struct {
 	cli.Register[T]
 }
@@ -92,10 +104,13 @@ func NewEvolve(cfgs ...cli.Config) cli.Application[any] {
 	evl := &Evolve[any]{}
 	evl.Config = rock.Param(cli.DefaultConfig, cfgs...)
 	evl.Call = func(fn any, parser cli.ArgsParser) {
-		if fn != nil {
-			evl.toRunRg(fn)
+		if fn == nil {
 			return
 		}
+		if evl.toRunRg(fn) {
+			return
+		}
+		lgr.Error("%s: 命令注册实例无效，其不可执行（%#v）", parser.Command(), fn)
 	}
 	evl.Help(evl.GenerateHelpFn)
 	return evl
