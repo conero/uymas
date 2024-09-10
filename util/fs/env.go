@@ -36,6 +36,9 @@ func RootPath(joins ...string) string {
 		parseRoot()
 	}
 
+	if len(joins) == 0 {
+		return gRootPath
+	}
 	joins = append([]string{gRootPath}, joins...)
 	return path.Join(joins...)
 }
