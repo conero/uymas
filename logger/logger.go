@@ -104,6 +104,9 @@ func (l *Logger) autoColor(prefix string, level Level) string {
 }
 
 func (l *Logger) Format(prefix, message string, args ...any) {
+	if prefix == "" {
+		return
+	}
 	var infoText string
 	if len(args) > 0 {
 		infoText = fmt.Sprintf(message, args...)

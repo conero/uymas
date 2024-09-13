@@ -24,11 +24,6 @@ type Evolve[T any] struct {
 	cli.Register[T]
 }
 
-type registerEvolveAttr[T any] struct {
-	cli.CommandOptional
-	runnable T
-}
-
 func (e *Evolve[T]) callFunc(fn reflect.Value) bool {
 	fnVal := fn.Interface()
 	isSuccess := false

@@ -44,11 +44,6 @@ func lostFn(arg ArgsParser) {
 	fmt.Println()
 }
 
-type registerAttr[T any] struct {
-	CommandOptional
-	runnable T
-}
-
 // Cli command line struct
 type Cli struct {
 	Register[Fn]

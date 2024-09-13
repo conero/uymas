@@ -38,16 +38,18 @@
 - **cli**
 
   - feat: 实验性地添加 Register 用于处理 Cli 以及 evolve.Evolve 之间的重复处理
-
   - feat: 新增 `CommandOptional.OffValid` 、`NoValid()`选项用于配置具体命令的验证开关控制
-
   - pref: 完整 option 有效性验证，添加对不运行选项的验证支持
-
   - pref: 优化 hook 使其在 index/help命令中同样有效，命令提示日志更新
+  - pref: 删除过渡中间类型 `registerAttr[T any]` 
+- **cli/evolve**
+  - pref: 删除过渡中间类型 `registerEvolveAttr[T any]` 
 
 - **fs**
-
   - fixed: 修复函数 `RootPath()`，空变量时为不以"/"结尾的标准目录
+- **logger**
+  - pref!: Logger.Format 函数日志内容为空时不输出
+
 
 
 
