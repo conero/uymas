@@ -55,6 +55,7 @@ func ArgsDress(args cli.ArgsParser, data any) error {
 	for i := 0; i < rtp.NumField(); i++ {
 		fieldType := rtp.Field(i)
 		name := fieldType.Tag.Get(ArgsTagName)
+		tagValue := name
 		if name == "" {
 			name = fieldType.Tag.Get("json")
 		}
@@ -65,6 +66,7 @@ func ArgsDress(args cli.ArgsParser, data any) error {
 		if name == ArgsTagOmit {
 			continue
 		}
+
 		keys := getNameByTag(name)
 
 		var vFiled = realValue.Field(i)
@@ -80,6 +82,10 @@ func ArgsDress(args cli.ArgsParser, data any) error {
 		}
 
 		value := args.Get(keys...)
+		if value == "" && tagValue != "" {
+			option := OptionTagParse(tagValue)
+			value = option.DefValue
+		}
 		convert.SetByStr(vFiled, value)
 	}
 
