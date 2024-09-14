@@ -57,6 +57,13 @@ func Error(message string, args ...any) {
 	vLgr.Errorf(message, args...)
 }
 
+func ErrorIf(err error) {
+	if err == nil {
+		return
+	}
+	vLgr.Errorf(err.Error())
+}
+
 func Pref(logPref string) logger.Logger {
 	vLgr.Pref(logPref)
 	return *vLgr

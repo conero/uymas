@@ -38,7 +38,8 @@ func (c Config) IndexDoc() {
 	}
 
 	fmt.Println()
-	fmt.Println("-------------- Uymas/Evolution -----------------")
+	fmt.Println("-------------- Uymas -----------------")
+	fmt.Println()
 	fmt.Println("Welcome to our world")
 	fmt.Printf(":)- %s/%s\n", uymas.Version, uymas.Release)
 	fmt.Println()

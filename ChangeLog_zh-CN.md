@@ -44,11 +44,16 @@
   - pref: 删除过渡中间类型 `registerAttr[T any]` 
 - **cli/evolve**
   - pref: 删除过渡中间类型 `registerEvolveAttr[T any]` 
+- **cli/gen**
+  - feat: 新增方法 `ArgsDecomposeMust` 用于解析 struct 为选项
 
 - **fs**
   - fixed: 修复函数 `RootPath()`，空变量时为不以"/"结尾的标准目录
 - **logger**
   - pref!: Logger.Format 函数日志内容为空时不输出
+- **logger/lgr**
+  - feat: 新增方法 `ErrorIf` 用于调试错误，当出现错误时
+
 
 
 

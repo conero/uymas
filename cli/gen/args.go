@@ -126,6 +126,11 @@ func ArgsDecompose(data any, excludes ...string) ([]cli.Option, error) {
 	return optionList, nil
 }
 
+func ArgsDecomposeMust(data any, excludes ...string) []cli.Option {
+	opts, _ := ArgsDecompose(data, excludes...)
+	return opts
+}
+
 // OptionTagParse Resolves the value of the tag into an option object
 //
 // syntax rules of tag: `"name,n required default:111 help:help msg"`.
