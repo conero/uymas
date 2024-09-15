@@ -34,7 +34,7 @@
 
 
 
-### v2.0.0-rc.1/dev
+### v2.0.0-rc.1/2024-09-15
 
 > cli 优化，并整合 cli/evolve 减少冗余。
 
@@ -61,12 +61,6 @@
 - **data/convert**
   - feat: 新增函数 `ToSlice` 及 `IsSlice`用于处理字符串数字切片或判别是否符号
   - pref: `SetByStrSlice` 函数实现字符串转任意 slice类型
-
-
-
-
-
-
 
 
 
@@ -131,8 +125,6 @@
 - **logger**
   - feat: 新增函数 Logger.Pref 用于设置日志消息前缀
   - pref: Logger.Format 函数未设置变量时使用非格式化函数
-
-
 
 
 

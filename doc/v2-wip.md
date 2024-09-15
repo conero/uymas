@@ -13,7 +13,7 @@
 ```powershell
 # 将系统所有包编译到 dist用于编译尺寸比较
 go build -o ./dist ./...
-go build -o ./dist/g ./...
+go build -o ./dist/g20 ./...
 
 # 压缩打包
 go build -ldflags "-w -s" -o ./dist/mini ./...
@@ -32,7 +32,8 @@ ls ./example/cli | foreach{tinygo build -o "./dist/tinygo/$($_.Name).exe" $_}
 - [x] v2.0.0-alpha.1 发布实现，初步实现主要库的转移
 - [x] v2.0.0-alpha.2 移除原包中遗弃的方法
 - [x] v2.0.0-alpha.3 cli 下命令行工具功能实现和完善（功能初步稳定）
-- [ ] v2.0.0-rc.1 功能程序优化，cli 整合以及功能完善
+- [x] v2.0.0-rc.1 功能程序优化，cli 整合以及功能完善
+- [ ] v2.0.0-rc.2 uymas2 实现以及cli等优化使其尽可能达到发布标准，加入test使其验证程序（尽可能添加）
 
 
 
