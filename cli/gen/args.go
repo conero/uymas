@@ -72,8 +72,8 @@ func ArgsDress(args cli.ArgsParser, data any) error {
 		var vFiled = realValue.Field(i)
 		vfKind := vFiled.Kind()
 
-		if vfKind == reflect.Bool {
-			vFiled.SetBool(args.Switch(keys...))
+		if vfKind == reflect.Bool && args.Switch(keys...) {
+			vFiled.SetBool(true)
 			continue
 		}
 		if vfKind == reflect.Slice {

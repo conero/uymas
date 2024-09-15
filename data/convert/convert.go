@@ -10,15 +10,15 @@ import (
 //
 // The types are as follows:
 //
-// 1. string
+// 1. string, convert the original input string.
 //
-// 2. bool
+// 2. bool, parse string true, True, false, False etc.
 //
-// 3. int64
+// 3. int64, parse a numeric string to int64.
 //
-// 4. float
+// 4. float, parse numeric strings into floats.
 //
-// 5. uint64
+// 5. uint64, parse a numeric string to uint64.
 func SetByStr(value reflect.Value, s string) bool {
 	if !value.CanSet() {
 		return false

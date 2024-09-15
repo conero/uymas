@@ -35,8 +35,8 @@
 
 > cli 优化，并整合 cli/evolve 减少冗余。
 
+- doc: example 下加入说明文档，以及godoc文档注释完善
 - **cli**
-
   - feat: 实验性地添加 Register 用于处理 Cli 以及 evolve.Evolve 之间的重复处理
   - feat: 新增 `CommandOptional.OffValid` 、`NoValid()`选项用于配置具体命令的验证开关控制
   - pref: 完整 option 有效性验证，添加对不运行选项的验证支持
@@ -46,6 +46,7 @@
   - pref: 删除过渡中间类型 `registerEvolveAttr[T any]` 
 - **cli/gen**
   - feat: 新增方法 `ArgsDecomposeMust` 用于解析 struct 为选项
+  - pref: 优化 `ArgsDress` 函数使其准确无误地支持基础类型的转换
 
 - **fs**
   - fixed: 修复函数 `RootPath()`，空变量时为不以"/"结尾的标准目录
