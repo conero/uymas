@@ -1,9 +1,11 @@
-// Package convert common data converter
+// Package convert common data converter, base "reflect".
 package convert
 
 import (
 	"gitee.com/conero/uymas/v2/data/input"
+	"gitee.com/conero/uymas/v2/str"
 	"reflect"
+	"strings"
 )
 
 // SetByStr set the literal string to any specified type
@@ -34,6 +36,11 @@ func SetByStr(value reflect.Value, s string) bool {
 	if kind == reflect.Bool {
 		value.Set(reflect.ValueOf(input.Stringer(s).Bool()))
 		return true
+	}
+
+	vSlice, isMatch := ToSlice(s)
+	if isMatch {
+		return SetByStrSlice(value, vSlice)
 	}
 
 	if value.CanInt() {
@@ -81,4 +88,30 @@ func SetByStrSlice(value reflect.Value, vSlice []string) bool {
 
 	sliceValue.Set(newSlice)
 	return true
+}
+
+// ToSlice convert string to slice, format `[e0, e1, ..., en]`
+func ToSlice(s string) (vSlice []string, isMatch bool) {
+	if s == "" {
+		return
+	}
+
+	vLen := len(s)
+	if s[:1] == "[" && s[vLen-1:] == "]" {
+		ss := s[1 : vLen-1]
+		vSlice = strings.Split(str.Str(ss).ClearSpace(), ",")
+		isMatch = true
+		return
+	}
+
+	return
+}
+
+// IsSlice determine whether the string conforms to the slice
+func IsSlice(s string) bool {
+	vLen := len(s)
+	if vLen < 2 {
+		return false
+	}
+	return s[:1] == "[" && s[vLen-1:] == "]"
 }

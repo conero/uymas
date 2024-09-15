@@ -56,6 +56,7 @@
   - feat: 新增方法 `ErrorIf` 用于调试错误，当出现错误时
 
 - **data/convert**
+  - feat: 新增函数 `ToSlice` 及 `IsSlice`用于处理字符串数字切片或判别是否符号
   - pref: `SetByStrSlice` 函数实现字符串转任意 slice类型
 
 
