@@ -6,6 +6,19 @@ import (
 	"reflect"
 )
 
+// SetByStr set the literal string to any specified type
+//
+// The types are as follows:
+//
+// 1. string
+//
+// 2. bool
+//
+// 3. int64
+//
+// 4. float
+//
+// 5. uint64
 func SetByStr(value reflect.Value, s string) bool {
 	if !value.CanSet() {
 		return false

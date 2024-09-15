@@ -57,6 +57,7 @@ func Error(message string, args ...any) {
 	vLgr.Errorf(message, args...)
 }
 
+// ErrorIf print error message only when err is not nil
 func ErrorIf(err error) {
 	if err == nil {
 		return
