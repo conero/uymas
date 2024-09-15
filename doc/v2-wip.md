@@ -8,13 +8,12 @@
 
 
 
-
-
-程序编译
+程序编译，**发布版本时应该在 go1.20 版本进行测试**
 
 ```powershell
 # 将系统所有包编译到 dist用于编译尺寸比较
 go build -o ./dist ./...
+go build -o ./dist/g ./...
 
 # 压缩打包
 go build -ldflags "-w -s" -o ./dist/mini ./...

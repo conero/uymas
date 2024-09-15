@@ -77,7 +77,7 @@ func main() {
 			Alias: []string{"make-number", "M"},
 			Help:  "创建的个数，用于测试",
 		},
-	))
+	).NoValid())
 
 	app.Command(func(arg cli.ArgsParser) {
 		data := arg.SubCommand()
