@@ -489,7 +489,7 @@ func FloatSimple(fv string) string {
 }
 
 func StringAsFloat(s string) float64 {
-	f64, _ := strconv.ParseFloat(s, 10)
+	f64, _ := strconv.ParseFloat(s, 64)
 	return f64
 }
 

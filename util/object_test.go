@@ -284,8 +284,7 @@ func TestStructToMapLStyle(t *testing.T) {
 
 func TestObject_Keys(t *testing.T) {
 	// map-case1
-	var v any
-	v = map[string]string{"name": "Joshua", "age": "23", "country": "cn"}
+	var v any = map[string]string{"name": "Joshua", "age": "23", "country": "cn"}
 
 	var obj Object
 	var rf = []string{"name", "age", "country"}

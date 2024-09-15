@@ -111,7 +111,7 @@ func (pyt *Pinyin) GetPyToneNumber(chinese string) string {
 		for k, m := range ChineseToneMap {
 			isBreak := false
 			for s, n := range m {
-				if strings.Index(word, s) > -1 {
+				if strings.Contains(word, s) {
 					word = strings.ReplaceAll(word, s, k)
 					word = fmt.Sprintf("%v%v", word, n)
 					isBreak = true
@@ -133,7 +133,7 @@ func (pyt *Pinyin) GetPyToneAlpha(chinese string) string {
 		for k, m := range ChineseToneMap {
 			isBreak := false
 			for s, _ := range m {
-				if strings.Index(word, s) > -1 {
+				if strings.Contains(word, s) {
 					word = strings.ReplaceAll(word, s, k)
 					isBreak = true
 					break

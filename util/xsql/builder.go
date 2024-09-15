@@ -281,16 +281,15 @@ func Table(table any, alias ...string) *Builder {
 		panic("if params of Table is invalid, `table == nil`")
 	}
 	c := &Builder{}
-	switch table.(type) {
+	switch tbAny := table.(type) {
 	case string:
-		c.table = table.(string)
+		c.table = tbAny
 	case []string:
-		tables := table.([]string)
-		if len(tables) != 2 {
+		if len(tbAny) != 2 {
 			panic("if param of Table.table is []string, format should be `(table, alias string)`")
 		}
-		c.table = tables[0]
-		c.alias = tables[1]
+		c.table = tbAny[0]
+		c.alias = tbAny[1]
 
 	default:
 		c.table = fmt.Sprintf("%v", table)
