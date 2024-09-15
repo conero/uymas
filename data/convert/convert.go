@@ -55,18 +55,23 @@ func SetByStr(value reflect.Value, s string) bool {
 }
 
 // SetByStrSlice Assigns a string array to another type of slice
-// @todo bug
 func SetByStrSlice(value reflect.Value, vSlice []string) bool {
 	vKind := value.Kind()
 	var sliceType reflect.Type
+
+	sliceValue := value
 	if vKind == reflect.Ptr {
-		sliceType = value.Elem().Type()
+		sliceValue = value.Elem()
+		sliceType = sliceValue.Type()
 	} else {
 		sliceType = value.Type()
 	}
 
-	vLen := len(vSlice)
+	if sliceValue.Kind() != reflect.Slice {
+		return false
+	}
 
+	vLen := len(vSlice)
 	newSlice := reflect.MakeSlice(sliceType, vLen, vLen)
 	for i, s := range vSlice {
 		if !SetByStr(newSlice.Index(i), s) {
@@ -74,6 +79,6 @@ func SetByStrSlice(value reflect.Value, vSlice []string) bool {
 		}
 	}
 
-	value.Set(newSlice)
+	sliceValue.Set(newSlice)
 	return true
 }

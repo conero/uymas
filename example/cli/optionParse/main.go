@@ -9,11 +9,12 @@ import (
 )
 
 type optionParse struct {
-	Addr string  `cmd:"addr,a default::12409 help:请求监听地址"`
-	File string  `cmd:"file,fl,f required help:输出文件指定文件"`
-	Age  int16   `cmd:"age,a default:18 help:设置年龄，这是整形数展示"`
-	Rage float32 `cmd:"rage,r default:0.3145 help:设置占用比例，浮点数实例"`
-	Off  bool    `cmd:"off default:True help:默认关闭，bool类型展示"`
+	Addr  string   `cmd:"addr,a default::12409 help:请求监听地址"`
+	File  string   `cmd:"file,fl,f required help:输出文件指定文件"`
+	Age   int16    `cmd:"age,a default:18 help:设置年龄，这是整形数展示"`
+	Rage  float32  `cmd:"rage,r default:0.3145 help:设置占用比例，浮点数实例"`
+	Off   bool     `cmd:"off default:True help:默认关闭，bool类型展示"`
+	Index []string `cmd:"index default:[index.html,index.htm] help:服务器支持索引文件"`
 }
 
 func main() {
@@ -34,6 +35,7 @@ func main() {
 		lgr.Info("文件: %s", opt.File)
 		lgr.Info("占比: %f", opt.Rage)
 		lgr.Info("是否关闭: %#v", opt.Off)
+		lgr.Info("服务索引: %#v", opt.Index)
 		fmt.Println()
 
 	}, "option", cli.Help("选项测试", gen.ArgsDecomposeMust(optionParse{})...))

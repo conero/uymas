@@ -55,6 +55,9 @@
 - **logger/lgr**
   - feat: 新增方法 `ErrorIf` 用于调试错误，当出现错误时
 
+- **data/convert**
+  - pref: `SetByStrSlice` 函数实现字符串转任意 slice类型
+
 
 
 

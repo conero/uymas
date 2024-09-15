@@ -107,7 +107,7 @@ func (c CommandOptional) OptionHelpMsg(levels ...int) string {
 		}
 		line := help
 		if len(optList) > 0 {
-			line += "，支持别名 " + strings.Join(optList, ",")
+			line += "，其他别名 " + strings.Join(optList, ",")
 		}
 		if opt.DefValue != "" {
 			line += "，默认值“" + opt.DefValue + "”"
@@ -153,7 +153,7 @@ func (c CommandOptional) SubCommandHelpMsg(levels ...int) string {
 
 		alias := ""
 		if keyNum > 1 {
-			alias = "，支持别名 " + strings.Join(keys, ",")
+			alias = "，其他别名 " + strings.Join(keys, ",")
 		}
 		line := help + alias
 		optHelp := sub.OptionHelpMsg(level)

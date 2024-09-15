@@ -76,8 +76,10 @@ func ArgsDress(args cli.ArgsParser, data any) error {
 			vFiled.SetBool(true)
 			continue
 		}
-		if vfKind == reflect.Slice {
-			convert.SetByStrSlice(vFiled, args.List(keys...))
+
+		vSlice := args.List(keys...)
+		if vfKind == reflect.Slice && vSlice != nil {
+			convert.SetByStrSlice(vFiled, vSlice)
 			continue
 		}
 
