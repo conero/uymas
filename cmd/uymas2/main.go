@@ -14,9 +14,6 @@ import (
 	"time"
 )
 
-// v2 版本临时程序
-//
-// @todo 后期移除（稳定后）
 func main() {
 	app := cli.NewCli()
 	app.Index(func(cli.ArgsParser) {
@@ -108,6 +105,10 @@ func main() {
 		Require: false,
 		Alias:   []string{"s"},
 	}))
+
+	app.End(func(cli.ArgsParser) {
+		fmt.Println()
+	})
 
 	err := app.Run()
 	if err != nil {

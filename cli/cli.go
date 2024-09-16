@@ -36,7 +36,7 @@ type Application[T any] interface {
 }
 
 // Fn command line registration function
-type Fn = func(ArgsParser)
+type Fn = func(args ArgsParser)
 
 func lostFn(arg ArgsParser) {
 	fmt.Println()
