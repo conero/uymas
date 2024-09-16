@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"gitee.com/conero/uymas/v2"
 	"gitee.com/conero/uymas/v2/cli"
+	"gitee.com/conero/uymas/v2/cli/gen"
 	"gitee.com/conero/uymas/v2/logger/lgr"
 	"gitee.com/conero/uymas/v2/str"
 	"gitee.com/conero/uymas/v2/util/tm"
@@ -13,6 +14,10 @@ import (
 	"strings"
 	"time"
 )
+
+type globalOption struct {
+	IsVerbose bool `cmd:"verbose,vv help:是否详细输出"`
+}
 
 func main() {
 	app := cli.NewCli()
@@ -109,6 +114,9 @@ func main() {
 	app.End(func(cli.ArgsParser) {
 		fmt.Println()
 	})
+
+	app.CommandList(cmdPinyin, []string{"pinyin", "py"},
+		cli.Help("生成汉字拼音", gen.ArgsDecomposeMust(pinyinOption{})...))
 
 	err := app.Run()
 	if err != nil {

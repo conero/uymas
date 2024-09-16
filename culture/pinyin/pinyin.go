@@ -3,6 +3,8 @@ package pinyin
 
 import (
 	"fmt"
+	"gitee.com/conero/uymas/v2/rock"
+	"gitee.com/conero/uymas/v2/util/fs"
 	"regexp"
 	"strings"
 )
@@ -10,37 +12,37 @@ import (
 var (
 	CcReg          = regexp.MustCompile("^[\u4E00-\u9FA5]$")
 	ChineseToneMap = map[string]map[string]int{
-		"ue": map[string]int{
+		"ue": {
 			"üē": 1,
 			"üé": 2,
 			"üě": 3,
 			"üè": 4,
 		},
-		"a": map[string]int{
+		"a": {
 			"ā": 1,
 			"á": 2,
 			"ǎ": 3,
 			"à": 4,
 		},
-		"e": map[string]int{
+		"e": {
 			"ē": 1,
 			"é": 2,
 			"ě": 3,
 			"è": 4,
 		},
-		"i": map[string]int{
+		"i": {
 			"ī": 1,
 			"í": 2,
 			"ǐ": 3,
 			"ì": 4,
 		},
-		"o": map[string]int{
+		"o": {
 			"ō": 1,
 			"ó": 2,
 			"ǒ": 3,
 			"ò": 4,
 		},
-		"u": map[string]int{
+		"u": {
 			"ū": 1,
 			"ú": 2,
 			"ǔ": 3,
@@ -49,10 +51,19 @@ var (
 	}
 )
 
+var (
+	hanRegString = `\p{Han}`
+	hanReg       *regexp.Regexp
+)
+
+const (
+	SearchAlphaLimit = 1000
+)
+
 // Pinyin the pinyin dick creator
 type Pinyin struct {
 	filename string
-	Dicks    map[string]map[string]string
+	dicks    map[string]Element
 }
 
 func NewPinyin(filename string) *Pinyin {
@@ -72,7 +83,7 @@ func (pyt *Pinyin) loadData() {
 
 // LineToDick turn lines to dick data.
 func (pyt *Pinyin) LineToDick(lines []string) *Pinyin {
-	innerDick := map[string]map[string]string{}
+	innerDick := map[string]Element{}
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
 		if line == "" {
@@ -89,13 +100,13 @@ func (pyt *Pinyin) LineToDick(lines []string) *Pinyin {
 		pinyin := strings.TrimSpace(queue[0])
 		chinese := strings.TrimSpace(queue[1])
 
-		innerDick[chinese] = map[string]string{
-			"unicode": unicode,
-			"pinyin":  pinyin,
-			"chinese": chinese,
+		innerDick[chinese] = Element{
+			Unicode: unicode,
+			pinyin:  pinyin,
+			Text:    chinese,
 		}
 	}
-	pyt.Dicks = innerDick
+	pyt.dicks = innerDick
 	return pyt
 }
 
@@ -107,43 +118,16 @@ func (pyt *Pinyin) GetPyTone(chinese string) string {
 
 // GetPyToneNumber get pinyin with tone that replace by number (1-4)
 func (pyt *Pinyin) GetPyToneNumber(chinese string) string {
-	chinese = pyt.GetPyToneFunc(chinese, func(word string) string {
-		for k, m := range ChineseToneMap {
-			isBreak := false
-			for s, n := range m {
-				if strings.Contains(word, s) {
-					word = strings.ReplaceAll(word, s, k)
-					word = fmt.Sprintf("%v%v", word, n)
-					isBreak = true
-					break
-				}
-			}
-			if isBreak {
-				break
-			}
-		}
-		return word
+	chinese = pyt.GetPyToneFunc(chinese, func(s string) string {
+		return PyinNumber(s)
 	})
 	return chinese
 }
 
 // GetPyToneAlpha get pinyin without tone
 func (pyt *Pinyin) GetPyToneAlpha(chinese string) string {
-	chinese = pyt.GetPyToneFunc(chinese, func(word string) string {
-		for k, m := range ChineseToneMap {
-			isBreak := false
-			for s, _ := range m {
-				if strings.Contains(word, s) {
-					word = strings.ReplaceAll(word, s, k)
-					isBreak = true
-					break
-				}
-			}
-			if isBreak {
-				break
-			}
-		}
-		return word
+	chinese = pyt.GetPyToneFunc(chinese, func(s string) string {
+		return PyinAlpha(s)
 	})
 	return chinese
 }
@@ -153,7 +137,7 @@ func (pyt *Pinyin) GetPyToneFunc(chinese string, call func(string) string) strin
 	queue := strings.Split(chinese, "")
 	var words []string
 
-	dicks := pyt.Dicks
+	dicks := pyt.dicks
 	for _, c := range queue {
 		c = strings.TrimSpace(c)
 		if c == "" {
@@ -162,9 +146,9 @@ func (pyt *Pinyin) GetPyToneFunc(chinese string, call func(string) string) strin
 		if dd, has := dicks[c]; has {
 			var word string
 			if call == nil {
-				word = pyt.checkOneMultipleWords(dd["pinyin"])
+				word = pyt.checkOneMultipleWords(dd.pinyin)
 			} else {
-				word = call(pyt.checkOneMultipleWords(dd["pinyin"]))
+				word = call(pyt.checkOneMultipleWords(dd.pinyin))
 			}
 			words = append(words, word)
 		} else {
@@ -192,4 +176,186 @@ func (pyt *Pinyin) checkOneMultipleWords(word string) string {
 	}
 
 	return word
+}
+
+func (pyt *Pinyin) FileLoadSuccess() bool {
+	if pyt.filename != "" {
+		if !fs.ExistPath(pyt.filename) {
+			return false
+		}
+
+		return len(pyt.dicks) > 0
+	}
+	return false
+}
+
+func (pyt *Pinyin) Dicks() map[string]Element {
+	return pyt.dicks
+}
+
+// Len get the length of dicks
+func (pyt *Pinyin) Len() int {
+	return len(pyt.dicks)
+}
+
+// SearchByGroupFunc @todo implement grouped text queries and call callback functions
+func (pyt *Pinyin) SearchByGroupFunc(s string, call func(el Element)) {
+	stc := ZhSentences(s)
+	// smail dynamic cache dick
+	var cacheDick = map[string]Element{}
+	dicks := pyt.dicks
+	for _, w := range stc.Words() {
+		if !IsHanWord(w) {
+			// empty
+			call(Element{
+				Text: w,
+			})
+		}
+
+		// smail
+		el, exist := cacheDick[w]
+		if exist {
+			call(el)
+			continue
+		}
+
+		// full
+		el, exist = dicks[w]
+		if exist {
+			cacheDick[w] = el
+			call(el)
+			continue
+		}
+
+	}
+}
+
+// SearchByGroup @todo implement grouped text queries
+func (pyt *Pinyin) SearchByGroup(words string) List {
+	var elList List
+	pyt.SearchByGroupFunc(words, func(el Element) {
+		elList = append(elList, el)
+	})
+	return elList
+}
+
+// IsHanWord detect if it is chinese word.
+func IsHanWord(w string) bool {
+	if hanReg == nil {
+		hanReg = regexp.MustCompile(hanRegString)
+	}
+
+	return hanReg.MatchString(w)
+}
+
+// PyinNumber turn pinyin with number
+//
+// Since alphanumeric pinyin is loaded at the end of the word rather than replacing it in situ,
+// new segmentation symbols are added
+func PyinNumber(word string, seqs ...string) string {
+	seq := rock.Param(",", seqs...)
+	var queue []string
+
+	for _, vs := range strings.Split(word, seq) {
+		for k, m := range ChineseToneMap {
+			isBreak := false
+			for s, n := range m {
+				if strings.Contains(vs, s) {
+					vs = strings.ReplaceAll(vs, s, k)
+					vs = fmt.Sprintf("%v%v", vs, n)
+					queue = append(queue, vs)
+					isBreak = true
+					break
+				}
+			}
+			if isBreak {
+				break
+			}
+		}
+	}
+
+	return strings.Join(queue, seq)
+}
+
+// PyinNumberList convert the pinyin number to C and output the list
+func PyinNumberList(word []string) []string {
+	for i, vs := range word {
+		for k, m := range ChineseToneMap {
+			isBreak := false
+			for s, n := range m {
+				if strings.Contains(vs, s) {
+					vs = strings.ReplaceAll(vs, s, k)
+					vs = fmt.Sprintf("%v%v", vs, n)
+					isBreak = true
+					break
+				}
+			}
+			if isBreak {
+				break
+			}
+		}
+		word[i] = vs
+	}
+
+	return word
+}
+
+// PyinAlpha turn pinyin with alpha
+func PyinAlpha(word string, isAllArgs ...bool) string {
+	isAll := rock.Param(false, isAllArgs...)
+	for k, m := range ChineseToneMap {
+		isBreak := false
+		for s := range m {
+			if strings.Contains(word, s) {
+				word = strings.ReplaceAll(word, s, k)
+				isBreak = !isAll
+				if isBreak {
+					break
+				} else {
+					continue
+				}
+			}
+		}
+		if isBreak {
+			break
+		}
+	}
+	return word
+}
+
+// SearchAlpha search word by single alpha
+func (pyt *Pinyin) SearchAlpha(alpha string, limits ...int) List {
+	limit := rock.Param(SearchAlphaLimit, limits...)
+	list := List{}
+
+	for _, v := range pyt.dicks {
+		matchAlpha := PyinAlpha(v.pinyin)
+		if limit > 0 && len(list) >= limit {
+			break
+		}
+		// Search from polyphonic word
+		pyList := v.PinyinList()
+		if len(pyList) > 0 {
+			isContinue := false
+			for _, py := range pyList {
+				if strings.Index(py, alpha) == 0 {
+					list = append(list, v)
+					isContinue = true
+					break
+				}
+			}
+			if isContinue {
+				continue
+			}
+		}
+		if strings.Index(matchAlpha, alpha) == 0 {
+			list = append(list, v)
+		}
+	}
+
+	return list
+}
+
+func (pyt *Pinyin) IsEmpty() bool {
+	return pyt.Len() == 0
 }

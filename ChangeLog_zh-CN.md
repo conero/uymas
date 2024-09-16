@@ -36,10 +36,21 @@
 
 ### v2.0.0-rc.2/dev
 
-> uymas2 二进制程序实现
+> uymas2 二进制程序实现，pinyin相关函数初步与 v1.4.1 进行合并
 
 - **cli**
   - pref: `Fn` 标注指定名称便于IDE自动生成
+- **str**
+  - feat: 新增函数 Str.ParseUnicode 用于解析Unicode（合并来自v1.4.1）。
+  - pref: 字符串代码机构化调整，将 RandString 移动到单独文件中
+- **rock**
+  - feat: 新增函数 ListNoRepeat 来自对 v1.4.1 版本的合并
+- **culture/pinyin**
+  - feat: 合并 v1.4.1 版本程序使其实现拼音搜索
+- **culture/pinyin/material**
+  - chore：mt_pinyin.txt 升级 0.12.0 --> 0.14.0
+- **cmd/uymas2**
+  - feat: 新增 pinyin 命令，来自对 v1.4.1 版本的程序合并以及处理
 
 
 
