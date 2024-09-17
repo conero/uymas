@@ -4,6 +4,7 @@ package number
 import (
 	"fmt"
 	"math"
+	"regexp"
 	"strconv"
 )
 
@@ -151,4 +152,14 @@ func Round(num float64, b int) float64 {
 	}
 	num = float64(int(num)) + float64(n2t)/math.Pow10(b)
 	return num
+}
+
+// NumberClear number string clear like '_' or ','
+func NumberClear(s string) string {
+	matched, _ := regexp.MatchString(`\d+([_,]\d)+\d*(\.\d)*`, s)
+	if !matched {
+		return s
+	}
+	clrReg := regexp.MustCompile(`[_,]`)
+	return clrReg.ReplaceAllString(s, "")
 }

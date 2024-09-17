@@ -73,13 +73,14 @@ func main() {
 		Alias:   []string{"s"},
 	}))
 
-	app.End(func(cli.ArgsParser) {
-		fmt.Println()
-	})
-
 	app.CommandList(cmdPinyin, []string{"pinyin", "py"},
 		cli.Help("生成汉字拼音", gen.ArgsDecomposeMust(pinyinOption{})...))
 
+	app.Command(cmdCalc, "cal", cli.Help("等式计算器"))
+
+	app.End(func(cli.ArgsParser) {
+		fmt.Println()
+	})
 	err := app.Run()
 	if err != nil {
 		log.Fatalf("命令行执行错误，%v", err)
