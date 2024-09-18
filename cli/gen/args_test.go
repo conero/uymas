@@ -9,7 +9,7 @@ import (
 )
 
 type top0Data struct {
-	Version bool `cmd:"version help:输出版本信息（top0）层"`
+	Version string `cmd:"version help:输出版本信息（top0）层"`
 }
 
 type topData struct {
@@ -31,8 +31,9 @@ type dressData struct {
 func TestArgsDress(t *testing.T) {
 	vStr := "Joshua Conero"
 	var vF32 float32 = 75
+	version := "3.13.0 2024"
 
-	cmdMock := []string{"uymas", "test", "-N", vStr, "--score", fmt.Sprintf("%.2f", vF32), "-O"}
+	cmdMock := []string{"uymas", "test", "-N", vStr, "--score", fmt.Sprintf("%.2f", vF32), "-O", "--vv", "-version", version}
 	args := cli.NewArgs(cmdMock...)
 	//t.Logf("command: %v\nargs:%v", cmdMock, args)
 	var data dressData
@@ -44,7 +45,13 @@ func TestArgsDress(t *testing.T) {
 	} else if data.Score != vF32 {
 		t.Errorf("float32 赋值失败，%v ≠ %v", data.Score, vF32)
 	} else if !data.Off {
-		t.Errorf("bool 赋值失败，%v ≠ %v", data.Score, vF32)
+		t.Errorf("bool 赋值失败，%v ≠ %v", data.Score, true)
+	} else if !data.IsVerbose {
+		t.Errorf("top bool 赋值失败，%v ≠ %v", data.IsVerbose, true)
+	} else if data.Version == "" {
+		t.Errorf("top/level0 string 赋值失败，%v ≠ %v", data.Version, version)
+	} else {
+		t.Logf("data: %#v\n", data)
 	}
 
 }

@@ -43,16 +43,12 @@ func argsValueCheck(ref reflect.Value) (reflect.Value, error) {
 	return rValue, nil
 }
 
-// ArgsDress Dress the command argument up on the specified data entity (struct)
-func ArgsDress(args cli.ArgsParser, data any) error {
-	ref := reflect.ValueOf(data)
-	realValue, err := argsValueCheck(ref)
-	if err != nil {
-		return err
+func setToStruct(tgt reflect.Value, args cli.ArgsParser) {
+	if tgt.Kind() != reflect.Struct {
+		return
 	}
-	rtp := realValue.Type()
-
-	for i := 0; i < rtp.NumField(); i++ {
+	rtp := tgt.Type()
+	for i := 0; i < tgt.NumField(); i++ {
 		fieldType := rtp.Field(i)
 		name := fieldType.Tag.Get(ArgsTagName)
 		tagValue := name
@@ -67,9 +63,15 @@ func ArgsDress(args cli.ArgsParser, data any) error {
 			continue
 		}
 
+		// field inherit by parent struct.
+		if fieldType.Anonymous {
+			setToStruct(tgt.Field(i), args)
+			continue
+		}
+
 		keys := getNameByTag(name)
 
-		var vFiled = realValue.Field(i)
+		var vFiled = tgt.Field(i)
 		vfKind := vFiled.Kind()
 
 		if vfKind == reflect.Bool && args.Switch(keys...) {
@@ -91,6 +93,18 @@ func ArgsDress(args cli.ArgsParser, data any) error {
 		convert.SetByStr(vFiled, value)
 	}
 
+	return
+}
+
+// ArgsDress Dress the command argument up on the specified data entity (struct)
+func ArgsDress(args cli.ArgsParser, data any) error {
+	ref := reflect.ValueOf(data)
+	realValue, err := argsValueCheck(ref)
+	if err != nil {
+		return err
+	}
+
+	setToStruct(realValue, args)
 	return nil
 }
 
