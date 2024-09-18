@@ -101,23 +101,35 @@ func ArgsDecompose(data any, excludes ...string) ([]cli.Option, error) {
 	if err != nil {
 		return nil, err
 	}
-	rtp := realValue.Type()
+	return StructDress(realValue, excludes...), nil
+}
 
-	var optionList []cli.Option
-	for i := 0; i < rtp.NumField(); i++ {
-		fieldType := rtp.Field(i)
-		cmdTag := fieldType.Tag.Get(ArgsTagName)
+// StructDress dress up the struct property value (which supports composition/inheritance) on `cli.Option`
+func StructDress(vStruct reflect.Value, excludes ...string) (inheritOpts []cli.Option) {
+	if vStruct.Kind() != reflect.Struct {
+		return
+	}
+	vType := vStruct.Type()
+	num := vStruct.NumField()
+	for i := 0; i < num; i++ {
+		field := vStruct.Field(i)
+		sField := vType.Field(i)
+		cmdTag := sField.Tag.Get(ArgsTagName)
 		if cmdTag == ArgsTagOmit {
+			continue
+		}
+		if sField.Anonymous {
+			inheritOpts = append(inheritOpts, StructDress(field, excludes...)...)
 			continue
 		}
 		option := OptionTagParse(cmdTag)
 		var name string
 		if option == nil {
 			if name == "" {
-				name = fieldType.Tag.Get("json")
+				name = sField.Tag.Get("json")
 			}
 			if name == "" {
-				name = str.Str(fieldType.Name).LowerStyle()
+				name = str.Str(sField.Name).LowerStyle()
 			}
 			if rock.InList(excludes, name) {
 				continue
@@ -129,9 +141,9 @@ func ArgsDecompose(data any, excludes ...string) ([]cli.Option, error) {
 			continue
 		}
 
-		optionList = append(optionList, *option)
+		inheritOpts = append(inheritOpts, *option)
 	}
-	return optionList, nil
+	return
 }
 
 func ArgsDecomposeMust(data any, excludes ...string) []cli.Option {
