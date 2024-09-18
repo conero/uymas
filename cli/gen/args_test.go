@@ -1,13 +1,21 @@
 package gen
 
 import (
-	"encoding/json"
 	"fmt"
 	"gitee.com/conero/uymas/v2/cli"
 	"gitee.com/conero/uymas/v2/rock"
 	"gitee.com/conero/uymas/v2/str"
 	"testing"
 )
+
+type top0Data struct {
+	Version bool `cmd:"version help:输出版本信息（top0）层"`
+}
+
+type topData struct {
+	IsVerbose bool `cmd:"verbose,vv help:是否详细输出"`
+	top0Data
+}
 
 type dressData struct {
 	Off        bool   `cmd:"off,O,close required help:请求数据关闭"`
@@ -17,6 +25,7 @@ type dressData struct {
 	SupportExt []string
 	Rates      []float32 `cmd:"rates,rate,R"`
 	Data       []string  `cmd:"data,d required help:输入数组列表，\\s\\s支持列表"`
+	topData
 }
 
 func TestArgsDress(t *testing.T) {
@@ -47,9 +56,8 @@ func TestArgsDecompose(t *testing.T) {
 	} else if optionsList == nil {
 		t.Errorf("Args 解析数据为空")
 	} else {
-		bys, _ := json.Marshal(optionsList)
-		t.Logf("解析后的数据：\n%s", string(bys))
-		t.Logf("%#v", optionsList[len(optionsList)-1])
+		help := cli.Help("doc 选项生成", optionsList...)
+		t.Logf("生成文档如下：\n%s", help.OptionHelpMsg())
 	}
 }
 

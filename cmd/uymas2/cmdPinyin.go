@@ -17,7 +17,6 @@ import (
 )
 
 type pinyinOption struct {
-	globalOption
 	File      string   `cmd:"file,f help:将文件的内容作为输入以获取字典拼音"`
 	IsUnicode bool     `cmd:"unicode,U help:将unicode码转为字符串实体"`
 	Utf16     bool     `cmd:"utf16 help:同步将输入的汉字转或任何字符转\sUnicode\s代码"`
@@ -26,6 +25,7 @@ type pinyinOption struct {
 	Alpha     bool     `cmd:"alpha,a help:输出不带音标拉丁文pinyin"`
 	All       bool     `cmd:"all,A help:输出所有类型的拼音"`
 	Seps      []string `cmd:"sep,S help:设置查询到的字符分割，默认为空"`
+	globalOption
 }
 
 func cmdPinyin(args cli.ArgsParser) {
