@@ -102,6 +102,8 @@ func main() {
 	app.Command(cmdCalc, "cal", cli.Help("等式计算器"))
 	app.Command(cmdGanz, "ganz", cli.Help("计算给定年的干支纪元，默认今年"))
 	app.Command(cmdHash, "hash", cli.Help("读取指定文件hash码列表", gen.ArgsDecomposeMust(cmdHashOpt{})...))
+	app.CommandList(cmdDigit, []string{"digit", "dg"},
+		cli.Help("阿拉伯数字转中文（默认大写）", gen.ArgsDecomposeMust(digitOption{})...))
 	app.End(func(cli.ArgsParser) {
 		fmt.Println()
 	})
