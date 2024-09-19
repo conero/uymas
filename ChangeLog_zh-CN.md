@@ -43,7 +43,6 @@
 - **cli/gen**
   - feat: 新增方法 `StructDress` 实现对struct属性值装扮，支持组合/继承值
   - pref:发方法 `ArgsDress` 支持继承的struct进行参数赋值
-  
 - **str**
   - feat: 新增函数 Str.ParseUnicode 用于解析Unicode（合并来自v1.4.1）。
   - pref: 字符串代码机构化调整，将 RandString 移动到单独文件中
@@ -54,8 +53,11 @@
 - **culture/pinyin/material**
   - chore：mt_pinyin.txt 升级 0.12.0 --> 0.14.0
 - **cmd/uymas2**
-  - feat: 新增 pinyin, cal 命令，来自对 v1.4.1 版本的程序合并以及处理
+  - feat: 新增 pinyin, cal，ganz，hash 命令，来自对 v1.4.1 版本的程序合并以及处理
   - pref: 项目结构优化，cmd 命名为 `cmdX`
+- **internal/recipe**
+  - feat: 新增内部私有包，常用于内部 cmd或者实验性包等
+
 
 
 

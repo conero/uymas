@@ -91,5 +91,5 @@ func cmdCalc(args cli.ArgsParser) {
 	lgr.Info("输入等式：\n%s => %s， %s,"+
 		ansi.Style(equal, ansi.Cyan),
 		ansi.Style(calc.NumberSplitFormat(rslt), ansi.Green),
-		ansi.Style(calc.FloatSimple(cal.String())), ansi.BlackBr, calc.FloatSimple(cal.String()))
+		ansi.Style(calc.FloatSimple(cal.String()), ansi.BlackBr), calc.FloatSimple(cal.String()))
 }

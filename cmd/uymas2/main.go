@@ -4,15 +4,38 @@ import (
 	"fmt"
 	"gitee.com/conero/uymas/v2"
 	"gitee.com/conero/uymas/v2/cli"
+	"gitee.com/conero/uymas/v2/cli/ansi"
 	"gitee.com/conero/uymas/v2/cli/gen"
+	"gitee.com/conero/uymas/v2/culture/ganz"
 	"gitee.com/conero/uymas/v2/logger/lgr"
 	"log"
 	"runtime"
+	"strconv"
 	"time"
 )
 
 type globalOption struct {
 	IsVerbose bool `cmd:"verbose,vv help:是否详细输出"`
+}
+
+func cmdGanz(args cli.ArgsParser) {
+	year := args.SubCommand()
+	if year == "" {
+		lgr.Info("请输入年份，来计算干支纪元法。默认为当年")
+	}
+
+	y, _ := strconv.Atoi(year)
+	if y <= 0 {
+		y = time.Now().Year()
+	}
+
+	gz, zod := ganz.CountGzAndZodiac(y)
+
+	fmt.Printf("  %d年，干支纪元%s年，属%s.\n", y, gz, zod)
+	fmt.Printf("\n天干：%s\n地支：%s\n属相：%s\n",
+		ansi.Style(ganz.TianGan, ansi.CyanBr),
+		ansi.Style(ganz.DiZhi, ansi.CyanBr),
+		ansi.Style(ganz.DiZhi, ansi.CyanBr))
 }
 
 func main() {
@@ -77,7 +100,8 @@ func main() {
 		cli.Help("生成汉字拼音", gen.ArgsDecomposeMust(pinyinOption{})...))
 
 	app.Command(cmdCalc, "cal", cli.Help("等式计算器"))
-
+	app.Command(cmdGanz, "ganz", cli.Help("计算给定年的干支纪元，默认今年"))
+	app.Command(cmdHash, "hash", cli.Help("读取指定文件hash码列表", gen.ArgsDecomposeMust(cmdHashOpt{})...))
 	app.End(func(cli.ArgsParser) {
 		fmt.Println()
 	})
