@@ -39,6 +39,8 @@
 > uymas2 二进制程序实现，pinyin相关函数初步与 v1.4.1 进行合并
 
 - **cli**
+  - feat: option 新增 isdata cmd 标签用于标注option中的输入数据（非选项）
+  - feat: option 新增 `DataOption` 用于标记请求数据
   - pref: `Fn` 标注指定名称便于IDE自动生成
 - **cli/gen**
   - feat: 新增方法 `StructDress` 实现对struct属性值装扮，支持组合/继承值

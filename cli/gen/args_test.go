@@ -25,6 +25,7 @@ type dressData struct {
 	SupportExt []string
 	Rates      []float32 `cmd:"rates,rate,R"`
 	Data       []string  `cmd:"data,d required help:输入数组列表，\\s\\s支持列表"`
+	Input      string    `cmd:"input isdata"`
 	topData
 }
 

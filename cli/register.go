@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"gitee.com/conero/uymas/v2/logger/lgr"
 	"gitee.com/conero/uymas/v2/rock"
-	"gitee.com/conero/uymas/v2/str"
 	"log"
 	"sort"
 	"strings"
@@ -107,13 +106,36 @@ func (r *Register[T]) Help(t T) Application[T] {
 	return r
 }
 
+func (r *Register[T]) helpCmdName() (list []string, keys []string, maxLen int) {
+	keys = rock.MapKeys(r.register)
+	sort.Strings(keys)
+	maxLen = 0
+	for _, key := range keys {
+		reg := r.register[key]
+		opt := reg.Command.DataOption()
+		docName := key
+		getName := ""
+		if opt != nil {
+			getName = opt.GetName()
+		}
+		if opt != nil && getName != "" {
+			docName += " [" + opt.GetName() + "]"
+		}
+		list = append(list, docName)
+		vLen := len(docName)
+		if vLen > maxLen {
+			maxLen = vLen
+		}
+	}
+	return
+}
+
 func (r *Register[T]) GetHelp(cmd string) (helpMsg string, exits bool) {
 	if cmd == "" {
 		var lines []string
-		keys := rock.MapKeys(r.register)
-		maxLen := str.QueueMaxLen(keys)
-		sort.Strings(keys)
-		for _, name := range keys {
+		list, keys, maxLen := r.helpCmdName()
+		for i, name := range keys {
+			docName := list[i]
 			meta := r.register[name]
 			reg := meta.Command
 			cmdHelp := reg.Help
@@ -123,7 +145,7 @@ func (r *Register[T]) GetHelp(cmd string) (helpMsg string, exits bool) {
 			if len(reg.Alias) > 0 {
 				cmdHelp += "，别名支持 " + strings.Join(reg.Alias, ",")
 			}
-			line := fmt.Sprintf("%-"+(fmt.Sprintf("%d", maxLen+8))+"s", name) + cmdHelp
+			line := fmt.Sprintf("%-"+(fmt.Sprintf("%d", maxLen+8))+"s", docName) + cmdHelp
 			optionHelp := reg.OptionHelpMsg()
 			if optionHelp != "" {
 				line += "\n" + optionHelp

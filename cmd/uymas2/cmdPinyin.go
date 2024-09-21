@@ -25,6 +25,7 @@ type pinyinOption struct {
 	Alpha     bool     `cmd:"alpha,a help:输出不带音标拉丁文pinyin"`
 	All       bool     `cmd:"all,A help:输出所有类型的拼音"`
 	Seps      []string `cmd:"sep,S help:设置查询到的字符分割，默认为空"`
+	Words     string   `cmd:"words isdata"`
 	globalOption
 }
 

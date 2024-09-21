@@ -15,6 +15,8 @@ type Option struct {
 	ValidFn  func(ArgsParser) string `json:"-"`
 	DefValue string                  `json:"defValue"`
 	Help     string                  `json:"help"`
+	// When set, indicates the input data of the option but the command
+	IsData bool `json:"isData"`
 }
 
 // GetName Gets option names automatically compatible with aliases or actual names
@@ -68,8 +70,9 @@ type CommandOptional struct {
 	Options     []Option
 	SubCommands []CommandOptional
 	// Whether the subcommand is an entry
-	IsEntry  bool
-	OffValid bool // Turn off validation
+	IsEntry    bool
+	OffValid   bool // Turn off validation
+	dataOption *Option
 }
 
 // OptionHelpMsg generate an options help document through the options parameters you set
@@ -82,6 +85,11 @@ func (c CommandOptional) OptionHelpMsg(levels ...int) string {
 	var pairList [][2]string
 	maxLen := 0
 	for _, opt := range c.Options {
+		if opt.IsData {
+			var vDataOpt = opt
+			c.dataOption = &vDataOpt
+			continue
+		}
 		var optList []string
 		if opt.Name != "" {
 			optList = append(optList, opt.Name)
@@ -268,6 +276,20 @@ func (c CommandOptional) SubCommand(subName string) (optional CommandOptional, i
 func (c CommandOptional) NoValid() CommandOptional {
 	c.OffValid = true
 	return c
+}
+
+func (c CommandOptional) DataOption() *Option {
+	if c.dataOption != nil {
+		return c.dataOption
+	}
+	var vOpt Option
+	for _, opt := range c.Options {
+		if opt.IsData {
+			vOpt = opt
+			return &vOpt
+		}
+	}
+	return nil
 }
 
 // Help Used to set help information

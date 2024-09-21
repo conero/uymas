@@ -22,6 +22,7 @@ const ArgsCmdRequired = "required"
 const ArgsCmdHelp = "help"
 const ArgsCmdDefault = "default"
 const ArgsTagOmit = "-"
+const ArgsTagData = "isdata"
 
 func argsValueCheck(ref reflect.Value) (reflect.Value, error) {
 	isStruct := ref.Kind() == reflect.Struct
@@ -189,7 +190,9 @@ func OptionTagParse(vTag string) *cli.Option {
 			option.Require = true
 			continue
 		}
-
+		if s == ArgsTagData {
+			option.IsData = true
+		}
 		idx := strings.Index(s, ":")
 		if idx > 0 {
 			key := s[:idx]
