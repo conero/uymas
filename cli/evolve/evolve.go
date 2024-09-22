@@ -82,6 +82,7 @@ func (e *Evolve[T]) toRunRg(rg T) bool {
 		} else {
 			if !runMth(str.Str(sumCommand).Ucfirst()) {
 				runMth(CmdMtdLost)
+				return false
 			}
 		}
 

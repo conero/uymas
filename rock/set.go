@@ -57,6 +57,17 @@ func ListRemove[T constraints.Equable](list []T, removes ...T) []T {
 	return newList
 }
 
+// ListGetOr Read element values through index or use default substitution (when not present)
+func ListGetOr[T any](list []T, index int, def T) T {
+	if index < 0 {
+		return def
+	}
+	if len(list) > index {
+		return list[index]
+	}
+	return def
+}
+
 // ExtractArrUnique extracting array elements with loss (non-repeatable) from an array
 func ExtractArrUnique[T constraints.ValueIterable](count int, arr []T) []T {
 	vLen := len(arr)

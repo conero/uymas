@@ -4,6 +4,7 @@ import (
 	"errors"
 	"gitee.com/conero/uymas/v2/cli"
 	"gitee.com/conero/uymas/v2/data/convert"
+	"gitee.com/conero/uymas/v2/data/input"
 	"gitee.com/conero/uymas/v2/rock"
 	"gitee.com/conero/uymas/v2/str"
 	"reflect"
@@ -23,6 +24,7 @@ const ArgsCmdHelp = "help"
 const ArgsCmdDefault = "default"
 const ArgsTagOmit = "-"
 const ArgsTagData = "isdata"
+const ArgsTagNext = "next"
 
 func argsValueCheck(ref reflect.Value) (reflect.Value, error) {
 	isStruct := ref.Kind() == reflect.Struct
@@ -71,9 +73,19 @@ func setToStruct(tgt reflect.Value, args cli.ArgsParser) {
 		}
 
 		keys := getNameByTag(name)
-
+		if len(keys) == 0 {
+			continue
+		}
 		var vFiled = tgt.Field(i)
 		vfKind := vFiled.Kind()
+
+		option := OptionTagParse(tagValue)
+		// data
+		if option != nil && option.IsData {
+			valueStr := rock.ListGetOr(args.CommandList(), option.Next-1, args.SubCommand())
+			convert.SetByStr(vFiled, valueStr)
+			continue
+		}
 
 		if vfKind == reflect.Bool && args.Switch(keys...) {
 			vFiled.SetBool(true)
@@ -87,8 +99,7 @@ func setToStruct(tgt reflect.Value, args cli.ArgsParser) {
 		}
 
 		value := args.Get(keys...)
-		if value == "" && tagValue != "" {
-			option := OptionTagParse(tagValue)
+		if value == "" && option != nil {
 			value = option.DefValue
 		}
 		convert.SetByStr(vFiled, value)
@@ -169,6 +180,10 @@ func ArgsDecomposeMust(data any, excludes ...string) []cli.Option {
 // OptionTagParse Resolves the value of the tag into an option object
 //
 // syntax rules of tag: `"name,n required default:111 help:help msg"`.
+//
+// When using command data instead of options, you can specify `next` or default `subCommand`.
+//
+// `"input isdata next:2"`
 func OptionTagParse(vTag string) *cli.Option {
 	if vTag == "" {
 		return nil
@@ -193,6 +208,10 @@ func OptionTagParse(vTag string) *cli.Option {
 		if s == ArgsTagData {
 			option.IsData = true
 		}
+		if s == ArgsTagNext {
+			option.Next = 1
+			continue
+		}
 		idx := strings.Index(s, ":")
 		if idx > 0 {
 			key := s[:idx]
@@ -202,6 +221,8 @@ func OptionTagParse(vTag string) *cli.Option {
 				option.Help = str.Str(value).Unescape()
 			case ArgsCmdDefault:
 				option.DefValue = str.Str(value).Unescape()
+			case ArgsTagNext:
+				option.Next = input.Stringer(value).Int()
 			}
 		}
 	}

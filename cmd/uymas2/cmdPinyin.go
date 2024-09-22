@@ -38,7 +38,7 @@ func cmdPinyin(args cli.ArgsParser) {
 		return
 	}
 
-	words := args.SubCommand()
+	words := opt.Words
 	if opt.File != "" {
 		bys, err := os.ReadFile(opt.File)
 		if err != nil {

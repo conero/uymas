@@ -15,6 +15,7 @@ type Option struct {
 	ValidFn  func(ArgsParser) string `json:"-"`
 	DefValue string                  `json:"defValue"`
 	Help     string                  `json:"help"`
+	Next     int                     `json:"next"`
 	// When set, indicates the input data of the option but the command
 	IsData bool `json:"isData"`
 }
