@@ -104,6 +104,8 @@ func main() {
 	app.Command(cmdHash, "hash", cli.Help("读取指定文件hash码列表", gen.ArgsDecomposeMust(cmdHashOpt{})...))
 	app.CommandList(cmdDigit, []string{"digit", "dg"},
 		cli.Help("阿拉伯数字转中文（默认大写）", gen.ArgsDecomposeMust(digitOption{})...))
+	app.CommandList(cmdDatediff, []string{"datediff", "dd"},
+		cli.Help("日期运算", gen.ArgsDecomposeMust(ddOption{})...))
 	app.End(func(cli.ArgsParser) {
 		fmt.Println()
 	})

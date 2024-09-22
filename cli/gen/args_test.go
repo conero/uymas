@@ -26,6 +26,8 @@ type dressData struct {
 	Rates      []float32 `cmd:"rates,rate,R"`
 	Data       []string  `cmd:"data,d required help:输入数组列表，\\s\\s支持列表"`
 	Input      string    `cmd:"input isdata"`
+	Add        string    `cmd:"add,a help:日期加，采用\\sd/h/m/s\\s表示天/时/分秒，减则采用负号（“-/减/负”）。默认为天"`
+	Add2       string    `cmd:"add2 help:日期加，采用\\sd/h/m/s\\s表示天/时/分秒，减则采用负号（\"-/减/负\"）。默认为天"`
 	topData
 }
 
