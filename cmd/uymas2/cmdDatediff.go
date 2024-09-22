@@ -11,12 +11,6 @@ import (
 	"time"
 )
 
-/*
-*
---end,-e    结束数据，默认为当天
-
-	--add,-a    日期加，采用 d/h/m/s 表示天/时/分秒，减则采用负号（"-/减/负"）。默认为天
-*/
 type ddOption struct {
 	End  string `cmd:"end,e help:结束数据，默认为当天"`
 	Add  string `cmd:"add,a help:日期加，采用\\sd/h/m/s\\s表示天/时/分秒，减则采用负号（“-/减/负”）。默认为天"`

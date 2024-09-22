@@ -58,7 +58,7 @@
 - **culture/pinyin/material**
   - chore：mt_pinyin.txt 升级 0.12.0 --> 0.14.0
 - **cmd/uymas2**
-  - feat: 新增 pinyin, cal，ganz，hash，digit，datediff 命令，来自对 v1.4.1 版本的程序合并以及处理
+  - feat: 新增 pinyin, cal，ganz，hash，digit，datediff，base64 命令，来自对 v1.4.1 版本的程序合并以及处理
   - pref: 项目结构优化，cmd 命名为 `cmdX`
 - **internal/recipe**
   - feat: 新增内部私有包，常用于内部 cmd或者实验性包等
