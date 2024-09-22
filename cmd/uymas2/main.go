@@ -108,6 +108,8 @@ func main() {
 		cli.Help("日期运算", gen.ArgsDecomposeMust(ddOption{})...))
 	app.CommandList(cmdBase64, []string{"base64", "b64"},
 		cli.Help("读取文件或字符串的base64", gen.ArgsDecomposeMust(base64Option{})...))
+	app.CommandList(cmdScan, []string{"scan", "sc"},
+		cli.Help("目录扫描工具", gen.ArgsDecomposeMust(scanOption{})...))
 	app.End(func(cli.ArgsParser) {
 		fmt.Println()
 	})
