@@ -52,6 +52,7 @@
 - **rock**
   - feat: 新增函数 ListNoRepeat 来自对 v1.4.1 版本的合并
   - feat: 新增函数 `ListGetOr` 使用通过索引获取数组元素的值或使用默认值
+  - feat: 新增函数 `FormatTable` 其是对 1.4.1 版本中的重构
 - **culture/pinyin**
   - feat: 合并 v1.4.1 版本程序使其实现拼音搜索
 - **culture/pinyin/material**

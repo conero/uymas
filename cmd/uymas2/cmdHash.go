@@ -1,16 +1,19 @@
 package main
 
 import (
+	"fmt"
 	"gitee.com/conero/uymas/v2/cli"
 	"gitee.com/conero/uymas/v2/cli/gen"
 	"gitee.com/conero/uymas/v2/internal/recipe"
 	"gitee.com/conero/uymas/v2/logger/lgr"
+	"gitee.com/conero/uymas/v2/rock"
 	"gitee.com/conero/uymas/v2/util/tm"
 	"os"
 )
 
 type cmdHashOpt struct {
 	Vtype string `cmd:"type,t help:支持md5, sha1, sha256, sha512等"`
+	Path  string `cmd:"path isdata"`
 }
 
 func cmdHash(args cli.ArgsParser) {
@@ -21,7 +24,7 @@ func cmdHash(args cli.ArgsParser) {
 		return
 	}
 	timeDiffFn := tm.SpendFn()
-	vPath := args.SubCommand()
+	vPath := opt.Path
 	if vPath == "" {
 		pwdDir, _ := os.Getwd()
 		vPath = pwdDir
@@ -46,6 +49,7 @@ func cmdHash(args cli.ArgsParser) {
 		return
 	}
 
-	lgr.Info("文件读取(%s)成功，如列表下：\n%v\n", fh.Vtype, tableData)
+	lgr.Info("文件读取(%s)成功，如列表下：\n%v\n", fh.Vtype, rock.FormatTable(tableData))
+	fmt.Println()
 	lgr.Info("用时 %s", timeDiffFn())
 }

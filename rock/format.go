@@ -45,3 +45,46 @@ func FormatList[V any](vList []V, joins ...string) string {
 
 	return strings.Join(queue, "\n")
 }
+
+func FormatTable[V any](table [][]V) string {
+	var maxLenLs []int
+	var data [][]string
+	// calculate the maximum length value
+	for _, vc := range table {
+		var line []string
+		for i, v := range vc {
+			vStr := fmt.Sprintf("%v", v)
+			maxLen := ListGetOr(maxLenLs, i, 0)
+			vLen := len(vStr)
+			if vLen > maxLen {
+				maxLen = vLen
+				lnLen := len(line)
+				if lnLen <= i {
+					maxLenLs = append(maxLenLs, maxLen)
+				} else {
+					maxLenLs[i] = maxLen
+				}
+			}
+			line = append(line, vStr)
+		}
+		data = append(data, line)
+	}
+
+	// Output value construction
+	var outputLns []string
+	numCount := len(maxLenLs)
+	for _, sArr := range data {
+		var lnStr string
+		for i, sLn := range sArr {
+			maxLen := maxLenLs[i]
+			sep := 0
+			if i+1 < numCount {
+				sep = 4
+			}
+			vFmt := "%-" + fmt.Sprintf("%d", maxLen+sep) + "s"
+			lnStr += fmt.Sprintf(vFmt, sLn)
+		}
+		outputLns = append(outputLns, lnStr)
+	}
+	return strings.Join(outputLns, "\n")
+}
