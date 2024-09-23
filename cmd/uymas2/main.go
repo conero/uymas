@@ -6,6 +6,7 @@ import (
 	"gitee.com/conero/uymas/v2/cli"
 	"gitee.com/conero/uymas/v2/cli/ansi"
 	"gitee.com/conero/uymas/v2/cli/gen"
+	"gitee.com/conero/uymas/v2/cli/repl"
 	"gitee.com/conero/uymas/v2/culture/ganz"
 	"gitee.com/conero/uymas/v2/logger/lgr"
 	"log"
@@ -110,6 +111,11 @@ func main() {
 		cli.Help("读取文件或字符串的base64", gen.ArgsDecomposeMust(base64Option{})...))
 	app.CommandList(cmdScan, []string{"scan", "sc"},
 		cli.Help("目录扫描工具", gen.ArgsDecomposeMust(scanOption{})...))
+	// repl
+	app.Command(func(cli.ArgsParser) {
+		repl.Command("uymas", app)
+	}, "repl",
+		cli.Help("交互式对话命令"))
 	app.End(func(cli.ArgsParser) {
 		fmt.Println()
 	})
