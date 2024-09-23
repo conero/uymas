@@ -10,6 +10,7 @@ import (
 	"gitee.com/conero/uymas/v2/rock"
 	"gitee.com/conero/uymas/v2/util/fs"
 	"gitee.com/conero/uymas/v2/util/tm"
+	"sort"
 )
 
 type scanOption struct {
@@ -17,6 +18,7 @@ type scanOption struct {
 	Exclude    []string `cmd:"exclude mark:... help:排除"`
 	Include    []string `cmd:"include mark:... help:包含"`
 	IsParallel bool     `cmd:"parallel,ll help:[实验性]的并行扫描"`
+	NoSort     bool     `cmd:"not-sort help:禁止文件大小排序"`
 	Dir        string   `cmd:"dir isdata"`
 }
 
@@ -50,19 +52,50 @@ func cmdScan(args cli.ArgsParser) {
 	} else {
 		er = dd.Scan()
 	}
+	if er != nil {
+		lgr.Error("目录扫描异常，%v", er)
+		return
+	}
 
-	if er == nil {
-		var table = [][]any{{"Path", "Size", "Depth"}}
+	var table = [][]any{{"Path", "Size", "Depth"}}
+	if opt.NoSort {
 		for key, tcd := range dd.TopChildDick {
 			table = append(table, []any{key, number.Bytes(tcd.Size), tcd.Depth})
 		}
-
-		fmt.Println(rock.FormatTable(table))
-		fmt.Println()
-		fmt.Printf(" 文件扫目标目录： %v，是否并发: %v(线程分配 %v).\n", dd.BaseDir(), isParallel, dd.ChanNumber())
-		fmt.Printf(" 文件扫描数： %v, 目录: %v, 文件： %v.\n", dd.AllItem, dd.AllDirItem, dd.AllFileItem)
-		fmt.Printf(" 目录大小: %v.\n", number.Bytes(dd.AllSize))
-		fmt.Printf(" 使用时间： %v.\n", dd.Runtime)
+	} else {
+		var diskAttr = map[int64]scan.ChildDirData{}
+		var sizeList []int64
+		var repeatArr = map[int64][]scan.ChildDirData{}
+		for _, tcd := range dd.TopChildDick {
+			_, exist := diskAttr[tcd.Size]
+			if exist {
+				repeat := repeatArr[tcd.Size]
+				repeat = append(repeat, tcd)
+				repeatArr[tcd.Size] = repeat
+				continue
+			}
+			diskAttr[tcd.Size] = tcd
+			sizeList = append(sizeList, tcd.Size)
+		}
+		sort.Slice(sizeList, func(i, j int) bool {
+			return sizeList[i] > sizeList[j]
+		})
+		for _, vSize := range sizeList {
+			tcd := diskAttr[vSize]
+			table = append(table, []any{tcd.Name, number.Bytes(tcd.Size), tcd.Depth})
+			repeat := repeatArr[tcd.Size]
+			for _, same := range repeat {
+				table = append(table, []any{same.Name, number.Bytes(same.Size), same.Depth})
+			}
+		}
 	}
+
+	fmt.Println(rock.FormatTable(table))
+	fmt.Println()
+	fmt.Printf(" 文件扫目标目录： %v，是否并发: %v(线程分配 %v).\n", dd.BaseDir(), isParallel, dd.ChanNumber())
+	fmt.Printf(" 文件扫描数： %v, 目录: %v, 文件： %v.\n", dd.AllItem, dd.AllDirItem, dd.AllFileItem)
+	fmt.Printf(" 目录大小: %v.\n", number.Bytes(dd.AllSize))
+	fmt.Printf(" 使用时间： %v.\n", dd.Runtime)
+
 	fmt.Printf(" 内存消耗：%v，用时:%s\n", memSubCall(), spendFn())
 }

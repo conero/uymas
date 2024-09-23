@@ -46,7 +46,8 @@ func FormatList[V any](vList []V, joins ...string) string {
 	return strings.Join(queue, "\n")
 }
 
-func FormatTable[V any](table [][]V) string {
+// FormatTable two-dimensional array formatted output
+func FormatTable[V any](table [][]V, seps ...int) string {
 	var maxLenLs []int
 	var data [][]string
 	// calculate the maximum length value
@@ -58,7 +59,7 @@ func FormatTable[V any](table [][]V) string {
 			vLen := len(vStr)
 			if vLen > maxLen {
 				maxLen = vLen
-				lnLen := len(line)
+				lnLen := len(maxLenLs)
 				if lnLen <= i {
 					maxLenLs = append(maxLenLs, maxLen)
 				} else {
@@ -73,13 +74,14 @@ func FormatTable[V any](table [][]V) string {
 	// Output value construction
 	var outputLns []string
 	numCount := len(maxLenLs)
+	joinSep := Param(2, seps...)
 	for _, sArr := range data {
 		var lnStr string
 		for i, sLn := range sArr {
 			maxLen := maxLenLs[i]
 			sep := 0
 			if i+1 < numCount {
-				sep = 4
+				sep = joinSep
 			}
 			vFmt := "%-" + fmt.Sprintf("%d", maxLen+sep) + "s"
 			lnStr += fmt.Sprintf(vFmt, sLn)
