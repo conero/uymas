@@ -14,8 +14,8 @@ import (
 
 type scanOption struct {
 	Bufsize    int      `cmd:"bufsize,B default:5000 help:缓存数默认"`
-	Exclude    []string `cmd:"exclude help:排除"`
-	Include    []string `cmd:"include help:包含"`
+	Exclude    []string `cmd:"exclude mark:... help:排除"`
+	Include    []string `cmd:"include mark:... help:包含"`
 	IsParallel bool     `cmd:"parallel,ll help:[实验性]的并行扫描"`
 	Dir        string   `cmd:"dir isdata"`
 }

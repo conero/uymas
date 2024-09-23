@@ -41,6 +41,7 @@
 - **cli**
   - feat: option 新增 isdata cmd 标签用于标注option中的输入数据（非选项）
   - feat: option 新增 `DataOption` 用于标记请求数据
+  - feat: option 新增 Mark 属性用于选项帮助信息生成时值占位符
   - pref: `Fn` 标注指定名称便于IDE自动生成
 - **cli/gen**
   - feat: 新增方法 `StructDress` 实现对struct属性值装扮，支持组合/继承值

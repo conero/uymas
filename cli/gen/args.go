@@ -25,6 +25,7 @@ const ArgsCmdDefault = "default"
 const ArgsTagOmit = "-"
 const ArgsTagData = "isdata"
 const ArgsTagNext = "next"
+const ArgsTagMark = "mark" // tag option input values name
 
 func argsValueCheck(ref reflect.Value) (reflect.Value, error) {
 	isStruct := ref.Kind() == reflect.Struct
@@ -212,6 +213,10 @@ func OptionTagParse(vTag string) *cli.Option {
 			option.Next = 1
 			continue
 		}
+		if s == ArgsTagMark {
+			option.Mark = option.GetName()
+			continue
+		}
 		idx := strings.Index(s, ":")
 		if idx > 0 {
 			key := s[:idx]
@@ -223,6 +228,8 @@ func OptionTagParse(vTag string) *cli.Option {
 				option.DefValue = str.Str(value).Unescape()
 			case ArgsTagNext:
 				option.Next = input.Stringer(value).Int()
+			case ArgsTagMark:
+				option.Mark = value
 			}
 		}
 	}

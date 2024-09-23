@@ -18,7 +18,7 @@ import (
 type base64Option struct {
 	IsDecode bool   `cmd:"decode,d help:读取文件或字符串的base64"`
 	IsFile   bool   `cmd:"file,f help:是否为文件，不设置是自动检测。用于产生混淆时"`
-	Output   string `cmd:"out,o help:保存内容到文件，未提供名称是默认为\\senc.base64\\s或\\sdec.raw"`
+	Output   string `cmd:"out,o mark:name help:保存内容到文件，未提供名称是默认为\\senc.base64\\s或\\sdec.raw"`
 	Input    string `cmd:"data isdata"`
 }
 

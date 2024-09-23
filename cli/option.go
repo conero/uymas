@@ -17,7 +17,8 @@ type Option struct {
 	Help     string                  `json:"help"`
 	Next     int                     `json:"next"`
 	// When set, indicates the input data of the option but the command
-	IsData bool `json:"isData"`
+	IsData bool   `json:"isData"`
+	Mark   string `json:"mark"` // option input name mark for help
 }
 
 // GetName Gets option names automatically compatible with aliases or actual names
@@ -120,6 +121,9 @@ func (c CommandOptional) OptionHelpMsg(levels ...int) string {
 		}
 		if opt.DefValue != "" {
 			line += "，默认值“" + opt.DefValue + "”"
+		}
+		if opt.Mark != "" {
+			name += " " + opt.Mark
 		}
 		if nameLen := len(name); nameLen > maxLen {
 			maxLen = nameLen
