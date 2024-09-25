@@ -2,6 +2,7 @@
 package evolve
 
 import (
+	"fmt"
 	"gitee.com/conero/uymas/v2/cli"
 	"gitee.com/conero/uymas/v2/logger/lgr"
 	"gitee.com/conero/uymas/v2/rock"
@@ -109,5 +110,17 @@ func NewEvolve(cfgs ...cli.Config) cli.Application[any] {
 		lgr.Error("%s: 命令注册实例无效，其不可执行（%#v）", parser.Command(), fn)
 	}
 	evl.Help(evl.GenerateHelpFn)
+	return evl
+}
+
+func FromStruct(vStruct any, cfgs ...cli.Config) cli.Application[any] {
+	evl := NewEvolve(cfgs...)
+
+	toRunFn := func(args cli.ArgsParser) {
+		fmt.Println("vStruct")
+	}
+
+	evl.Lost(toRunFn)
+	evl.Index(toRunFn)
 	return evl
 }
