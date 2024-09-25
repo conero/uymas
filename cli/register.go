@@ -135,6 +135,9 @@ func (r *Register[T]) GetHelp(cmd string) (helpMsg string, exits bool) {
 		var lines []string
 		list, keys, maxLen := r.helpCmdName()
 		for i, name := range keys {
+			if name == "" {
+				continue
+			}
 			docName := list[i]
 			meta := r.register[name]
 			reg := meta.Command
@@ -214,34 +217,24 @@ func (r *Register[T]) Args() ArgsParser {
 	return r.args
 }
 
-func (r *Register[T]) Run(args ...string) error {
-	if r.Config.ArgsConfig != nil {
-		r.args = NewArgsWith(*r.Config.ArgsConfig, args...)
-	} else {
-		r.args = NewArgs(args...)
-	}
-	if r.registerAlias != nil {
-		r.registerAlias = map[string][]string{}
-	}
-
-	param := r.args
-	command := param.Command()
+func (r *Register[T]) router(args ArgsParser) error {
+	command := args.Command()
 	cfg := r.Config
 	helpCall := r.helpTodo
 
-	isHelp := !cfg.DisableHelp && command == "" && param.Switch("help", "h", "?")
+	isHelp := !cfg.DisableHelp && command == "" && args.Switch("help", "h", "?")
 	isHelp = isHelp || (!cfg.DisableHelp && (command == "help" || command == "?"))
 	if isHelp {
-		r.Call(r.beforeHook, param)
-		r.Call(helpCall, param)
-		r.Call(r.endHook, param)
+		r.Call(r.beforeHook, args)
+		r.Call(helpCall, args)
+		r.Call(r.endHook, args)
 		return nil
 	}
 
 	if command == "" {
-		r.Call(r.beforeHook, param)
-		r.Call(r.indexTodo, param)
-		r.Call(r.endHook, param)
+		r.Call(r.beforeHook, args)
+		r.Call(r.indexTodo, args)
+		r.Call(r.endHook, args)
 		return nil
 	}
 
@@ -258,22 +251,35 @@ func (r *Register[T]) Run(args ...string) error {
 	}
 
 	if isFind {
-		r.Call(r.beforeHook, param)
+		r.Call(r.beforeHook, args)
 		metaCmd := meta.Command
 		if !r.Config.DisableVerify && !metaCmd.OffValid {
-			invalidMsg := metaCmd.InvalidMsg(param)
+			invalidMsg := metaCmd.InvalidMsg(args)
 			if invalidMsg != "" {
 				lgr.Error(invalidMsg)
 				return nil
 			}
 		}
-		r.Call(meta.Runnable, param)
-		r.Call(r.endHook, param)
+		r.Call(meta.Runnable, args)
+		r.Call(r.endHook, args)
 		return nil
 	}
 
-	r.Call(r.lostTodo, param)
+	r.Call(r.lostTodo, args)
 	return nil
+}
+
+func (r *Register[T]) Run(args ...string) error {
+	if r.Config.ArgsConfig != nil {
+		r.args = NewArgsWith(*r.Config.ArgsConfig, args...)
+	} else {
+		r.args = NewArgs(args...)
+	}
+	if r.registerAlias != nil {
+		r.registerAlias = map[string][]string{}
+	}
+
+	return r.router(r.args)
 }
 
 func (r *Register[T]) RunArgs(args ArgsParser) error {
