@@ -16,6 +16,7 @@ type StructCmd struct {
 	lostRn      any
 	initRn      any
 	commandList map[string]any
+	contextVal  reflect.Value
 }
 
 func (s *StructCmd) Index() any {
@@ -49,6 +50,7 @@ func ParseStruct(vStruct any) *StructCmd {
 	sc := &StructCmd{
 		commandList: map[string]any{},
 	}
+	sc.contextVal = rv
 	for i := 0; i < num; i++ {
 		method := rType.Method(i)
 		methodValue := rv.Method(i)
@@ -72,6 +74,21 @@ func ParseStruct(vStruct any) *StructCmd {
 	return sc
 }
 
+func (s *StructCmd) SetArgs(args cli.ArgsParser) {
+	if s.contextVal.IsNil() || !s.contextVal.IsValid() || s.contextVal.IsZero() {
+		return
+	}
+	value := s.contextVal
+	if s.contextVal.Kind() == reflect.Ptr {
+		value = s.contextVal.Elem()
+	}
+	field := value.FieldByName(evolve.CmdFidArgs)
+	if !field.CanSet() {
+		return
+	}
+	field.Set(reflect.ValueOf(args))
+}
+
 func AsCommand(vStruct any, cfgs ...cli.Config) cli.Application[any] {
 	pCmd := ParseStruct(vStruct)
 	if pCmd == nil {
@@ -80,6 +97,9 @@ func AsCommand(vStruct any, cfgs ...cli.Config) cli.Application[any] {
 	evl := evolve.NewEvolve(cfgs...)
 	evl.Lost(pCmd.Lost())
 	evl.Index(pCmd.Index())
+	evl.Before(func(args cli.ArgsParser) {
+		pCmd.SetArgs(args)
+	})
 
 	for vCmd, runnable := range pCmd.commandList {
 		evl.Command(runnable, vCmd)
