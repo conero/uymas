@@ -82,11 +82,19 @@ func (r *Register[T]) CommandList(t T, commands []string, optionals ...CommandOp
 }
 
 func (r *Register[T]) Index(t T) Application[T] {
+	var vAny any = t
+	if vAny == nil {
+		return r
+	}
 	r.indexTodo = t
 	return r
 }
 
 func (r *Register[T]) Lost(t T) Application[T] {
+	var vAny any = t
+	if vAny == nil {
+		return r
+	}
 	r.lostTodo = t
 	return r
 }

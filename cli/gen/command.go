@@ -68,3 +68,18 @@ func ParseStruct(vStruct any) *StructCmd {
 
 	return sc
 }
+
+func AsCommand(vStruct any, cfgs ...cli.Config) cli.Application[any] {
+	pCmd := ParseStruct(vStruct)
+	if pCmd == nil {
+		return nil
+	}
+	evl := evolve.NewEvolve(cfgs...)
+	evl.Lost(pCmd.Lost())
+	evl.Index(pCmd.Index())
+
+	for vCmd, runnable := range pCmd.commandList {
+		evl.Command(runnable, vCmd)
+	}
+	return evl
+}
