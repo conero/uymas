@@ -82,8 +82,7 @@ func (r *Register[T]) CommandList(t T, commands []string, optionals ...CommandOp
 }
 
 func (r *Register[T]) Index(t T) Application[T] {
-	var vAny any = t
-	if vAny == nil {
+	if any(t) == nil {
 		return r
 	}
 	r.indexTodo = t
@@ -91,8 +90,7 @@ func (r *Register[T]) Index(t T) Application[T] {
 }
 
 func (r *Register[T]) Lost(t T) Application[T] {
-	var vAny any = t
-	if vAny == nil {
+	if any(t) == nil {
 		return r
 	}
 	r.lostTodo = t

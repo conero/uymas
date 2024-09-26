@@ -39,16 +39,19 @@ func ParseStruct(vStruct any) *StructCmd {
 	if rv.Kind() == reflect.Ptr {
 		realVal = rv.Elem()
 	}
+
 	if realVal.Kind() != reflect.Struct {
 		return nil
 	}
 
-	num := realVal.NumMethod()
-	rType := realVal.Type()
-	sc := &StructCmd{}
+	num := rv.NumMethod()
+	rType := rv.Type()
+	sc := &StructCmd{
+		commandList: map[string]any{},
+	}
 	for i := 0; i < num; i++ {
 		method := rType.Method(i)
-		methodValue := realVal.Method(i)
+		methodValue := rv.Method(i)
 		if !methodValue.CanInterface() {
 			continue
 		}
@@ -72,7 +75,7 @@ func ParseStruct(vStruct any) *StructCmd {
 func AsCommand(vStruct any, cfgs ...cli.Config) cli.Application[any] {
 	pCmd := ParseStruct(vStruct)
 	if pCmd == nil {
-		return nil
+		panic("vStruct is not struct, and parse fail")
 	}
 	evl := evolve.NewEvolve(cfgs...)
 	evl.Lost(pCmd.Lost())

@@ -38,7 +38,7 @@ type Application[T any] interface {
 // Fn command line registration function
 type Fn = func(args ArgsParser)
 
-func lostFn(arg ArgsParser) {
+func DefaultLostFn(arg ArgsParser) {
 	fmt.Println()
 	fmt.Printf("%s: We gotta lost, honey!\n    Uymas@%s/%s\n", arg.Command(), uymas.Version, uymas.Release)
 	fmt.Println()
@@ -59,7 +59,7 @@ func NewCli(cfgs ...Config) *Cli {
 			return
 		}
 	}
-	app.lostTodo = lostFn
+	app.lostTodo = DefaultLostFn
 	app.indexTodo = func(parser ArgsParser) {
 		app.Config.IndexDoc()
 	}

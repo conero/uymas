@@ -108,6 +108,7 @@ func NewEvolve(cfgs ...cli.Config) cli.Application[any] {
 		}
 		lgr.Error("%s: 命令注册实例无效，其不可执行（%#v）", parser.Command(), fn)
 	}
+	evl.Lost(cli.DefaultLostFn)
 	evl.Index(func() {
 		evl.Config.IndexDoc()
 	})
