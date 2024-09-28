@@ -97,7 +97,7 @@ func AsCommand(vStruct any, cfgs ...cli.Config) cli.Application[any] {
 	evl := evolve.NewEvolve(cfgs...)
 	evl.Lost(pCmd.Lost())
 	evl.Index(pCmd.Index())
-	evl.Before(func(args cli.ArgsParser) {
+	evl.RouterBefore(func(args cli.ArgsParser) {
 		pCmd.SetArgs(args)
 	})
 

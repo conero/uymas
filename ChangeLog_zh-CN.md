@@ -42,6 +42,7 @@
 - **cli**
   - feat: option 新增 isdata cmd 标签用于标注option中的输入数据（非选项）
   - feat: option 新增 `DataOption` 用于标记请求数据
+  - feat: Application 新增方法 `RouterBefore(t Fn)`，用于实现路由前的 hook
   - feat: option 新增 Mark 属性用于选项帮助信息生成时值占位符
   - pref: `Fn` 标注指定名称便于IDE自动生成
 - **cli/gen**

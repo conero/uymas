@@ -48,7 +48,14 @@ func (c *Command) DefHelp() {
 // DefLost No command definition exists
 func (c *Command) DefLost() {
 	args := c.Args
-	command := args.SubCommand()
-	lgr.Error("%s: sub-command is not exist", command)
+
+	subCommand := args.SubCommand()
+	command := args.Command()
+	if subCommand == "" && command != "" {
+		lgr.Error("%s: command is not exist", command)
+		fmt.Println()
+		return
+	}
+	lgr.Error("%s: sub-command is not exist", subCommand)
 	fmt.Println()
 }

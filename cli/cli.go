@@ -27,6 +27,9 @@ type Application[T any] interface {
 	// End hook for command line run command to do something in end
 	End(t T) Application[T]
 
+	// RouterBefore hook be calling when router before
+	RouterBefore(t Fn) Application[T]
+
 	Help(t T) Application[T]
 
 	// Run execute the command parser

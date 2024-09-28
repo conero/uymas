@@ -27,6 +27,7 @@ type Register[T any] struct {
 	helpTodo      T
 	beforeHook    T
 	endHook       T
+	routerBefore  Fn
 	args          ArgsParser
 	Config        Config
 	Handler       Handler
@@ -104,6 +105,11 @@ func (r *Register[T]) Before(t T) Application[T] {
 
 func (r *Register[T]) End(t T) Application[T] {
 	r.endHook = t
+	return r
+}
+
+func (r *Register[T]) RouterBefore(t Fn) Application[T] {
+	r.routerBefore = t
 	return r
 }
 
@@ -284,7 +290,9 @@ func (r *Register[T]) Run(args ...string) error {
 	if r.registerAlias != nil {
 		r.registerAlias = map[string][]string{}
 	}
-
+	if r.routerBefore != nil {
+		r.routerBefore(r.args)
+	}
 	return r.router(r.args)
 }
 
