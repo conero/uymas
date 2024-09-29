@@ -13,9 +13,8 @@ type Runnable interface {
 }
 
 type StructCmdAttr struct {
-	Title     string
-	Option    []cli.Option
-	FieldName string
+	ChildOption []cli.Option
+	Option      cli.Option
 }
 
 type StructCmd struct {
@@ -65,6 +64,7 @@ func (s *StructCmd) parseStructOption() {
 			continue
 		}
 
+		opt.FieldName = sf.Name
 		if rock.InList(opt.List, ArgsGlobalOwner) {
 			s.globalOption = append(s.globalOption, *opt)
 			continue
@@ -76,9 +76,8 @@ func (s *StructCmd) parseStructOption() {
 		}
 
 		s.commandAttr[owner] = StructCmdAttr{
-			Title:     opt.Help,
-			Option:    StructDress(field),
-			FieldName: sf.Name,
+			ChildOption: StructDress(field),
+			Option:      *opt,
 		}
 		//if field.Kind() == reflect.Struct {
 		//	fmt.Println("Child Struct")
@@ -91,7 +90,7 @@ func (s *StructCmd) GetOptions(cmd string) *StructCmdAttr {
 	vAttr, exist := s.commandAttr[cmd]
 	if exist {
 		if len(options) > 0 {
-			vAttr.Option = append(vAttr.Option, options...)
+			vAttr.ChildOption = append(vAttr.ChildOption, options...)
 		}
 		return &vAttr
 	}
@@ -185,7 +184,7 @@ func (s *StructCmd) setOption(args cli.ArgsParser, target reflect.Value) {
 		return
 	}
 
-	vField := target.FieldByName(attr.FieldName)
+	vField := target.FieldByName(attr.Option.FieldName)
 	if !vField.IsValid() {
 		return
 	}
@@ -207,10 +206,14 @@ func AsCommand(vStruct any, cfgs ...cli.Config) cli.Application[any] {
 	for vCmd, runnable := range pCmd.commandList {
 		vAttr := pCmd.GetOptions(vCmd)
 		if vAttr != nil {
-			evl.Command(runnable, vCmd, cli.CommandOptional{
-				Help:    vAttr.Title,
-				Options: vAttr.Option,
-			})
+			co := cli.CommandOptional{
+				Help:    vAttr.Option.Help,
+				Options: vAttr.ChildOption,
+			}
+			if rock.InList(vAttr.Option.List, ArgsOptionNoValid) {
+				co = co.NoValid()
+			}
+			evl.Command(runnable, vCmd, co)
 		} else {
 			evl.Command(runnable, vCmd)
 		}

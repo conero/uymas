@@ -10,6 +10,7 @@ type optDemo struct {
 }
 
 type OptTest struct {
+	Key string `cmd:"key help:获取测试值索引"`
 }
 
 type defaultApp struct {
@@ -17,7 +18,7 @@ type defaultApp struct {
 	IsVerbose bool    `cmd:"verbose,vv globalOwner help:详细输出内容"`
 	Dir       string  `cmd:"dir,D globalOwner help:设置工作目录"`
 	OptDemo   optDemo `cmd:"owner:demo help:命令用例测试"`
-	OptTest   OptTest
+	OptTest   OptTest `cmd:"owner:test notValid"`
 }
 
 func (c *defaultApp) DefIndex() {
@@ -33,6 +34,8 @@ func (c *defaultApp) Demo() {
 	fmt.Println()
 	fmt.Println("输出选项测试值")
 	fmt.Printf("  Number: %d\n", opt.Number)
+	fmt.Printf("  Dir(global): %s\n", c.Dir)
+	fmt.Printf("  verbose(global): %v\n", c.IsVerbose)
 }
 
 func (c *defaultApp) Test() {

@@ -28,6 +28,7 @@ const ArgsTagNext = "next"
 const ArgsTagMark = "mark" // tag option input values name
 const ArgsTagOwner = "owner"
 const ArgsGlobalOwner = "globalOwner"
+const ArgsOptionNoValid = "notValid"
 
 func argsValueCheck(ref reflect.Value) (reflect.Value, error) {
 	isStruct := ref.Kind() == reflect.Struct
