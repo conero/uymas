@@ -3,6 +3,7 @@ package gen
 import (
 	"gitee.com/conero/uymas/v2/cli"
 	"gitee.com/conero/uymas/v2/cli/evolve"
+	"gitee.com/conero/uymas/v2/rock"
 	"gitee.com/conero/uymas/v2/str"
 	"reflect"
 )
@@ -11,12 +12,20 @@ type Runnable interface {
 	cli.Fn | func()
 }
 
+type StructCmdAttr struct {
+	Title     string
+	Option    []cli.Option
+	FieldName string
+}
+
 type StructCmd struct {
-	indexRn     any
-	lostRn      any
-	initRn      any
-	commandList map[string]any
-	contextVal  reflect.Value
+	indexRn      any
+	lostRn       any
+	initRn       any
+	commandList  map[string]any
+	commandAttr  map[string]StructCmdAttr
+	globalOption []cli.Option
+	contextVal   reflect.Value
 }
 
 func (s *StructCmd) Index() any {
@@ -29,6 +38,64 @@ func (s *StructCmd) Lost() any {
 
 func (s *StructCmd) Init() any {
 	return s.initRn
+}
+
+func (s *StructCmd) parseStructOption() {
+	if s.commandAttr == nil {
+		s.commandAttr = map[string]StructCmdAttr{}
+	}
+	rv := s.contextVal
+	rlStruct := rv
+	if rv.Kind() == reflect.Ptr {
+		rlStruct = rv.Elem()
+	}
+	num := rlStruct.NumField()
+	rType := rlStruct.Type()
+	for i := 0; i < num; i++ {
+		field := rlStruct.Field(i)
+		sf := rType.Field(i)
+
+		cmdStr := sf.Tag.Get(ArgsTagName)
+		if cmdStr == "" {
+			continue
+		}
+
+		opt := OptionTagParse(cmdStr)
+		if opt == nil {
+			continue
+		}
+
+		if rock.InList(opt.List, ArgsGlobalOwner) {
+			s.globalOption = append(s.globalOption, *opt)
+			continue
+		}
+
+		owner := opt.Owner
+		if owner == "" {
+			continue
+		}
+
+		s.commandAttr[owner] = StructCmdAttr{
+			Title:     opt.Help,
+			Option:    StructDress(field),
+			FieldName: sf.Name,
+		}
+		//if field.Kind() == reflect.Struct {
+		//	fmt.Println("Child Struct")
+		//}
+	}
+}
+
+func (s *StructCmd) GetOptions(cmd string) *StructCmdAttr {
+	options := s.globalOption
+	vAttr, exist := s.commandAttr[cmd]
+	if exist {
+		if len(options) > 0 {
+			vAttr.Option = append(vAttr.Option, options...)
+		}
+		return &vAttr
+	}
+	return nil
 }
 
 func ParseStruct(vStruct any) *StructCmd {
@@ -45,6 +112,7 @@ func ParseStruct(vStruct any) *StructCmd {
 		return nil
 	}
 
+	// method parse handler
 	num := rv.NumMethod()
 	rType := rv.Type()
 	sc := &StructCmd{
@@ -71,9 +139,12 @@ func ParseStruct(vStruct any) *StructCmd {
 		}
 	}
 
+	// option parse handler
+	sc.parseStructOption()
 	return sc
 }
 
+// SetArgs 设置option
 func (s *StructCmd) SetArgs(args cli.ArgsParser) {
 	if s.contextVal.IsNil() || !s.contextVal.IsValid() || s.contextVal.IsZero() {
 		return
@@ -82,11 +153,43 @@ func (s *StructCmd) SetArgs(args cli.ArgsParser) {
 	if s.contextVal.Kind() == reflect.Ptr {
 		value = s.contextVal.Elem()
 	}
+	s.setOption(args, value)
 	field := value.FieldByName(evolve.CmdFidArgs)
 	if !field.CanSet() {
 		return
 	}
 	field.Set(reflect.ValueOf(args))
+}
+
+func (s *StructCmd) setOption(args cli.ArgsParser, target reflect.Value) {
+	// set global option
+	for _, opt := range s.globalOption {
+		if opt.FieldName == "" {
+			continue
+		}
+		vField := target.FieldByName(opt.FieldName)
+		if !vField.IsValid() {
+			continue
+		}
+
+		setValueByOption(vField, &opt, args, nil)
+	}
+
+	command := args.Command()
+	if command == "" {
+		return
+	}
+
+	attr, exist := s.commandAttr[command]
+	if !exist {
+		return
+	}
+
+	vField := target.FieldByName(attr.FieldName)
+	if !vField.IsValid() {
+		return
+	}
+	setToStruct(vField, args)
 }
 
 func AsCommand(vStruct any, cfgs ...cli.Config) cli.Application[any] {
@@ -102,7 +205,16 @@ func AsCommand(vStruct any, cfgs ...cli.Config) cli.Application[any] {
 	})
 
 	for vCmd, runnable := range pCmd.commandList {
-		evl.Command(runnable, vCmd)
+		vAttr := pCmd.GetOptions(vCmd)
+		if vAttr != nil {
+			evl.Command(runnable, vCmd, cli.CommandOptional{
+				Help:    vAttr.Title,
+				Options: vAttr.Option,
+			})
+		} else {
+			evl.Command(runnable, vCmd)
+		}
+
 	}
 	return evl
 }

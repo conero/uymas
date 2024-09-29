@@ -17,8 +17,11 @@ type Option struct {
 	Help     string                  `json:"help"`
 	Next     int                     `json:"next"`
 	// When set, indicates the input data of the option but the command
-	IsData bool   `json:"isData"`
-	Mark   string `json:"mark"` // option input name mark for help
+	IsData    bool   `json:"isData"`
+	Mark      string `json:"mark"`  // option input name mark for help
+	Owner     string `json:"owner"` // single struct app for child command option map key, or naming rule `Opt[Name]`
+	List      []string
+	FieldName string // remember fieldName when gen by struct reflect
 }
 
 // GetName Gets option names automatically compatible with aliases or actual names

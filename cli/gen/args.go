@@ -26,6 +26,8 @@ const ArgsTagOmit = "-"
 const ArgsTagData = "isdata"
 const ArgsTagNext = "next"
 const ArgsTagMark = "mark" // tag option input values name
+const ArgsTagOwner = "owner"
+const ArgsGlobalOwner = "globalOwner"
 
 func argsValueCheck(ref reflect.Value) (reflect.Value, error) {
 	isStruct := ref.Kind() == reflect.Struct
@@ -45,6 +47,36 @@ func argsValueCheck(ref reflect.Value) (reflect.Value, error) {
 	}
 
 	return rValue, nil
+}
+
+func setValueByOption(vField reflect.Value, option *cli.Option, args cli.ArgsParser, keys []string) {
+	// data
+	if option != nil && option.IsData {
+		valueStr := rock.ListGetOr(args.CommandList(), option.Next-1, args.SubCommand())
+		convert.SetByStr(vField, valueStr)
+		return
+	}
+
+	vfKind := vField.Kind()
+	if len(keys) == 0 && option != nil {
+		keys = option.GetKeys()
+	}
+	if vfKind == reflect.Bool && args.Switch(keys...) {
+		vField.SetBool(true)
+		return
+	}
+
+	vSlice := args.List(keys...)
+	if vfKind == reflect.Slice && vSlice != nil {
+		convert.SetByStrSlice(vField, vSlice)
+		return
+	}
+
+	value := args.Get(keys...)
+	if value == "" && option != nil {
+		value = option.DefValue
+	}
+	convert.SetByStr(vField, value)
 }
 
 func setToStruct(tgt reflect.Value, args cli.ArgsParser) {
@@ -77,33 +109,8 @@ func setToStruct(tgt reflect.Value, args cli.ArgsParser) {
 		if len(keys) == 0 {
 			continue
 		}
-		var vFiled = tgt.Field(i)
-		vfKind := vFiled.Kind()
-
 		option := OptionTagParse(tagValue)
-		// data
-		if option != nil && option.IsData {
-			valueStr := rock.ListGetOr(args.CommandList(), option.Next-1, args.SubCommand())
-			convert.SetByStr(vFiled, valueStr)
-			continue
-		}
-
-		if vfKind == reflect.Bool && args.Switch(keys...) {
-			vFiled.SetBool(true)
-			continue
-		}
-
-		vSlice := args.List(keys...)
-		if vfKind == reflect.Slice && vSlice != nil {
-			convert.SetByStrSlice(vFiled, vSlice)
-			continue
-		}
-
-		value := args.Get(keys...)
-		if value == "" && option != nil {
-			value = option.DefValue
-		}
-		convert.SetByStr(vFiled, value)
+		setValueByOption(tgt.Field(i), option, args, keys)
 	}
 
 	return
@@ -150,6 +157,7 @@ func StructDress(vStruct reflect.Value, excludes ...string) (inheritOpts []cli.O
 			continue
 		}
 		option := OptionTagParse(cmdTag)
+		option.FieldName = sField.Name
 		var name string
 		if option == nil {
 			if name == "" {
@@ -198,8 +206,12 @@ func OptionTagParse(vTag string) *cli.Option {
 
 	option := &cli.Option{}
 	for i, s := range strings.Split(vTag, " ") {
-		if i == 0 && !strings.Contains(s, ":") {
-			option.Alias = strings.Split(str.Str(s).ClearSpace(), ",")
+		if !strings.Contains(s, ":") {
+			name := str.Str(s).ClearSpace()
+			option.List = append(option.List, name)
+			if i == 0 {
+				option.Alias = strings.Split(name, ",")
+			}
 			continue
 		}
 		if s == ArgsCmdRequired {
@@ -230,6 +242,8 @@ func OptionTagParse(vTag string) *cli.Option {
 				option.Next = input.Stringer(value).Int()
 			case ArgsTagMark:
 				option.Mark = value
+			case ArgsTagOwner:
+				option.Owner = value
 			}
 		}
 	}
