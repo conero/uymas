@@ -49,6 +49,7 @@
 - **cli/gen**
   - feat: 新增方法 `StructDress` 实现对struct属性值装扮，支持组合/继承值
   - feat: 新增方法 `ParseStruct` ，`AsCommand` 用于解析 struct 为命令行程序
+  - feat: 新增方法 `MultiArgs` 实现对数组的多重解析
   - pref:方法 `ArgsDress` 支持继承的struct进行参数赋值
   - pref: 方法 `ArgsDress` 实现对 isdata 的解析赋值支持
 - **cli/evolve**

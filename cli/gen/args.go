@@ -58,10 +58,16 @@ func setValueByOption(vField reflect.Value, option *cli.Option, args cli.ArgsPar
 		return
 	}
 
-	vfKind := vField.Kind()
-	if len(keys) == 0 && option != nil {
-		keys = option.GetKeys()
+	value := args.Get(keys...)
+	if value == "" && option != nil {
+		value = option.DefValue
 	}
+
+	setValueByStr(vField, keys, args, value)
+}
+
+func setValueByStr(vField reflect.Value, keys []string, args cli.ArgsParser, defStrs ...string) {
+	vfKind := vField.Kind()
 	if vfKind == reflect.Bool && args.Switch(keys...) {
 		vField.SetBool(true)
 		return
@@ -74,9 +80,7 @@ func setValueByOption(vField reflect.Value, option *cli.Option, args cli.ArgsPar
 	}
 
 	value := args.Get(keys...)
-	if value == "" && option != nil {
-		value = option.DefValue
-	}
+	value = rock.Param(value, defStrs...)
 	convert.SetByStr(vField, value)
 }
 
