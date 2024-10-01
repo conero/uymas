@@ -18,5 +18,9 @@ func TestMultiArgs(t *testing.T) {
 	err := MultiArgs(args, &tma)
 	if err != nil {
 		t.Errorf("解析异常，%v", err)
+	} else if tma.Test.Age != 18 {
+		t.Errorf("test.age 值复制错误")
+	} else {
+		t.Logf("data: %#v", tma)
 	}
 }

@@ -18,8 +18,17 @@ func isStruct(value reflect.Value) bool {
 }
 
 // MultiArgs Multi Args value parsing
-func MultiArgs(args cli.ArgsParser, tgt any, params ...string) error {
-	refVal := reflect.ValueOf(tgt)
+func MultiArgs(args cli.ArgsParser, target any, params ...string) error {
+	if target == nil {
+		return errors.New("target is nil")
+	}
+	var refVal reflect.Value
+	tgtVal, isVal := target.(reflect.Value)
+	if isVal {
+		refVal = tgtVal
+	} else {
+		refVal = reflect.ValueOf(target)
+	}
 	elem := refVal
 	if refVal.Kind() == reflect.Ptr {
 		elem = refVal.Elem()
@@ -43,11 +52,14 @@ func MultiArgs(args cli.ArgsParser, tgt any, params ...string) error {
 		name := str.Str(sf.Name).LowerStyle()
 		key := strings.Join(append(keyList, name), seq)
 		if isStruct(field) {
-			MultiArgs(args, field, seq, key)
+			err := MultiArgs(args, field, seq, key)
+			if err != nil {
+				return err
+			}
 			continue
 		}
 
-		setValueByStr(field, []string{name}, args)
+		setValueByStr(field, []string{key}, args)
 	}
 
 	return nil
