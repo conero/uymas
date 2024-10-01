@@ -162,6 +162,9 @@ func StructDress(vStruct reflect.Value, excludes ...string) (inheritOpts []cli.O
 			continue
 		}
 		option := OptionTagParse(cmdTag)
+		if option == nil {
+			continue
+		}
 		option.FieldName = sField.Name
 		var name string
 		if option == nil {
