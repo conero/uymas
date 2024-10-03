@@ -39,6 +39,9 @@
 
 > 主要测试并优化当前以实现的功能，保证功能的有效性
 
+- **parser/xini**
+  - pref: （内部）函数 `parseNumber` 修复 ParseFloat 等数制错误
+
 
 
 

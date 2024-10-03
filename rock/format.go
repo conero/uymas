@@ -6,7 +6,9 @@ import (
 	"strings"
 )
 
-// FormatKv @todo neet to test
+// FormatKv Formatting string alignment, currently valid only for Latin characters, not for mixed characters.
+//
+// BUG: Mixed strings in Chinese and English (Latin) are invalid
 func FormatKv[K constraints.KeyIterable, V any](data map[K]V) string {
 	var maxLen = 0
 	var stringMap = map[string]V{}

@@ -99,7 +99,7 @@ func (s Str) CamelCase() string {
 			if vQ == "" {
 				continue
 			}
-			newQue = append(newQue, strings.Title(vQ))
+			newQue = append(newQue, Str(vQ).Ucfirst())
 		}
 		vStr = strings.Join(newQue, "")
 	}

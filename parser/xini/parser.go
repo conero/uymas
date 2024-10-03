@@ -52,7 +52,7 @@ type Parser interface {
 func parseNumber(vStr string) (value any, isOk bool) {
 	i64Symbol := getRegByKey("reg_i64_symbol")
 	if i64Symbol != nil && i64Symbol.MatchString(vStr) {
-		i64, er := strconv.ParseInt(vStr, 10, 10)
+		i64, er := strconv.ParseInt(vStr, 10, 64)
 		if er == nil {
 			value = i64
 			isOk = true
@@ -62,7 +62,7 @@ func parseNumber(vStr string) (value any, isOk bool) {
 
 	f64Symbol := getRegByKey("reg_f64_symbol")
 	if f64Symbol != nil && f64Symbol.MatchString(vStr) {
-		f64, er := strconv.ParseFloat(vStr, 10)
+		f64, er := strconv.ParseFloat(vStr, 64)
 		if er == nil {
 			value = f64
 			isOk = true
