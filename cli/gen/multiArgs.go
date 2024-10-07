@@ -18,6 +18,8 @@ func isStruct(value reflect.Value) bool {
 }
 
 // MultiArgs Multi Args value parsing
+//
+// MultiArgs(args cli.ArgsParser, target any, seq string='.', pref string=”): support all param like
 func MultiArgs(args cli.ArgsParser, target any, params ...string) error {
 	if target == nil {
 		return errors.New("target is nil")
