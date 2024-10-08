@@ -41,6 +41,10 @@
 
 - **parser/xini**
   - pref: （内部）函数 `parseNumber` 修复 ParseFloat 等数制错误
+- **cli/gen**
+  - feat: 新增函数`MultiArgsMap`用于实现`cli.ArgsParser`到map的值映射
+  - pref: 完善 `MultiArgs` 使其赋值兼容性更强
+
 
 
 

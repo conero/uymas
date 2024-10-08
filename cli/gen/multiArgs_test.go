@@ -36,3 +36,16 @@ func TestMultiArgs(t *testing.T) {
 		t.Logf("data: %#v", tma)
 	}
 }
+
+func TestMultiArgsMap(t *testing.T) {
+	args := cli.NewArgs("-test.name", "Joshua", "-test.age", "18")
+	vmap := map[string]any{}
+
+	err := MultiArgsMap(args, vmap)
+	if err != nil {
+		t.Errorf("map 赋值异常，%s", err.Error())
+	} else {
+		t.Logf("%#v", vmap)
+	}
+
+}

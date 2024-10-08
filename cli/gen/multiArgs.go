@@ -36,7 +36,11 @@ func MultiArgs(args cli.ArgsParser, target any, params ...string) error {
 		elem = refVal.Elem()
 	}
 
-	if elem.Kind() != reflect.Struct {
+	elKind := elem.Kind()
+	if elKind == reflect.Map {
+		return MultiArgsMap(args, target, params...)
+	}
+	if elKind != reflect.Struct {
 		return errors.New("target is not struct type")
 	}
 
@@ -62,6 +66,52 @@ func MultiArgs(args cli.ArgsParser, target any, params ...string) error {
 		}
 
 		setValueByStr(field, []string{key}, args)
+	}
+
+	return nil
+}
+
+// MultiArgsMap Assign cli.ArgsParser to map
+func MultiArgsMap(args cli.ArgsParser, mapTgt any, params ...string) error {
+	seq := rock.ParamIndex(1, ".", params...)
+	pref := rock.ParamIndex(2, "", params...)
+
+	refVal := reflect.ValueOf(mapTgt)
+	elem := refVal
+	if refVal.Kind() == reflect.Ptr {
+		elem = refVal.Elem()
+	}
+	if elem.Kind() != reflect.Map {
+		return errors.New("mapTgt is not valid Map")
+	}
+
+	values := args.Values()
+	for key, _ := range values {
+		index := strings.Index(key, seq)
+		if index < 1 {
+			continue
+		}
+
+		// eg `[key].[subkey]`, '-test.name Jc'
+		fullKey := pref + key
+		mapKey := fullKey[:index]
+		subKey := fullKey[index+1:]
+
+		vMapKey := reflect.ValueOf(mapKey)
+		vMapValue := elem.MapIndex(vMapKey)
+		if !vMapValue.IsValid() || vMapValue.IsNil() || vMapValue.IsZero() {
+			var subMap = map[string]string{
+				subKey: args.Get(key),
+			}
+			elem.SetMapIndex(vMapKey, reflect.ValueOf(subMap))
+			continue
+		}
+
+		if vMapValue.Kind() != reflect.Map {
+			continue
+		}
+		vMapValue.SetMapIndex(reflect.ValueOf(subKey), reflect.ValueOf(args.Get(key)))
+
 	}
 
 	return nil
