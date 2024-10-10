@@ -107,11 +107,17 @@ func MultiArgsMap(args cli.ArgsParser, mapTgt any, params ...string) error {
 			continue
 		}
 
-		if vMapValue.Kind() != reflect.Map {
+		// get interface inner value or type
+		vmvKind := vMapValue.Kind()
+		vmvTgt := vMapValue
+		if vmvKind == reflect.Interface {
+			vmvTgt = vMapValue.Elem()
+			vmvKind = vmvTgt.Kind()
+		}
+		if vmvKind != reflect.Map {
 			continue
 		}
-		vMapValue.SetMapIndex(reflect.ValueOf(subKey), reflect.ValueOf(args.Get(key)))
-
+		vmvTgt.SetMapIndex(reflect.ValueOf(subKey), reflect.ValueOf(args.Get(key)))
 	}
 
 	return nil
