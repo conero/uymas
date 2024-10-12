@@ -20,8 +20,6 @@ const (
 	TimeLayoutDate = "20060102" // date layout-20060102
 )
 
-// Data for injection
-// # go build -ldflags "-s -w -Args 'gitee.com/conero/uymas/v2.gitHash=$gitHash' -Args 'gitee.com/conero/uymas/v2.buildData=$buildData' -Args 'gitee.com/conero/uymas/v2.buildAuthor=$buildAuthor'" ./cmd/...
 var (
 	gitHash     string
 	buildData   string
@@ -29,6 +27,12 @@ var (
 )
 
 // GetBuildInfo Get the relevant version information after injection with the -ldflags parameters gitHash, buildData, buildAuthor.
+//
+// shell like:
+//
+// $gitHash = $(git rev-parse --short HEAD); $buildData = $(get-date -Format 'yyyy-MM-dd');$buildAuthor = 'Joshua Conero';
+//
+// go build -ldflags "-s -w -X 'gitee.com/conero/uymas/v2.gitHash=$gitHash' -X 'gitee.com/conero/uymas/v2.buildData=$buildData' -X 'gitee.com/conero/uymas/v2.buildAuthor=$buildAuthor'" ./cmd/...
 //
 // Output format such as: "(buildData gitHash)"
 func GetBuildInfo() string {
