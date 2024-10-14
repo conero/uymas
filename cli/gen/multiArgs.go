@@ -85,39 +85,88 @@ func MultiArgsMap(args cli.ArgsParser, mapTgt any, params ...string) error {
 		return errors.New("mapTgt is not valid Map")
 	}
 
+	// to set Value
+	toSetValue := func(keys []string, value string) {
+		countKey := len(keys)
+		//fmt.Printf("keys: %v, value: %v\n", keys, value)
+		for cIdx, ccKey := range keys {
+			//fmt.Printf("cIdx: %v, ccKey: %v\n", cIdx, ccKey)
+			switch cIdx {
+			case 0: // 顶级
+				if countKey == 1 {
+					continue
+				}
+				vMapKey := reflect.ValueOf(ccKey)
+				vMapValue := elem.MapIndex(vMapKey)
+				if !vMapValue.IsValid() || vMapValue.IsZero() || vMapValue.IsNil() {
+					elem.SetMapIndex(vMapKey, reflect.ValueOf(map[string]any{}))
+				}
+			case 1:
+				parentKey := reflect.ValueOf(keys[cIdx-1])
+				vMapValue := elem.MapIndex(parentKey)
+				if !vMapValue.IsValid() || vMapValue.IsZero() || vMapValue.IsNil() {
+					elem.SetMapIndex(parentKey, reflect.ValueOf(map[string]any{}))
+					vMapValue = elem.MapIndex(parentKey)
+				}
+
+				if countKey == 2 {
+					//vMapValue.SetMapIndex(parentKey, reflect.ValueOf(value))
+					if vMapValue.Kind() == reflect.Map {
+						vMapValue.SetMapIndex(reflect.ValueOf(ccKey), reflect.ValueOf(value))
+					} else if vMapValue.Kind() == reflect.Interface {
+						instance := vMapValue.Elem()
+						if instance.IsValid() {
+							instance.SetMapIndex(reflect.ValueOf(ccKey), reflect.ValueOf(value))
+							//fmt.Printf("instance: %v\n", instance)
+							//elem.SetMapIndex(vMapKey, reflect.ValueOf(instance.Interface()))
+							//elem.SetMapIndex(vMapKey, instance)
+						}
+					}
+				}
+			case 2:
+				parentKey := reflect.ValueOf(keys[cIdx-1])
+				parentElem := elem.MapIndex(reflect.ValueOf(keys[cIdx-2]))
+				if parentElem.Kind() == reflect.Interface {
+					parentElem = parentElem.Elem()
+				}
+				if parentElem.Kind() != reflect.Map {
+					continue
+				}
+				vMapValue := parentElem.MapIndex(parentKey)
+				if !vMapValue.IsValid() || vMapValue.IsZero() || vMapValue.IsNil() {
+					parentElem.SetMapIndex(parentKey, reflect.ValueOf(map[string]any{}))
+					vMapValue = parentElem.MapIndex(parentKey)
+				}
+
+				if countKey == 3 {
+					//vMapValue.SetMapIndex(parentKey, reflect.ValueOf(value))
+					if vMapValue.Kind() == reflect.Map {
+						vMapValue.SetMapIndex(reflect.ValueOf(ccKey), reflect.ValueOf(value))
+					} else if vMapValue.Kind() == reflect.Interface {
+						instance := vMapValue.Elem()
+						if instance.IsValid() {
+							instance.SetMapIndex(reflect.ValueOf(ccKey), reflect.ValueOf(value))
+							//fmt.Printf("instance: %v\n", instance)
+							//elem.SetMapIndex(vMapKey, reflect.ValueOf(instance.Interface()))
+							//elem.SetMapIndex(vMapKey, instance)
+						}
+					}
+				}
+			}
+		}
+	}
+
 	values := args.Values()
 	for key, _ := range values {
-		index := strings.Index(key, seq)
+		fullKey := pref + key
+		index := strings.Index(fullKey, seq)
 		if index < 1 {
 			continue
 		}
 
-		// eg `[key].[subkey]`, '-test.name Jc'
-		fullKey := pref + key
-		mapKey := fullKey[:index]
-		subKey := fullKey[index+1:]
-
-		vMapKey := reflect.ValueOf(mapKey)
-		vMapValue := elem.MapIndex(vMapKey)
-		if !vMapValue.IsValid() || vMapValue.IsNil() || vMapValue.IsZero() {
-			var subMap = map[string]string{
-				subKey: args.Get(key),
-			}
-			elem.SetMapIndex(vMapKey, reflect.ValueOf(subMap))
-			continue
-		}
-
-		// get interface inner value or type
-		vmvKind := vMapValue.Kind()
-		vmvTgt := vMapValue
-		if vmvKind == reflect.Interface {
-			vmvTgt = vMapValue.Elem()
-			vmvKind = vmvTgt.Kind()
-		}
-		if vmvKind != reflect.Map {
-			continue
-		}
-		vmvTgt.SetMapIndex(reflect.ValueOf(subKey), reflect.ValueOf(args.Get(key)))
+		keys := strings.Split(fullKey, seq)
+		value := args.Get(key)
+		toSetValue(keys, value)
 	}
 
 	return nil
