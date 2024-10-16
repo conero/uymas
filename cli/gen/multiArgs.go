@@ -93,9 +93,6 @@ func MultiArgsMap(args cli.ArgsParser, mapTgt any, params ...string) error {
 			//fmt.Printf("cIdx: %v, ccKey: %v\n", cIdx, ccKey)
 			switch cIdx {
 			case 0: // 顶级
-				if countKey == 1 {
-					continue
-				}
 				vMapKey := reflect.ValueOf(ccKey)
 				vMapValue := elem.MapIndex(vMapKey)
 				if !vMapValue.IsValid() || vMapValue.IsZero() || vMapValue.IsNil() {
@@ -160,12 +157,13 @@ func MultiArgsMap(args cli.ArgsParser, mapTgt any, params ...string) error {
 	for key, _ := range values {
 		fullKey := pref + key
 		index := strings.Index(fullKey, seq)
+		value := args.Get(key)
 		if index < 1 {
+			elem.SetMapIndex(reflect.ValueOf(key), reflect.ValueOf(value))
 			continue
 		}
 
 		keys := strings.Split(fullKey, seq)
-		value := args.Get(key)
 		toSetValue(keys, value)
 	}
 

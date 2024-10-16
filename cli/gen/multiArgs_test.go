@@ -61,7 +61,8 @@ func TestMultiArgsMap(t *testing.T) {
 
 	// case
 	args = cli.NewArgs("-jc:name", "Joshua",
-		"-jc:age", "18", "-jc:server:source", "Guizhou", "-jc:db:host", "-jc:db:host", "127.0.0.1", "-jc:db:port", "2024")
+		"-jc:age", "18", "-jc:server:source", "Guizhou", "-jc:db:host", "-jc:db:host", "127.0.0.1",
+		"-jc:db:port", "2024", "-xargs", "aToC")
 	vmap = map[string]any{}
 
 	err = MultiArgsMap(args, vmap, ":")
