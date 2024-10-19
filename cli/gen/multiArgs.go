@@ -85,38 +85,32 @@ func MultiArgsMap(args cli.ArgsParser, mapTgt any, params ...string) error {
 		return errors.New("mapTgt is not valid Map")
 	}
 
-	// to set Value
+	elemType := elem.Type()
 	toSetValue := func(keys []string, value string) {
 		countKey := len(keys)
-		//fmt.Printf("keys: %v, value: %v\n", keys, value)
 		for cIdx, ccKey := range keys {
-			//fmt.Printf("cIdx: %v, ccKey: %v\n", cIdx, ccKey)
 			switch cIdx {
 			case 0: // 顶级
 				vMapKey := reflect.ValueOf(ccKey)
 				vMapValue := elem.MapIndex(vMapKey)
 				if !vMapValue.IsValid() || vMapValue.IsZero() || vMapValue.IsNil() {
-					elem.SetMapIndex(vMapKey, reflect.ValueOf(map[string]any{}))
+					elem.SetMapIndex(vMapKey, reflect.MakeMap(elemType))
 				}
 			case 1:
 				parentKey := reflect.ValueOf(keys[cIdx-1])
 				vMapValue := elem.MapIndex(parentKey)
 				if !vMapValue.IsValid() || vMapValue.IsZero() || vMapValue.IsNil() {
-					elem.SetMapIndex(parentKey, reflect.ValueOf(map[string]any{}))
+					elem.SetMapIndex(parentKey, reflect.MakeMap(elemType))
 					vMapValue = elem.MapIndex(parentKey)
 				}
 
 				if countKey == 2 {
-					//vMapValue.SetMapIndex(parentKey, reflect.ValueOf(value))
 					if vMapValue.Kind() == reflect.Map {
 						vMapValue.SetMapIndex(reflect.ValueOf(ccKey), reflect.ValueOf(value))
 					} else if vMapValue.Kind() == reflect.Interface {
 						instance := vMapValue.Elem()
 						if instance.IsValid() {
 							instance.SetMapIndex(reflect.ValueOf(ccKey), reflect.ValueOf(value))
-							//fmt.Printf("instance: %v\n", instance)
-							//elem.SetMapIndex(vMapKey, reflect.ValueOf(instance.Interface()))
-							//elem.SetMapIndex(vMapKey, instance)
 						}
 					}
 				}
@@ -131,7 +125,7 @@ func MultiArgsMap(args cli.ArgsParser, mapTgt any, params ...string) error {
 				}
 				vMapValue := parentElem.MapIndex(parentKey)
 				if !vMapValue.IsValid() || vMapValue.IsZero() || vMapValue.IsNil() {
-					parentElem.SetMapIndex(parentKey, reflect.ValueOf(map[string]any{}))
+					parentElem.SetMapIndex(parentKey, reflect.MakeMap(elemType))
 					vMapValue = parentElem.MapIndex(parentKey)
 				}
 
@@ -143,9 +137,6 @@ func MultiArgsMap(args cli.ArgsParser, mapTgt any, params ...string) error {
 						instance := vMapValue.Elem()
 						if instance.IsValid() {
 							instance.SetMapIndex(reflect.ValueOf(ccKey), reflect.ValueOf(value))
-							//fmt.Printf("instance: %v\n", instance)
-							//elem.SetMapIndex(vMapKey, reflect.ValueOf(instance.Interface()))
-							//elem.SetMapIndex(vMapKey, instance)
 						}
 					}
 				}

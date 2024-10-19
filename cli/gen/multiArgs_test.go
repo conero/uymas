@@ -72,4 +72,14 @@ func TestMultiArgsMap(t *testing.T) {
 		t.Logf("%#v", vmap)
 	}
 
+	// case
+	args = cli.NewArgs("-jc:age", "18", "-jc:number", "1092", "-jc:size", "90123",
+		"score", "100", "-jc:Age", "28")
+
+	err = MultiArgsMap(args, vmap, ":")
+	if err != nil {
+		t.Errorf("map 赋值异常，%s", err.Error())
+	} else {
+		t.Logf("%#v", vmap)
+	}
 }
