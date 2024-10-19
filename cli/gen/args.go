@@ -157,6 +157,7 @@ func StructDress(vStruct reflect.Value, excludes ...string) (inheritOpts []cli.O
 		if cmdTag == ArgsTagOmit {
 			continue
 		}
+		// field inherit by parent struct.
 		if sField.Anonymous {
 			inheritOpts = append(inheritOpts, StructDress(field, excludes...)...)
 			continue
