@@ -18,6 +18,16 @@ type optionParse struct {
 	Number []uint16 `cmd:"number,N default:[52,26,27] help:uint16切片类型测试"`
 }
 
+type subOptionX struct {
+	Name    string `cmd:"name help:设置姓名"`
+	Age     int16  `cmd:"age default:42 help:设置年纪"`
+	IsCheck bool   `cmd:"check help:是否需要检查"`
+}
+
+type subOption struct {
+	X subOptionX `cmd:"x structGen help:附加参数选项"`
+}
+
 func main() {
 	app := cli.NewCli()
 
@@ -41,5 +51,16 @@ func main() {
 		fmt.Println()
 
 	}, "option", cli.Help("选项测试", gen.ArgsDecomposeMust(optionParse{})...))
+
+	app.Command(func(parser cli.ArgsParser) {
+		var opt subOption
+		err := gen.ArgsDress(parser, &opt)
+		if err != nil {
+			lgr.Error(err.Error())
+			return
+		}
+		fmt.Println("子选项测试: ")
+		fmt.Printf("%#v\n", opt)
+	}, "sub", cli.Help("命令子选项支持", gen.ArgsDecomposeMust(subOption{})...))
 	lgr.ErrorIf(app.Run())
 }

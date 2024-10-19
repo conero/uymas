@@ -43,9 +43,13 @@
 
 - **parser/xini**
   - pref: （内部）函数 `parseNumber` 修复 ParseFloat 等数制错误
+- **cli**
+  - feat: cli.Option 新增属性`StructGen`，`StructItems` 并支持选项struct文档标识
+
 - **cli/gen**
   - feat: 新增函数`MultiArgsMap`用于实现`cli.ArgsParser`到map的值映射
   - pref: 完善 `MultiArgs` 使其赋值兼容性更强
+  - pref: 完善对 `ArgsDress` 及 `ArgsDecomposeMust` 对 `StructGen`，`StructItems` 解析支持
 
 
 

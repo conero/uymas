@@ -17,11 +17,13 @@ type Option struct {
 	Help     string                  `json:"help"`
 	Next     int                     `json:"next"`
 	// When set, indicates the input data of the option but the command
-	IsData    bool   `json:"isData"`
-	Mark      string `json:"mark"`  // option input name mark for help
-	Owner     string `json:"owner"` // single struct app for child command option map key, or naming rule `Opt[Name]`
-	List      []string
-	FieldName string // remember fieldName when gen by struct reflect
+	IsData      bool   `json:"isData"`
+	Mark        string `json:"mark"`  // option input name mark for help
+	Owner       string `json:"owner"` // single struct app for child command option map key, or naming rule `Opt[Name]`
+	List        []string
+	FieldName   string // remember fieldName when gen by struct reflect
+	StructGen   bool   // parse the struct into documents and values
+	StructItems []Option
 }
 
 // GetName Gets option names automatically compatible with aliases or actual names
@@ -130,6 +132,32 @@ func (c CommandOptional) OptionHelpMsg(levels ...int) string {
 		}
 		if nameLen := len(name); nameLen > maxLen {
 			maxLen = nameLen
+		}
+		if len(opt.StructItems) > 0 {
+			var siPairList [][2]string
+			var siMaxLen = 0
+			for _, item := range opt.StructItems {
+				if item.Help == "" {
+					continue
+				}
+				siName := opt.GetName() + ":" + item.GetName()
+				siLen := len(siName)
+				if siLen > siMaxLen {
+					siMaxLen = siLen
+				}
+				siHelp := item.Help
+				if item.DefValue != "" {
+					siHelp += "，默认值“" + item.DefValue + "”"
+				}
+				siPairList = append(siPairList, [2]string{
+					siName, siHelp,
+				})
+			}
+
+			for _, sPair := range siPairList {
+				line += "\n" + pref + "    " +
+					"    -" + fmt.Sprintf("%-"+fmt.Sprintf("%d", siMaxLen)+"s", sPair[0]) + "   " + sPair[1]
+			}
 		}
 		pairList = append(pairList, [2]string{name, line})
 	}

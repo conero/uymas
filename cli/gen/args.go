@@ -49,6 +49,9 @@ const ArgsGlobalOwner = "globalOwner"
 // ArgsOptionNoValid the command does not verify option data
 const ArgsOptionNoValid = "notValid"
 
+// ArgsCmdStructGen marking it requires parsing of substructure documents and values
+const ArgsCmdStructGen = "structGen"
+
 func argsValueCheck(ref reflect.Value) (reflect.Value, error) {
 	isStruct := ref.Kind() == reflect.Struct
 	isPtr := false
@@ -70,15 +73,45 @@ func argsValueCheck(ref reflect.Value) (reflect.Value, error) {
 }
 
 func setValueByOption(vField reflect.Value, option *cli.Option, args cli.ArgsParser, keys []string) {
+	if option == nil {
+		return
+	}
 	// data
-	if option != nil && option.IsData {
+	if option.IsData {
 		valueStr := rock.ListGetOr(args.CommandList(), option.Next-1, args.SubCommand())
 		convert.SetByStr(vField, valueStr)
 		return
 	}
 
+	// set struct gen
+	if option.StructGen {
+		if vField.Kind() != reflect.Struct {
+			return
+		}
+		if len(option.StructItems) < 1 {
+			option.StructItems = StructDress(vField)
+		}
+		name := option.GetName()
+		for _, item := range option.StructItems {
+			structName := item.GetName()
+			var key = name + ":" + structName
+			var valueStr = args.Get(key)
+			if valueStr == "" {
+				valueStr = item.DefValue
+			}
+
+			structName = str.Str(structName).Ucfirst()
+			childFld := vField.FieldByName(structName)
+			if !childFld.IsValid() {
+				continue
+			}
+			setValueByStr(childFld, []string{key}, args, valueStr)
+		}
+		return
+	}
+
 	value := args.Get(keys...)
-	if value == "" && option != nil {
+	if value == "" {
 		value = option.DefValue
 	}
 
@@ -203,7 +236,10 @@ func StructDress(vStruct reflect.Value, excludes ...string) (inheritOpts []cli.O
 		} else if rock.InList(excludes, option.Name) {
 			continue
 		}
-
+		// parse child items
+		if option.StructGen {
+			option.StructItems = StructDress(field)
+		}
 		inheritOpts = append(inheritOpts, *option)
 	}
 	return
@@ -239,6 +275,9 @@ func OptionTagParse(vTag string) *cli.Option {
 			option.List = append(option.List, name)
 			if i == 0 {
 				option.Alias = strings.Split(name, ",")
+			}
+			if s == ArgsCmdStructGen {
+				option.StructGen = true
 			}
 			continue
 		}
