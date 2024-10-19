@@ -275,8 +275,14 @@ func (c CommandOptional) InvalidMsg(args ArgsParser) string {
 	}
 
 	if allowOptions != nil {
+		cfg := c.GetConfig()
 		for _, iptOpt := range args.Option() {
-			if !rock.InList(allowOptions, iptOpt) {
+			verifyKey := iptOpt
+			keyMutilClass := strings.Split(iptOpt, cfg.StructGenSep)
+			if len(keyMutilClass) > 0 {
+				verifyKey = keyMutilClass[0]
+			}
+			if !rock.InList(allowOptions, verifyKey) {
 				return iptOpt + ": 选项不支持，请参考帮助文档"
 			}
 		}
