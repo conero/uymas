@@ -99,6 +99,9 @@ func (e *Evolve[T]) toRunRg(rg T) bool {
 func NewEvolve(cfgs ...cli.Config) cli.Application[any] {
 	evl := &Evolve[any]{}
 	evl.Config = rock.Param(cli.DefaultConfig, cfgs...)
+	if len(cfgs) > 0 {
+		cli.ConfigSet(cfgs[0])
+	}
 	evl.Call = func(fn any, parser cli.ArgsParser) {
 		if fn == nil {
 			return

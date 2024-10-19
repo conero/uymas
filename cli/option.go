@@ -80,6 +80,19 @@ type CommandOptional struct {
 	IsEntry    bool
 	OffValid   bool // Turn off validation
 	dataOption *Option
+	config     *Config
+}
+
+func (c CommandOptional) SetConfig(cfg Config) CommandOptional {
+	c.config = &cfg
+	return c
+}
+
+func (c CommandOptional) GetConfig() Config {
+	if c.config == nil {
+		return DefaultConfig
+	}
+	return *c.config
 }
 
 // OptionHelpMsg generate an options help document through the options parameters you set
@@ -136,11 +149,12 @@ func (c CommandOptional) OptionHelpMsg(levels ...int) string {
 		if len(opt.StructItems) > 0 {
 			var siPairList [][2]string
 			var siMaxLen = 0
+			cfg := c.GetConfig()
 			for _, item := range opt.StructItems {
 				if item.Help == "" {
 					continue
 				}
-				siName := opt.GetName() + ":" + item.GetName()
+				siName := opt.GetName() + cfg.StructGenSep + item.GetName()
 				siLen := len(siName)
 				if siLen > siMaxLen {
 					siMaxLen = siLen

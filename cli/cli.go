@@ -56,6 +56,9 @@ type Cli struct {
 func NewCli(cfgs ...Config) *Cli {
 	app := &Cli{}
 	app.Config = rock.Param(DefaultConfig, cfgs...)
+	if len(cfgs) > 0 {
+		ConfigSet(cfgs[0])
+	}
 	app.Call = func(fn Fn, parser ArgsParser) {
 		if fn != nil {
 			fn(parser)

@@ -92,9 +92,10 @@ func setValueByOption(vField reflect.Value, option *cli.Option, args cli.ArgsPar
 			option.StructItems = StructDress(vField)
 		}
 		name := option.GetName()
+		cfg := cli.ConfigWith()
 		for _, item := range option.StructItems {
 			structName := item.GetName()
-			var key = name + ":" + structName
+			var key = name + cfg.StructGenSep + structName
 			var valueStr = args.Get(key)
 			if valueStr == "" {
 				valueStr = item.DefValue

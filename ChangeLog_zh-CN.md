@@ -45,6 +45,7 @@
   - pref: （内部）函数 `parseNumber` 修复 ParseFloat 等数制错误
 - **cli**
   - feat: cli.Option 新增属性`StructGen`，`StructItems` 并支持选项struct文档标识
+  - feat: 新增函数 `ConfigWith` 及 `ConfigSet` 用于读取或设置全局变量
 
 - **cli/gen**
   - feat: 新增函数`MultiArgsMap`用于实现`cli.ArgsParser`到map的值映射
