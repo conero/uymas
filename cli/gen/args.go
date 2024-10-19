@@ -19,15 +19,34 @@ import (
 //
 // syntax rules of name: "cmd>>json>>FileName".
 const ArgsTagName = "cmd"
+
+// ArgsCmdRequired the option of command is required
 const ArgsCmdRequired = "required"
+
+// ArgsCmdHelp the help information of the option
 const ArgsCmdHelp = "help"
+
+// ArgsCmdDefault to set option a default value
 const ArgsCmdDefault = "default"
+
+// ArgsTagOmit ignore command line properties, that is, do not parse
 const ArgsTagOmit = "-"
+
+// ArgsTagData as a mapping identifier for the data in the command
 const ArgsTagData = "isdata"
+
+// ArgsTagNext as a command output data specific index, default index=1
 const ArgsTagNext = "next"
+
+// ArgsTagMark the option document is identified as the value of the option when it is generated
 const ArgsTagMark = "mark" // tag option input values name
+// ArgsTagOwner a tag in a structure command that is an option to the command it belongs to
 const ArgsTagOwner = "owner"
+
+// ArgsGlobalOwner as an identifier for global options
 const ArgsGlobalOwner = "globalOwner"
+
+// ArgsOptionNoValid the command does not verify option data
 const ArgsOptionNoValid = "notValid"
 
 func argsValueCheck(ref reflect.Value) (reflect.Value, error) {
