@@ -44,11 +44,6 @@ func parseCurrent(force bool) {
 
 }
 
-// Deprecated: get the root base dir, will rename to `Basedir()`
-func GetBasedir() string {
-	return Basedir()
-}
-
 // Basedir get application binary root dir.
 func Basedir() string {
 	if current.BaseDir == "" {
@@ -72,11 +67,6 @@ func AppName() string {
 
 func AppFilename() string {
 	return current.Name
-}
-
-// Deprecated: the path dir by application same location, please replace use  `RootPath`.
-func GetPathDir(vPath string) string {
-	return fmt.Sprintf("%v%v", Basedir(), vPath)
 }
 
 // RootPath the path dir by application same location.

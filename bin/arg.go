@@ -545,8 +545,3 @@ func NewArgWith(cfg *ArgConfig, args ...string) *Arg {
 func NewCliCmdByString(ss string) *Arg {
 	return NewCliCmd(butil.StringToArgs(ss)...)
 }
-
-// CliCmd as the alias of Arg
-//
-// Deprecated: maybe will be deleted when next version, please use Arg replace.
-type CliCmd = Arg

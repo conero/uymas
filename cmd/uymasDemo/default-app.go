@@ -6,9 +6,7 @@ import (
 	"gitee.com/conero/uymas/bin/color"
 	"gitee.com/conero/uymas/logger"
 	"gitee.com/conero/uymas/logger/lgr"
-	"gitee.com/conero/uymas/str"
 	"os"
-	"regexp"
 	"runtime"
 	"time"
 )
@@ -33,30 +31,6 @@ func (c *defaultApp) DefaultHelp() {
 	fmt.Println("log [text]  日志测试")
 	fmt.Println("  -l,--level 日志级别设置")
 
-}
-
-// Cal @todo 下一版本进行删除（next-remove）
-//
-// Deprecated: next major version remove
-func (c *defaultApp) Cal() {
-	equal := c.Cc.SubCommand
-	if equal != "" {
-		spanReg := regexp.MustCompile(`\s+`)
-		equal = spanReg.ReplaceAllString(equal, "")
-	}
-	if equal == "" {
-		lgr.Error("请输入等式符号！")
-		return
-	}
-
-	calc := str.NewCalc(equal)
-	calc.Count()
-
-	if c.Cc.CheckSetting("V", "verbose") {
-		lgr.Info("输入等式：%s\n    => %v", c.Cc.SubCommand, calc)
-		return
-	}
-	fmt.Println(calc)
 }
 
 // Color 测试命令行文本颜色
