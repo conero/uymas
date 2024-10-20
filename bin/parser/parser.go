@@ -62,6 +62,11 @@ func NewScriptFile(filename string) []string {
 		buf := bufio.NewReader(fl)
 		for {
 			line, err2 := buf.ReadString('\n')
+			// 错误
+			if err2 != nil {
+				break
+			}
+
 			line = strings.TrimSpace(line)
 			// empty line
 			if line == "" {
@@ -75,11 +80,6 @@ func NewScriptFile(filename string) []string {
 				continue
 			}
 			cmds = append(cmds, line)
-
-			// 错误
-			if err2 != nil {
-				break
-			}
 		}
 	}
 	return cmds
