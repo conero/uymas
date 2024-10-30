@@ -1,5 +1,5 @@
-// Package netutil net util, Web related assistant tools
-package netutil
+// Package cloud net util, Web related assistant tools
+package cloud
 
 import (
 	"bytes"

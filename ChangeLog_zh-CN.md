@@ -46,7 +46,6 @@
 - **cli**
   - feat: cli.Option 新增属性`StructGen`，`StructItems` 并支持选项struct文档标识
   - feat: 新增函数 `ConfigWith` 及 `ConfigSet` 用于读取或设置全局变量
-
 - **cli/gen**
   - feat: 新增函数`MultiArgsMap`用于实现`cli.ArgsParser`到map的值映射
   - pref: 完善 `MultiArgs` 使其赋值兼容性更强
@@ -55,6 +54,13 @@
   - feat: 新增函数 `StdPathList` 实现路径列表标准化处理
   - feat: 实现空函数 `DelEnvPath`，删除指定的路径
   - pref: 函数 `AddEnvPath`等返回参数有 error调整为 string，因实际无法改变环境变量路径
+- **util/cloud**
+  - feat: 新增 `PortAvailable` /`PortAddress` 放到实现端口可用性检查以及端口转标准地址
+  - fix: 修复package表名错误，从v1.4版本移植时
+
+- **example/cli/fast/**
+  - feat: 新增命令 port 用于检查当前可用端口
+
 
 
 

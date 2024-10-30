@@ -6,6 +6,8 @@ import (
 	"gitee.com/conero/uymas/v2/logger/lgr"
 	"gitee.com/conero/uymas/v2/number"
 	"gitee.com/conero/uymas/v2/rock"
+	"gitee.com/conero/uymas/v2/util/cloud"
+	"gitee.com/conero/uymas/v2/util/tm"
 	"os"
 	"time"
 )
@@ -57,5 +59,19 @@ func main() {
 			Help:    "指定文件名称",
 		},
 	))
+	app.Command(func(args cli.ArgsParser) {
+		sendFn := tm.SpendFn()
+		port := args.SubCommand()
+		if port == "" {
+			port = "80"
+		}
+		lgr.Info("即将检查端口 %s", port)
+
+		vPort := uint16(number.AnyInt64(port))
+		vPort = cloud.PortAvailable(vPort)
+
+		lgr.Info("可用端口号 -> %d", vPort)
+		lgr.Info("用时 -> %s", sendFn())
+	}, "port", cli.Help("判别端口是否可用，不可用者查看下一个端口"))
 	_ = app.Run()
 }
