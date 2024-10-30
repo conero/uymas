@@ -1,7 +1,6 @@
 package fs
 
 import (
-	"errors"
 	"gitee.com/conero/uymas/v2/str"
 	"os"
 	"strings"
@@ -20,31 +19,42 @@ func EnvPath() []string {
 	var value []string
 	path := os.Getenv(VEnvPath)
 	if path != "" {
+		path = strings.ReplaceAll(path, "\\", "/")
 		value = strings.Split(path, ";")
 	}
 	return value
 }
 
 // AddEnvPath and path to env
-func AddEnvPath(paths ...string) error {
+func AddEnvPath(paths ...string) string {
+	paths = StdPathList(paths...)
 	refPath := EnvPath()
-	addMk := false
 	for _, path := range paths {
 		if str.InQuei(path, refPath) == -1 {
 			refPath = append(refPath, path)
-			addMk = true
 		}
 	}
-	if addMk {
-		err := os.Setenv(VEnvPath, strings.Join(refPath, ";"))
-		// [TIP] 仅仅在当前进程中/实例中有效
-		// fmt.Println(os.Getenv(V_EnvPath))
-		return err
-	}
-	return errors.New("输入为空或者环境变量已经存在")
+	return strings.Join(refPath, ";")
 }
 
 // DelEnvPath del the path from env path list.
-func DelEnvPath(paths ...string) error {
-	return nil
+func DelEnvPath(paths ...string) string {
+	var newPath []string
+	paths = StdPathList(paths...)
+	for _, pth := range EnvPath() {
+		if str.InQuei(pth, paths) != -1 {
+			continue
+		}
+		newPath = append(newPath, pth)
+	}
+	return strings.Join(newPath, ";")
+}
+
+// StdPathList turn path list to standard path
+func StdPathList(paths ...string) []string {
+	var newPath []string
+	for i, path := range paths {
+		paths[i] = StdPathName(path)
+	}
+	return newPath
 }

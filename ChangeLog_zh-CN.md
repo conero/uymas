@@ -51,9 +51,10 @@
   - feat: 新增函数`MultiArgsMap`用于实现`cli.ArgsParser`到map的值映射
   - pref: 完善 `MultiArgs` 使其赋值兼容性更强
   - pref: 完善对 `ArgsDress` 及 `ArgsDecomposeMust` 对 `StructGen`，`StructItems` 解析支持
-
-
-
+- **fs/os**
+  - feat: 新增函数 `StdPathList` 实现路径列表标准化处理
+  - feat: 实现空函数 `DelEnvPath`，删除指定的路径
+  - pref: 函数 `AddEnvPath`等返回参数有 error调整为 string，因实际无法改变环境变量路径
 
 
 
