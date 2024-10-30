@@ -42,7 +42,9 @@
   - feat: 新增函数 `StdPathList` 实现路径列表标准化处理
   - feat: 实现空函数 `DelEnvPath`，删除指定的路径
   - pref: 函数 `AddEnvPath`等返回参数有 error调整为 string，因实际无法改变环境变量路径
-
+- **util/cloud**
+  - feat: 新增 `PortAvailable` /`PortAddress` 放到实现端口可用性检查以及端口转标准地址
+  - fix: 修复package表名错误，从v1.4版本移植时
 
 
 
@@ -918,4 +920,4 @@ _<font color="blue">此版本开始，必须在发布大版本时，总结该大
 - **uymas/util**
   - (+) *提供切片存在性判断*
 - **uymas/util/str**
-  - (+) 实现方法 *Ucfirst* 用于对首字母变大写
+  - (+) 实现方法 *Ucfirst* 用于对首字母变大写、
