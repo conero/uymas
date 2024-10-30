@@ -38,6 +38,13 @@
 > 删除-标记弃用的-函数及方法、
 
 - break: 删除使用 `Deprecated` 标记的方法和函数
+- **fs/os**
+  - feat: 新增函数 `StdPathList` 实现路径列表标准化处理
+  - feat: 实现空函数 `DelEnvPath`，删除指定的路径
+  - pref: 函数 `AddEnvPath`等返回参数有 error调整为 string，因实际无法改变环境变量路径
+
+
+
 
 
 
