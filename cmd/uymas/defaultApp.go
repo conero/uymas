@@ -56,7 +56,11 @@ func (c *defaultApp) Construct() {
 func (c *defaultApp) DefaultIndex() {
 	cc := c.Cc
 	if cc.CheckSetting("v", "version") {
-		fmt.Printf("v%v/%v\n", uymas.Version, uymas.Release)
+		gbi := uymas.GetBuildInfo()
+		if gbi != "" {
+			gbi = " " + gbi
+		}
+		fmt.Printf("v%s/%s%s\n", uymas.Version, uymas.Release, gbi)
 		return
 	} else if cc.CheckSetting("h", "help") {
 		cc.CallCmd("help")

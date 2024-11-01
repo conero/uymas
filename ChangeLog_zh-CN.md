@@ -16,7 +16,6 @@
 
 - **bin**
   - [ ] 是否增加可选的 *cache* 选项，实现对命令行程序缓存，增加程序响应。
-- [ ] 包支持 1.18并使用范类重写方法。(maybe v2.0.0）
 
 
 
@@ -45,6 +44,9 @@
 - **util/cloud**
   - feat: 新增 `PortAvailable` /`PortAddress` 放到实现端口可用性检查以及端口转标准地址
   - fix: 修复package表名错误，从v1.4版本移植时
+- **cmd/uymas**
+  - pref: `--version` 版本选项添加编译版本信息
+
 
 
 

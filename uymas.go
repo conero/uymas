@@ -21,13 +21,19 @@ const (
 )
 
 // Data for injection
-// # go build -ldflags "-s -w -X 'gitee.com/conero/uymas.gitHash=$gitHash' -X 'gitee.com/conero/uymas.buildData=$buildData' -X 'gitee.com/conero/uymas.buildAuthor=$buildAuthor'" ./cmd/...
 var (
 	gitHash     string
 	buildData   string
 	buildAuthor string
 )
 
+// GetBuildInfo return the build info by data injection
+// ```
+// powershell
+// $gitHash = $(git rev-parse --short HEAD); $buildData = $(get-date -Format 'yyyy-MM-dd'); $buildAuthor = 'Joshua Conero';
+//
+// go build -ldflags "-s -w -X 'gitee.com/conero/uymas.gitHash=$gitHash' -X 'gitee.com/conero/uymas.buildData=$buildData' -X 'gitee.com/conero/uymas.buildAuthor=$buildAuthor'" ./cmd/...
+// ```
 func GetBuildInfo() string {
 	info := ""
 	if gitHash != "" && buildData != "" {
