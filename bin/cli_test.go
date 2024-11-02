@@ -2,6 +2,7 @@ package bin
 
 import (
 	"fmt"
+	"gitee.com/conero/uymas/logger/lgr"
 	"testing"
 )
 
@@ -72,4 +73,14 @@ func TestCLI_RegisterEnd(t *testing.T) {
 	cli.Run()
 	// case
 	cli.Run("test")
+}
+
+func TestCLI_RegisterFunc_Repeat(t *testing.T) {
+	app := NewCLI()
+	app.RegisterFunc(func(arg *Arg) {
+		lgr.Info("it‘s C command")
+	}, "repeat")
+	app.RegisterFunc(func(arg *Arg) {
+		lgr.Info("it‘s B command")
+	}, "repeat")
 }

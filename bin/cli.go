@@ -120,6 +120,7 @@ type CLI struct {
 	ScriptFileOption   string // default: --file,-f
 	// DisPlgCmdDetect Turn off Plugin Command detection
 	DisPlgCmdDetect bool
+	closeVerify     bool // display verify command register, default: false
 }
 
 // CliApp the cli app.
@@ -178,6 +179,12 @@ func NewCLI() *CLI {
 	return cli
 }
 
+// NoVerify close verify, when prod
+func (cli *CLI) NoVerify(args ...bool) *CLI {
+	cli.closeVerify = rock.ExtractParam(true, args...)
+	return cli
+}
+
 // GetCmdList get the list cmd of application
 func (cli *CLI) GetCmdList() []string {
 	var list = cli.registerCmdList
@@ -204,6 +211,9 @@ func (cli *CLI) GetCmdList() []string {
 //
 //	`RegisterFunc(todo func(cc *Arg), cmd string)` or `RegisterFunc(todo func(), cmd, alias string)`
 func (cli *CLI) RegisterFunc(todo func(*Arg), cmds ...string) *CLI {
+	if !cli.closeVerify && cli.checkRegisterRepeat(cmds...) {
+		panic("The command has been registered, please check the command name")
+	}
 	if len(cmds) > 0 {
 		cmd := cmds[0]
 		if len(cmds) > 1 {
@@ -217,6 +227,25 @@ func (cli *CLI) RegisterFunc(todo func(*Arg), cmds ...string) *CLI {
 	}
 	cli.registerFunc(todo, cmds...)
 	return cli
+}
+
+// check the command repeat, maybe create debug mode to check for performance
+func (cli *CLI) checkRegisterRepeat(cmds ...string) bool {
+	for _, c := range cmds {
+		_, has := cli.cmds[c]
+		if has {
+			return true
+		}
+
+		for key, _ := range cli.commands {
+			if key == c {
+				return true
+			}
+			// @todo
+			//attr.Alias
+		}
+	}
+	return false
 }
 
 // register command by function or struct
