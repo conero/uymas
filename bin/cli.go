@@ -120,7 +120,7 @@ type CLI struct {
 	ScriptFileOption   string // default: --file,-f
 	// DisPlgCmdDetect Turn off Plugin Command detection
 	DisPlgCmdDetect bool
-	closeVerify     bool // display verify command register, default: false
+	closeVerify     bool // disable verify like command register and so on, default: false
 }
 
 // CliApp the cli app.
