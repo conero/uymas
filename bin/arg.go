@@ -11,6 +11,7 @@ import (
 	"strings"
 )
 
+// ArgConfig the config of command
 type ArgConfig struct {
 	// If it's support `--long` that is true, otherwise as `-long`.
 	//
@@ -43,26 +44,22 @@ type Arg struct {
 
 // CheckSetting checkout if the set exist in `Arg` sets and support multi.
 func (app *Arg) CheckSetting(sets ...string) bool {
-	has := false
 	for _, set := range sets {
-		if idx := rock.ListIndex(app.Setting, set); idx > -1 {
-			has = true
-			break
+		if rock.InList(app.Setting, set) {
+			return true
 		}
 	}
-	return has
+	return false
 }
 
 // CheckMustKey check the data key must in the sets and support multi
 func (app *Arg) CheckMustKey(keys ...string) bool {
-	check := true
 	for _, k := range keys {
 		if v, has := app.DataRaw[k]; !has || v == "" {
-			check = false
-			break
+			return false
 		}
 	}
-	return check
+	return true
 }
 
 // Cwd get the application current word dir.

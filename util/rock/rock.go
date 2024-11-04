@@ -18,6 +18,11 @@ func ListIndex[T constraints.Equable](list []T, value T) (index int) {
 	return
 }
 
+// InList determines whether a key value exists in the list
+func InList[T constraints.Equable](list []T, value T) bool {
+	return ListIndex(list, value) > -1
+}
+
 // ListNoRepeat filter duplicate elements in list
 func ListNoRepeat[T constraints.Equable](list []T) []T {
 	var noRepeat []T

@@ -42,12 +42,14 @@
   - feat: 新增函数 `StdPathList` 实现路径列表标准化处理
   - feat: 实现空函数 `DelEnvPath`，删除指定的路径
   - pref: 函数 `AddEnvPath`等返回参数有 error调整为 string，因实际无法改变环境变量路径
+- **util/rock**
+  - feat: 新增函数 `InList` 用于判断队列中是否存在元素
+
 - **util/cloud**
   - feat: 新增 `PortAvailable` /`PortAddress` 放到实现端口可用性检查以及端口转标准地址
   - fix: 修复package表名错误，从v1.4版本移植时
 - **cmd/uymas**
   - pref: `--version` 版本选项添加编译版本信息
-
 - **bin**
   - pref: 注册命令时添加可选的注册验证，如验证命令重复性
 
