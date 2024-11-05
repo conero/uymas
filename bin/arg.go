@@ -69,24 +69,17 @@ func (app *Arg) Cwd() string {
 
 // QueueNext get next key from order left to right
 func (app *Arg) QueueNext(key string) string {
-	idx := -1
 	qLen := len(app.Raw)
-	var value string
-	for i := 0; i < qLen; i++ {
-		if idx == i {
-			value = app.Raw[i]
-			break
-		}
-		if key == app.Raw[i] {
-			idx = i + 1
+	for i, value := range app.Raw {
+		if value == key && qLen > i+1 {
+			return app.Raw[i+1]
 		}
 	}
-	return value
+	return ""
 }
 
 // Next Get key values from multiple key values
 func (app *Arg) Next(keys ...string) string {
-	var value string
 	var vLen = len(keys)
 	//when keys is empty default use the current Next value that next of `app.Command` or `queue index-2`
 	if vLen == 0 {
@@ -98,12 +91,11 @@ func (app *Arg) Next(keys ...string) string {
 		return ""
 	}
 	for _, k := range keys {
-		value = app.QueueNext(k)
-		if value != "" {
-			break
+		if value := app.QueueNext(k); value != "" {
+			return value
 		}
 	}
-	return value
+	return ""
 }
 
 // NextList get the next list value exclude option.
@@ -123,7 +115,7 @@ func (app *Arg) NextList(keys ...string) []string {
 
 		if isEmptyKey {
 			keyMatch = true
-		} else if !keyMatch && rock.ListIndex(keys, arg) > -1 {
+		} else if !keyMatch && rock.InList(keys, arg) {
 			keyMatch = true
 			continue
 		}
@@ -171,11 +163,11 @@ func (app *Arg) ArgFloat64(keys ...string) float64 {
 func (app *Arg) ArgStringSlice(keys ...string) []string {
 	value := app.Arg(keys...)
 	if value != nil {
-		switch value.(type) {
+		switch vAny := value.(type) {
 		case []string:
-			return value.([]string)
+			return vAny
 		case string:
-			return []string{value.(string)}
+			return []string{vAny}
 		default:
 			var vSlice []string
 			vr := reflect.ValueOf(value)
@@ -195,11 +187,11 @@ func (app *Arg) ArgStringSlice(keys ...string) []string {
 func (app *Arg) ArgIntSlice(keys ...string) []int {
 	value := app.Arg(keys...)
 	if value != nil {
-		switch value.(type) {
+		switch vInt := value.(type) {
 		case []int:
-			return value.([]int)
+			return vInt
 		case int:
-			return []int{value.(int)}
+			return []int{vInt}
 		default:
 			var vSlice []int
 			vr := reflect.ValueOf(value)
@@ -218,32 +210,28 @@ func (app *Arg) ArgIntSlice(keys ...string) []int {
 
 // ArgRawDefault get raw arg has default
 func (app *Arg) ArgRawDefault(key, def string) string {
-	var value = def
 	if v, b := app.DataRaw[key]; b {
-		value = v
+		return v
 	}
-	return value
+	return def
 }
 
 // Arg get arg after parsed the raw data
 func (app *Arg) Arg(keys ...string) any {
-	var value any = nil
 	for _, key := range keys {
 		if v, b := app.Data[key]; b {
-			value = v
-			break
+			return v
 		}
 	}
-	return value
+	return nil
 }
 
 // ArgDefault can default value to get the arg
 func (app *Arg) ArgDefault(key string, def any) any {
-	var value = def
 	if v, b := app.Data[key]; b {
-		value = v
+		return v
 	}
-	return value
+	return def
 }
 
 // ArgRawLine get the raw line input.
@@ -271,21 +259,19 @@ func (app *Arg) CmdType() int {
 
 // AppendData append the Data
 func (app *Arg) AppendData(vMap map[string]any) *Arg {
-	if len(vMap) > 0 {
-		if app.Data == nil {
-			app.Data = map[string]any{}
+	if app.Data == nil {
+		app.Data = map[string]any{}
+	}
+	if app.DataRaw == nil {
+		app.DataRaw = map[string]string{}
+	}
+	for k, v := range vMap {
+		var value string
+		if v != nil {
+			value = fmt.Sprintf("%v", v)
 		}
-		if app.DataRaw == nil {
-			app.DataRaw = map[string]string{}
-		}
-		for k, v := range vMap {
-			var value string
-			if v != nil {
-				value = fmt.Sprintf("%v", v)
-			}
-			app.Data[k] = v
-			app.DataRaw[k] = value
-		}
+		app.Data[k] = v
+		app.DataRaw[k] = value
 	}
 	return app
 }
@@ -324,7 +310,7 @@ func (app *Arg) parseArgs() {
 			optKey = ""
 			k, v := s[0:idx], s[idx+1:]
 			app.saveOptionDick(k, v)
-			if rock.ListIndex(app.Setting, k) == -1 {
+			if !rock.InList(app.Setting, k) {
 				app.Setting = append(app.Setting, k)
 			}
 		} else {
