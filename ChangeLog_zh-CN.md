@@ -35,7 +35,7 @@
 
 #### v1.5.0/dev
 
-> 删除-标记弃用的-函数及方法、
+> 删除-标记弃用的-函数及方法、优化代码如阅读代码尝试编写最优代码
 
 - break: 删除使用 `Deprecated` 标记的方法和函数
 - **fs/os**
@@ -52,6 +52,7 @@
   - pref: `--version` 版本选项添加编译版本信息
 - **bin**
   - pref: 注册命令时添加可选的注册验证，如验证命令重复性
+  - del: 移除如`AppMethodInit/AppMethodRun/AppMethodNoSubC/AppMethodHelp/FuncRegisterEmpty` 等未真正使用的代码
 
 
 
