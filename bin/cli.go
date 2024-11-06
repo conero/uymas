@@ -56,10 +56,12 @@ func (c *registerCommand) setFiled(filedName string, value any) bool {
 	if fieldKind == toSetVal.Kind() {
 		field.Set(toSetVal)
 		return true
-	} else if toSetVal.Kind() == reflect.Ptr {
-		tval := toSetVal.Elem()
-		if fieldKind == tval.Kind() {
-			field.Set(tval)
+	}
+
+	if toSetVal.Kind() == reflect.Ptr {
+		tVal := toSetVal.Elem()
+		if fieldKind == tVal.Kind() {
+			field.Set(tVal)
 			return true
 		}
 	}
@@ -188,21 +190,22 @@ func (cli *CLI) NoVerify(args ...bool) *CLI {
 // GetCmdList get the list cmd of application
 func (cli *CLI) GetCmdList() []string {
 	var list = cli.registerCmdList
-	if cli.cmds != nil {
-		for cmd, _ := range cli.cmds {
-			if alias, hasMk := cli.cmdMap[cmd]; hasMk {
-				var cmdList = []string{cmd}
-				if v, isStr := alias.(string); isStr {
-					cmdList = append(cmdList, v)
-					cmd = strings.Join(cmdList, ", ")
-				} else if v, isStrQue := alias.([]string); isStrQue {
-					cmdList = append(cmdList, v...)
-					cmd = strings.Join(cmdList, ", ")
-				}
+	if cli.cmds == nil {
+		return list
+	}
+	for cmd, _ := range cli.cmds {
+		if alias, hasMk := cli.cmdMap[cmd]; hasMk {
+			var cmdList = []string{cmd}
+			if v, isStr := alias.(string); isStr {
+				cmdList = append(cmdList, v)
+				cmd = strings.Join(cmdList, ", ")
+			} else if v, isStrQue := alias.([]string); isStrQue {
+				cmdList = append(cmdList, v...)
+				cmd = strings.Join(cmdList, ", ")
 			}
-
-			list = append(list, cmd)
 		}
+
+		list = append(list, cmd)
 	}
 	return list
 }
@@ -231,47 +234,72 @@ func (cli *CLI) RegisterFunc(todo func(*Arg), cmds ...string) *CLI {
 
 // check the command repeat, maybe create debug mode to check for performance
 func (cli *CLI) checkRegisterRepeat(cmds ...string) bool {
+	vCmdMap := cli.cmdMap
+	isFindRepeatAnyFn := func(vAny any, search string) bool {
+		if vAny == nil {
+			return false
+		}
+		switch vAlias := vAny.(type) {
+		case string:
+			if vAlias == search {
+				return true
+			}
+		case []string:
+			if rock.InList(vAlias, search) {
+				return true
+			}
+		}
+		return false
+	}
 	for _, c := range cmds {
 		_, has := cli.cmds[c]
 		if has {
 			return true
 		}
 
-		for key, _ := range cli.commands {
+		for key, vCmd := range cli.commands {
 			if key == c {
 				return true
 			}
-			// @todo
-			//attr.Alias
+			if isFindRepeatAnyFn(vCmd.Alias, c) {
+				return true
+			}
+			if isFindRepeatAnyFn(vCmdMap[key], c) {
+				return true
+			}
 		}
 	}
 	return false
 }
 
 // register command by function or struct
-func (cli *CLI) register(rgst any, cmds ...string) {
-	if len(cmds) > 0 {
-		cmd := cmds[0]
-		if len(cmds) > 1 {
-			cli.cmdMap[cmd] = cmds[1]
-		}
-		// make the function map th struct
-		cli.commands[cmd] = Cmd{
-			Command: cmd,
-			Alias:   cli.cmdMap[cmd],
-		}
-		// register feedback
-		cli.cmds[cmd] = rgst
+func (cli *CLI) register(reg any, cmds ...string) {
+	vCount := len(cmds)
+	if vCount == 0 {
+		return
 	}
+
+	cmd := cmds[0]
+	if vCount > 1 {
+		cli.cmdMap[cmd] = cmds[1]
+	}
+	// make the function map th struct
+	cli.commands[cmd] = Cmd{
+		Command: cmd,
+		Alias:   cli.cmdMap[cmd],
+	}
+	// register feedback
+	cli.cmds[cmd] = reg
 }
 
 func (cli *CLI) registerFunc(todo func(*Arg), cmds ...string) {
 	cli.tempLastCommand = ""
-	if len(cmds) > 0 {
+	count := len(cmds)
+	if count > 0 {
 		cmd := cmds[0]
 		cli.tempLastCommand = cmd
 		cli.cmds[cmd] = todo
-		if len(cmds) > 1 {
+		if count > 1 {
 			cli.cmdMap[cmd] = cmds[1:]
 		}
 	} else {
@@ -286,13 +314,16 @@ func (cli *CLI) registerFunc(todo func(*Arg), cmds ...string) {
 }
 
 func (cli *CLI) Describe(desc string) bool {
-	if cli.tempLastCommand != "" {
-		if c, has := cli.commands[cli.tempLastCommand]; has {
-			c.Describe = desc
-			cli.commands[cli.tempLastCommand] = c
-			return true
-		}
+	if cli.tempLastCommand == "" {
+		return false
 	}
+
+	if c, has := cli.commands[cli.tempLastCommand]; has {
+		c.Describe = desc
+		cli.commands[cli.tempLastCommand] = c
+		return true
+	}
+
 	return false
 }
 
@@ -312,30 +343,33 @@ func (cli *CLI) GetDescribe(cmd string) string {
 
 // RegisterCommand register by command struct data
 func (cli *CLI) RegisterCommand(c Cmd) *CLI {
-	if c.Command != "" {
-		cli.commands[c.Command] = c
-		if c.Handler != nil {
-			cmds := []string{c.Command}
-			alias := c.Alias
-			if alias != nil {
-				if v, isStr := alias.(string); isStr {
-					cmds = append(cmds, v)
-				} else if v, isStrQue := alias.([]string); isStrQue {
-					cmds = append(cmds, v...)
-				}
-			}
-			cli.registerFunc(c.Handler, cmds...)
+	if c.Command == "" {
+		return cli
+	}
+	cli.commands[c.Command] = c
+	if c.Handler == nil {
+		return cli
+	}
+	cmds := []string{c.Command}
+	alias := c.Alias
+	if alias != nil {
+		if v, isStr := alias.(string); isStr {
+			cmds = append(cmds, v)
+		} else if v, isStrQue := alias.([]string); isStrQue {
+			cmds = append(cmds, v...)
 		}
 	}
+	cli.registerFunc(c.Handler, cmds...)
 	return cli
 }
 
 // RegisterApp register the struct app, the format same as RegisterFunc. cmds any be `cmd string` or `cmd, alias string`
 func (cli *CLI) RegisterApp(ap any, cmds ...string) *CLI {
-	if len(cmds) > 0 {
+	vCount := len(cmds)
+	if vCount > 0 {
 		cmd := cmds[0]
 		cli.cmds[cmd] = ap
-		if len(cmds) > 1 {
+		if vCount > 1 {
 			cli.cmdMap[cmd] = cmds[1]
 		}
 	}
@@ -434,18 +468,20 @@ func (cli *CLI) CmdExist(cmds ...string) bool {
 		}
 	}
 
-	if !cmdExist {
-		for _, cm := range cli.cmdMap {
-			//KV: string->string
-			if cmStr, isStr := cm.(string); isStr && rock.ListIndex(cmds, cmStr) > -1 {
-				cmdExist = true
-				break
-			} else if cmStrQue, isStrArray := cm.([]string); isStrArray {
-				for _, cStr := range cmds {
-					if rock.ListIndex(cmStrQue, cStr) > -1 {
-						cmdExist = true
-						break
-					}
+	if cmdExist {
+		return cmdExist
+	}
+
+	for _, cm := range cli.cmdMap {
+		//KV: string->string
+		if cmStr, isStr := cm.(string); isStr && rock.ListIndex(cmds, cmStr) > -1 {
+			cmdExist = true
+			break
+		} else if cmStrQue, isStrArray := cm.([]string); isStrArray {
+			for _, cStr := range cmds {
+				if rock.ListIndex(cmStrQue, cStr) > -1 {
+					cmdExist = true
+					break
 				}
 			}
 		}
@@ -458,7 +494,7 @@ func (cli *CLI) CmdExist(cmds ...string) bool {
 func (cli *CLI) router(cc *Arg) {
 	//set the last `*CLI` as context of Arg.
 	cc.context = *cli
-	cc.cmdType = int(CmdFunc)
+	cc.cmdType = CmdFunc
 	// call the `before-call-hook`
 	cli.hookBeforeCall(cc)
 
@@ -490,60 +526,63 @@ func (cli *CLI) router(cc *Arg) {
 	}
 
 	// router command is default.
-	if !isRouterMk {
-		if cli.actionAnyRegister != nil {
-			if isMatch, rc := cli.routerAny(cc); isMatch {
-				if rc != nil {
-					if !rc.callMethod(actionRunEnd, cc) {
-						cli.hookEndCall(cc)
-					}
-				}
-				isRouterMk = isMatch
-			}
-		}
+	if isRouterMk {
+		return
+	}
 
-		if !isRouterMk {
-			defaultUnmatchFn(cc)
-			isRouterMk = false
+	if cli.actionAnyRegister != nil {
+		if isMatch, rc := cli.routerAny(cc); isMatch {
+			if rc != nil {
+				if !rc.callMethod(actionRunEnd, cc) {
+					cli.hookEndCall(cc)
+				}
+			}
+			isRouterMk = isMatch
 		}
+	}
+
+	if !isRouterMk {
+		defaultUnmatchFn(cc)
+		isRouterMk = false
 	}
 }
 
 // The later optimization is for the first detection, and caching is performed after success for quick recall next time
 func (cli *CLI) plgCmdDetect(cc *Arg) bool {
 	plgC := plgCmdDetect(cc)
-	if plgC != nil {
-		raw := cc.Raw
-		count := len(raw)
-		if count > 0 {
-			raw = raw[1:]
-		}
-
-		bys, err := plgC.Run(raw...)
-		if err != nil {
-			fmt.Printf("err: %v\n", err)
-		}
-		if bys != nil {
-			fmt.Printf("%s\n", string(bys))
-		}
-		return true
+	if plgC == nil {
+		return false
 	}
-	return false
+	raw := cc.Raw
+	count := len(raw)
+	if count > 0 {
+		raw = raw[1:]
+	}
+
+	bys, err := plgC.Run(raw...)
+	if err != nil {
+		fmt.Printf("err: %v\n", err)
+	}
+	if bys != nil {
+		fmt.Printf("%s\n", string(bys))
+	}
+	return true
 }
 
 // search register func and call if exits
 func (cli *CLI) findRegisterFuncAndRun(fnName string, cc *Arg) (rc *registerCommand) {
 	rc = &registerCommand{}
 	value := cli.findRegisterValueByCommand(fnName)
-	if value != nil {
-		if tryCallFn(value, cc) {
-			rc.isMatch = true
-			rc.isFunc = true
-		} else {
-			// call the AppCmd
-			rc.refVal = reflect.ValueOf(value)
-			rc.isStruct = true
-		}
+	if value == nil {
+		return
+	}
+	if tryCallFn(value, cc) {
+		rc.isMatch = true
+		rc.isFunc = true
+	} else {
+		// call the AppCmd
+		rc.refVal = reflect.ValueOf(value)
+		rc.isStruct = true
 	}
 	return
 }
@@ -559,7 +598,7 @@ func (cli *CLI) routerCommand(cc *Arg) *registerCommand {
 		return rfar
 	}
 
-	cc.cmdType = int(CmdApp)
+	cc.cmdType = CmdApp
 	if !rfar.setFiled(appCliFieldCliCmd, cc) {
 		panic(fmt.Sprintf("%v:the command field of `Cc` is not valid filed.", cc.Command))
 	}
@@ -749,7 +788,7 @@ func (cli *CLI) loadDataSyntax(cc *Arg) {
 	}
 }
 
-// to checkout if load script file, script mutil lines
+// to check out if load script file, script mutil lines
 func (cli *CLI) loadScriptSyntax(cc *Arg) {
 	if cli.UnLoadScriptSyntax {
 		return
