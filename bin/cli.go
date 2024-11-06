@@ -589,21 +589,21 @@ func (cli *CLI) findRegisterFuncAndRun(fnName string, cc *Arg) (rc *registerComm
 
 // router when `command` is not empty.
 func (cli *CLI) routerCommand(cc *Arg) *registerCommand {
-	rfar := cli.findRegisterFuncAndRun(cc.Command, cc)
-	if rfar.isMatch {
-		return rfar
+	find := cli.findRegisterFuncAndRun(cc.Command, cc)
+	if find.isMatch {
+		return find
 	}
 
-	if !rfar.isStruct {
-		return rfar
+	if !find.isStruct {
+		return find
 	}
 
 	cc.cmdType = CmdApp
-	if !rfar.setFiled(appCliFieldCliCmd, cc) {
+	if !find.setFiled(appCliFieldCliCmd, cc) {
 		panic(fmt.Sprintf("%v:the command field of `Cc` is not valid filed.", cc.Command))
 	}
 
-	if !rfar.callMethod(actionRunConstruct, cc) {
+	if !find.callMethod(actionRunConstruct, cc) {
 		panic(fmt.Sprintf("%v: the command is not vaild.", cc.Command))
 	}
 	//the subCommand string
@@ -611,9 +611,9 @@ func (cli *CLI) routerCommand(cc *Arg) *registerCommand {
 	if subCmdStr != "" {
 		subCmdStr = cc.getAlias(cc.subCommandAlias, subCmdStr)
 		subCmdStr = Cmd2StringMap(subCmdStr)
-		if rfar.callMethod(subCmdStr, cc) {
-			rfar.isMatch = true
-			return rfar
+		if find.callMethod(subCmdStr, cc) {
+			find.isMatch = true
+			return find
 		}
 	}
 
@@ -622,31 +622,31 @@ func (cli *CLI) routerCommand(cc *Arg) *registerCommand {
 	//	option		=> --help,-h,-?
 	if subCmdStr == actionRunHelpName || subCmdStr == "?" || (subCmdStr == "" && cc.
 		CheckSetting("help", "h", "?")) {
-		if rfar.callMethod(actionRunHelp, cc) {
-			rfar.isMatch = true
-			return rfar
+		if find.callMethod(actionRunHelp, cc) {
+			find.isMatch = true
+			return find
 		}
 	}
 
 	// actionRunIndex
 	if subCmdStr == "" {
-		if rfar.callMethod(actionRunIndex, cc) {
-			rfar.isMatch = true
-			return rfar
+		if find.callMethod(actionRunIndex, cc) {
+			find.isMatch = true
+			return find
 		}
 	}
 
 	// actionRunUnmatched
-	if rfar.callMethod(actionRunUnmatched, cc) {
-		rfar.isMatch = true
-		return rfar
+	if find.callMethod(actionRunUnmatched, cc) {
+		find.isMatch = true
+		return find
 	}
 
 	if subCmdStr != "" {
 		panic(fmt.Sprintf("the method `%s` do not have a handler as `%v`.", cc.SubCommand, subCmdStr))
 	}
 
-	return rfar
+	return find
 
 }
 
@@ -671,54 +671,54 @@ func (cli *CLI) routerAny(cc *Arg) (bool, *registerCommand) {
 	}
 	if tryCallFn(aur, cc) {
 		isRouterMk = true
-	} else {
-		rc = &registerCommand{
-			refVal: reflect.ValueOf(aur),
-		}
-		// Arg field
-		rc.setFiled(appCliFieldCliCmd, cc)
-		// init-method
-		rc.callMethod(actionRunConstruct, cc)
+		return isRouterMk, rc
+	}
 
-		var cmdTitle string
-		// try to find `command`
-		if cc.Command != "" {
-			cmdTitle = cc.getAlias(cc.commandAlias, cc.Command)
-			cmdTitle = Cmd2StringMap(cmdTitle)
-			// check `Construct` repeat call(2 times)
-			if cmdTitle != actionRunConstruct && rc.callMethod(cmdTitle, cc) {
-				rc.isMatch = true
-				return true, rc
-			}
-		}
+	rc = &registerCommand{
+		refVal: reflect.ValueOf(aur),
+	}
+	// Arg field
+	rc.setFiled(appCliFieldCliCmd, cc)
+	// init-method
+	rc.callMethod(actionRunConstruct, cc)
 
-		// actionRunHelp, support the command/option like:
-		//	command		=> help,?
-		//	option		=> --help,-h,-?
-		if cmdTitle == actionRunHelpName || cmdTitle == "?" || (cmdTitle == "" && cc.
-			CheckSetting("help", "h", "?")) {
-			if rc.callMethod(actionRunHelp, cc) {
-				rc.isMatch = true
-				return true, rc
-			}
-		}
-		//default empty call be a index action.
-		if cmdTitle == "" && rc.callMethod(actionRunIndex, cc) {
+	var cmdTitle string
+	// try to find `command`
+	if cc.Command != "" {
+		cmdTitle = cc.getAlias(cc.commandAlias, cc.Command)
+		cmdTitle = Cmd2StringMap(cmdTitle)
+		// check `Construct` repeat call(2 times)
+		if cmdTitle != actionRunConstruct && rc.callMethod(cmdTitle, cc) {
 			rc.isMatch = true
 			return true, rc
 		}
+	}
 
-		// actionRunUnmatched
-		if rc.callMethod(actionRunUnmatched, cc) {
+	// actionRunHelp, support the command/option like:
+	//	command		=> help,?
+	//	option		=> --help,-h,-?
+	if cmdTitle == actionRunHelpName || cmdTitle == "?" || (cmdTitle == "" && cc.
+		CheckSetting("help", "h", "?")) {
+		if rc.callMethod(actionRunHelp, cc) {
 			rc.isMatch = true
 			return true, rc
 		}
+	}
+	//default empty call be a index action.
+	if cmdTitle == "" && rc.callMethod(actionRunIndex, cc) {
+		rc.isMatch = true
+		return true, rc
+	}
 
-		// finally not match any method will print the tips.
-		if !isRouterMk {
-			log.Printf("[WARNING] the method `RegisterUnfind` of param is valid, please reference the doc.")
-		}
+	// actionRunUnmatched
+	if rc.callMethod(actionRunUnmatched, cc) {
+		rc.isMatch = true
+		return true, rc
+	}
 
+	// finally not match any method will print the tips.
+	if !isRouterMk {
+		log.Printf("[WARNING] the method `RegisterUnfind` of param is valid, please reference the doc.")
 	}
 
 	return isRouterMk, rc
@@ -746,44 +746,48 @@ func (cli *CLI) hookInterruptExit() {
 // to do load data by setting syntax
 func (cli *CLI) loadDataSyntax(cc *Arg) {
 	raw := cc.DataRaw
-	if !cli.UnLoadDataSyntax && len(raw) > 0 {
-		allowLoads := []string{
-			"load-json", "LJ", "load-json-file", "LJF", "load-json-url", "LJU",
-			"load-url", "LU", "load-url-file", "LUF", "load-url-url", "LUU",
-		}
-		for _, allow := range allowLoads {
-			var (
-				loadType    string
-				contentType parser.DataReceiverType
-			)
-			if content, exist := raw[allow]; exist {
-				switch allow {
-				case "load-json", "LJ":
-					loadType = parser.RJson
-					contentType = parser.ReceiverContent
-				case "load-json-file", "LJF":
-					loadType = parser.RJson
-					contentType = parser.ReceiverFile
-				case "load-json-url", "LJU":
-					loadType = parser.RJson
-					contentType = parser.ReceiverUrl
-				case "load-url", "LU":
-					loadType = parser.RUrl
-					contentType = parser.ReceiverContent
-				case "load-url-file", "LUF":
-					loadType = parser.RUrl
-					contentType = parser.ReceiverFile
-				case "load-url-url", "LUU":
-					loadType = parser.RUrl
-					contentType = parser.ReceiverUrl
-				}
+	if cli.UnLoadDataSyntax || len(raw) == 0 {
+		return
+	}
 
-				if loadType != "" {
-					dr, _ := parser.NewDataReceiver(loadType)
-					dr.Receiver(contentType, content)
-					cc.AppendData(dr.GetData())
-				}
-			}
+	allowLoads := []string{
+		"load-json", "LJ", "load-json-file", "LJF", "load-json-url", "LJU",
+		"load-url", "LU", "load-url-file", "LUF", "load-url-url", "LUU",
+	}
+	for _, allow := range allowLoads {
+		var (
+			loadType    string
+			contentType parser.DataReceiverType
+		)
+		content, exist := raw[allow]
+		if !exist {
+			continue
+		}
+		switch allow {
+		case "load-json", "LJ":
+			loadType = parser.RJson
+			contentType = parser.ReceiverContent
+		case "load-json-file", "LJF":
+			loadType = parser.RJson
+			contentType = parser.ReceiverFile
+		case "load-json-url", "LJU":
+			loadType = parser.RJson
+			contentType = parser.ReceiverUrl
+		case "load-url", "LU":
+			loadType = parser.RUrl
+			contentType = parser.ReceiverContent
+		case "load-url-file", "LUF":
+			loadType = parser.RUrl
+			contentType = parser.ReceiverFile
+		case "load-url-url", "LUU":
+			loadType = parser.RUrl
+			contentType = parser.ReceiverUrl
+		}
+
+		if loadType != "" {
+			dr, _ := parser.NewDataReceiver(loadType)
+			dr.Receiver(contentType, content)
+			cc.AppendData(dr.GetData())
 		}
 	}
 }
@@ -798,16 +802,16 @@ func (cli *CLI) loadScriptSyntax(cc *Arg) {
 	scriptFile := cc.ArgRaw(strings.Split(fileOpt, ",")...)
 	if scriptFile != "" && cc.Command == "" {
 		lines := parser.NewScriptFile(scriptFile)
-		if len(lines) > 0 {
-			for _, line := range lines {
-				for _, command := range parser.ParseLine(line) {
-					if len(command) > 0 {
-						cli.Run(command...)
-					}
+		if len(lines) == 0 {
+			panic("script is empty or load fail.")
+		}
+
+		for _, line := range lines {
+			for _, command := range parser.ParseLine(line) {
+				if len(command) > 0 {
+					cli.Run(command...)
 				}
 			}
-		} else {
-			panic("script is empty or load fail.")
 		}
 		cli.hookInterruptExit()
 	}
@@ -827,38 +831,35 @@ func (cli *CLI) loadScriptSyntax(cc *Arg) {
 
 // find the register value by command.
 func (cli *CLI) findRegisterValueByCommand(c string) any {
-	var value any = nil
 	cmds := cli.cmds
 	if v, has := cmds[c]; has {
-		value = v
-	} else if cli.cmdMap != nil {
-		for aCmd, mV := range cli.cmdMap {
-			isBreak := false
-			switch mV.(type) {
-			case string:
-				if c == mV.(string) {
-					if v, has = cmds[aCmd]; has {
-						isBreak = true
-						value = v
-					}
-				}
-			case []string:
-				for _, vs := range mV.([]string) {
-					if c == vs {
-						if v, has = cmds[aCmd]; has {
-							isBreak = true
-							value = v
-						}
-					}
+		return v
+	}
+
+	if cli.cmdMap == nil {
+		return nil
+	}
+
+	for aCmd, mV := range cli.cmdMap {
+		switch mValue := mV.(type) {
+		case string:
+			if c == mValue {
+				if v, has := cmds[aCmd]; has {
+					return v
 				}
 			}
-
-			if isBreak {
-				break
+		case []string:
+			for _, vs := range mValue {
+				if c == vs {
+					if v, has := cmds[aCmd]; has {
+						return v
+					}
+				}
 			}
 		}
 	}
-	return value
+
+	return nil
 }
 
 // Inject inject for data from outside.
@@ -875,11 +876,7 @@ func (cli *CLI) GetInjection(key string) any {
 	if cli.injectionData == nil {
 		return nil
 	}
-	value, has := cli.injectionData[key]
-	if has {
-		return value
-	}
-	return nil
+	return cli.injectionData[key]
 }
 
 // check the cmd of validation
@@ -938,26 +935,26 @@ func ParseValueByStr(ss string) any {
 	return ss
 }
 
-// try run the call
+// try to run the call
 func tryCallFn(fn any, cc *Arg) bool {
-	switch fn.(type) {
+	switch valueFn := fn.(type) {
 	case func(string):
-		fn.(func(string))(cc.Command)
+		valueFn(cc.Command)
 		return true
 	case func(string, *Arg):
-		fn.(func(string, *Arg))(cc.Command, cc)
+		valueFn(cc.Command, cc)
 		return true
 	case func(string, Arg):
-		fn.(func(string, Arg))(cc.Command, *cc)
+		valueFn(cc.Command, *cc)
 		return true
 	case func(*Arg):
-		fn.(func(*Arg))(cc)
+		valueFn(cc)
 		return true
 	case func(Arg):
-		fn.(func(Arg))(*cc)
+		valueFn(*cc)
 		return true
 	case func():
-		fn.(func())()
+		valueFn()
 		return true
 	}
 	return false

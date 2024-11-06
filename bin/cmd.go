@@ -40,39 +40,40 @@ func (c *App) Append(ac ...AppCmd) *App {
 }
 
 func (c *App) getCli() *CLI {
-	if c.cli == nil {
-		c.parseDoc()
-		c.cli = NewCLI()
-		// register <help>
-		c.cli.RegisterFunc(func(arg *Arg) {
-			fmt.Println(c.GetDoc() + "\n")
-		}, "help")
+	if c.cli != nil {
+		return c.cli
+	}
+	c.parseDoc()
+	c.cli = NewCLI()
+	// register <help>
+	c.cli.RegisterFunc(func(arg *Arg) {
+		fmt.Println(c.GetDoc() + "\n")
+	}, "help")
 
-		// register cmd list
-		for _, rgst := range c.register {
-			cmd := []string{rgst.name}
-			if len(rgst.alias) > 0 {
-				cmd = append(cmd, rgst.alias...)
-			}
-			if rgst.register != nil {
-				allow := false
-				switch rgst.register.(type) {
-				case func(), func(cmd *Arg), func(cmd Arg):
+	// register cmd list
+	for _, reg := range c.register {
+		cmd := []string{reg.name}
+		if len(reg.alias) > 0 {
+			cmd = append(cmd, reg.alias...)
+		}
+		if reg.register != nil {
+			allow := false
+			switch reg.register.(type) {
+			case func(), func(cmd *Arg), func(cmd Arg):
+				allow = true
+			default:
+				rv := reflect.ValueOf(reg.register)
+				if rv.Kind() == reflect.Ptr {
+					rv = rv.Elem()
+				}
+				if rv.Kind() == reflect.Struct {
 					allow = true
-				default:
-					rv := reflect.ValueOf(rgst.register)
-					if rv.Kind() == reflect.Ptr {
-						rv = rv.Elem()
-					}
-					if rv.Kind() == reflect.Struct {
-						allow = true
-					}
 				}
-				if !allow {
-					panic(fmt.Sprintf("%v Register not allow type %#v", cmd, c.register))
-				}
-				c.cli.register(rgst.register, cmd...)
 			}
+			if !allow {
+				panic(fmt.Sprintf("%v Register not allow type %#v", cmd, c.register))
+			}
+			c.cli.register(reg.register, cmd...)
 		}
 	}
 	return c.cli
@@ -93,31 +94,32 @@ func defString(v, def string) string {
 }
 
 func (c *App) parseDoc() string {
-	if c.doc == "" {
-		var que []string
-		que = append(que, fmt.Sprintf("%v", defString(c.Title, "the app of uymas.")))
-		//blank b2
-		que = append(que, fmt.Sprintf("  %v\n", defString(c.Description, "power by gitee.com/conero/uymas")))
-		//b2
-		que = append(que, "Usage:  $ [command] [option]")
-
-		existCmd := len(c.CmdList) > 0
-		if existCmd {
-			que = append(que, "\n")
-		}
-		//命令行读取
-		for _, cmd := range c.CmdList {
-			vCmd := fmt.Sprintf("%v    %v", cmd.Name, cmd.Title)
-			que = append(que, vCmd)
-			c.register = append(c.register, appRegisterData{
-				name:     cmd.Name,
-				alias:    cmd.Alias,
-				register: cmd.Register,
-			})
-		}
-
-		c.doc = strings.Join(que, "\n")
+	if c.doc != "" {
+		return c.doc
 	}
+	var que []string
+	que = append(que, fmt.Sprintf("%v", defString(c.Title, "the app of uymas.")))
+	//blank b2
+	que = append(que, fmt.Sprintf("  %v\n", defString(c.Description, "power by gitee.com/conero/uymas")))
+	//b2
+	que = append(que, "Usage:  $ [command] [option]")
+
+	existCmd := len(c.CmdList) > 0
+	if existCmd {
+		que = append(que, "\n")
+	}
+	//命令行读取
+	for _, cmd := range c.CmdList {
+		vCmd := fmt.Sprintf("%v    %v", cmd.Name, cmd.Title)
+		que = append(que, vCmd)
+		c.register = append(c.register, appRegisterData{
+			name:     cmd.Name,
+			alias:    cmd.Alias,
+			register: cmd.Register,
+		})
+	}
+
+	c.doc = strings.Join(que, "\n")
 	return c.doc
 }
 
@@ -201,25 +203,27 @@ func ParseOptionGroup(v any) *AppOptionGroup {
 
 // Option get option by name
 func (c *AppOptionGroup) Option(name string) *AppOption {
-	if c.optionDick != nil {
-		opt, exist := c.optionDick[name]
-		if exist {
-			return opt
-		}
-		return c.OptionSearchAlias(name)
+	if c.optionDick == nil {
+		return nil
 	}
-	return nil
+	opt, exist := c.optionDick[name]
+	if exist {
+		return opt
+	}
+	return c.OptionSearchAlias(name)
 }
 
 func (c *AppOptionGroup) OptionSearchAlias(name string) *AppOption {
-	if c.optionDick != nil {
-		for k, opt := range c.optionDick {
-			if k == name {
-				return opt
-			}
-			if rock.ListIndex(opt.Alias, name) > -1 {
-				return opt
-			}
+	if c.optionDick == nil {
+		return nil
+	}
+
+	for k, opt := range c.optionDick {
+		if k == name {
+			return opt
+		}
+		if rock.InList(opt.Alias, name) {
+			return opt
 		}
 	}
 	return nil
