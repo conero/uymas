@@ -83,7 +83,6 @@ var tom = testObjectMax{
 }
 
 func TestObject_Assign(t *testing.T) {
-	o := Object{}
 	//simple struct
 	type ta struct {
 		Name      string
@@ -114,16 +113,16 @@ func TestObject_Assign(t *testing.T) {
 		Score:     0.1244,
 		ScoreList: []float64{0.124, 0.124, 0.881},
 	}
-	o.Assign(&ta1, srs1)
+	Obj.Assign(&ta1, srs1)
 
 	t.Logf("taDefualt: %#v , \r\n source: %#v, \n\r targat: %#v\r\n", taDefualt, srs1, ta1)
 
 	//case 2: different struct
 	var tc1 tc
-	o.Assign(&tc1, srs1)
+	Obj.Assign(&tc1, srs1)
 	t.Logf("zore tc assian after: %#v , \r\n use by last source", tc1)
 
-	o.Assign(&tc1.Ta, srs1)
+	Obj.Assign(&tc1.Ta, srs1)
 	t.Logf("tc target chage use field: tc.ta: %#v , \r\n use by last source", tc1)
 
 	srs2 := tc{
@@ -134,7 +133,7 @@ func TestObject_Assign(t *testing.T) {
 		Name:      "Nesting",
 		VtypeMark: 12,
 	}
-	o.Assign(&tc1, srs2)
+	Obj.Assign(&tc1, srs2)
 	t.Logf("tc target chage use field: tc.ta: %#v , \r\n use by last source", tc1)
 }
 
@@ -188,8 +187,7 @@ func TestObject_Assign2(t *testing.T) {
 		},
 	}
 
-	var obj Object
-	obj.Assign(&vCfg, defCfg)
+	Obj.Assign(&vCfg, defCfg)
 	if vCfg.Port != defCfg.Port {
 		t.Errorf("Assign 数据合并无效，%#v", vCfg)
 	}
@@ -198,7 +196,6 @@ func TestObject_Assign2(t *testing.T) {
 }
 
 func TestObject_AssignMap(t *testing.T) {
-	obj := Object{}
 	type dog struct {
 		Weight   float64
 		Describe string
@@ -213,7 +210,7 @@ func TestObject_AssignMap(t *testing.T) {
 		"score": 89.3,
 	}
 
-	obj.AssignMap(tgt, srcMap)
+	Obj.AssignMap(tgt, srcMap)
 	t.Logf("%#v", tgt)
 
 	//case: map->map
@@ -221,7 +218,7 @@ func TestObject_AssignMap(t *testing.T) {
 		"score": 93.14,
 		"class": "A+",
 	}
-	obj.AssignMap(tgt, srcMap)
+	Obj.AssignMap(tgt, srcMap)
 	t.Logf("%#v", tgt)
 
 	//case: struct->map
@@ -232,7 +229,7 @@ func TestObject_AssignMap(t *testing.T) {
 		IsMale:   true,
 	}
 	tgt = map[string]any{}
-	obj.AssignMap(tgt, dg)
+	Obj.AssignMap(tgt, dg)
 	t.Logf("%#v", tgt)
 
 }
@@ -286,10 +283,9 @@ func TestObject_Keys(t *testing.T) {
 	// map-case1
 	var v any = map[string]string{"name": "Joshua", "age": "23", "country": "cn"}
 
-	var obj Object
 	var rf = []string{"name", "age", "country"}
 
-	keys := obj.Keys(v)
+	keys := Obj.Keys(v)
 	vmStr := fmt.Sprintf("%#v", keys)
 	rfStr := fmt.Sprintf("%#v", rf)
 	if vmStr != rfStr {
@@ -299,7 +295,7 @@ func TestObject_Keys(t *testing.T) {
 	// map-case2
 	// delete for map
 	delete(v.(map[string]string), "country")
-	keys = obj.Keys(v)
+	keys = Obj.Keys(v)
 	vmStr = fmt.Sprintf("%#v", keys)
 
 	rf = []string{"name", "age"}
@@ -317,7 +313,7 @@ func TestObject_Keys(t *testing.T) {
 	}
 
 	var ta Ta
-	keys = obj.Keys(ta)
+	keys = Obj.Keys(ta)
 	vmStr = fmt.Sprintf("%#v", keys)
 
 	rf = []string{"Name", "Age", "Country"}
@@ -328,7 +324,7 @@ func TestObject_Keys(t *testing.T) {
 
 	// struct-case3
 	var tPtr = &Ta{}
-	keys = obj.Keys(tPtr)
+	keys = Obj.Keys(tPtr)
 	vmStr = fmt.Sprintf("%#v", keys)
 
 	rf = []string{"Name", "Age", "Country"}
@@ -339,13 +335,12 @@ func TestObject_Keys(t *testing.T) {
 }
 
 func TestObject_AssignCovert(t *testing.T) {
-	var obj Object
 	var tgt, src any
 
 	// case
 	tgt = "Joshua"
 	src = "Joshua Doeeking Conero"
-	obj.AssignCovert(&tgt, src)
+	Obj.AssignCovert(&tgt, src)
 	ref := fmt.Sprintf("%T/%#v", src, src)
 	rslt := fmt.Sprintf("%T/%#v", tgt, tgt)
 	if ref != rslt {
@@ -357,7 +352,7 @@ func TestObject_AssignCovert(t *testing.T) {
 	src = ""
 
 	ref = fmt.Sprintf("%T/%#v", tgt, tgt)
-	obj.AssignCovert(&tgt, src)
+	Obj.AssignCovert(&tgt, src)
 	rslt = fmt.Sprintf("%T/%#v", tgt, tgt)
 	if ref != rslt {
 		t.Errorf("至覆盖错误.\n  IN=>  %s\n  OUT=> %s\n", rslt, ref)
@@ -366,7 +361,7 @@ func TestObject_AssignCovert(t *testing.T) {
 	// case
 	tgt = int64(64)
 	src = 202_403
-	obj.AssignCovert(&tgt, src)
+	Obj.AssignCovert(&tgt, src)
 	ref = fmt.Sprintf("%T/%#v", tgt, src)
 	rslt = fmt.Sprintf("%T/%#v", tgt, tgt)
 	if ref != rslt {
@@ -376,7 +371,7 @@ func TestObject_AssignCovert(t *testing.T) {
 	// case
 	tgt = 3.141592654
 	src = 11_000
-	obj.AssignCovert(&tgt, src)
+	Obj.AssignCovert(&tgt, src)
 	ref = fmt.Sprintf("%T/%#v", tgt, src)
 	rslt = fmt.Sprintf("%T/%#v", tgt, tgt)
 	if ref != rslt {
@@ -386,7 +381,7 @@ func TestObject_AssignCovert(t *testing.T) {
 	// case
 	tgt = 1949
 	src = "1949"
-	obj.AssignCovert(&tgt, src)
+	Obj.AssignCovert(&tgt, src)
 	ref = fmt.Sprintf("%T/%#v", tgt, 1949)
 	rslt = fmt.Sprintf("%T/%#v", tgt, tgt)
 	if ref != rslt {
@@ -396,7 +391,7 @@ func TestObject_AssignCovert(t *testing.T) {
 	// case
 	tgt = false
 	src = "1949"
-	obj.AssignCovert(&tgt, src)
+	Obj.AssignCovert(&tgt, src)
 	ref = fmt.Sprintf("%T/%#v", true, true)
 	rslt = fmt.Sprintf("%T/%#v", tgt, tgt)
 	if ref != rslt {
@@ -406,7 +401,7 @@ func TestObject_AssignCovert(t *testing.T) {
 	// case
 	tgt = 1949
 	src = "1949"
-	obj.AssignCovert(&tgt, src)
+	Obj.AssignCovert(&tgt, src)
 	ref = fmt.Sprintf("%T/%#v", tgt, 1949)
 	rslt = fmt.Sprintf("%T/%#v", tgt, tgt)
 	if ref != rslt {
@@ -416,7 +411,7 @@ func TestObject_AssignCovert(t *testing.T) {
 	// case
 	tgt = 2024.0328
 	src = "2024.0328"
-	obj.AssignCovert(&tgt, src)
+	Obj.AssignCovert(&tgt, src)
 	ref = fmt.Sprintf("%T/%#v", tgt, 2024.0328)
 	rslt = fmt.Sprintf("%T/%#v", tgt, tgt)
 	if ref != rslt {

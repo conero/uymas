@@ -9,6 +9,11 @@ import (
 	"strings"
 )
 
+var (
+	// Obj the object instance for call Object method directly
+	Obj Object
+)
+
 type Object struct {
 }
 

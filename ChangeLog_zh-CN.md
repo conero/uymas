@@ -54,11 +54,13 @@
   - feat: 新增函数 `StdPathList` 实现路径列表标准化处理
   - feat: 实现空函数 `DelEnvPath`，删除指定的路径
   - pref: 函数 `AddEnvPath`等返回参数有 error调整为 string，因实际无法改变环境变量路径
+- **util**
+  - pref: 新增对象 Object 的对象实例`Obj`，使外部可以直接通过其调用方法
+
 - **util/cloud**
   - feat: 新增 `PortAvailable` /`PortAddress` 放到实现端口可用性检查以及端口转标准地址
   - feat: 新增方法 `PortAsWeb` 用于实现端口转 http地址
   - fix: 修复package表名错误，从v1.4版本移植时
-  
 - **example/cli/fast/**
   - feat: 新增命令 port 用于检查当前可用端口
 
