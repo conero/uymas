@@ -24,12 +24,14 @@ const (
 	LogInfo
 	LogWarn
 	LogError
+	LogFatal
 	LogNone
 )
 
 // string level values.
 const (
 	LevelAll   = "all"
+	LevelFatal = "fatal"
 	LevelError = "error"
 	LevelWarn  = "warn"
 	LevelInfo  = "info"
@@ -60,6 +62,8 @@ func Prefix(level Level) string {
 		prefix = "WARN"
 	case LogError:
 		prefix = "ERROR"
+	case LogFatal:
+		prefix = "FATAL"
 	}
 	return prefix
 }
@@ -84,6 +88,8 @@ func (l *Logger) autoColor(prefix string, level Level) string {
 
 	var ansiVal int
 	switch level {
+	case LogFatal:
+		ansiVal = ansi.Red
 	case LogError:
 		ansiVal = ansi.RedBr
 	case LogWarn:
@@ -168,6 +174,11 @@ func (l *Logger) Errorf(message string, args ...any) {
 
 func (l *Logger) ErrorFunc(callback func() string) {
 	l.outputFunc(LogError, callback)
+}
+
+func (l *Logger) Fatalf(message string, args ...any) {
+	l.formatLevel(LogError, message, args...)
+
 }
 
 // Log get embed go lib log when you need the instance.

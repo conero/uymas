@@ -65,6 +65,14 @@ func ErrorIf(err error) {
 	vLgr.Errorf(err.Error())
 }
 
+func FatalIf(err error) {
+	if err == nil {
+		return
+	}
+	vLgr.Fatalf(err.Error())
+	os.Exit(1)
+}
+
 func Pref(logPref string) logger.Logger {
 	vLgr.Pref(logPref)
 	return *vLgr
