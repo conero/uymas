@@ -62,7 +62,9 @@
   - fix: 修复package表名错误，从v1.4版本移植时
 - **logger**
   - feat: 新增日志等级 `LogFatal`
-
+  - feat: 新增日志函数 `Fatal` 与 logger 方式一直
+  - pref: `ErrorIf/FatalIf` 函数添加可选的前缀error
+  
 - **logger/lgr**
   - feat: 新增日志函数 `FatalIf` 用于判断是否有错误若有则退出
 

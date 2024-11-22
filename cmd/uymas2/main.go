@@ -72,11 +72,14 @@ func main() {
 		if data == "" {
 			data = "日志测试工具，" + time.Now().Format(time.DateTime) + "\n 命令格式 log [data]"
 		}
+		if arg.Switch("fatal", "F") {
+			lgr.Fatal(data)
+		}
 		lgr.Trace(data)
 		lgr.Debug(data)
 		lgr.Warn(data)
 		lgr.Error(data)
-	}, "log", cli.Help("日志输出测试"))
+	}, "log", cli.Help("日志输出测试", cli.Option{Alias: []string{"fatal", "F"}, Help: "是否暂时 fatal 日志，并中断程序"}))
 
 	app.Command(func(parser cli.ArgsParser) {
 		if parser.Switch("simple", "s") {

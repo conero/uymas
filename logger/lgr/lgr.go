@@ -12,6 +12,7 @@
 package lgr
 
 import (
+	"errors"
 	"gitee.com/conero/uymas/v2/logger"
 	"os"
 )
@@ -58,18 +59,27 @@ func Error(message string, args ...any) {
 }
 
 // ErrorIf print error message only when err is not nil
-func ErrorIf(err error) {
+func ErrorIf(err error, prefixErr ...error) {
 	if err == nil {
 		return
 	}
-	vLgr.Errorf(err.Error())
+	vErr := errors.Join(prefixErr...)
+	vErr = errors.Join(err)
+	vLgr.Errorf(vErr.Error())
 }
 
-func FatalIf(err error) {
+func Fatal(message string, args ...any) {
+	vLgr.Fatalf(message, args...)
+	os.Exit(0)
+}
+
+func FatalIf(err error, prefixErr ...error) {
 	if err == nil {
 		return
 	}
-	vLgr.Fatalf(err.Error())
+	vErr := errors.Join(prefixErr...)
+	vErr = errors.Join(err)
+	vLgr.Fatalf(vErr.Error())
 	os.Exit(1)
 }
 
