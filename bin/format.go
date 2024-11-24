@@ -126,9 +126,9 @@ func FormatQue(que any, prefs ...string) string {
 	dter := " " // 空格
 	if len(prefs) > 0 {
 		pref = prefs[0]
-		if len(prefs) > 1 {
-			dter = prefs[1]
-		}
+	}
+	if len(prefs) > 1 {
+		dter = prefs[1]
 	}
 	s := ""
 	vt := reflect.ValueOf(que)
@@ -155,7 +155,7 @@ func FormatQue(que any, prefs ...string) string {
 
 // FormatTable Table format output by slice:
 //
-//	(table, bool) if is use the idx, table is 2 dimensional array.
+//	(table, bool) if is use the idx, table is 2-dimensional array.
 //
 // Bug(FormatQue): chinese text cannot alignment
 func FormatTable(table any, args ...any) string {

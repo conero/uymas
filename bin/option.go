@@ -36,7 +36,7 @@ func (c *Option) ExcludeReg(regs ...string) *Option {
 
 // check if it has been excluded
 func (c *Option) isExclude(optName string) bool {
-	if rock.ListIndex(c.exclude, optName) > -1 {
+	if rock.InList(c.exclude, optName) {
 		return true
 	}
 	for _, rg := range c.excludeReg {
@@ -56,6 +56,31 @@ func (c *Option) Unmarshal(v any) {
 	vt := reflect.TypeOf(v).Elem()
 	vv := reflect.ValueOf(v).Elem()
 	i := vt.NumField()
+
+	getFnI64 := func(args []string, hasDef bool, defValue string) int64 {
+		vI64 := int64(cc.ArgInt(args...))
+		if vI64 == 0 && hasDef && defValue != "" {
+			vI64, _ = strconv.ParseInt(defValue, 10, 10)
+		}
+		return vI64
+	}
+
+	getFnUi64 := func(args []string, hasDef bool, defValue string) uint64 {
+		vI64 := uint64(cc.ArgInt(args...))
+		if vI64 == 0 && hasDef && defValue != "" {
+			vI64, _ = strconv.ParseUint(defValue, 10, 64)
+		}
+		return vI64
+	}
+
+	getFnF64 := func(args []string, hasDef bool, defValue string) float64 {
+		vf64 := cc.ArgFloat64(args...)
+		if vf64 == 0 && hasDef && defValue != "" {
+			vf64, _ = strconv.ParseFloat(defValue, 64)
+		}
+		return vf64
+	}
+
 	for {
 		i -= 1
 		if i < 0 {
@@ -73,27 +98,6 @@ func (c *Option) Unmarshal(v any) {
 			args = c.argParse(tag)
 		}
 
-		getFnI64 := func() int64 {
-			vI64 := int64(cc.ArgInt(args...))
-			if vI64 == 0 && hasDef && defValue != "" {
-				vI64, _ = strconv.ParseInt(defValue, 10, 10)
-			}
-			return vI64
-		}
-		getFnUi64 := func() uint64 {
-			vI64 := uint64(cc.ArgInt(args...))
-			if vI64 == 0 && hasDef && defValue != "" {
-				vI64, _ = strconv.ParseUint(defValue, 10, 64)
-			}
-			return vI64
-		}
-		getFnF64 := func() float64 {
-			vf64 := cc.ArgFloat64(args...)
-			if vf64 == 0 && hasDef && defValue != "" {
-				vf64, _ = strconv.ParseFloat(defValue, 64)
-			}
-			return vf64
-		}
 		c.allow = append(c.allow, args...)
 		switch fld.Type.Kind() {
 		case reflect.String:
@@ -101,11 +105,11 @@ func (c *Option) Unmarshal(v any) {
 		case reflect.Bool:
 			vv.Field(i).SetBool(cc.CheckSetting(args...) || hasDef)
 		case reflect.Int, reflect.Int64, reflect.Int32, reflect.Int16, reflect.Int8:
-			vv.Field(i).SetInt(getFnI64())
+			vv.Field(i).SetInt(getFnI64(args, hasDef, defValue))
 		case reflect.Uint, reflect.Uint64, reflect.Uint32, reflect.Uint16, reflect.Uint8:
-			vv.Field(i).SetUint(getFnUi64())
+			vv.Field(i).SetUint(getFnUi64(args, hasDef, defValue))
 		case reflect.Float64, reflect.Float32:
-			vv.Field(i).SetFloat(getFnF64())
+			vv.Field(i).SetFloat(getFnF64(args, hasDef, defValue))
 
 		}
 	}
@@ -114,7 +118,7 @@ func (c *Option) Unmarshal(v any) {
 func (c *Option) NotAllow() []string {
 	var unAllow []string
 	for _, set := range c.cc.Setting {
-		if rock.ListIndex(c.allow, set) == -1 {
+		if !rock.InList(c.allow, set) {
 			if c.isExclude(set) {
 				continue
 			}

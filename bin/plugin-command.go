@@ -204,12 +204,12 @@ func plgCmdListLinux() []string {
 
 	// to scan file
 	toScan := func(vDir string) {
-		entrys, err := os.ReadDir(vDir)
+		dirEntry, err := os.ReadDir(vDir)
 		if err != nil {
 			return
 		}
 
-		for _, entry := range entrys {
+		for _, entry := range dirEntry {
 			if entry.IsDir() {
 				continue
 			}
