@@ -15,10 +15,8 @@ func InputRequire(title string, validFunc func(string) bool) string {
 	for input.Scan() {
 		text = input.Text()
 		text = strings.TrimSpace(text)
-		if validFunc != nil {
-			if validFunc(text) {
-				break
-			}
+		if validFunc != nil && validFunc(text) {
+			break
 		} else if text != "" {
 			break
 		}

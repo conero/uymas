@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"gitee.com/conero/uymas/bin/parser"
 	"gitee.com/conero/uymas/fs"
+	"gitee.com/conero/uymas/util/rock"
 	"os"
 	"path"
 	"strings"
@@ -23,7 +24,8 @@ var (
 )
 
 // parse the current application
-func parseCurrent(force bool) {
+func parseCurrent(forces ...bool) {
+	force := rock.ExtractParam(false, forces...)
 	if current != nil && !force {
 		return
 	}
@@ -46,18 +48,21 @@ func parseCurrent(force bool) {
 
 // Basedir get application binary root dir.
 func Basedir() string {
-	if current.BaseDir == "" {
-		// Notice: When the system is running in a cmd environment,
-		// it may not be possible to obtain the current directory.
-		// Therefore, at this point, read the cwd of the current running environment
-		cwd, err := os.Getwd()
-		if err == nil {
-			basedir := fs.StdPathName(cwd + "/")
-			return basedir
-		}
-		return "./"
+	if current == nil {
+		parseCurrent(true)
 	}
-	return current.BaseDir
+	if current.BaseDir != "" {
+		return current.BaseDir
+	}
+	// Notice: When the system is running in a cmd environment,
+	// it may not be possible to obtain the current directory.
+	// Therefore, at this point, read the cwd of the current running environment
+	cwd, err := os.Getwd()
+	if err == nil {
+		basedir := fs.StdPathName(cwd + "/")
+		return basedir
+	}
+	return "./"
 }
 
 // AppName get current binary application name
@@ -118,7 +123,7 @@ func Current() BinInfo {
 }
 
 func init() {
-	parseCurrent(false)
+	parseCurrent()
 }
 
 // Pwd try to get the current working directory
