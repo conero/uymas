@@ -57,7 +57,7 @@ func (c *defaultApp) Color() {
 	multi := c.Cc.ArgIntSlice("multi", "m")
 
 	if len(multi) > 0 {
-		colorStr := color.StyleByAnsiMulti(text, multi...)
+		colorStr := color.Styles(text, multi...)
 		fmt.Println(colorStr)
 		lgr.Info("原始：%#v", colorStr)
 		return
@@ -65,10 +65,10 @@ func (c *defaultApp) Color() {
 
 	value := c.Cc.ArgInt("value", "v")
 	if value < 1 {
-		value = color.AnsiTextRed
+		value = color.TextRed
 	}
 
-	colorStr := color.StyleByAnsi(value, text)
+	colorStr := color.Style(value, text)
 	fmt.Println(colorStr)
 	lgr.Info("原始：%#v", colorStr)
 }

@@ -164,7 +164,7 @@ func (c *defaultApp) Pinyin() {
 	if fl != "" {
 		bys, err := os.ReadFile(fl)
 		if err != nil {
-			lgr.Error("读取文件错误，%s", color.StyleByAnsi(color.AnsiTextRed, err))
+			lgr.Error("读取文件错误，%s", color.Style(color.TextRed, err))
 			return
 		}
 		lgr.Info("已读取文件 %s 的内容", fl)
@@ -191,11 +191,11 @@ func (c *defaultApp) Pinyin() {
 			strList = append(strList, fmt.Sprintf("\\u%s", strconv.FormatInt(int64(r), 16)))
 		}
 		lgr.Info("%s 转utf16如：\n %s\n", words,
-			color.StyleByAnsi(color.AnsiTextGreen, strings.Join(strList, "")))
+			color.Style(color.TextGreen, strings.Join(strList, "")))
 
 		if c.isVerbose {
 			lgr.Info("%s 转utf16 (unicode 风格)如：\n %s\n", words,
-				color.StyleByAnsi(color.AnsiTextGreen, strings.Join(codeList, " ")))
+				color.Style(color.TextGreen, strings.Join(codeList, " ")))
 		}
 	}
 
@@ -431,9 +431,9 @@ func (c *defaultApp) Datediff() {
 
 		newTm := tm.Add(dura)
 		lgr.Info("当前时间：%s, 运算：%s，得\n    %s",
-			color.StyleByAnsi(color.AnsiTextBlackBr, tm.Format(time.DateTime)),
-			color.StyleByAnsi(color.AnsiTextBlackBr, add+"("+dura.String()+")"),
-			color.StyleByAnsi(color.AnsiTextGreenBr, newTm.Format(time.DateTime)))
+			color.Style(color.TextBlackBr, tm.Format(time.DateTime)),
+			color.Style(color.TextBlackBr, add+"("+dura.String()+")"),
+			color.Style(color.TextGreenBr, newTm.Format(time.DateTime)))
 		return
 	}
 
@@ -607,7 +607,7 @@ func (c *defaultApp) Cal() {
 			lgr.Error("进制转换错误。\n  %v", err)
 			return
 		}
-		lgr.Info("进制转换：%s", color.StyleByAnsi(color.AnsiTextGreen, rslt))
+		lgr.Info("进制转换：%s", color.Style(color.TextGreen, rslt))
 		return
 	}
 
@@ -617,7 +617,7 @@ func (c *defaultApp) Cal() {
 	calc := str.NewCalc(equal)
 	rslt := calc.Count()
 	lgr.Info("输入等式：\n%s => %s， %s",
-		color.StyleByAnsi(color.AnsiTextCyan, equal),
-		color.StyleByAnsi(color.AnsiTextGreen, str.NumberSplitFormat(rslt)),
-		color.StyleByAnsi(color.AnsiTextBlackBr, str.FloatSimple(calc.String())))
+		color.Style(color.TextCyan, equal),
+		color.Style(color.TextGreen, str.NumberSplitFormat(rslt)),
+		color.Style(color.TextBlackBr, str.FloatSimple(calc.String())))
 }

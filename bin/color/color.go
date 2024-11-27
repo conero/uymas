@@ -23,53 +23,53 @@ import (
 )
 
 const (
-	AnsiTextBlack  = 30
-	AnsiTextRed    = 31
-	AnsiTextGreen  = 32
-	AnsiTextYellow = 33
-	AnsiTextBlue   = 34
-	AnsiTextPurple = 35
-	AnsiTextCyan   = 36
-	AnsiTextWhite  = 37
-	// AnsiTextBlackBr Font Brightening
-	AnsiTextBlackBr   = 90
-	AnsiTextRedBr     = 91
-	AnsiTextGreenBr   = 92
-	AnsiTextYellowBr  = 93
-	AnsiTextBlueBr    = 94
-	AnsiTextPurpleBr  = 95
-	AnsiTextCyanBr    = 96
-	AnsiTextWhiteBr   = 97
-	AnsiBkgBlack      = 40
-	AnsiBkgRed        = 41
-	AnsiBkgGreen      = 42
-	AnsiBkgYellow     = 43
-	AnsiBkgBlue       = 44
-	AnsiBkgPurple     = 45
-	AnsiBkgCyan       = 46
-	AnsiBkgWhite      = 47
-	AnsiBkgBlackBr    = 100
-	AnsiBkgRedBr      = 101
-	AnsiBkgGreenBr    = 102
-	AnsiBkgYellowBr   = 103
-	AnsiBkgBlueBr     = 104
-	AnsiBkgPurpleBr   = 105
-	AnsiBkgCyanBr     = 106
-	AnsiBkgWhiteBr    = 107
-	AnsiBoldFont      = 1
-	AnsiDimFont       = 2
-	AnsiItalicFont    = 3
-	AnsiUnderlineFont = 4
-	AnsiTwinkleFont   = 5
-	AnsiReverseFont   = 6
-	AnsiHideFont      = 7
+	TextBlack  = 30
+	TextRed    = 31
+	TextGreen  = 32
+	TextYellow = 33
+	TextBlue   = 34
+	TextPurple = 35
+	TextCyan   = 36
+	TextWhite  = 37
+	// TextBlackBr Font Brightening
+	TextBlackBr   = 90
+	TextRedBr     = 91
+	TextGreenBr   = 92
+	TextYellowBr  = 93
+	TextBlueBr    = 94
+	PurpleBr      = 95
+	TextCyanBr    = 96
+	TextWhiteBr   = 97
+	BkgBlack      = 40
+	BkgRed        = 41
+	BkgGreen      = 42
+	BkgYellow     = 43
+	BkgBlue       = 44
+	BkgPurple     = 45
+	BkgCyan       = 46
+	BkgWhite      = 47
+	BkgBlackBr    = 100
+	BkgRedBr      = 101
+	BkgGreenBr    = 102
+	BkgYellowBr   = 103
+	BkgBlueBr     = 104
+	BkgPurpleBr   = 105
+	BkgCyanBr     = 106
+	BkgWhiteBr    = 107
+	BoldFont      = 1
+	DimFont       = 2
+	ItalicFont    = 3
+	UnderlineFont = 4
+	TwinkleFont   = 5
+	ReverseFont   = 6
+	HideFont      = 7
 )
 
-func StyleByAnsi(ansi int, value any) string {
+func Style(ansi int, value any) string {
 	return fmt.Sprintf("\033[%dm%v\033[0m", ansi, value)
 }
 
-func StyleByAnsiMulti(value any, ansi ...int) string {
+func Styles(value any, ansi ...int) string {
 	var aList []string
 	for _, a := range ansi {
 		aList = append(aList, fmt.Sprintf("%d", a))
@@ -77,20 +77,20 @@ func StyleByAnsiMulti(value any, ansi ...int) string {
 	return fmt.Sprintf("\033[%sm%v\033[0m", strings.Join(aList, ";"), value)
 }
 
-func StyleByAnsiString(ansi string, value any) string {
+func StyleString(ansi string, value any) string {
 	return fmt.Sprintf("\033[%sm%v\033[0m", ansi, value)
 }
 
-// AnsiClear clear ansi color code from text string
+// Clear ansi color code from text string
 //
 // Format: `\033[<parameter1>;<parameter2>...<parameterN><letter>`
-func AnsiClear(ansiColor string) string {
-	clearFn := AnsiClearFn()
+func Clear(ansiColor string) string {
+	clearFn := ClearFn()
 	return clearFn(ansiColor)
 }
 
-// AnsiClearFn clear ansi with anonymous function
-func AnsiClearFn() func(string) string {
+// ClearFn clear ansi with anonymous function
+func ClearFn() func(string) string {
 	reg := regexp.MustCompile(`.*\033\[\d+(;\d+)*m.*(\033\[0m).*`)
 	headReg := regexp.MustCompile(`\033\[\d+(;\d+)*m`)
 	endReg := regexp.MustCompile(`\033\[0m`)

@@ -44,7 +44,6 @@
   - pref: 函数 `AddEnvPath`等返回参数有 error调整为 string，因实际无法改变环境变量路径
 - **util/rock**
   - feat: 新增函数 `InList` 用于判断队列中是否存在元素
-
 - **util/cloud**
   - feat: 新增 `PortAvailable` /`PortAddress` 放到实现端口可用性检查以及端口转标准地址
   - fix: 修复package表名错误，从v1.4版本移植时
@@ -53,6 +52,9 @@
 - **bin**
   - pref: 注册命令时添加可选的注册验证，如验证命令重复性
   - del: 移除如`AppMethodInit/AppMethodRun/AppMethodNoSubC/AppMethodHelp/FuncRegisterEmpty` 等未真正使用的代码
+- **bin/color**
+  - break: 删除`Ansi` 前缀，使其更简介。替换Ansi，简化名称
+
 
 
 

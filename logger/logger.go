@@ -85,22 +85,22 @@ func (l *Logger) autoColor(prefix string, level Level) string {
 	var ansi int
 	switch level {
 	case LogError:
-		ansi = color.AnsiTextRedBr
+		ansi = color.TextRedBr
 	case LogWarn:
-		ansi = color.AnsiTextYellowBr
+		ansi = color.TextYellowBr
 	case LogInfo:
-		ansi = color.AnsiTextGreenBr
+		ansi = color.TextGreenBr
 	case LogDebug:
-		ansi = color.AnsiTextCyanBr
+		ansi = color.TextCyanBr
 	case LogTrace:
-		ansi = color.AnsiTextBlackBr
+		ansi = color.TextBlackBr
 	}
 
 	if ansi < 1 {
 		return prefix
 	}
 
-	return color.StyleByAnsi(ansi, prefix)
+	return color.Style(ansi, prefix)
 }
 
 func (l *Logger) Format(prefix, message string, args ...any) {
