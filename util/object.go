@@ -442,8 +442,8 @@ func StructToMapViaJson(value any, ignoreKeys ...string) map[string]any {
 	return newVal
 }
 
-// MapToStructViaJson use the map value to set structPtr
-func MapToStructViaJson(mapValue any, structPtr any) error {
+// MapToStruct use the map value to set structPtr
+func MapToStruct(mapValue any, structPtr any, supportTags []string) error {
 	vm := reflect.ValueOf(mapValue)
 	if vm.Kind() != reflect.Map {
 		return fmt.Errorf("mapValue is not belong to map type")
@@ -477,18 +477,38 @@ func MapToStructViaJson(mapValue any, structPtr any) error {
 			continue
 		}
 
-		// from json tag name
-		jsonName, exist := sf.Tag.Lookup("json")
-		if exist {
-			if src, exist := mapValKv[jsonName]; exist {
+		// from tag
+		isContinue := false
+		for _, tagName := range supportTags {
+			// from json tag name
+			jsonName, exist := sf.Tag.Lookup(tagName)
+			if exist {
+				if src, exist := mapValKv[jsonName]; exist {
+					TryAssignValue(src, field)
+					isContinue = true
+					break
+				}
+			}
+		}
+		if isContinue {
+			continue
+		}
+		// lc-style
+		lcKey := str.Str(sf.Name).Lcfirst()
+		if lcKey != sf.Name {
+			if src, exist := mapValKv[lcKey]; exist {
 				TryAssignValue(src, field)
 				continue
 			}
 		}
-
 	}
 
 	return nil
+}
+
+// MapToStructViaJson use the map value to set structPtr
+func MapToStructViaJson(mapValue any, structPtr any) error {
+	return MapToStruct(mapValue, structPtr, []string{"json"})
 }
 
 // TryAssignValue try assign value to another value.
