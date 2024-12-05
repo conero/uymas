@@ -65,6 +65,7 @@
   - feat: 新增日志函数 `Fatal` 与 logger 方式一直
   - feat: 新增日志函数 `TraceFunc` 用于函数式trace及日志调用
   - pref: `ErrorIf/FatalIf` 函数添加可选的前缀error
+  - pref: `LevelFunc`（如 TraceFunc等）回调函数为空时不输出
   
 - **logger/lgr**
   - feat: 新增日志函数 `FatalIf` 用于判断是否有错误若有则退出

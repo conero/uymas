@@ -132,12 +132,16 @@ func (l *Logger) formatLevel(level Level, message string, args ...any) {
 	l.Format(l.autoColor(Prefix(level), level), message, args...)
 }
 
-// output logging with callback, logging creator
+// output logging with callback, logging creator. when callback return empty string, no logging will be output
 func (l *Logger) outputFunc(level Level, callback func() string) {
 	if l.Level > level {
 		return
 	}
-	l.formatLevel(level, callback())
+	msg := callback()
+	if msg == "" {
+		return
+	}
+	l.formatLevel(level, msg)
 }
 
 func (l *Logger) TraceFunc(callback func() string) {
