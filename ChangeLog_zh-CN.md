@@ -63,6 +63,7 @@
 - **logger**
   - feat: 新增日志等级 `LogFatal`
   - feat: 新增日志函数 `Fatal` 与 logger 方式一直
+  - feat: 新增日志函数 `TraceFunc` 用于函数式trace及日志调用
   - pref: `ErrorIf/FatalIf` 函数添加可选的前缀error
   
 - **logger/lgr**

@@ -140,6 +140,10 @@ func (l *Logger) outputFunc(level Level, callback func() string) {
 	l.formatLevel(level, callback())
 }
 
+func (l *Logger) TraceFunc(callback func() string) {
+	l.outputFunc(LogTrace, callback)
+}
+
 func (l *Logger) Tracef(message string, args ...any) {
 	l.formatLevel(LogTrace, message, args...)
 }
