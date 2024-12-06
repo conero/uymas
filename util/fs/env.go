@@ -55,6 +55,15 @@ func RunDir(joins ...string) string {
 	return RootPath(joins...)
 }
 
+// PwdPath Get the current working directory
+func PwdPath(joins ...string) string {
+	pwd, err := os.Getwd()
+	if err != nil {
+		return ""
+	}
+	return StdPathName(path.Join(append([]string{pwd}, joins...)...))
+}
+
 // AppName Get the name of the current application without any suffix
 func AppName() string {
 	if gRootApp == "" {

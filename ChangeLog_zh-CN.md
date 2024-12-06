@@ -53,6 +53,7 @@
 - **fs/os**
   - feat: 新增函数 `StdPathList` 实现路径列表标准化处理
   - feat: 实现空函数 `DelEnvPath`，删除指定的路径
+  - feat: 新增函数`PwdPath`，用于获取当前工作目录下的路径名称
   - pref: 函数 `AddEnvPath`等返回参数有 error调整为 string，因实际无法改变环境变量路径
 - **util**
   - feat: 新增函数 `MapToStruct` 用于更通用的 map 赋值 struct，并用其改写`MapToStructViaJson`
