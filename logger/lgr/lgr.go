@@ -87,3 +87,7 @@ func Pref(logPref string) logger.Logger {
 	vLgr.Pref(logPref)
 	return *vLgr
 }
+
+func SetFlag(flag int) {
+	vLgr.SetFlags(flag)
+}

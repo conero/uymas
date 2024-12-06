@@ -66,12 +66,14 @@
   - feat: 新增日志等级 `LogFatal`
   - feat: 新增日志函数 `Fatal` 与 logger 方式一直
   - feat: 新增日志函数 `TraceFunc` 用于函数式trace及日志调用
+  - feat: 新增日志函数 `SetFlag` 用于设置日志的头部输出格式
   - pref: `ErrorIf/FatalIf` 函数添加可选的前缀error
   - pref: `LevelFunc`（如 TraceFunc等）回调函数为空时不输出
   
 - **logger/lgr**
   - feat: 新增日志函数 `FatalIf` 用于判断是否有错误若有则退出
-
+  - feat: 新增日志函数 `SetFlag` ，用于调用日志前缀
+  
 - **example/cli/fast/**
   - feat: 新增命令 port 用于检查当前可用端口
 

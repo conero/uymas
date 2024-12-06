@@ -72,6 +72,10 @@ func main() {
 		if data == "" {
 			data = "日志测试工具，" + time.Now().Format(time.DateTime) + "\n 命令格式 log [data]"
 		}
+		logFlag := arg.Int("flag")
+		if logFlag > 0 {
+			lgr.SetFlag(logFlag)
+		}
 		if arg.Switch("fatal", "F") {
 			lgr.Fatal(data)
 		}
@@ -79,7 +83,10 @@ func main() {
 		lgr.Debug(data)
 		lgr.Warn(data)
 		lgr.Error(data)
-	}, "log", cli.Help("日志输出测试", cli.Option{Alias: []string{"fatal", "F"}, Help: "是否暂时 fatal 日志，并中断程序"}))
+	}, "log", cli.Help("日志输出测试",
+		cli.Option{Alias: []string{"fatal", "F"}, Help: "是否暂时 fatal 日志，并中断程序"},
+		cli.Option{Alias: []string{"flag"}, Help: "设置日志输出级别，参考 https://pkg.go.dev/log@latest#pkg-constants"},
+	))
 
 	app.Command(func(parser cli.ArgsParser) {
 		if parser.Switch("simple", "s") {

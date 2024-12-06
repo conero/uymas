@@ -203,6 +203,12 @@ func (l *Logger) Pref(logPref string) *Logger {
 	return l
 }
 
+// SetFlags to set log flag
+func (l *Logger) SetFlags(flag int) *Logger {
+	l.logger.SetFlags(flag)
+	return l
+}
+
 // ToLevel turn string to level
 func ToLevel(lvl string, args ...Level) (Level, error) {
 	var (
@@ -298,7 +304,8 @@ func NewLogger(cfgs ...Config) *Logger {
 
 	// Demoted processing, all driver parsing failed using the console
 	if cfg.Log == nil {
-		cfg.Log = log.New(os.Stdout, "", log.Ltime)
+		//cfg.Log = log.New(os.Stdout, "", log.Ltime)
+		cfg.Log = log.New(os.Stdout, "", log.LstdFlags)
 	}
 
 	logging.Level = lv
