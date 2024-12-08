@@ -41,7 +41,8 @@
 
 > 实现程序版本的稳定度，为发布做准备
 
-
+- **secure/aesutil**
+  - feat: 新增 Aes CBC 模式加解密函数
 
 
 
