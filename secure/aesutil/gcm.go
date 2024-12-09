@@ -2,9 +2,9 @@ package aesutil
 
 import (
 	"crypto/cipher"
+	"errors"
 )
 
-// @todo don't work
 func GcmEncrypt(data, key, nonce []byte) (ciphertext []byte, err error) {
 	block, err := AdjustKey(key)
 	if err != nil {
@@ -16,12 +16,10 @@ func GcmEncrypt(data, key, nonce []byte) (ciphertext []byte, err error) {
 	}
 
 	nonce = checkAndGenIv(key, nonce, gcm.NonceSize())
-
 	ciphertext = gcm.Seal(nil, nonce, data, nil)
 	return
 }
 
-// @todo don't work
 func GcmDecrypt(cipherText, key, nonce []byte) (rawtext []byte, err error) {
 	block, err := AdjustKey(key)
 	if err != nil {
@@ -32,8 +30,11 @@ func GcmDecrypt(cipherText, key, nonce []byte) (rawtext []byte, err error) {
 		return nil, err
 	}
 	nonceSize := gcm.NonceSize()
-	if len(cipherText) < nonceSize {
-		return nil, err
+	nonceLen := len(nonce)
+	if nonceLen < nonceSize {
+		return nil, errors.New("nonce is too short")
+	} else if nonceLen > nonceSize {
+		nonce = nonce[:nonceSize]
 	}
 
 	return gcm.Open(nil, nonce, cipherText, nil)
