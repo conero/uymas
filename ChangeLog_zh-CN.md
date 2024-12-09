@@ -45,6 +45,7 @@
   - feat: 新增 Aes CBC 模式加解密函数
   - feat: 新增 Aes CFB 模式加解密函数
   - feat: 新增 Aes GCM 模式加解密函数
+  - feat: 新增 Aes CTR 模式加解密函数
 
 
 
