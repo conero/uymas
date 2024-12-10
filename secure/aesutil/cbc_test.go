@@ -1,6 +1,7 @@
 package aesutil
 
 import (
+	"encoding/base64"
 	"gitee.com/conero/uymas/v2/str"
 	"testing"
 )
@@ -29,4 +30,42 @@ func TestCbcEncrypt(t *testing.T) {
 	} else {
 		t.Logf("解密成功！明文：%s", decryptStr)
 	}
+}
+
+// 与 php 互通
+//
+// 见文件： doc/test/php-insecure-aes/aes_test_fns.php
+func TestCbcEncrypt_php(t *testing.T) {
+	data := `Demo|十年生死两茫茫，不思量，自难忘|2018-07-01|㎡`
+	key := "Y0^n4Dh47:dd7wOXyWJ9,jN-tv8jxY8i"
+	iv := "[K$jCYBej-vLVDQY"
+
+	refCipher := `E/6l1oVnotjo0gbovDloCuIa/CXdMysaOqQIWfZiYEpaJa+FjgFbESeVnZWoCeC7gNXsP/3Vd2OTB7X1b9jxE6K7O8bV2WCyv7ruSa8bbvM=`
+	by, err := CbcEncrypt([]byte(data), []byte(key), []byte(iv))
+	if err != nil {
+		t.Errorf("加密失败，%v", err)
+		return
+	}
+	relCipher := base64.StdEncoding.EncodeToString(by)
+	if refCipher != relCipher {
+		//t.Errorf("加密结果不匹配，参考值：\n%s\n实际值：\n%s", refCipher, relCipher)
+	}
+
+	// 解密
+	cipherBytes, err := base64.StdEncoding.DecodeString(refCipher)
+	if err != nil {
+		t.Errorf("php操作密文无法解析为字节，%v", err)
+		return
+	}
+	rawTxt, err := CbcDecrypt(cipherBytes, []byte(key), []byte(iv))
+	if err != nil {
+		t.Errorf("php密文解密错误，%v", err)
+		return
+	}
+	if string(rawTxt) != data {
+		t.Errorf("php密文解密结果不匹配，参考值：\n%#v\n实际值：\n%#v", data, string(rawTxt))
+		return
+	}
+	t.Logf("解密结果：%s", string(rawTxt))
+
 }
