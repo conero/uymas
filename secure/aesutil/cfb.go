@@ -6,21 +6,21 @@ import (
 	"errors"
 )
 
-func CfbEncrypt(data, key, iv []byte) (ciphertext []byte, err error) {
+func CfbEncrypt(plaintext, key, iv []byte) (ciphertext []byte, err error) {
 	mode, er := AdjustKey(key)
 	if er != nil {
 		return nil, er
 	}
 
 	iv = checkAndGenIv(key, iv, mode.BlockSize())
-	ciphertext = make([]byte, aes.BlockSize+len(data))
+	ciphertext = make([]byte, aes.BlockSize+len(plaintext))
 
 	stream := cipher.NewCFBEncrypter(mode, iv)
-	stream.XORKeyStream(ciphertext[aes.BlockSize:], data)
+	stream.XORKeyStream(ciphertext[aes.BlockSize:], plaintext)
 	return
 }
 
-func CfbDecrypt(cipherText, key, iv []byte) (rawtext []byte, err error) {
+func CfbDecrypt(cipherText, key, iv []byte) (plaintext []byte, err error) {
 	mode, er := AdjustKey(key)
 	if er != nil {
 		return nil, er
@@ -36,6 +36,6 @@ func CfbDecrypt(cipherText, key, iv []byte) (rawtext []byte, err error) {
 	stream := cipher.NewCFBDecrypter(mode, iv)
 	stream.XORKeyStream(cipherText, cipherText)
 
-	rawtext = cipherText
+	plaintext = cipherText
 	return
 }

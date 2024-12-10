@@ -16,7 +16,7 @@ function aesCbcTest()
         echo "\n";
 
         // 还原
-        $msg = 'E/6l1oVnotjo0gbovDloCuIa/CXdMysaOqQIWfZiYEpaJa+FjgFbESeVnZWoCeC7gNXsP/3Vd2OTB7X1b9jxE/PzThvC/fTiEuXVRm/J3o8=';
+        //$msg = 'E/6l1oVnotjo0gbovDloCuIa/CXdMysaOqQIWfZiYEpaJa+FjgFbESeVnZWoCeC7gNXsP/3Vd2OTB7X1b9jxE/PzThvC/fTiEuXVRm/J3o8=';
         $msg = openssl_decrypt($msg, 'aes-256-cbc', $key, 0, $iv);
         echo "还原明文：\n";
         echo $msg;

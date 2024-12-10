@@ -18,25 +18,25 @@ func checkAndGenIv(key, iv []byte, blockSize int) []byte {
 }
 
 // CbcEncrypt aes cbc encrypt, refer to https://pkg.go.dev/crypto/cipher@latest#example-NewCBCDecrypter
-func CbcEncrypt(data, key, iv []byte) (ciphertext []byte, err error) {
+func CbcEncrypt(plaintext, key, iv []byte) (ciphertext []byte, err error) {
 	block, err := AdjustKey(key)
 	if err != nil {
 		return nil, err
 	}
 	blockSize := block.BlockSize()
-	if len(data)%blockSize != 0 {
-		data = ZeroPadding(data, block.BlockSize())
+	if len(plaintext)%blockSize != 0 {
+		plaintext = ZeroPadding(plaintext, block.BlockSize())
 	}
 
-	ciphertext = make([]byte, len(data))
+	ciphertext = make([]byte, len(plaintext))
 	iv = checkAndGenIv(key, iv, blockSize)
 
 	mode := cipher.NewCBCEncrypter(block, iv)
-	mode.CryptBlocks(ciphertext, data)
+	mode.CryptBlocks(ciphertext, plaintext)
 	return ciphertext, nil
 }
 
-func CbcDecrypt(cipherText, key, iv []byte) (rawtext []byte, err error) {
+func CbcDecrypt(cipherText, key, iv []byte) (plaintext []byte, err error) {
 	block, err := AdjustKey(key)
 	if err != nil {
 		return nil, err
@@ -49,11 +49,11 @@ func CbcDecrypt(cipherText, key, iv []byte) (rawtext []byte, err error) {
 		return nil, errors.New("ciphertext is not a multiple of the block size")
 	}
 
-	rawtext = make([]byte, len(cipherText))
+	plaintext = make([]byte, len(cipherText))
 	iv = checkAndGenIv(key, iv, blockSize)
 
 	mode := cipher.NewCBCDecrypter(block, iv)
-	mode.CryptBlocks(rawtext, cipherText)
-	rawtext = ZeroUnPadding(rawtext)
-	return rawtext, nil
+	mode.CryptBlocks(plaintext, cipherText)
+	plaintext = ZeroUnPadding(plaintext)
+	return plaintext, nil
 }

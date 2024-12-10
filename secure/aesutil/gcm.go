@@ -5,7 +5,7 @@ import (
 	"errors"
 )
 
-func GcmEncrypt(data, key, nonce []byte) (ciphertext []byte, err error) {
+func GcmEncrypt(plaintext, key, nonce []byte) (ciphertext []byte, err error) {
 	block, err := AdjustKey(key)
 	if err != nil {
 		return nil, err
@@ -16,11 +16,11 @@ func GcmEncrypt(data, key, nonce []byte) (ciphertext []byte, err error) {
 	}
 
 	nonce = checkAndGenIv(key, nonce, gcm.NonceSize())
-	ciphertext = gcm.Seal(nil, nonce, data, nil)
+	ciphertext = gcm.Seal(nil, nonce, plaintext, nil)
 	return
 }
 
-func GcmDecrypt(cipherText, key, nonce []byte) (rawtext []byte, err error) {
+func GcmDecrypt(cipherText, key, nonce []byte) (plaintext []byte, err error) {
 	block, err := AdjustKey(key)
 	if err != nil {
 		return nil, err
