@@ -1,6 +1,7 @@
 package aesutil
 
 import (
+	"crypto/aes"
 	"encoding/base64"
 	"gitee.com/conero/uymas/v2/str"
 	"testing"
@@ -41,12 +42,17 @@ func TestCbcEncrypt_php(t *testing.T) {
 	iv := "[K$jCYBej-vLVDQY"
 
 	refCipher := `E/6l1oVnotjo0gbovDloCuIa/CXdMysaOqQIWfZiYEpaJa+FjgFbESeVnZWoCeC7gNXsP/3Vd2OTB7X1b9jxE6K7O8bV2WCyv7ruSa8bbvM=`
-	by, err := CbcEncrypt([]byte(data), []byte(key), []byte(iv))
+	dataPkcs7, err := Pkcs7Padding([]byte(data), aes.BlockSize)
+	if err != nil {
+		t.Errorf("Pkcs7Padding 失败，%v", err)
+	}
+	by, err := CbcEncrypt(dataPkcs7, []byte(key), []byte(iv))
 	if err != nil {
 		t.Errorf("加密失败，%v", err)
 		return
 	}
 	relCipher := base64.StdEncoding.EncodeToString(by)
+	t.Logf("relCipher: %#v", relCipher)
 	if refCipher != relCipher {
 		//t.Errorf("加密结果不匹配，参考值：\n%s\n实际值：\n%s", refCipher, relCipher)
 	}
@@ -62,6 +68,7 @@ func TestCbcEncrypt_php(t *testing.T) {
 		t.Errorf("php密文解密错误，%v", err)
 		return
 	}
+	rawTxt, err = Pkcs7UnPadding(rawTxt, aes.BlockSize)
 	if string(rawTxt) != data {
 		t.Errorf("php密文解密结果不匹配，参考值：\n%#v\n实际值：\n%#v", data, string(rawTxt))
 		return
