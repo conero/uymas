@@ -214,15 +214,26 @@ func (r *Register[T]) GetHelp(cmd string) (helpMsg string, exits bool) {
 func (r *Register[T]) GenerateHelpFn(arg ArgsParser) {
 	cmdName := arg.HelpCmd()
 	helpMsg, isFind := r.GetHelp(cmdName)
+	runEmptyFn := func() {
+		fmt.Println("(:_")
+		fmt.Println("暂无帮助信息")
+		fmt.Println("您可为应用注册帮助信息或由结构化数据自动生成")
+	}
 	if isFind {
-		fmt.Println(helpMsg)
+		if helpMsg == "" {
+			runEmptyFn()
+		} else {
+			fmt.Println(helpMsg)
+		}
 		fmt.Println()
 		return
 	}
 
 	if cmdName != "" {
 		lgr.Warn("命令 " + cmdName + " 不存在")
+		return
 	}
+	runEmptyFn()
 }
 
 func (r *Register[T]) Args() ArgsParser {
