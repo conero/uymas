@@ -5,13 +5,14 @@ import (
 	"testing"
 )
 
-func TestCtrEncrypt(t *testing.T) {
+// TestOfbEncrypt tests the OfbEncrypt function for proper encryption.
+func TestOfbEncrypt(t *testing.T) {
 	key := []byte(str.RandStr.String(32))
 	iv := []byte(str.RandStr.String(16))
 
 	// 加密
-	data := "test in aes/Ctr.  王子曰：仲永之通悟，受之天也。其受之天也，贤于材人远矣。卒之为众人，则其受于人者不至也。彼其受之天也，如此其贤也，不受之人，且为众人；今夫不受之天，固众人，又不受之人，得为众人而已耶？ "
-	encrypt, err := CtrEncrypt([]byte(data), key, iv)
+	data := "test in aes/Ofb.  墙角数枝梅，凌寒独自开；遥知不是雪，为有暗香来。~"
+	encrypt, err := OfbEncrypt([]byte(data), key, iv)
 	if err != nil {
 		t.Error(err)
 	} else {
@@ -19,7 +20,7 @@ func TestCtrEncrypt(t *testing.T) {
 	}
 
 	// 解密
-	decrypt, err := CtrDecrypt(encrypt, key, iv)
+	decrypt, err := OfbDecrypt(encrypt, key, iv)
 	decryptStr := string(decrypt)
 	if err != nil {
 		t.Error(err)
