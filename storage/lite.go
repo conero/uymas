@@ -30,46 +30,47 @@ func (lite *Lite) judgeType() {
 	value := lite.variable
 	if value == "" {
 		lite.vType = LiteralNull
-	} else {
-		isMapMk := false
-		// INT
-		// regexp judge the data type
-		isIntReg := regexp.MustCompile(`^[\d]+$`)
-		if isIntReg.MatchString(value) {
-			lite.vType = LiteralInt
-			lite.anyValue, _ = strconv.Atoi(value)
+		return
+	}
+
+	isMapMk := false
+	// INT
+	// regexp judge the data type
+	isIntReg := regexp.MustCompile(`^[\d]+$`)
+	if isIntReg.MatchString(value) {
+		lite.vType = LiteralInt
+		lite.anyValue, _ = strconv.Atoi(value)
+		isMapMk = true
+	}
+
+	//FLOAT
+	if !isMapMk {
+		isfloatReg := regexp.MustCompile(`^[\d]+\.[\d]+$`)
+		if isfloatReg.MatchString(value) {
+			lite.vType = LiteralFloat
+			lite.anyValue, _ = strconv.ParseFloat(value, 64)
 			isMapMk = true
 		}
+	}
 
-		//FLOAT
-		if !isMapMk {
-			isfloatReg := regexp.MustCompile(`^[\d]+\.[\d]+$`)
-			if isfloatReg.MatchString(value) {
-				lite.vType = LiteralFloat
-				lite.anyValue, _ = strconv.ParseFloat(value, 64)
-				isMapMk = true
-			}
+	//bool
+	if !isMapMk {
+		switch value {
+		case "true", "True":
+			lite.anyValue = true
+			lite.vType = LiteralBool
+			isMapMk = true
+		case "false", "False":
+			lite.anyValue = false
+			lite.vType = LiteralBool
+			isMapMk = true
 		}
+	}
 
-		//bool
-		if !isMapMk {
-			switch value {
-			case "true", "True":
-				lite.anyValue = true
-				lite.vType = LiteralBool
-				isMapMk = true
-			case "false", "False":
-				lite.anyValue = false
-				lite.vType = LiteralBool
-				isMapMk = true
-			}
-		}
-
-		//string
-		if !isMapMk {
-			lite.anyValue = value
-			lite.vType = LiteralString
-		}
+	//string
+	if !isMapMk {
+		lite.anyValue = value
+		lite.vType = LiteralString
 	}
 }
 
@@ -112,39 +113,40 @@ func LiteralExpression(expression string) (float64, error) {
 
 // ExpNoBracket the expression without bracket
 func ExpNoBracket(expression string) string {
-	var result string = "0"
+	var result = "0"
 	reg := regexp.MustCompile(`^[+\-*/\d\s.]+$`)
-	if reg.MatchString(expression) {
-		mulDivReg := regexp.MustCompile(`[\d.]+[*/]+[\d.]`)
-		mulDivSignReg := regexp.MustCompile(`\*|\/`)
-		checkReg := regexp.MustCompile(`^[\d.]+$`)
+	if !reg.MatchString(expression) {
+		return result
+	}
 
-		for {
-			if !mulDivReg.MatchString(expression) {
-				break
-			}
+	mulDivReg := regexp.MustCompile(`[\d.]+[*/]+[\d.]`)
+	mulDivSignReg := regexp.MustCompile(`\*|\/`)
+	checkReg := regexp.MustCompile(`^[\d.]+$`)
 
-			if checkReg.MatchString(expression) {
-				break
-			}
-
-			for _, frag := range mulDivReg.FindAllString(expression, -1) {
-				fragQue := mulDivSignReg.Split(frag, -1)
-				frag1, frag2 := fragQue[0], fragQue[1]
-				fragV1, _ := strconv.ParseFloat(frag1, 64)
-				fragV2, _ := strconv.ParseFloat(frag2, 64)
-
-				rpl := ""
-				if strings.Contains(frag, "/") {
-					rpl = fmt.Sprintf("%v", fragV1/fragV2)
-				} else if strings.Contains(frag, "*") {
-					rpl = fmt.Sprintf("%v", fragV1*fragV2)
-				}
-
-				expression = strings.ReplaceAll(expression, frag, rpl)
-			}
+	for {
+		if !mulDivReg.MatchString(expression) {
+			break
 		}
 
+		if checkReg.MatchString(expression) {
+			break
+		}
+
+		for _, frag := range mulDivReg.FindAllString(expression, -1) {
+			fragQue := mulDivSignReg.Split(frag, -1)
+			frag1, frag2 := fragQue[0], fragQue[1]
+			fragV1, _ := strconv.ParseFloat(frag1, 64)
+			fragV2, _ := strconv.ParseFloat(frag2, 64)
+
+			rpl := ""
+			if strings.Contains(frag, "/") {
+				rpl = fmt.Sprintf("%v", fragV1/fragV2)
+			} else if strings.Contains(frag, "*") {
+				rpl = fmt.Sprintf("%v", fragV1*fragV2)
+			}
+
+			expression = strings.ReplaceAll(expression, frag, rpl)
+		}
 	}
 
 	return result

@@ -17,7 +17,7 @@ type BitSize int64
 //
 // 1 MB	  = 1024 KB				    Megabyte		百万字节		   兆
 //
-// 1 GB    = 1024 MB				    Gigabyte		千兆			   吉
+// 1 GB    = 1024 MB				Gigabyte		千兆			   吉
 //
 // 1 TB	  = 1024 GB				    Terabyte		万亿字节		   太
 //
