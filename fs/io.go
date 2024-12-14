@@ -30,18 +30,21 @@ func Copy(dstFile, srcFile string) (bool, error) {
 func CopyDir(dst, src string) {
 	dst = StdDir(dst)
 	src = StdDir(src)
-	if files, err := os.ReadDir(src); err == nil {
-		CheckDir(dst)
-		for _, fl := range files {
-			d1 := dst + fl.Name()
-			s1 := src + fl.Name()
-			if fl.IsDir() {
-				d1 += "/"
-				s1 += "/"
-				CopyDir(d1, s1)
-			} else {
-				_, _ = Copy(d1, s1)
-			}
+	files, err := os.ReadDir(src)
+	if err != nil {
+		return
+	}
+
+	CheckDir(dst)
+	for _, fl := range files {
+		d1 := dst + fl.Name()
+		s1 := src + fl.Name()
+		if fl.IsDir() {
+			d1 += "/"
+			s1 += "/"
+			CopyDir(d1, s1)
+		} else {
+			_, _ = Copy(d1, s1)
 		}
 	}
 }
@@ -88,11 +91,13 @@ func StdDir(d string) string {
 
 // StdPathName the standard path format
 func StdPathName(vPath string) string {
-	if vPath != "" {
-		vPath = strings.ReplaceAll(vPath, "\\", "/")
-		reg := regexp.MustCompile(`/{2,}`)
-		vPath = reg.ReplaceAllString(vPath, "/")
+	if vPath == "" {
+		return ""
 	}
+
+	vPath = strings.ReplaceAll(vPath, "\\", "/")
+	reg := regexp.MustCompile(`/{2,}`)
+	vPath = reg.ReplaceAllString(vPath, "/")
 	return vPath
 }
 

@@ -54,6 +54,9 @@
   - del: 移除如`AppMethodInit/AppMethodRun/AppMethodNoSubC/AppMethodHelp/FuncRegisterEmpty` 等未真正使用的代码
 - **bin/color**
   - break: 删除`Ansi` 前缀，使其更简介。替换Ansi，简化名称
+- **logger**
+  - feat: 新增Logger.TraceFunc 函数补全trace处理机制
+
 
 
 
