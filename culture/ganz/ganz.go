@@ -140,25 +140,27 @@ func (c *DzTime) String() string {
 // 十二时辰
 // https://zhuanlan.zhihu.com/p/490496771
 func DzTimeList() []DzTime {
-	if cacheDzTimeDick == nil {
-		dztList := strings.Split(DiZhiTime, ",")
-		monthList := strings.Split(DiZhiMonth, ",")
-		zodiacLs := ZodiacList()
-		for i, dz := range DzList() {
-			name := dz
+	if cacheDzTimeDick != nil {
+		return cacheDzTimeDick
+	}
 
-			begin := 23 + i*2
-			end := begin + 2
-			vRang := [2]int{begin % 24, end % 24}
-			cacheDzTimeDick = append(cacheDzTimeDick, DzTime{
-				Name:      name,
-				Alias:     dztList[i],
-				Range:     vRang,
-				Month:     (11 + i) % 12,
-				MonthName: monthList[i],
-				Zodiac:    zodiacLs[i],
-			})
-		}
+	dztList := strings.Split(DiZhiTime, ",")
+	monthList := strings.Split(DiZhiMonth, ",")
+	zodiacLs := ZodiacList()
+	for i, dz := range DzList() {
+		name := dz
+
+		begin := 23 + i*2
+		end := begin + 2
+		vRang := [2]int{begin % 24, end % 24}
+		cacheDzTimeDick = append(cacheDzTimeDick, DzTime{
+			Name:      name,
+			Alias:     dztList[i],
+			Range:     vRang,
+			Month:     (11 + i) % 12,
+			MonthName: monthList[i],
+			Zodiac:    zodiacLs[i],
+		})
 	}
 
 	return cacheDzTimeDick
