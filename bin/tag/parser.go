@@ -108,19 +108,20 @@ func (c *Parser) parse() bool {
 		}
 
 		tg := ParseTag(cmdStr)
-		if tg != nil {
-			tg.Name = str.Lcfirst(sf.Name)
-			if tg.Type == CmdCommand {
-				c.parseRunnable(tg, field)
-				//fmt.Printf("%v:%#v\n", tg.Name, *tg)
-			}
-			tg.carrier = rv
-			tg.carrierKey = sf.Name
-			c.Tags = append(c.Tags, *tg)
-			setNameFieldFn(fv, field, sf, tg)
-		} else {
+		if tg == nil {
 			setNameFieldFn(fv, field, sf, nil)
+			continue
 		}
+
+		tg.Name = str.Lcfirst(sf.Name)
+		if tg.Type == CmdCommand {
+			c.parseRunnable(tg, field)
+			//fmt.Printf("%v:%#v\n", tg.Name, *tg)
+		}
+		tg.carrier = rv
+		tg.carrierKey = sf.Name
+		c.Tags = append(c.Tags, *tg)
+		setNameFieldFn(fv, field, sf, tg)
 	}
 
 	return true
@@ -141,13 +142,14 @@ func (c *Parser) parseRunnable(tg *Tag, field reflect.Value) {
 	}
 	for i := 0; i < field.NumMethod(); i++ {
 		mth := field.Method(i)
-		if mth.IsValid() {
-			v := mth.Interface()
-			rMth, matched := v.(func(cmd *bin.Arg))
-			if matched {
-				tg.runnable = rMth
-				break
-			}
+		if !mth.IsValid() {
+			continue
+		}
+		v := mth.Interface()
+		rMth, matched := v.(func(cmd *bin.Arg))
+		if matched {
+			tg.runnable = rMth
+			break
 		}
 	}
 
@@ -175,22 +177,23 @@ func (c *Parser) parseCommandTags(tg *Tag, field reflect.Value) {
 			continue
 		}
 		cTg := ParseTag(tag)
-		if cTg != nil {
-			if cTg.Name == "" {
-				name := cTg.ValueString(TyOptionName)
-				if name == "" {
-					name = str.Lcfirst(cSf.Name)
-				}
-				cTg.Name = name
-				if cTg.CheckOption(TyOptionName) {
-					cTg.Type = CmdOption
-				}
-			}
-			cTg.carrierKey = cSf.Name
-			cTg.carrier = field
-			tDick = append(tDick, *cTg)
-			isUpdMk = true
+		if cTg == nil {
+			continue
 		}
+		if cTg.Name == "" {
+			name := cTg.ValueString(TyOptionName)
+			if name == "" {
+				name = str.Lcfirst(cSf.Name)
+			}
+			cTg.Name = name
+			if cTg.CheckOption(TyOptionName) {
+				cTg.Type = CmdOption
+			}
+		}
+		cTg.carrierKey = cSf.Name
+		cTg.carrier = field
+		tDick = append(tDick, *cTg)
+		isUpdMk = true
 	}
 
 	if isUpdMk {
@@ -291,19 +294,21 @@ func (c *Parser) genCli() {
 		}
 		fmt.Printf("%v      %v\n", subCmd, help)
 
-		if dick != nil {
-			helpDick := map[string]string{}
-			for _, ct := range dick {
-				name := strings.Join(ct.Names(), ", ")
-				help = "选项参数"
-				if vh := ct.ValueString(OptHelp); vh != "" {
-					help += vh
-				}
-				helpDick[name] = help
+		if dick == nil {
+			return
+		}
+
+		helpDick := map[string]string{}
+		for _, ct := range dick {
+			name := strings.Join(ct.Names(), ", ")
+			help = "选项参数"
+			if vh := ct.ValueString(OptHelp); vh != "" {
+				help += vh
 			}
-			if len(helpDick) > 0 {
-				fmt.Printf("选项列表如下：\n%v", bin.FormatKv(helpDick, "  "))
-			}
+			helpDick[name] = help
+		}
+		if len(helpDick) > 0 {
+			fmt.Printf("选项列表如下：\n%v", bin.FormatKv(helpDick, "  "))
 		}
 
 	}, "help", "?")

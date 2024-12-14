@@ -182,10 +182,7 @@ func (c *Tag) Own(name string) bool {
 		return true
 	}
 	alias := c.Value(OptAlias)
-	if rock.ListIndex(alias, name) > -1 {
-		return true
-	}
-	return false
+	return rock.InList(alias, name)
 }
 
 func (c *Tag) Names() []string {
@@ -209,12 +206,13 @@ func (c *Tag) setArgsCarrier(cc *bin.Arg) {
 		carrier = carrier.Elem()
 	}
 	value := carrier.FieldByName(CmdFieldArg)
-	if value.IsValid() {
-		if value.IsNil() || value.IsZero() {
-			switch value.Interface().(type) {
-			case *bin.Arg:
-				value.Set(reflect.ValueOf(cc))
-			}
+	if !value.IsValid() {
+		return
+	}
+	if value.IsNil() || value.IsZero() {
+		switch value.Interface().(type) {
+		case *bin.Arg:
+			value.Set(reflect.ValueOf(cc))
 		}
 	}
 }

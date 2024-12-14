@@ -46,17 +46,20 @@ type JsonReceiver struct {
 func (c *JsonReceiver) parseJson(vByte []byte) *JsonReceiver {
 	var jsonData any
 	er := json.Unmarshal(vByte, &jsonData)
-	if er == nil {
-		rv := reflect.ValueOf(jsonData)
-		if rv.Kind() == reflect.Map {
-			mr := rv.MapRange()
-			if c.vMap == nil {
-				c.vMap = map[string]any{}
-			}
-			for mr.Next() {
-				c.vMap[fmt.Sprintf("%v", mr.Key().Interface())] = mr.Value().Interface()
-			}
-		}
+	if er != nil {
+		return c
+	}
+	rv := reflect.ValueOf(jsonData)
+	if rv.Kind() != reflect.Map {
+		return c
+	}
+
+	mr := rv.MapRange()
+	if c.vMap == nil {
+		c.vMap = map[string]any{}
+	}
+	for mr.Next() {
+		c.vMap[fmt.Sprintf("%v", mr.Key().Interface())] = mr.Value().Interface()
 	}
 	return c
 }
@@ -108,13 +111,15 @@ func (c *JsonReceiver) GetData() map[string]any {
 // GetUrlContent get url content
 func GetUrlContent(vUrl string) []byte {
 	resp, er := http.Get(vUrl)
-	if er == nil {
-		if resp.StatusCode == http.StatusOK {
-			bys, err := io.ReadAll(resp.Body)
-			if err == nil {
-				return bys
-			}
-		}
+	if er != nil {
+		return nil
+	}
+	if resp.StatusCode != http.StatusOK {
+		return nil
+	}
+	bys, err := io.ReadAll(resp.Body)
+	if err == nil {
+		return bys
 	}
 	return nil
 }
@@ -126,7 +131,7 @@ type UrlReceiver struct {
 
 // UrlStr parse json string
 func (c *UrlReceiver) UrlStr(vStr string) *UrlReceiver {
-	return c.parse(string(vStr))
+	return c.parse(vStr)
 }
 
 // UrlFile parse json from json-file
@@ -148,23 +153,33 @@ func (c *UrlReceiver) UrlUrl(vUrl string) *UrlReceiver {
 
 // base json parse
 func (c *UrlReceiver) parse(vStr string) *UrlReceiver {
-	if u, er := url.ParseQuery(vStr); er == nil {
-		if vJson, err := json.Marshal(u); err == nil {
-			var jsonData any
-			er := json.Unmarshal(vJson, &jsonData)
-			if er == nil {
-				rv := reflect.ValueOf(jsonData)
-				if rv.Kind() == reflect.Map {
-					mr := rv.MapRange()
-					if c.vMap == nil {
-						c.vMap = map[string]any{}
-					}
-					for mr.Next() {
-						c.vMap[fmt.Sprintf("%v", mr.Key().Interface())] = mr.Value().Interface()
-					}
-				}
-			}
-		}
+	u, er := url.ParseQuery(vStr)
+	if er != nil {
+		return c
+	}
+
+	vJson, err := json.Marshal(u)
+	if err != nil {
+		return c
+	}
+
+	var jsonData any
+	er = json.Unmarshal(vJson, &jsonData)
+	if er != nil {
+		return c
+	}
+
+	rv := reflect.ValueOf(jsonData)
+	if rv.Kind() != reflect.Map {
+		return c
+	}
+
+	mr := rv.MapRange()
+	if c.vMap == nil {
+		c.vMap = map[string]any{}
+	}
+	for mr.Next() {
+		c.vMap[fmt.Sprintf("%v", mr.Key().Interface())] = mr.Value().Interface()
 	}
 	return c
 }

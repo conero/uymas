@@ -9,7 +9,7 @@ import (
 )
 
 // Transferred Escape symbol
-var Transferred map[string]string = map[string]string{
+var Transferred = map[string]string{
 	`\'`: "_Sg_.Qmark_", // Single quotation mark
 	`\"`: "_Db_.Qmark_", // Double quotation marks
 }
@@ -85,7 +85,7 @@ func NewScriptFile(filename string) []string {
 	return cmds
 }
 
-// ParseLine parse shell line syntax to option
+// ParseLine parse cli line syntax to option
 func ParseLine(line string) [][]string {
 	var args [][]string
 	line = strings.TrimSpace(line)

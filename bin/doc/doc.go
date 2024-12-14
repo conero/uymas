@@ -200,7 +200,7 @@ func (c *Doc) listAsHelp(list []HelpDick) string {
 
 // Support detect if the lang is supported
 func (c *Doc) Support(lng string) bool {
-	return rock.ListIndex(c.LangList, lng) > -1
+	return rock.InList(c.LangList, lng)
 }
 
 // Search help by give command to search
