@@ -308,30 +308,31 @@ func (obj Object) stringCoverNumber(dst, src reflect.Value) bool {
 // AssignMap Assign Map/Struct to map
 func (obj Object) AssignMap(targetMap any, srcMapOrStruct any) {
 	tVal := reflect.ValueOf(targetMap)
-	sVal := reflect.ValueOf(srcMapOrStruct)
 	tKind := tVal.Kind()
-	if tKind == reflect.Map {
-		sKind := sVal.Kind()
-		if tKind == sKind {
-			rg := sVal.MapRange()
-			for rg.Next() {
-				sk := rg.Key()
-				sV := rg.Value()
-				if !sV.IsNil() {
-					tVal.SetMapIndex(sk, sV)
-				}
+	if tKind != reflect.Map {
+		return
+	}
+	sVal := reflect.ValueOf(srcMapOrStruct)
+	sKind := sVal.Kind()
+	if tKind == sKind {
+		rg := sVal.MapRange()
+		for rg.Next() {
+			sk := rg.Key()
+			sV := rg.Value()
+			if !sV.IsNil() {
+				tVal.SetMapIndex(sk, sV)
 			}
-		} else if sKind == reflect.Struct {
-			sVal = sVal.Elem()
-			num := sVal.NumField()
-			sTp := reflect.TypeOf(srcMapOrStruct)
-			for i := 0; i < num; i++ {
-				field := sVal.Field(i)
-				fieldKind := field.Kind()
-				tField := sTp.Elem()
-				if fieldKind != reflect.Struct && fieldKind != reflect.Map {
-					tVal.SetMapIndex(reflect.ValueOf(tField.Name()), field)
-				}
+		}
+	} else if sKind == reflect.Struct {
+		sVal = sVal.Elem()
+		num := sVal.NumField()
+		sTp := reflect.TypeOf(srcMapOrStruct)
+		for i := 0; i < num; i++ {
+			field := sVal.Field(i)
+			fieldKind := field.Kind()
+			tField := sTp.Elem()
+			if fieldKind != reflect.Struct && fieldKind != reflect.Map {
+				tVal.SetMapIndex(reflect.ValueOf(tField.Name()), field)
 			}
 		}
 	}
@@ -381,29 +382,30 @@ func StructToMap(value any, ignoreKeys ...string) map[string]any {
 		rv = rv.Elem()
 		rt = rv.Type()
 	}
-	if rv.Kind() == reflect.Struct {
-		if rt == nil {
-			rt = reflect.TypeOf(value)
+	if rv.Kind() != reflect.Struct {
+		return nil
+	}
+
+	if rt == nil {
+		rt = reflect.TypeOf(value)
+	}
+	vMap := map[string]any{}
+	for i := 0; i < rv.NumField(); i++ {
+		field := rv.Field(i)
+		if !field.IsValid() {
+			continue
 		}
-		vMap := map[string]any{}
-		for i := 0; i < rv.NumField(); i++ {
-			field := rv.Field(i)
-			if !field.IsValid() {
+		// Notice: struct lower field also can be scan, and ignore func/ptr.
+		if vKind := field.Kind(); vKind != reflect.Func && vKind != reflect.Ptr {
+			name := rt.Field(i).Name
+			//ignore keys
+			if str.InQuei(name, ignoreKeys) > -1 {
 				continue
 			}
-			// Notice: struct lower field also can be scan, and ignore func/ptr.
-			if vKind := field.Kind(); vKind != reflect.Func && vKind != reflect.Ptr {
-				name := rt.Field(i).Name
-				//ignore keys
-				if str.InQuei(name, ignoreKeys) > -1 {
-					continue
-				}
-				vMap[name] = field.Interface()
-			}
+			vMap[name] = field.Interface()
 		}
-		return vMap
 	}
-	return nil
+	return vMap
 }
 
 // StructToMapLStyle convert Struct field to by Map and key is Lower style, key support `JSON.TAG`.
@@ -415,37 +417,38 @@ func StructToMapLStyle(value any, ignoreKeys ...string) map[string]any {
 		rv = rv.Elem()
 		rt = rv.Type()
 	}
-	if rv.Kind() == reflect.Struct {
-		if rt == nil {
-			rt = reflect.TypeOf(value)
+	if rv.Kind() != reflect.Struct {
+		return nil
+	}
+
+	if rt == nil {
+		rt = reflect.TypeOf(value)
+	}
+	vMap := map[string]any{}
+	for i := 0; i < rv.NumField(); i++ {
+		field := rv.Field(i)
+		if !field.IsValid() {
+			continue
 		}
-		vMap := map[string]any{}
-		for i := 0; i < rv.NumField(); i++ {
-			field := rv.Field(i)
-			if !field.IsValid() {
+		if vKind := field.Kind(); vKind != reflect.Func && vKind != reflect.Ptr {
+			tField := rt.Field(i)
+			// Support JSON/TAG
+			name := tField.Name
+			//ignore keys
+			if str.InQuei(name, ignoreKeys) > -1 {
 				continue
 			}
-			if vKind := field.Kind(); vKind != reflect.Func && vKind != reflect.Ptr {
-				tField := rt.Field(i)
-				// Support JSON/TAG
-				name := tField.Name
-				//ignore keys
-				if str.InQuei(name, ignoreKeys) > -1 {
-					continue
+			if tagName, isOk := tField.Tag.Lookup("json"); isOk {
+				if tagName != "-" && tagName != "" {
+					name = tagName
 				}
-				if tagName, isOk := tField.Tag.Lookup("json"); isOk {
-					if tagName != "-" && tagName != "" {
-						name = tagName
-					}
-				} else {
-					name = str.LowerStyle(name)
-				}
-				vMap[name] = field.Interface()
+			} else {
+				name = str.LowerStyle(name)
 			}
+			vMap[name] = field.Interface()
 		}
-		return vMap
 	}
-	return nil
+	return vMap
 }
 
 // ToMapLStyleIgnoreEmpty convert Struct field to by Map and key is Lower style and ignore empty.
@@ -457,40 +460,41 @@ func ToMapLStyleIgnoreEmpty(value any, ignoreKeys ...string) map[string]any {
 		rv = rv.Elem()
 		rt = rv.Type()
 	}
-	if rv.Kind() == reflect.Struct {
-		if rt == nil {
-			rt = reflect.TypeOf(value)
-		}
-		vMap := map[string]any{}
-		for i := 0; i < rv.NumField(); i++ {
-			field := rv.Field(i)
-			if !field.IsValid() {
-				continue
-			}
-			if vKind := field.Kind(); vKind != reflect.Func && vKind != reflect.Ptr {
-				if !field.IsZero() {
-					tField := rt.Field(i)
-					name := tField.Name
-					//ignore keys
-					if str.InQuei(name, ignoreKeys) > -1 {
-						continue
-					}
-
-					// Support JSON/TAG
-					if tagName, isOk := tField.Tag.Lookup("json"); isOk {
-						if tagName != "-" && tagName != "" {
-							name = tagName
-						}
-					} else {
-						name = str.LowerStyle(name)
-					}
-					vMap[name] = field.Interface()
-				}
-			}
-		}
-		return vMap
+	if rv.Kind() != reflect.Struct {
+		return nil
 	}
-	return nil
+
+	if rt == nil {
+		rt = reflect.TypeOf(value)
+	}
+	vMap := map[string]any{}
+	for i := 0; i < rv.NumField(); i++ {
+		field := rv.Field(i)
+		if !field.IsValid() {
+			continue
+		}
+		if vKind := field.Kind(); vKind != reflect.Func && vKind != reflect.Ptr {
+			if !field.IsZero() {
+				tField := rt.Field(i)
+				name := tField.Name
+				//ignore keys
+				if str.InQuei(name, ignoreKeys) > -1 {
+					continue
+				}
+
+				// Support JSON/TAG
+				if tagName, isOk := tField.Tag.Lookup("json"); isOk {
+					if tagName != "-" && tagName != "" {
+						name = tagName
+					}
+				} else {
+					name = str.LowerStyle(name)
+				}
+				vMap[name] = field.Interface()
+			}
+		}
+	}
+	return vMap
 }
 
 // StructToMapViaJson convert map via json Marshal/Unmarshal

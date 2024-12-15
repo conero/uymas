@@ -31,23 +31,25 @@ func InQueAny(que any, keys ...any) int {
 
 	vt := reflect.ValueOf(que)
 	//Only Array And Slice.
-	if vt.Kind() == reflect.Array || vt.Kind() == reflect.Slice {
-		vLen := vt.Len()
-		for i := 0; i < vLen; i++ {
-			value := vt.Index(i)
-			for j := 0; j < len(keys); j++ {
-				vsKey := keys[j]
-				if reflect.DeepEqual(value.Interface(), vsKey) {
-					idx = i
-					break
-				}
-			}
-			if idx != -1 {
+	isMatched := vt.Kind() == reflect.Array || vt.Kind() == reflect.Slice
+	if !isMatched {
+		return idx
+	}
+
+	vLen := vt.Len()
+	for i := 0; i < vLen; i++ {
+		value := vt.Index(i)
+		for j := 0; j < len(keys); j++ {
+			vsKey := keys[j]
+			if reflect.DeepEqual(value.Interface(), vsKey) {
+				idx = i
 				break
 			}
 		}
+		if idx != -1 {
+			break
+		}
 	}
-
 	return idx
 }
 

@@ -131,13 +131,13 @@ func (c *Builder) Page(page int, orPageSize ...int) *Builder {
 	return c
 }
 
-// GroupBy call once, than more to reset.
+// GroupBy call once, then more to reset.
 func (c *Builder) GroupBy(groupBys ...string) *Builder {
 	c.condGroupBys = groupBys
 	return c
 }
 
-// OrderBy call once, than more to reset.
+// OrderBy call once, then more to reset.
 func (c *Builder) OrderBy(orderBys ...string) *Builder {
 	c.condOrderBys = orderBys
 	return c
@@ -154,23 +154,24 @@ func (c *Builder) Limit(offset int, orRowCount ...int) *Builder {
 
 func (c *Builder) parseWhere() string {
 	var where string
-	if len(c.wheres) > 0 {
-		var whereQueue []string
-		for _, whs := range c.wheres {
-			if len(whs) == 1 {
-				if len(whereQueue) == 0 {
-					whereQueue = append(whereQueue, whs[0])
-				} else {
-					whereQueue = append(whereQueue, fmt.Sprintf("AND (%v)", whs[0]))
-				}
-			} else if len(whs) == 2 {
-				whereQueue = append(whereQueue, fmt.Sprintf("%v (%v)", whs[0], whs[1]))
+	if len(c.wheres) == 0 {
+		return where
+	}
+	var whereQueue []string
+	for _, whs := range c.wheres {
+		if len(whs) == 1 {
+			if len(whereQueue) == 0 {
+				whereQueue = append(whereQueue, whs[0])
+			} else {
+				whereQueue = append(whereQueue, fmt.Sprintf("AND (%v)", whs[0]))
 			}
+		} else if len(whs) == 2 {
+			whereQueue = append(whereQueue, fmt.Sprintf("%v (%v)", whs[0], whs[1]))
 		}
+	}
 
-		if len(whereQueue) > 0 {
-			where = "WHERE " + strings.Join(whereQueue, " ")
-		}
+	if len(whereQueue) > 0 {
+		where = "WHERE " + strings.Join(whereQueue, " ")
 	}
 	return where
 }
