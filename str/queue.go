@@ -27,7 +27,7 @@ func DelQue(que []string, ss ...string) []string {
 	var value []string
 	if que != nil && ss != nil {
 		for _, s := range que {
-			if rock.ListIndex(ss, s) == -1 {
+			if !rock.InList(ss, s) {
 				if value == nil {
 					value = []string{}
 				}

@@ -67,37 +67,38 @@ func IsLatinAlpha(alpha string) bool {
 //	`getHeightWidthRate` 	-> `get_height_width_rate`
 func LowerStyle(vStr string) string {
 	vLen := len(vStr)
-	if vLen > 0 {
-		bys := []byte(vStr)
-		var upperQueue []int
-		for i := 0; i < vLen; i++ {
-			alpha := vStr[i : i+1]
-			if IsLatinAlpha(alpha) && alpha == strings.ToUpper(alpha) {
-				upperQueue = append(upperQueue, i)
-			}
-		}
-
-		var valueQueue []string
-		var lastIndex = 0
-		var uQLen = len(upperQueue)
-		for j, v := range upperQueue {
-			if v == 0 {
-				continue
-			}
-			valueQueue = append(valueQueue, string(bys[lastIndex:v]))
-			lastIndex = v
-			//Last
-			if j == (uQLen - 1) {
-				valueQueue = append(valueQueue, string(bys[lastIndex:]))
-			}
-		}
-
-		if len(valueQueue) == 0 {
-			return strings.ToLower(vStr)
-		}
-		return strings.ToLower(strings.Join(valueQueue, "_"))
+	if vLen == 0 {
+		return ""
 	}
-	return vStr
+
+	bys := []byte(vStr)
+	var upperQueue []int
+	for i := 0; i < vLen; i++ {
+		alpha := vStr[i : i+1]
+		if IsLatinAlpha(alpha) && alpha == strings.ToUpper(alpha) {
+			upperQueue = append(upperQueue, i)
+		}
+	}
+
+	var valueQueue []string
+	var lastIndex = 0
+	var uQLen = len(upperQueue)
+	for j, v := range upperQueue {
+		if v == 0 {
+			continue
+		}
+		valueQueue = append(valueQueue, string(bys[lastIndex:v]))
+		lastIndex = v
+		//Last
+		if j == (uQLen - 1) {
+			valueQueue = append(valueQueue, string(bys[lastIndex:]))
+		}
+	}
+
+	if len(valueQueue) == 0 {
+		return strings.ToLower(vStr)
+	}
+	return strings.ToLower(strings.Join(valueQueue, "_"))
 }
 
 // CamelCase camelcase --> snake case
@@ -108,18 +109,20 @@ func LowerStyle(vStr string) string {
 //
 // snake case --> camelcase
 func CamelCase(vStr string) string {
-	if vLen := len(vStr); vLen > 0 {
-		vQueue := strings.Split(vStr, "_")
-		var newQue []string
-		for _, vQ := range vQueue {
-			vQ = strings.TrimSpace(vQ)
-			if vQ == "" {
-				continue
-			}
-			newQue = append(newQue, Ucfirst(vQ))
-		}
-		vStr = strings.Join(newQue, "")
+	vLen := len(vStr)
+	if vLen == 0 {
+		return ""
 	}
+	vQueue := strings.Split(vStr, "_")
+	var newQue []string
+	for _, vQ := range vQueue {
+		vQ = strings.TrimSpace(vQ)
+		if vQ == "" {
+			continue
+		}
+		newQue = append(newQue, Ucfirst(vQ))
+	}
+	vStr = strings.Join(newQue, "")
 	return vStr
 }
 
@@ -150,11 +153,11 @@ func Render(tpl string, data any) (string, error) {
 		return "", err
 	}
 	var bf bytes.Buffer
-	err2 := temp.Execute(&bf, data)
-	if err2 == nil {
+	err = temp.Execute(&bf, data)
+	if err == nil {
 		return bf.String(), nil
 	}
-	return value, err2
+	return value, err
 }
 
 // Reverse string reverse
@@ -171,34 +174,36 @@ func Reverse(s string) string {
 // PadLeft string pad substring from left.
 func PadLeft(s string, pad string, le int) string {
 	sLen := len(s)
-	if sLen < le {
-		le -= sLen
-		padLen := len(pad)
-		n := math.Ceil(float64(le) / float64(padLen))
-		pref := strings.Repeat(pad, int(n))
-		prefLen := len(pref)
-		if prefLen > le {
-			pref = pref[prefLen-le:]
-		}
-		s = pref + s
+	if sLen >= le {
+		return s
 	}
+	le -= sLen
+	padLen := len(pad)
+	n := math.Ceil(float64(le) / float64(padLen))
+	pref := strings.Repeat(pad, int(n))
+	prefLen := len(pref)
+	if prefLen > le {
+		pref = pref[prefLen-le:]
+	}
+	s = pref + s
 	return s
 }
 
 // PadRight string pad substring from right.
 func PadRight(s string, pad string, le int) string {
 	sLen := len(s)
-	if sLen < le {
-		le -= sLen
-		padLen := len(pad)
-		n := math.Ceil(float64(le) / float64(padLen))
-		end := strings.Repeat(pad, int(n))
-		prefLen := len(end)
-		if prefLen > le {
-			end = end[:le]
-		}
-		s = s + end
+	if sLen >= le {
+		return s
 	}
+	le -= sLen
+	padLen := len(pad)
+	n := math.Ceil(float64(le) / float64(padLen))
+	end := strings.Repeat(pad, int(n))
+	prefLen := len(end)
+	if prefLen > le {
+		end = end[:le]
+	}
+	s = s + end
 	return s
 }
 
@@ -207,15 +212,16 @@ func RandStrBase(base string, length int) string {
 	var s string
 	vLen := len(base)
 
-	if vLen > 0 {
-		var ss []string
-		for i := 0; i < length; i++ {
-			r := rand.New(rand.NewSource(time.Now().UnixNano() + int64(i)))
-			x := r.Intn(vLen)
-			ss = append(ss, base[x:x+1])
-		}
-		s = strings.Join(ss, "")
+	if vLen == 0 {
+		return s
 	}
+	var ss []string
+	for i := 0; i < length; i++ {
+		r := rand.New(rand.NewSource(time.Now().UnixNano() + int64(i)))
+		x := r.Intn(vLen)
+		ss = append(ss, base[x:x+1])
+	}
+	s = strings.Join(ss, "")
 	return s
 }
 

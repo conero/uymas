@@ -465,23 +465,24 @@ func (c *Calc) String() string {
 func FloatSimple(fv string) string {
 	potSig := "."
 	split := strings.Split(fv, potSig)
-	if len(split) == 2 {
-		zero := split[1]
-		// 全0
-		isMatched, _ := regexp.MatchString(`^0+$`, zero)
-		if isMatched {
-			return strings.ReplaceAll(fv, "."+zero, "")
-		}
+	if len(split) != 2 {
+		return fv
+	}
 
-		zeroReg := regexp.MustCompile(`0+$`)
-		if zeroReg.MatchString(zero) {
-			zeroList := zeroReg.FindAllString(zero, -1)
-			if len(zeroList) > 0 {
-				zero = zero[:len(zero)-len(zeroList[0])]
-				return split[0] + "." + zero
-			}
-		}
+	zero := split[1]
+	// 全0
+	isMatched, _ := regexp.MatchString(`^0+$`, zero)
+	if isMatched {
+		return strings.ReplaceAll(fv, "."+zero, "")
+	}
 
+	zeroReg := regexp.MustCompile(`0+$`)
+	if zeroReg.MatchString(zero) {
+		zeroList := zeroReg.FindAllString(zero, -1)
+		if len(zeroList) > 0 {
+			zero = zero[:len(zero)-len(zeroList[0])]
+			return split[0] + "." + zero
+		}
 	}
 
 	return fv

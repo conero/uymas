@@ -57,6 +57,9 @@
 - **logger**
   - feat: 新增Logger.TraceFunc 函数补全trace处理机制
 
+- **str**
+  - pref: `TimeParse` 函数使用 time.ParseInLocation 代替以消除时区造成的误差
+
 
 
 

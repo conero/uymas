@@ -17,7 +17,7 @@ func TimeParse(tmStr string) (time.Time, error) {
 	if err != nil {
 		return time.Time{}, err
 	}
-	return time.Parse(layout, tmStr)
+	return time.ParseInLocation(layout, tmStr, time.Local)
 }
 
 type TimeLayoutDetector struct {
@@ -33,31 +33,32 @@ func (c *TimeLayoutDetector) timeDetect(tm string) string {
 	}
 	tmSpl := ":"
 	// time
-	if strings.Contains(tm, tmSpl) {
-		for j, ss := range strings.Split(tm, tmSpl) {
-			ssLn := len(ss)
-			if j == 0 {
-				if ssLn == 2 {
-					layout += "15"
-				} else if ssLn == 1 {
-					layout += "3"
-				}
-			} else if j == 1 {
-				if ssLn == 2 {
-					layout += tmSpl + "04"
-				} else if ssLn == 1 {
-					layout += tmSpl + "4"
-				}
-			} else if j == 2 {
-				if ssLn == 2 {
-					layout += tmSpl + "05"
-				} else if ssLn == 1 {
-					layout += tmSpl + "5"
-				}
+	if !strings.Contains(tm, tmSpl) {
+		return layout
+	}
+
+	for j, ss := range strings.Split(tm, tmSpl) {
+		ssLn := len(ss)
+		if j == 0 {
+			if ssLn == 2 {
+				layout += "15"
+			} else if ssLn == 1 {
+				layout += "3"
+			}
+		} else if j == 1 {
+			if ssLn == 2 {
+				layout += tmSpl + "04"
+			} else if ssLn == 1 {
+				layout += tmSpl + "4"
+			}
+		} else if j == 2 {
+			if ssLn == 2 {
+				layout += tmSpl + "05"
+			} else if ssLn == 1 {
+				layout += tmSpl + "5"
 			}
 		}
 	}
-
 	return layout
 }
 
