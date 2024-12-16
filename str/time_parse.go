@@ -12,7 +12,7 @@ func TimeParse(tmStr string) (time.Time, error) {
 	if err != nil {
 		return time.Time{}, err
 	}
-	return time.Parse(layout, tmStr)
+	return time.ParseInLocation(layout, tmStr, time.Local)
 }
 
 type TimeLayoutDetector struct {

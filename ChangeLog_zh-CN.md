@@ -43,10 +43,12 @@
 
 - **cli**
   - pref: 系统自定 help 命令，为空时对其进行介绍而非空
-
 - **secure/aesutil**
   - feat: 新增 Aes CBC、CFB、GCM、CTR，OFB模式加解密函数
   - feat: 新增 Pkcs#7、Zero Padding，用于填充或还原变量
+- **str**
+  - pref: TimeParse 字符串解析日期使用本地时间代替UTC时间，以避免因时区引起的误差
+
 
 
 
