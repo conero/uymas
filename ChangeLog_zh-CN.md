@@ -43,6 +43,9 @@
 
 - **cli**
   - pref: 系统自定 help 命令，为空时对其进行介绍而非空
+- **secure**
+  - pref: 新增函数 HashString、HashHmacString用于简化hash生成
+
 - **secure/aesutil**
   - feat: 新增 Aes CBC、CFB、GCM、CTR，OFB模式加解密函数
   - feat: 新增 Pkcs#7、Zero Padding，用于填充或还原变量
