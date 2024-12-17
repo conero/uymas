@@ -142,3 +142,11 @@ func main() {
 }
 ```
 
+
+
+#### 压缩
+
+- 初步使用 build 参数 `-ldflags="-w -s"` 对编译文件进行压缩
+
+- 可使用如 [upx](https://github.com/upx/upx) 工具直接对二进制进行压缩（可大幅度压缩文件大小），初步测试无异常
+- 使用 [tinygo](https://github.com/tinygo-org/tinygo) 打包文件（编译可能存在问题）
