@@ -32,6 +32,7 @@ type Register[T any] struct {
 	Config        Config
 	Handler       Handler
 	Call          func(T, ArgsParser)
+	globalHelp    CommandOptional
 }
 
 // Command When registering a method you must specify commands to run more than one.
@@ -310,4 +311,9 @@ func (r *Register[T]) Run(args ...string) error {
 func (r *Register[T]) RunArgs(args ArgsParser) error {
 	r.args = args
 	return r.Run()
+}
+
+func (r *Register[T]) GlobalHelp(cp CommandOptional) Application[T] {
+	r.globalHelp = cp
+	return r
 }

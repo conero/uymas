@@ -36,6 +36,7 @@ type Application[T any] interface {
 	Run(args ...string) error
 	// RunArgs run the command line program by setting Args
 	RunArgs(args ArgsParser) error
+	GlobalHelp(cp CommandOptional) Application[T]
 }
 
 // Fn command line registration function

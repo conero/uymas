@@ -24,6 +24,7 @@ type Option struct {
 	FieldName   string // remember fieldName when gen by struct reflect
 	StructGen   bool   // parse the struct into documents and values
 	StructItems []Option
+	IsGlobal    bool // global means that the option belong to all commands or entry command
 }
 
 // GetName Gets option names automatically compatible with aliases or actual names
@@ -334,6 +335,11 @@ func (c CommandOptional) NoValid() CommandOptional {
 	return c
 }
 
+func (c CommandOptional) SetHelp(help string) CommandOptional {
+	c.Help = help
+	return c
+}
+
 func (c CommandOptional) DataOption() *Option {
 	if c.dataOption != nil {
 		return c.dataOption
@@ -348,9 +354,24 @@ func (c CommandOptional) DataOption() *Option {
 	return nil
 }
 
+func (c CommandOptional) AddOption(options ...Option) CommandOptional {
+	c.Options = append(c.Options, options...)
+	return c
+}
+
 // Help Used to set help information
 func Help(help string, options ...Option) CommandOptional {
 	return CommandOptional{Help: help, Options: options}
+}
+
+// HelpGlobal Used to set global help information
+func HelpGlobal(options ...Option) CommandOptional {
+	for i, opt := range options {
+		if !opt.IsGlobal {
+			options[i].IsGlobal = true
+		}
+	}
+	return CommandOptional{Options: options}
 }
 
 // HelpSub Used to set help information for the subcommand for top command
