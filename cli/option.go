@@ -96,8 +96,7 @@ func (c CommandOptional) GetConfig() Config {
 	return *c.config
 }
 
-// OptionHelpMsg generate an options help document through the options parameters you set
-func (c CommandOptional) OptionHelpMsg(levels ...int) string {
+func (c CommandOptional) GenOptionHelpMsg(isAll bool, levels ...int) string {
 	level := rock.Param(0, levels...)
 	pref := ""
 	if level > 0 {
@@ -109,6 +108,9 @@ func (c CommandOptional) OptionHelpMsg(levels ...int) string {
 		if opt.IsData {
 			var vDataOpt = opt
 			c.dataOption = &vDataOpt
+			continue
+		}
+		if !isAll && opt.IsGlobal {
 			continue
 		}
 		var optList []string
@@ -183,6 +185,11 @@ func (c CommandOptional) OptionHelpMsg(levels ...int) string {
 		lines = append(lines, line)
 	}
 	return strings.Join(lines, "\n")
+}
+
+// OptionHelpMsg generate an options help document through the options parameters you set
+func (c CommandOptional) OptionHelpMsg(levels ...int) string {
+	return c.GenOptionHelpMsg(false, levels...)
 }
 
 func (c CommandOptional) SubCommandHelpMsg(levels ...int) string {

@@ -42,7 +42,7 @@
 > 实现程序版本的稳定度，为发布做准备
 
 - **cli**
-  - feat: Option新增`IsGlobal`属性，以及`GlobalHelp`方法用于配套设置值
+  - feat: Option新增`IsGlobal`属性，以及`GlobalHelp`方法用于配套设置值和文档生成支持
   - pref: 系统自定 help 命令，为空时对其进行介绍而非空
 - **secure**
   - pref: 新增函数 HashString、HashHmacString用于简化hash生成

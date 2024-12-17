@@ -13,5 +13,11 @@ func main() {
 	app.Command(func(parser cli.ArgsParser) {
 		fmt.Println("用户自定义命令，JC")
 	}, "cust", cli.Help("用户自定义命令"))
+	// 全局配置文件
+	app.GlobalHelp(cli.HelpGlobal(cli.Option{
+		Name:  "version",
+		Alias: []string{"V"},
+		Help:  "查看版本信息",
+	}))
 	lgr.ErrorIf(app.Run())
 }

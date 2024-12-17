@@ -86,12 +86,8 @@ func (s *StructCmd) parseStructOption() {
 }
 
 func (s *StructCmd) GetOptions(cmd string) *StructCmdAttr {
-	options := s.globalOption
 	vAttr, exist := s.commandAttr[cmd]
 	if exist {
-		if len(options) > 0 {
-			vAttr.ChildOption = append(vAttr.ChildOption, options...)
-		}
 		return &vAttr
 	}
 	return nil
@@ -218,6 +214,10 @@ func AsCommand(vStruct any, cfgs ...cli.Config) cli.Application[any] {
 			evl.Command(runnable, vCmd)
 		}
 
+	}
+	// globalOption
+	if len(pCmd.globalOption) > 0 {
+		evl.GlobalHelp(cli.HelpGlobal(pCmd.globalOption...))
 	}
 	return evl
 }

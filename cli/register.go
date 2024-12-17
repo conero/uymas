@@ -173,6 +173,12 @@ func (r *Register[T]) GetHelp(cmd string) (helpMsg string, exits bool) {
 			lines = append(lines, line)
 		}
 		helpMsg = strings.Join(lines, "\n")
+
+		// the global help
+		globalMsg := r.globalHelp.GenOptionHelpMsg(true)
+		if globalMsg != "" {
+			helpMsg += "\n\n全局选项如:\n" + globalMsg
+		}
 		exits = true
 		return
 	}
@@ -314,6 +320,8 @@ func (r *Register[T]) RunArgs(args ArgsParser) error {
 }
 
 func (r *Register[T]) GlobalHelp(cp CommandOptional) Application[T] {
-	r.globalHelp = cp
+	globalCo := r.globalHelp
+	globalCo = globalCo.AddOption(cp.Options...)
+	r.globalHelp = globalCo
 	return r
 }
