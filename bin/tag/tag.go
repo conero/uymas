@@ -143,7 +143,7 @@ func ParseTag(vTag string) *Tag {
 		idx := strings.Index(s, tagKvEqualLimiter)
 		var key string
 		var value string
-		values, _ := tg.Values[key]
+		values := tg.Values[key]
 		if idx > -1 {
 			key = strings.TrimSpace(s[:idx])
 			value = strings.TrimSpace(s[idx+1:])

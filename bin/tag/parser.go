@@ -161,7 +161,7 @@ func (c *Parser) parseCommandTags(tg *Tag, field reflect.Value) {
 	if c.commandsTagDick == nil {
 		c.commandsTagDick = map[string][]Tag{}
 	}
-	tDick, _ := c.commandsTagDick[tg.Name]
+	tDick := c.commandsTagDick[tg.Name]
 	targetFld := field
 	if field.Kind() == reflect.Ptr {
 		targetFld = targetFld.Elem()
@@ -318,7 +318,7 @@ func (c *Parser) genCli() {
 
 // valid command like option
 func (c *Parser) validCommand(cc *bin.Arg, tag Tag) bool {
-	if c.commandsTagDick == nil || len(c.commandsTagDick) == 0 {
+	if len(c.commandsTagDick) == 0 {
 		return true
 	}
 	cTag, exist := c.commandsTagDick[tag.Name]
@@ -360,7 +360,7 @@ func (c *Parser) CommandTag(name string) (tag *Tag, option []Tag) {
 	}
 
 	if tag != nil && c.commandsTagDick != nil {
-		option, _ = c.commandsTagDick[tag.Name]
+		option = c.commandsTagDick[tag.Name]
 	}
 	return
 }

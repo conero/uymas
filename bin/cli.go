@@ -543,7 +543,6 @@ func (cli *CLI) router(cc *Arg) {
 
 	if !isRouterMk {
 		defaultUnmatchFn(cc)
-		isRouterMk = false
 	}
 }
 

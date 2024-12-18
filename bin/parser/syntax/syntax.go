@@ -73,7 +73,7 @@ func NumberOpera(equation string) float64 {
 			equation = strings.TrimSpace(equation)
 			// `+`/`-`
 			for _, vAs := range subtractReg.FindAllString(equation, -1) {
-				var v float64 = 0
+				var v float64
 				if strings.Contains(vAs, "+") {
 					queue := strings.Split(vAs, "+")
 					vqCk := len(queue)
