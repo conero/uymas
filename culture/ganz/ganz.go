@@ -175,6 +175,9 @@ func TimeParse(tm time.Time) {
 	dzTimeLs := DzTimeList()
 
 	month := tm.Month()
+	if len(dzTimeLs) <= int(month) {
+		return
+	}
 	mth := dzTimeLs[month]
 
 	//hour := tm.Hour()

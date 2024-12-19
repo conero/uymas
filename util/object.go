@@ -324,15 +324,15 @@ func (obj Object) AssignMap(targetMap any, srcMapOrStruct any) {
 			}
 		}
 	} else if sKind == reflect.Struct {
-		sVal = sVal.Elem()
+		//sVal = sVal.Elem()
 		num := sVal.NumField()
 		sTp := reflect.TypeOf(srcMapOrStruct)
 		for i := 0; i < num; i++ {
 			field := sVal.Field(i)
 			fieldKind := field.Kind()
-			tField := sTp.Elem()
+			tField := sTp.Field(i)
 			if fieldKind != reflect.Struct && fieldKind != reflect.Map {
-				tVal.SetMapIndex(reflect.ValueOf(tField.Name()), field)
+				tVal.SetMapIndex(reflect.ValueOf(tField.Name), field)
 			}
 		}
 	}
@@ -402,7 +402,9 @@ func StructToMap(value any, ignoreKeys ...string) map[string]any {
 			if str.InQuei(name, ignoreKeys) > -1 {
 				continue
 			}
-			vMap[name] = field.Interface()
+			if field.CanInterface() {
+				vMap[name] = field.Interface()
+			}
 		}
 	}
 	return vMap

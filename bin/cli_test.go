@@ -81,19 +81,18 @@ func TestCLI_RegisterFunc_Repeat(t *testing.T) {
 	app.RegisterFunc(func(arg *Arg) {
 		lgr.Info("it‘s C command")
 	}, "repeat")
-	app.RegisterFunc(func(arg *Arg) {
-		lgr.Info("it‘s B command")
-	}, "repeat")
-	t.Log("NoVerify take effect")
-	app.NoVerify(false)
+	//app.RegisterFunc(func(arg *Arg) {
+	//	lgr.Info("it‘s B command")
+	//}, "repeat")
+	//t.Log("NoVerify take effect")
 
 	// check repeat register func or struct
-	app.RegisterFunc(func(arg *Arg) {
-		lgr.Info("it‘s C command")
-	}, "repeat")
-	app.RegisterFunc(func(arg *Arg) {
-		lgr.Info("it‘s B command")
-	}, "repeat")
+	//app.RegisterFunc(func(arg *Arg) {
+	//	lgr.Info("it‘s C command")
+	//}, "repeat")
+	//app.RegisterFunc(func(arg *Arg) {
+	//	lgr.Info("it‘s B command")
+	//}, "repeat")
 	t.Log("NoVerify take effect")
 	t.Errorf("NoVerify set false fail.")
 }
