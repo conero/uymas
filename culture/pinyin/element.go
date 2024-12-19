@@ -194,9 +194,7 @@ func polyphonyTraverse(ls List, next int, queue []string) [][]string {
 				continue
 			}
 
-			for _, cn := range polyphonyTraverse(ls, j+1, append(queue, cv)) {
-				tcbNext = append(tcbNext, cn)
-			}
+			tcbNext = append(tcbNext, polyphonyTraverse(ls, j+1, append(queue, cv))...)
 		}
 
 		tmpChildBranch = tcbNext

@@ -107,10 +107,10 @@ func ParseValue(v string) any {
 					}
 				}
 			} else if strings.Contains(v, ",") { // []int
-				sQue := []string{}
+				var sQue []string
 				if matched, err := regexp.MatchString(`^[-\d]+[-\d,]+[-\d]+$`, v); err == nil && matched {
 					sQue = strings.Split(v, ",")
-					iQue := []int{}
+					var iQue []int
 					for _, v0 := range sQue {
 						if i, err := strconv.Atoi(v0); err == nil {
 							iQue = append(iQue, i)

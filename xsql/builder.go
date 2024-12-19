@@ -282,11 +282,11 @@ func Table(table any, alias ...string) *Builder {
 		panic("if params of Table is invalid, `table == nil`")
 	}
 	c := &Builder{}
-	switch table.(type) {
+	switch vTable := table.(type) {
 	case string:
-		c.table = table.(string)
+		c.table = vTable
 	case []string:
-		tables := table.([]string)
+		tables := vTable
 		if len(tables) != 2 {
 			panic("if param of Table.table is []string, format should be `(table, alias string)`")
 		}
