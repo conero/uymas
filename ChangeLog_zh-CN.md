@@ -31,7 +31,7 @@
 - [x] v2.0 为旧版本v1.x的重大重构版本，包结构等进行重
 - [x] doc 自动文档设计，计划在 v2.0.0-alpha.3 中实现 `#240824`
 - [ ] `#240915` cli.Option 执行 map 类型，gen 亦支持 map 解析
-- [ ] `#240924` cmd/uymas2 正式发布后应更名，使其不与 v1 版的 uymas 混淆
+- [x] `#240924` cmd/uymas2 正式发布后应更名，使其不与 v1 版的 uymas 混淆（更名为 jahn）
 - [ ] `#241019` 系统常量或函数等加入关键的文档注释，使其不忘记具体作用或原由
 - [ ] `#241019` 包 `cli/gen` *ArgsTagData* 等一些列常量命名与时间额的功能含义比较混乱，需对命令进行规范化
 
@@ -46,12 +46,14 @@
   - pref: 系统自定 help 命令，为空时对其进行介绍而非空
 - **secure**
   - pref: 新增函数 HashString、HashHmacString用于简化hash生成
-
 - **secure/aesutil**
   - feat: 新增 Aes CBC、CFB、GCM、CTR，OFB模式加解密函数
   - feat: 新增 Pkcs#7、Zero Padding，用于填充或还原变量
 - **str**
   - pref: TimeParse 字符串解析日期使用本地时间代替UTC时间，以避免因时区引起的误差
+- **cmd/jahn**
+  - break: 将uymas2更名为 jahn
+
 
 
 
