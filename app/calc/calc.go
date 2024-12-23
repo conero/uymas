@@ -308,18 +308,17 @@ func (c *Calc) Exp(eq string) string {
 
 	index := c.expReg.FindAllStringIndex(eq, -1)
 	size := len(index)
-	sLen := len(eq)
 	for x, idx := range index {
-		end := sLen
+		var sLen int
 		if size > x+1 {
-			end = index[x+1][0]
+			sLen = index[x+1][0]
 		} else {
-			end = strings.LastIndex(eq, ")") + 1
+			sLen = strings.LastIndex(eq, ")") + 1
 		}
 		name := eq[idx[0] : idx[1]-1]
 
 		// 获取原始表达式
-		rawEq := eq[idx[0]:end]
+		rawEq := eq[idx[0]:sLen]
 		braB := strings.Count(rawEq, "(")
 		braE := strings.Count(rawEq, ")")
 

@@ -94,7 +94,7 @@ func ParseValue(v string) any {
 			// 数字解析
 			reg := regexp.MustCompile(`^[-]*[\d.]+$`)
 			if reg.MatchString(v) {
-				if strings.Index(v, ".") > -1 {
+				if strings.Contains(v, ".") {
 					// float64
 					if f64, er := strconv.ParseFloat(v, 64); er == nil {
 						value = f64
@@ -106,8 +106,8 @@ func ParseValue(v string) any {
 						parseMk = true
 					}
 				}
-			} else if strings.Index(v, ",") > -1 { // []int
-				sQue := []string{}
+			} else if strings.Contains(v, ",") { // []int
+				var sQue []string
 				if matched, err := regexp.MatchString(`^[-\d]+[-\d,]+[-\d]+$`, v); err == nil && matched {
 					sQue = strings.Split(v, ",")
 					iQue := []int{}
@@ -118,7 +118,7 @@ func ParseValue(v string) any {
 					}
 					value = iQue
 					parseMk = true
-				} else if strings.Index(v, ".") > -1 {
+				} else if strings.Contains(v, ".") {
 					// []float64
 					if matched, er := regexp.MatchString(`^[-\d.]+[-\d,.]{3,}[-\d,.]{3,}$`, v); er == nil && matched {
 						sQue := strings.Split(v, ",")
@@ -143,8 +143,8 @@ func ParseValue(v string) any {
 						vt0 = strings.Replace(vt0, v1, v2, -1)
 					}
 
-					if strings.Index(vt0, ",") > -1 {
-						ss := []string{}
+					if strings.Contains(vt0, ",") {
+						var ss []string
 						for _, tV := range strings.Split(vt0, ",") {
 							tV = StrClear(tV)
 							tV = strings.ReplaceAll(tV, rpls, ",")

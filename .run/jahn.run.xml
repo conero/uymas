@@ -1,11 +1,11 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="u2" type="GoApplicationRunConfiguration" factoryName="Go Application">
-    <module name="uymas" />
+  <configuration default="false" name="jahn" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="uymas-v2" />
     <working_directory value="$PROJECT_DIR$" />
     <kind value="PACKAGE" />
-    <package value="gitee.com/conero/uymas/v2/cmd/uymas2" />
+    <package value="gitee.com/conero/uymas/v2/cmd/jahn" />
     <directory value="$PROJECT_DIR$" />
-    <filePath value="$PROJECT_DIR$/cmd/uymasv2/main.go" />
+    <filePath value="$PROJECT_DIR$/cmd/uymas2/main.go" />
     <output_directory value="$PROJECT_DIR$" />
     <method v="2" />
   </configuration>

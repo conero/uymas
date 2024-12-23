@@ -220,6 +220,7 @@ func StructDress(vStruct reflect.Value, excludes ...string) (inheritOpts []cli.O
 			continue
 		}
 		option.FieldName = sField.Name
+		//@todo optimize code follow business
 		var name string
 		if option == nil {
 			if name == "" {

@@ -167,7 +167,6 @@ func (c *Scanner) parseKv(hdlLn string) {
 	value := c.supportVariable(kv.value)
 	vAny := parseValue(value)
 	c.saveData(kv.key, vAny)
-	return
 }
 
 func (c *Scanner) saveData(key string, value any) {

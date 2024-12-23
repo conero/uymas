@@ -20,28 +20,24 @@ func (hu HttpUtil) PostForm(rUrl string, files map[string]string, data map[strin
 	bufWrite := multipart.NewWriter(buf)
 
 	// 文件
-	if files != nil {
-		for flKey, flName := range files {
-			fw, er := bufWrite.CreateFormFile(flKey, filepath.Base(flName))
-			if er != nil {
-				panic(er)
-			}
-			fh, er := os.Open(flName)
-			if er != nil {
-				panic(er)
-			}
-
-			io.Copy(fw, fh)
-
-			fh.Close()
+	for flKey, flName := range files {
+		fw, er := bufWrite.CreateFormFile(flKey, filepath.Base(flName))
+		if er != nil {
+			panic(er)
 		}
+		fh, er := os.Open(flName)
+		if er != nil {
+			panic(er)
+		}
+
+		io.Copy(fw, fh)
+
+		fh.Close()
 	}
 
 	// 数据库
-	if data != nil {
-		for dk, dv := range data {
-			bufWrite.WriteField(dk, dv)
-		}
+	for dk, dv := range data {
+		bufWrite.WriteField(dk, dv)
 	}
 
 	//获取请求Content-Type类型,后面有用

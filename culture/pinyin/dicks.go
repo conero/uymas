@@ -159,7 +159,6 @@ func GetLinesFromFile(filename string) []string {
 	if err == nil {
 		buf := bufio.NewReader(fh)
 		var lines []string
-		var linesCase []string
 		for {
 			line, err2 := buf.ReadString('\n')
 			line = strings.TrimSpace(line)
@@ -173,7 +172,6 @@ func GetLinesFromFile(filename string) []string {
 			}
 			if line != "" {
 				lines = append(lines, line)
-				linesCase = append(linesCase, line)
 			}
 			// 错误
 			if err2 != nil {
@@ -190,7 +188,6 @@ func GetLinesFromByte(content []byte) []string {
 	bf := bytes.NewBuffer(content)
 	buf := bufio.NewReader(bf)
 	var lines []string
-	var linesCase []string
 	for {
 		line, err2 := buf.ReadString('\n')
 		line = strings.TrimSpace(line)
@@ -204,7 +201,6 @@ func GetLinesFromByte(content []byte) []string {
 		}
 		if line != "" {
 			lines = append(lines, line)
-			linesCase = append(linesCase, line)
 		}
 		// 错误
 		if err2 != nil {

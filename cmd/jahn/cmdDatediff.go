@@ -58,7 +58,7 @@ func cmdDatediff(args cli.ArgsParser) {
 		lgr.Info("当前时间：%s, 运算：%s，得\n    %s",
 			ansi.Style(vTm.Format(time.DateTime), ansi.BlackBr),
 			ansi.Style(add+"("+dura.String()+")", ansi.BlackBr),
-			ansi.Style(newTm.Format(time.DateTime)), ansi.GreenBr)
+			ansi.Style(newTm.Format(time.DateTime), ansi.GreenBr))
 		return
 	}
 

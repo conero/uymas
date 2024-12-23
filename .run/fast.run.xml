@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="fast" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="uymas-v2" />
+    <working_directory value="$PROJECT_DIR$" />
+    <kind value="PACKAGE" />
+    <package value="gitee.com/conero/uymas/v2/example/cli/fast" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/example/cli/fast/main.go" />
+    <output_directory value="$PROJECT_DIR$" />
+    <method v="2" />
+  </configuration>
+</component>

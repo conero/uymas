@@ -9,4 +9,14 @@
     <output_directory value="$PROJECT_DIR$" />
     <method v="2" />
   </configuration>
+  <configuration default="false" name="evolve" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="uymas-v2" />
+    <working_directory value="$PROJECT_DIR$" />
+    <kind value="PACKAGE" />
+    <package value="gitee.com/conero/uymas/v2/example/cli/evolve" />
+    <directory value="$PROJECT_DIR$" />
+    <filePath value="$PROJECT_DIR$/example/cli/evolve/main.go" />
+    <output_directory value="$PROJECT_DIR$" />
+    <method v="2" />
+  </configuration>
 </component>
