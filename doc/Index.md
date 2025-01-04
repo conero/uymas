@@ -10,7 +10,11 @@
 
 ### 环境变量
 
-- `UYMAS_LGR_LEVEL`  用于设置 *logger/lgr* 的输出日志
+- **logger/lgr**
+  - `UYMAS_LGR_LEVEL`  用于设置 *logger/lgr* 的输出日志
+  - `UYMAS_TMP_MARK`   设日志调试标记标题
+
+
 
 
 

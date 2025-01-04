@@ -1,6 +1,7 @@
 package fs
 
 import (
+	"gitee.com/conero/uymas/v2/rock"
 	"gitee.com/conero/uymas/v2/str"
 	"os"
 	"strings"
@@ -59,8 +60,14 @@ func StdPathList(paths ...string) []string {
 	return newPath
 }
 
-// GetEnvOr get env value or set default
-func GetEnvOr(key string, orParam string) string {
+// GetenvOr get env value or set default.
+//
+// due to the convention that environment variable key values are all uppercase, the default setting is all uppercase
+func GetenvOr(key string, orParam string, isUpperParams ...bool) string {
+	isUpper := rock.Param(true, isUpperParams...)
+	if isUpper {
+		key = strings.ToUpper(key)
+	}
 	value := os.Getenv(key)
 	if value != "" {
 		return value

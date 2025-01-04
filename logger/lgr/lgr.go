@@ -16,6 +16,7 @@ import (
 	"fmt"
 	"gitee.com/conero/uymas/v2/cli/ansi"
 	"gitee.com/conero/uymas/v2/logger"
+	"gitee.com/conero/uymas/v2/util/fs"
 	"os"
 )
 
@@ -24,13 +25,12 @@ var vLgr *logger.Logger
 const (
 	// EnvLevelKey try set the lgr level by system environment, like `$ export EnvLevelKey=info`
 	EnvLevelKey = "UYMAS_LGR_LEVEL"
+	// EnvMarkKey try set the lgr mark by system environment, like `$ export EnvMarkKey=mark`
+	EnvMarkKey = "UYMAS_TMP_MARK"
 )
 
 func init() {
-	lvl := os.Getenv(EnvLevelKey)
-	if lvl == "" {
-		lvl = logger.LevelInfo
-	}
+	lvl := fs.GetenvOr(EnvLevelKey, logger.LevelInfo)
 	vLgr = logger.NewLogger(logger.Config{
 		Level: lvl,
 	})
@@ -97,6 +97,7 @@ func SetFlag(flag int) {
 // TmpMark temporary tags are used for debugging, and debugging should be removed before release
 func TmpMark(mark any, args ...any) {
 	markString := fmt.Sprintf("%v", mark)
-	markString = ansi.Style("<TMark Show DEL> ", ansi.Red, ansi.BkgCyan) + markString
+	markTitle := fs.GetenvOr(EnvMarkKey, "TMark Show DEL")
+	markString = ansi.Style("<"+markTitle+"> ", ansi.Red, ansi.BkgCyan) + markString
 	vLgr.Errorf(markString, args...)
 }
