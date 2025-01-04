@@ -41,6 +41,14 @@
 
 > 最终版本发布
 
+- **v2**
+  - del: 删除没有应用的常量——*TimeLayoutDate*，备注中有
+- **logger/lgr**
+  - feat: 新增函数 `TmpMark` 用于临时调试标记，发布到GIT/SVN后应该删除它（通过搜索定位）
+- **util/fs**
+  - feat: 新增函数 `GetEnvOr` 用于获取环境变量或使用默认值
+
+
 
 
 

@@ -13,6 +13,8 @@ package lgr
 
 import (
 	"errors"
+	"fmt"
+	"gitee.com/conero/uymas/v2/cli/ansi"
 	"gitee.com/conero/uymas/v2/logger"
 	"os"
 )
@@ -90,4 +92,11 @@ func Pref(logPref string) logger.Logger {
 
 func SetFlag(flag int) {
 	vLgr.SetFlags(flag)
+}
+
+// TmpMark temporary tags are used for debugging, and debugging should be removed before release
+func TmpMark(mark any, args ...any) {
+	markString := fmt.Sprintf("%v", mark)
+	markString = ansi.Style("<TMark Show DEL> ", ansi.Red, ansi.BkgCyan) + markString
+	vLgr.Errorf(markString, args...)
 }

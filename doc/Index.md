@@ -8,7 +8,9 @@
 
 
 
+### 环境变量
 
+- `UYMAS_LGR_LEVEL`  用于设置 *logger/lgr* 的输出日志
 
 
 

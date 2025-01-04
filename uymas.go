@@ -10,14 +10,13 @@ package uymas
 // @Author:  Joshua Conero
 
 const (
-	Version        = "2.0.0" //dev is not product but development tag.
-	Release        = "dev"   // dev|20060102
-	Since          = "20181030"
-	Author         = "Joshua Conero"
-	Email          = "conero@163.com"
-	Name           = "uymas"
-	PkgName        = "conero/uymas"
-	TimeLayoutDate = "20060102" // date layout-20060102
+	Version = "2.0.0" //dev is not product but development tag.
+	Release = "dev"   // dev|20060102
+	Since   = "20181030"
+	Author  = "Joshua Conero"
+	Email   = "conero@163.com"
+	Name    = "uymas"
+	PkgName = "conero/uymas/v2"
 )
 
 var (

@@ -58,3 +58,13 @@ func StdPathList(paths ...string) []string {
 	}
 	return newPath
 }
+
+// GetEnvOr get env value or set default
+func GetEnvOr(key string, orParam string) string {
+	value := os.Getenv(key)
+	if value != "" {
+		return value
+	}
+
+	return orParam
+}

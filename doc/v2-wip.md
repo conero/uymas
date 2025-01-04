@@ -34,7 +34,7 @@ ls ./example/cli | foreach{tinygo build -o "./dist/tinygo/$($_.Name).exe" $_}
 - [x] v2.0.0-alpha.3 cli 下命令行工具功能实现和完善（功能初步稳定）
 - [x] v2.0.0-rc.1 功能程序优化，cli 整合以及功能完善
 - [x] v2.0.0-rc.2 uymas2 实现以及cli等优化使其尽可能达到发布标准，加入test使其验证程序（尽可能添加）
-- [ ] v2.0.0-rc.3 功能稳定以及优化
+- [x] v2.0.0-rc.3 功能稳定以及优化
 
 
 
