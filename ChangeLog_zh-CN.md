@@ -48,6 +48,9 @@
 - **util/fs**
   - feat: 新增函数 `GetenvOr` 用于获取环境变量或使用默认值
 
+- **cli/gen**
+  - fix: 修复函数 `StructDress` *isdata* 标签解析失败
+
 
 
 

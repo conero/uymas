@@ -95,6 +95,8 @@ func SetFlag(flag int) {
 }
 
 // TmpMark temporary tags are used for debugging, and debugging should be removed before release
+//
+// to global search keyword `lgr.TmpMark` then remove it.
 func TmpMark(mark any, args ...any) {
 	markString := fmt.Sprintf("%v", mark)
 	markTitle := fs.GetenvOr(EnvMarkKey, "TMark Show DEL")

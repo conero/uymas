@@ -53,14 +53,14 @@ const ArgsOptionNoValid = "notValid"
 const ArgsCmdStructGen = "structGen"
 
 func argsValueCheck(ref reflect.Value) (reflect.Value, error) {
-	isStruct := ref.Kind() == reflect.Struct
+	structMark := ref.Kind() == reflect.Struct
 	isPtr := false
 	if ref.Kind() == reflect.Ptr {
-		isStruct = ref.Elem().Kind() == reflect.Struct
+		structMark = ref.Elem().Kind() == reflect.Struct
 		isPtr = true
 	}
 
-	if !isStruct {
+	if !structMark {
 		return reflect.Value{}, errors.New("data: the param of ArgsDress only support struct")
 	}
 
@@ -271,6 +271,14 @@ func OptionTagParse(vTag string) *cli.Option {
 	}
 
 	option := &cli.Option{}
+	toSetOptionByKeyFn := func(key string) {
+		switch key {
+		case ArgsCmdStructGen:
+			option.StructGen = true
+		case ArgsTagData:
+			option.IsData = true
+		}
+	}
 	for i, s := range strings.Split(vTag, " ") {
 		if !strings.Contains(s, ":") {
 			name := str.Str(s).ClearSpace()
@@ -278,17 +286,12 @@ func OptionTagParse(vTag string) *cli.Option {
 			if i == 0 {
 				option.Alias = strings.Split(name, ",")
 			}
-			if s == ArgsCmdStructGen {
-				option.StructGen = true
-			}
+			toSetOptionByKeyFn(s)
 			continue
 		}
+		toSetOptionByKeyFn(s)
 		if s == ArgsCmdRequired {
-			option.Require = true
 			continue
-		}
-		if s == ArgsTagData {
-			option.IsData = true
 		}
 		if s == ArgsTagNext {
 			option.Next = 1

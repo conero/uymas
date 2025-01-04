@@ -75,7 +75,7 @@ func TestOptionTagParse(t *testing.T) {
 	help := `输入用户指定命令`
 	name := `Joshua\sConero`
 	refDefault := str.Str(name).Unescape()
-	vTag := `name,n required help:` + help + ` default:` + name
+	vTag := `name,n required isdata help:` + help + ` default:` + name
 
 	// case 1
 	opt := OptionTagParse(vTag)
@@ -90,6 +90,9 @@ func TestOptionTagParse(t *testing.T) {
 		}
 		if !rock.ListEq(opt.Alias, []string{"name", "n"}) {
 			t.Errorf("name 命令解析失败，%#v", opt.Alias)
+		}
+		if !opt.IsData {
+			t.Errorf("isdata parse failure")
 		}
 	}
 }
