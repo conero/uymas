@@ -101,15 +101,22 @@ $ [command] [<sub-command>] [<options>]
 
 #### tinygo
 
+> 大于等于 v0.35.0
+
 `Experimental/Try`  尝试实验性支持 [tinygo](https://github.com/tinygo-org/tinygo)
 
 - [ ] **进行中**（since 2022-12-22）
 
-
-
-
-
 - （`"reflect is not fully implemented"`）That Fprintln appears to be using reflection, which is not well supported under tinygo yet. ([E2935](https://github.com/tinygo-org/tinygo/issues/2935))
+
+
+
+```shell
+# 打包实例；powershell 下windows导致中文乱码
+tinygo build -o ./dist/tinygo/jahn.exe ./cmd/jahn/
+```
+
+
 
 
 
