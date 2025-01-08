@@ -14,8 +14,9 @@ type Option struct {
 	Require  bool                    `json:"require"`
 	ValidFn  func(ArgsParser) string `json:"-"`
 	DefValue string                  `json:"defValue"`
-	Help     string                  `json:"help"`
-	Next     int                     `json:"next"`
+	// When the setting value is `-`, the document is not automatically generated
+	Help string `json:"help"`
+	Next int    `json:"next"`
 	// When set, indicates the input data of the option but the command
 	IsData      bool   `json:"isData"`
 	Mark        string `json:"mark"`  // option input name mark for help
