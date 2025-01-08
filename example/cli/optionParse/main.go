@@ -6,6 +6,8 @@ import (
 	"gitee.com/conero/uymas/v2/cli"
 	"gitee.com/conero/uymas/v2/cli/gen"
 	"gitee.com/conero/uymas/v2/logger/lgr"
+	"gitee.com/conero/uymas/v2/rock"
+	"gitee.com/conero/uymas/v2/util"
 )
 
 type optionParse struct {
@@ -16,6 +18,7 @@ type optionParse struct {
 	Off    bool     `cmd:"off default:True help:默认关闭，bool类型展示"`
 	Index  []string `cmd:"index default:[index.html,index.htm] help:服务器支持索引文件"`
 	Number []uint16 `cmd:"number,N default:[52,26,27] help:uint16切片类型测试"`
+	optionHelpPlus
 }
 
 type subOptionX struct {
@@ -26,6 +29,11 @@ type subOptionX struct {
 
 type subOption struct {
 	X subOptionX `cmd:"x structGen help:附加参数选项"`
+}
+
+type optionHelpPlus struct {
+	NoHelp bool `cmd:"no-help help:- default:true"`
+	IsHelp bool `cmd:"is-help default:false help:可设置no-help进行测试"`
 }
 
 func main() {
@@ -49,6 +57,7 @@ func main() {
 		lgr.Info("服务索引: %#v", opt.Index)
 		lgr.Info("切片 u16: %#v", opt.Number)
 		fmt.Println()
+		lgr.Info("all option:\n%s", rock.FormatKv(util.StructToMap(opt)))
 
 	}, "option", cli.Help("选项测试", gen.ArgsDecomposeMust(optionParse{})...))
 

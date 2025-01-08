@@ -43,10 +43,15 @@
 
 - **v2**
   - del: 删除没有应用的常量——*TimeLayoutDate*，备注中有
+- **cli**
+  - feat: 命令根据 Option 自动生成文档时支持参数`-`忽略
+
 - **logger/lgr**
   - feat: 新增函数 `TmpMark` 用于临时调试标记，发布到GIT/SVN后应该删除它（通过搜索定位）
 - **util/fs**
   - feat: 新增函数 `GetenvOr` 用于获取环境变量或使用默认值
+- **util**
+  - pref: 函数 StructToMap 支持继承 struct 所属子字段
 
 - **cli/gen**
   - fix: 修复函数 `StructDress` *isdata* 标签解析失败

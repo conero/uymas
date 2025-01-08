@@ -130,6 +130,10 @@ func (c CommandOptional) GenOptionHelpMsg(isAll bool, levels ...int) string {
 		}
 
 		help := opt.Help
+		//ignore the help doc for option
+		if help == "-" {
+			continue
+		}
 		if help == "" {
 			help = "支持参数选项"
 		}

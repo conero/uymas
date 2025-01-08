@@ -307,29 +307,47 @@ func StructToMap(value any, ignoreKeys ...string) map[string]any {
 		rv = rv.Elem()
 		rt = rv.Type()
 	}
-	if rv.Kind() == reflect.Struct {
-		if rt == nil {
-			rt = reflect.TypeOf(value)
+	if rv.Kind() != reflect.Struct {
+		return nil
+	}
+	if rt == nil {
+		rt = reflect.TypeOf(value)
+	}
+	vMap := map[string]any{}
+	var toSetMapValueFn func(value reflect.Value)
+	toSetMapValueFn = func(value reflect.Value) {
+		if value.Kind() != reflect.Struct {
+			return
 		}
-		vMap := map[string]any{}
-		for i := 0; i < rv.NumField(); i++ {
-			field := rv.Field(i)
+		valueTp := value.Type()
+		for i := 0; i < value.NumField(); i++ {
+			field := value.Field(i)
 			if !field.IsValid() {
 				continue
 			}
-			// Notice: struct lower field also can be scan, and ignore func/ptr.
+			// Notice: struct lower field also can be scanned, and ignore func/ptr.
 			if vKind := field.Kind(); vKind != reflect.Func && vKind != reflect.Ptr {
-				name := rt.Field(i).Name
+				structField := valueTp.Field(i)
+				name := structField.Name
 				//ignore keys
 				if str.InQuei(name, ignoreKeys) > -1 {
+					continue
+				}
+				// determine whether it is a combination inheritance type
+				if structField.Anonymous {
+					toSetMapValueFn(field)
+					continue
+				}
+				if !field.CanInterface() {
 					continue
 				}
 				vMap[name] = field.Interface()
 			}
 		}
-		return vMap
 	}
-	return nil
+
+	toSetMapValueFn(rv)
+	return vMap
 }
 
 // StructToMapLStyle convert Struct field to by Map and key is Lower style, key support `JSON.TAG`.

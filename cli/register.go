@@ -155,6 +155,10 @@ func (r *Register[T]) GetHelp(cmd string) (helpMsg string, exits bool) {
 			meta := r.register[name]
 			reg := meta.Command
 			cmdHelp := reg.Help
+			//ignore the help doc for command
+			if cmdHelp == "-" {
+				continue
+			}
 			if cmdHelp == "" {
 				cmdHelp = "这是 " + name + " 命令（默认）"
 			}
