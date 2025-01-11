@@ -378,8 +378,15 @@ func StructToMapLStyle(value any, ignoreKeys ...string) map[string]any {
 					continue
 				}
 				if tagName, isOk := tField.Tag.Lookup("json"); isOk {
-					if tagName != "-" && tagName != "" {
+					if tagName == "-" {
+						continue
+					}
+					if tagName != "" {
 						name = tagName
+						idx := strings.Index(name, ",")
+						if idx > -1 {
+							name = name[:idx]
+						}
 					}
 				} else {
 					name = str.Str(name).LowerStyle()
