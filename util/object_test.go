@@ -44,7 +44,7 @@ type testObjectMax struct {
 	LsWidth    int       `json:"ls_width"`
 	PageOption string    `json:"page_option"`
 	RouterName string    `json:"router_name"`
-	CreateTime time.Time `json:"create_time"`
+	CreateTime time.Time `json:"create_time,omitempty"`
 	SubObject  testObjectTopMac
 }
 
@@ -279,7 +279,12 @@ func BenchmarkStructToMapLStyle(b *testing.B) {
 }
 
 func TestStructToMapLStyle(t *testing.T) {
-	t.Logf("StructToMapLStyle => %#v", StructToMapLStyle(tom))
+	vMap := StructToMapLStyle(tom)
+	t.Logf("StructToMapLStyle => %#v", vMap)
+	_, exist := vMap["create_time"]
+	if !exist {
+		t.Errorf("StructToMapLStyle json tag fial, like create_time")
+	}
 	t.Logf("StructToMapLStyle => %#v", StructToMapLStyle(tom, "CreateTime", "ID", "SubObject"))
 }
 

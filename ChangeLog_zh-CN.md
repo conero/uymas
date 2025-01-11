@@ -36,6 +36,9 @@
 
 > 版本代码安全修复，以及将 develop 更名为 v1
 
+- **util**
+  - pref: 优化 StructToMapLStyle 引用json tag 时排除`omitempty`等特殊值 
+
 
 
 

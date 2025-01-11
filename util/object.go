@@ -443,6 +443,10 @@ func StructToMapLStyle(value any, ignoreKeys ...string) map[string]any {
 			if tagName, isOk := tField.Tag.Lookup("json"); isOk {
 				if tagName != "-" && tagName != "" {
 					name = tagName
+					idx := strings.Index(name, ",")
+					if idx > -1 {
+						name = name[:idx]
+					}
 				}
 			} else {
 				name = str.LowerStyle(name)
