@@ -164,10 +164,9 @@ func DzTimeList() []DzTime {
 	return cacheDzTimeDick
 }
 
-// TimeParse @todo try and need todo, let make it.
-func TimeParse(tm time.Time) {
+// TimeParse the parsing date is in stem format
+func TimeParse(tm time.Time) string {
 	year := tm.Year()
-	fmt.Println(year)
 	gz, zodiac := CountGzAndZodiac(year)
 
 	dzTimeLs := DzTimeList()
@@ -175,7 +174,5 @@ func TimeParse(tm time.Time) {
 	month := tm.Month()
 	mth := dzTimeLs[month]
 
-	//hour := tm.Hour()
-
-	fmt.Printf("农历%s年（%s年）,%#v\n", gz, zodiac, mth)
+	return fmt.Sprintf("农历%s年（%s年）%s(%s月)%s时\n", gz, zodiac, mth.MonthName, mth.Zodiac, mth.Name)
 }

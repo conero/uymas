@@ -2,8 +2,9 @@ package ganz
 
 import (
 	"fmt"
+	"gitee.com/conero/uymas/v2/str"
+	"strings"
 	"testing"
-	"time"
 )
 
 func TestZodiacList(t *testing.T) {
@@ -161,5 +162,34 @@ func TestDzTimeList(t *testing.T) {
 }
 
 func TestTimeParse(t *testing.T) {
-	TimeParse(time.Now())
+	tm, _ := str.TimeParse("1949-10-01")
+	rel := TimeParse(tm)
+	refSxn, refGzn := "牛年", "己丑"
+
+	toTestFn := func() {
+		if !strings.Contains(rel, refSxn) {
+			t.Errorf("TimeParse 测试失败，不匹配。%s ≠ %s", rel, refSxn)
+		}
+		if !strings.Contains(rel, refGzn) {
+			t.Errorf("TimeParse 测试失败，不匹配。%s ≠ %s", rel, refGzn)
+		}
+	}
+
+	// case
+	toTestFn()
+
+	// case
+	tm, _ = str.TimeParse("1644年04月25日")
+	//t.Logf("tm: %v", tm)
+	rel = TimeParse(tm)
+	refSxn, refGzn = "猴年", "甲申"
+	toTestFn()
+
+	// case
+	// @todo 1368年4月25日 解析错误，待修复
+	tm, _ = str.TimeParse("1368年4月25日")
+	//t.Logf("tm: %v", tm)
+	rel = TimeParse(tm)
+	refSxn, refGzn = "猴年", "戊申"
+	toTestFn()
 }

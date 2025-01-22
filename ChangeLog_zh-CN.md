@@ -31,7 +31,7 @@
 - [x] v2.0 为旧版本v1.x的重大重构版本，包结构等进行重
 - [x] doc 自动文档设计，计划在 v2.0.0-alpha.3 中实现 `#240824`
 - [ ] `#240915` cli.Option 执行 map 类型，gen 亦支持 map 解析
-- [ ] `#240924` cmd/uymas2 正式发布后应更名，使其不与 v1 版的 uymas 混淆
+- [x] `#240924` cmd/uymas2 正式发布后应更名，使其不与 v1 版的 uymas 混淆
 - [ ] `#241019` 系统常量或函数等加入关键的文档注释，使其不忘记具体作用或来源原有
 - [ ] `#241019` 包 `cli/gen` *ArgsTagData* 等一些列常量命名与时间额的功能含义比较混乱，需对命令进行规范化
 - [ ] `#250108` 如 util object 包之类的处理 struct 注意看是否可扩展支持继承类
@@ -46,7 +46,6 @@
   - del: 删除没有应用的常量——*TimeLayoutDate*，备注中有
 - **cli**
   - feat: 命令根据 Option 自动生成文档时支持参数`-`忽略
-
 - **logger/lgr**
   - feat: 新增函数 `TmpMark` 用于临时调试标记，发布到GIT/SVN后应该删除它（通过搜索定位）
 - **util/fs**
@@ -54,9 +53,11 @@
 - **util**
   - pref: 函数 StructToMap 支持继承 struct 所属子字段
   - pref: 优化 StructToMapLStyle 引用json tag 时排除`omitempty`等特殊值
-
 - **cli/gen**
   - fix: 修复函数 `StructDress` *isdata* 标签解析失败
+- **ganz**
+  - feat: 实现函数 TimeParse 对日期的干支解析
+
 
 
 
