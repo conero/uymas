@@ -58,6 +58,9 @@
 - **ganz**
   - feat: 实现函数 TimeParse 对日期的干支解析
 
+- **str**
+  - fix: 修复 TimeLayoutDetector.Parse 如 2006年1月形式解析失败
+
 
 
 

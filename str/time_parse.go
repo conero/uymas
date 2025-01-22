@@ -230,7 +230,7 @@ func (c *TimeLayoutDetector) layoutFmt3() string {
 	ln := len(val)
 	if ln == 2 {
 		layout += "01月"
-	} else if vLn == 2 {
+	} else if ln == 1 {
 		layout += "1月"
 	}
 	if len(queue) > 1 {
@@ -246,7 +246,7 @@ func (c *TimeLayoutDetector) layoutFmt3() string {
 	ln = len(val)
 	if ln == 2 {
 		layout += "02"
-	} else if vLn == 2 {
+	} else if ln == 1 {
 		layout += "2"
 	}
 	if strings.Contains(input, splMon) {
