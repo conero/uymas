@@ -186,7 +186,6 @@ func TestTimeParse(t *testing.T) {
 	toTestFn()
 
 	// case
-	// @todo 1368年4月25日 解析错误，待修复
 	tm, _ = str.TimeParse("1368年4月25日")
 	//t.Logf("tm: %v", tm)
 	rel = TimeParse(tm)

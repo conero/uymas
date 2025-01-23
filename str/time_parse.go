@@ -28,27 +28,32 @@ func (c *TimeLayoutDetector) timeDetect(tm string) string {
 	}
 	tmSpl := ":"
 	// time
-	if strings.Contains(tm, tmSpl) {
-		for j, ss := range strings.Split(tm, tmSpl) {
-			ssLn := len(ss)
-			if j == 0 {
-				if ssLn == 2 {
-					layout += "15"
-				} else if ssLn == 1 {
-					layout += "3"
-				}
-			} else if j == 1 {
-				if ssLn == 2 {
-					layout += tmSpl + "04"
-				} else if ssLn == 1 {
-					layout += tmSpl + "4"
-				}
-			} else if j == 2 {
-				if ssLn == 2 {
-					layout += tmSpl + "05"
-				} else if ssLn == 1 {
-					layout += tmSpl + "5"
-				}
+	if !strings.Contains(tm, tmSpl) {
+		return layout
+	}
+
+	for j, ss := range strings.Split(tm, tmSpl) {
+		ssLn := len(ss)
+		switch j {
+		case 0:
+			switch ssLn {
+			case 2:
+				layout += "15"
+			case 1:
+				layout += "3"
+			}
+		case 1:
+			switch ssLn {
+			case 2:
+				layout += tmSpl + "04"
+			case 1:
+				layout += tmSpl + "4"
+			}
+		case 2:
+			if ssLn == 2 {
+				layout += tmSpl + "05"
+			} else if ssLn == 1 {
+				layout += tmSpl + "5"
 			}
 		}
 	}
@@ -128,7 +133,7 @@ func (c *TimeLayoutDetector) layoutFmt2() string {
 
 	spaceSpl := " "
 	idx := strings.Index(input, spaceSpl)
-	var dtStr, tmStr string = input, ""
+	var dtStr, tmStr = input, ""
 	if idx > -1 {
 		dtStr = input[:idx]
 		tmStr = input[idx+1:]
@@ -167,36 +172,38 @@ func (c *TimeLayoutDetector) layoutFmt2() string {
 	}
 
 	// time detected
-	if tmStr != "" {
-		if idx > -1 {
-			layout += " "
-		}
-		rIdx = 0
-		for {
-			tmLn := len(tmStr)
-			if rIdx == 0 {
-				if tmLn == 6 {
-					layout += "150405"
-					break
-				} else if tmLn >= 2 {
-					layout += "15"
-					tmStr = tmStr[2:]
-				}
-			} else if rIdx == 1 {
-				if tmLn >= 2 {
-					layout += "04"
-					tmStr = tmStr[2:]
-				}
-			} else if rIdx == 2 {
-				if tmLn >= 2 {
-					layout += "05"
-					tmStr = tmStr[2:]
-				}
-			} else {
+	if tmStr == "" {
+		return layout
+	}
+
+	if idx > -1 {
+		layout += " "
+	}
+	rIdx = 0
+	for {
+		tmLn := len(tmStr)
+		if rIdx == 0 {
+			if tmLn == 6 {
+				layout += "150405"
 				break
+			} else if tmLn >= 2 {
+				layout += "15"
+				tmStr = tmStr[2:]
 			}
-			rIdx += 1
+		} else if rIdx == 1 {
+			if tmLn >= 2 {
+				layout += "04"
+				tmStr = tmStr[2:]
+			}
+		} else if rIdx == 2 {
+			if tmLn >= 2 {
+				layout += "05"
+				tmStr = tmStr[2:]
+			}
+		} else {
+			break
 		}
+		rIdx += 1
 	}
 
 	return layout
