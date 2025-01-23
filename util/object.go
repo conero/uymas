@@ -289,7 +289,7 @@ func (obj Object) Keys(value any) []string {
 		for i := 0; i < vn; i++ {
 			field := rt.Field(i)
 			// Get the tag JSON parameter first
-			key := field.Tag.Get("json")
+			key := str.JsonTagName(field.Tag.Get("json"))
 			if key == "" {
 				key = field.Name
 			}

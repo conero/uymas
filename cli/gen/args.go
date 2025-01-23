@@ -147,7 +147,7 @@ func setToStruct(tgt reflect.Value, args cli.ArgsParser) {
 		name := fieldType.Tag.Get(ArgsTagName)
 		tagValue := name
 		if name == "" {
-			name = fieldType.Tag.Get("json")
+			name = str.JsonTagName(fieldType.Tag.Get("json"))
 		}
 		if name == "" {
 			name = str.Str(fieldType.Name).LowerStyle()
@@ -224,7 +224,7 @@ func StructDress(vStruct reflect.Value, excludes ...string) (inheritOpts []cli.O
 		var name string
 		if option == nil {
 			if name == "" {
-				name = sField.Tag.Get("json")
+				name = str.JsonTagName(sField.Tag.Get("json"))
 			}
 			if name == "" {
 				name = str.Str(sField.Name).LowerStyle()
