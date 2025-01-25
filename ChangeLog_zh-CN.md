@@ -63,6 +63,14 @@
 - **culture/digit**
   - feat: 实现函数 ToChnUpper 用于将数字转换为整形
 
+- **app/calc**
+  - pref: 函数及常量重命名`CalcEq -> Eq`，`CalcAccuracy->Accuracy`
+
+- **app/scan**
+  - pref: 将fmt.Print 错误日志用 `lgr.ErrorIf(err)` 输出
+
+- **app/storage**
+  - pref: 删除 `Any` 并用内置 any 代替
 
 
 

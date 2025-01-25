@@ -3,6 +3,7 @@ package scan
 
 import (
 	"fmt"
+	"gitee.com/conero/uymas/v2/logger/lgr"
 	"gitee.com/conero/uymas/v2/util/fs"
 	"os"
 	"regexp"
@@ -104,7 +105,7 @@ func (ds *DirScanner) Scan() error {
 func (ds *DirScanner) scanRecursion(vDir string, depth int) int64 {
 	dirEntries, err := os.ReadDir(vDir)
 	if err != nil {
-		fmt.Println(err)
+		lgr.ErrorIf(err)
 		return 0
 	}
 	isTopClass := false
@@ -207,7 +208,7 @@ func (ds *DirScanner) ScanParallel() error {
 func (ds *DirScanner) scanRecursionParallel(vDir string, depth int) int64 {
 	dirEntries, err := os.ReadDir(vDir)
 	if err != nil {
-		fmt.Println(err)
+		lgr.Error(err.Error())
 		return 0
 	}
 	isTopClass := false

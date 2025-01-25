@@ -72,7 +72,7 @@ type XmlInfo struct {
 	Enter   XIEnter
 }
 
-// Url the the repository url
+// Url the repository url
 func (x *XmlInfo) Url() string {
 	return x.Enter.Url
 }

@@ -13,7 +13,7 @@ import (
 type Lite struct {
 	variable string
 	vType    string // data type
-	anyValue Any    // the true map data
+	anyValue any    // the true map data
 }
 
 // NewLite new literal variable
@@ -75,7 +75,7 @@ func (lite *Lite) judgeType() {
 }
 
 // GetAny literal turn on
-func (lite *Lite) GetAny() Any {
+func (lite *Lite) GetAny() any {
 	value := lite.variable
 	return value
 }

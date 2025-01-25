@@ -49,7 +49,7 @@ type log struct {
 
 // test to get the format string
 func (lg log) format() {
-	sQue := []string{}
+	var sQue []string
 	for _, d := range lg.Enter {
 		s := `{"revision": "` + d.Revision + `", "author": "` + d.Author + `", "date": "` + d.Date + `", "msg": "` + d.Msg + `"}`
 		sQue = append(sQue, s)

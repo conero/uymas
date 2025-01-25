@@ -25,7 +25,7 @@ func Version() string {
 	return out.String()
 }
 
-// Call call the system command
+// Call the system command
 func Call(args ...string) (string, error) {
 	c := exec.Command(CliName, args...)
 	var out bytes.Buffer

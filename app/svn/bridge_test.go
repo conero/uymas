@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-var _testPath string = "D:/server/zmapp/mci600a/"
+var _testPath = "D:/server/zmapp/mci600a/"
 
 // @Date：   2018/12/6 0006 13:38
 // @Author:  Joshua Conero

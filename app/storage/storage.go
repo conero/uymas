@@ -9,14 +9,11 @@ import (
 	"gitee.com/conero/uymas/v2"
 )
 
-// Any the any type of the data
-type Any any
-
 // Kv the Kv style data
-type Kv map[Any]Any
+type Kv map[any]any
 
 // Table the list of table
-type Table []Any
+type Table []any
 
 const (
 	LiteralInt    = "int"   // golang type: int
@@ -40,7 +37,7 @@ type Storage struct {
 	data      Kv
 }
 
-func (store *Storage) GetValue(key Any) Any {
+func (store *Storage) GetValue(key any) any {
 	value, has := store.data[key]
 	if has {
 		return value
@@ -48,17 +45,17 @@ func (store *Storage) GetValue(key Any) Any {
 	return nil
 }
 
-func (store *Storage) SetValue(key, value Any) *Storage {
+func (store *Storage) SetValue(key, value any) *Storage {
 	store.data[key] = value
 	return store
 }
 
-func (store *Storage) hasKey(key Any) bool {
+func (store *Storage) hasKey(key any) bool {
 	_, has := store.data[key]
 	return has
 }
 
-func (store *Storage) DelKey(key Any) bool {
+func (store *Storage) DelKey(key any) bool {
 	if store.hasKey(key) {
 		delete(store.data, key)
 		return true

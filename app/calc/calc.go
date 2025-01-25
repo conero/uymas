@@ -11,7 +11,7 @@ import (
 	"strings"
 )
 
-const CalcAccuracy int8 = 7
+const Accuracy int8 = 7
 
 var (
 	cacheCalc *Calc
@@ -49,7 +49,7 @@ type Calc struct {
 // support `f8,exp` to set .Accuracy
 func NewCalc(equality string) *Calc {
 	idx := strings.Index(equality, ",")
-	accVal := CalcAccuracy
+	accVal := Accuracy
 	if idx > -1 {
 		accStr := strings.ToLower(equality[:idx])
 		if strings.Index(accStr, "f") == 0 {
@@ -371,7 +371,7 @@ func (c *Calc) Exp(eq string) string {
 func (c *Calc) expCalc(name, eq string) float64 {
 	eqClear := eq[len(name)+1 : len(eq)-1]
 
-	child := CalcEq(eqClear)
+	child := Eq(eqClear)
 	subValue := StringAsFloat(child.String())
 
 	switch name {
@@ -465,25 +465,24 @@ func (c *Calc) String() string {
 func FloatSimple(fv string) string {
 	potSig := "."
 	split := strings.Split(fv, potSig)
-	if len(split) == 2 {
-		zero := split[1]
-		// 全0
-		isMatched, _ := regexp.MatchString(`^0+$`, zero)
-		if isMatched {
-			return strings.ReplaceAll(fv, "."+zero, "")
-		}
-
-		zeroReg := regexp.MustCompile(`0+$`)
-		if zeroReg.MatchString(zero) {
-			zeroList := zeroReg.FindAllString(zero, -1)
-			if len(zeroList) > 0 {
-				zero = zero[:len(zero)-len(zeroList[0])]
-				return split[0] + "." + zero
-			}
-		}
-
+	if len(split) != 2 {
+		return fv
+	}
+	zero := split[1]
+	// 全0
+	isMatched, _ := regexp.MatchString(`^0+$`, zero)
+	if isMatched {
+		return strings.ReplaceAll(fv, "."+zero, "")
 	}
 
+	zeroReg := regexp.MustCompile(`0+$`)
+	if zeroReg.MatchString(zero) {
+		zeroList := zeroReg.FindAllString(zero, -1)
+		if len(zeroList) > 0 {
+			zero = zero[:len(zero)-len(zeroList[0])]
+			return split[0] + "." + zero
+		}
+	}
 	return fv
 }
 
@@ -497,7 +496,7 @@ func StringAsI64(s string) int64 {
 	return v
 }
 
-func CalcEq(eq string) Calc {
+func Eq(eq string) Calc {
 	if cacheCalc == nil {
 		cacheCalc = NewCalc("")
 	}
