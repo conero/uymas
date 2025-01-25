@@ -12,9 +12,11 @@ import (
 type Cover float64
 
 // ToChnUpper Convert to uppercase Chinese numerals
-func (c Cover) ToChnUpper() {
-	//@todo
-	fmt.Printf("%v => %v\n", int64(c), c.ToChnRoundUpper())
+//
+// Used to convert a number as an integer to a Chinese uppercase number
+func (c Cover) ToChnUpper() string {
+	return NumberCoverChnDigit(float64(int64(c)))
+
 }
 
 func (c Cover) ToChnRoundUpper() string {

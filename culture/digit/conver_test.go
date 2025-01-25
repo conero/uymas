@@ -6,25 +6,40 @@ func TestCover_ToChnUpper(t *testing.T) {
 	var test Cover
 
 	test = 6
-	test.ToChnUpper()
+	ref := "陆"
+	rel := test.ToChnUpper()
 
-	test = 9001
-	test.ToChnUpper()
+	testFn := func() {
+		if rel != ref {
+			t.Fatalf("值 [%v], 转换后 [%v]; 与参考值 [%v] 不符合！", test, rel, ref)
+		}
+	}
+	testFn()
+
+	test = 9001.71
+	ref = "玖仟零壹"
+	rel = test.ToChnUpper()
+	testFn()
 
 	test = 9070
-	test.ToChnUpper()
+	ref = "玖仟零柒拾"
+	rel = test.ToChnUpper()
+	testFn()
 
 	test = 98_710_016
-	test.ToChnUpper()
-
-	test = 105_070_401
-	test.ToChnUpper()
+	ref = "玖仟捌佰柒拾壹万零壹拾陆"
+	rel = test.ToChnUpper()
+	testFn()
 
 	test = 10_005_070_401
-	test.ToChnUpper()
+	ref = "壹佰亿零伍佰零柒万零肆佰零壹"
+	rel = test.ToChnUpper()
+	testFn()
 
 	test = 2391792.0872
-	test.ToChnUpper()
+	ref = "贰佰叁拾玖万壹仟柒佰玖拾贰"
+	rel = test.ToChnUpper()
+	testFn()
 }
 
 // 参考工具： http://daxie.gjcha.com/

@@ -57,10 +57,12 @@
   - fix: 修复函数 `StructDress` *isdata* 标签解析失败
 - **ganz**
   - feat: 实现函数 TimeParse 对日期的干支解析
-
 - **str**
   - feat: 新增函数 JsonTagName 实现对struct json tag的获取组手函数，以消除如omitempty之类参数的影响
   - fix: 修复 TimeLayoutDetector.Parse 如 2006年1月形式解析失败
+- **culture/digit**
+  - feat: 实现函数 ToChnUpper 用于将数字转换为整形
+
 
 
 
