@@ -145,7 +145,7 @@ func MultiArgsMap(args cli.ArgsParser, mapTgt any, params ...string) error {
 	}
 
 	values := args.Values()
-	for key, _ := range values {
+	for key := range values {
 		fullKey := pref + key
 		index := strings.Index(fullKey, seq)
 		value := args.Get(key)

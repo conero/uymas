@@ -170,8 +170,6 @@ func setToStruct(tgt reflect.Value, args cli.ArgsParser) {
 		option := OptionTagParse(tagValue)
 		setValueByOption(tgt.Field(i), option, args, keys)
 	}
-
-	return
 }
 
 // ArgsDress Dress the command argument up on the specified data entity (struct)

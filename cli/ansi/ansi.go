@@ -20,11 +20,11 @@
 // 关于\033中的\0在ANSI颜色码中，\033是一个八进制转义序列，代表ASCII字符集中的ESC（Escape）字符。
 // 在ASCII表中，ESC字符的值为27（十进制），对应的八进制表示为033。因此，\033实际上是转义序列的一部分，用于引入ANSI颜色码。
 //
-//	 var s = "xxxx"
-//		for i, e := range []rune(s) {
-//		   fmt.Printf("%d -> %c\n", i, e)
-//		}
-//		\033 -> esc
+//	var s = "xxxx"
+//	for i, e := range []rune(s) {
+//		 fmt.Printf("%d -> %c\n", i, e)
+//	}
+//	\033 -> esc
 package ansi
 
 import (

@@ -12,9 +12,9 @@ import (
 )
 
 const (
-	ReplContinue = iota
-	ReplBreak
-	ReplExit
+	Continue = iota
+	Break
+	Exit
 )
 
 type Repl struct {
@@ -61,11 +61,11 @@ func (c *Repl) Run(cliApp *cli.Cli) {
 
 			if c.HandlerFunc != nil {
 				switch c.HandlerFunc(text) {
-				case ReplBreak:
+				case Break:
 					isBreak = true
-				case ReplExit:
+				case Exit:
 					os.Exit(0)
-				case ReplContinue:
+				case Continue:
 					continue
 				}
 			}
