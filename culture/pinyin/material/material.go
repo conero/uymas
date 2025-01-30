@@ -50,7 +50,7 @@ func (c *CommonList) WordList(strokes int) string {
 // StrokesList get strokes(笔画) list
 func (c *CommonList) StrokesList() []int {
 	var sl []int
-	for idx, _ := range c.dicks {
+	for idx := range c.dicks {
 		sl = append(sl, int(number.AnyInt64(idx)))
 	}
 	return sl

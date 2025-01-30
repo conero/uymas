@@ -96,18 +96,18 @@ func cmdPinyin(args cli.ArgsParser) {
 			"字母拼音：" + vList.Alpha(opt.Seps...)
 
 		// 多音字
-		pyList := vList.Polyphony(pinyin.PinyinTone)
+		pyList := vList.Polyphony(pinyin.Tone)
 		pyCount := len(pyList)
 		if len(pyList) > 0 {
 			line += fmt.Sprintf("\n  多音字共 %d 组，详细如：\n原始拼音组：\n%s\n数字拼音组：\n%s\n字母拼音组：\n%s\n",
 				pyCount, rock.FormatList(pyList, "  "),
-				rock.FormatList(vList.Polyphony(pinyin.PinyinNumber), "  "),
-				rock.FormatList(rock.ListNoRepeat(vList.Polyphony(pinyin.PinyinAlpha)), "  "))
+				rock.FormatList(vList.Polyphony(pinyin.Number), "  "),
+				rock.FormatList(rock.ListNoRepeat(vList.Polyphony(pinyin.Alpha)), "  "))
 		}
 	} else {
 		if opt.IsVerbose {
 			list := pinyinCache.SearchByGroup(words)
-			line = rock.FormatList(list.Polyphony(pinyin.PinyinTone, opt.Seps...), " ")
+			line = rock.FormatList(list.Polyphony(pinyin.Tone, opt.Seps...), " ")
 		} else {
 			line = pinyinCache.SearchByGroup(words).Tone(opt.Seps...)
 		}

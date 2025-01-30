@@ -13,12 +13,12 @@ const (
 
 const (
 	_ = iota
-	// PinyinTone pinyin as tone for raw
-	PinyinTone
-	// PinyinNumber pinyin as tone for number
-	PinyinNumber
-	// PinyinAlpha pinyin as tone for alpha
-	PinyinAlpha
+	// Tone pinyin as tone for raw
+	Tone
+	// Number pinyin as tone for number
+	Number
+	// Alpha pinyin as tone for alpha
+	Alpha
 )
 
 // Element the data dictionary enter
@@ -133,9 +133,9 @@ func (e List) Polyphony(vType int32, args ...string) []string {
 	for _, qs := range queue {
 		var elStr string
 		switch vType {
-		case PinyinNumber:
+		case Number:
 			elStr = strings.Join(PyinNumberList(qs), joinSeq)
-		case PinyinAlpha:
+		case Alpha:
 			elStr = strings.Join(qs, joinSeq)
 			elStr = PyinAlpha(elStr, true)
 		default:

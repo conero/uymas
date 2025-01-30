@@ -13,47 +13,49 @@ func ReadDickFromIni(filename string) map[string]map[string]string {
 	dick := map[string]map[string]string{}
 
 	fh, err := os.Open(filename)
-	if err == nil {
-		buf := bufio.NewReader(fh)
-		var mapKey string
-		var regKey = regexp.MustCompile(`^\[[^\[\]]+]+`)
-		var regStr = regexp.MustCompile(`\[|]`)
-		var equalStr = "="
-		for {
-			line, err2 := buf.ReadString('\n')
-			line = strings.TrimSpace(line)
-			// "#/;" 开头含忽略
-			w := ""
-			if line != "" {
-				w = line[:1]
-			}
-			if w == "#" || w == ";" {
-				line = ""
-			}
-			if line != "" {
-				if regKey.MatchString(line) {
-					mapKey = regStr.ReplaceAllString(line, "")
-				} else if mapKey != "" {
-					idx := strings.Index(line, equalStr)
-					if idx > -1 {
-						tKey := strings.TrimSpace(line[:idx])
-						tValue := strings.TrimSpace(line[idx+1:])
-						v, has := dick[mapKey]
-						if has {
-							v[tKey] = tValue
-							dick[mapKey] = v
-						} else {
-							dick[mapKey] = map[string]string{
-								tKey: tValue,
-							}
+	if err != nil {
+		return dick
+	}
+
+	buf := bufio.NewReader(fh)
+	var mapKey string
+	var regKey = regexp.MustCompile(`^\[[^\[\]]+]+`)
+	var regStr = regexp.MustCompile(`\[|]`)
+	var equalStr = "="
+	for {
+		line, err2 := buf.ReadString('\n')
+		line = strings.TrimSpace(line)
+		// "#/;" 开头含忽略
+		w := ""
+		if line != "" {
+			w = line[:1]
+		}
+		if w == "#" || w == ";" {
+			line = ""
+		}
+		if line != "" {
+			if regKey.MatchString(line) {
+				mapKey = regStr.ReplaceAllString(line, "")
+			} else if mapKey != "" {
+				idx := strings.Index(line, equalStr)
+				if idx > -1 {
+					tKey := strings.TrimSpace(line[:idx])
+					tValue := strings.TrimSpace(line[idx+1:])
+					v, has := dick[mapKey]
+					if has {
+						v[tKey] = tValue
+						dick[mapKey] = v
+					} else {
+						dick[mapKey] = map[string]string{
+							tKey: tValue,
 						}
 					}
 				}
 			}
-			// 错误
-			if err2 != nil {
-				break
-			}
+		}
+		// 错误
+		if err2 != nil {
+			break
 		}
 	}
 
@@ -129,8 +131,7 @@ func ReadIniLines(lines []string) map[string]map[string]string {
 						//      ;等同 key = 22222,sdsd,3333,cdd
 						cv, cHas := v[tKey]
 						if cHas {
-							cv = v[tKey] + tValue
-							v[tKey] = cv
+							v[tKey] = cv + tValue
 						} else {
 							v[tKey] = tValue
 						}
