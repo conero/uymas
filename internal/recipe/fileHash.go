@@ -77,9 +77,8 @@ func (c *FileHash) GetHash(filepath string) string {
 	if err != nil {
 		return ""
 	}
-	vtype := strings.ToLower(c.Vtype)
-	c.Vtype = vtype
-	switch vtype {
+	c.Vtype = strings.ToLower(c.Vtype)
+	switch c.Vtype {
 	case "sha1":
 		h := sha1.New()
 		if _, err = io.Copy(h, fl); err != nil {

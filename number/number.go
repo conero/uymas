@@ -19,73 +19,73 @@ import (
 func SumQueue(data []any) any {
 	var a any = nil
 	for _, d := range data {
-		switch d.(type) {
+		switch value := d.(type) {
 		case int:
 			if a == nil {
-				var tInt int = 0
+				var tInt = 0
 				a = tInt
 			}
-			a = a.(int) + d.(int)
+			a = a.(int) + value
 		case int8:
 			if a == nil {
 				var tInt int8 = 0
 				a = tInt
 			}
-			a = a.(int8) + d.(int8)
+			a = a.(int8) + value
 		case int16:
 			if a == nil {
 				var tInt int16 = 0
 				a = tInt
 			}
-			a = a.(int16) + d.(int16)
+			a = a.(int16) + value
 		case int32:
 			if a == nil {
 				var tInt int32 = 0
 				a = tInt
 			}
-			a = a.(int32) + d.(int32)
+			a = a.(int32) + value
 		case int64:
 			if a == nil {
 				var tInt int64 = 0
 				a = tInt
 			}
-			a = a.(int64) + d.(int64)
+			a = a.(int64) + value
 		case uint:
 			if a == nil {
 				var tInt uint = 0
 				a = tInt
 			}
-			a = a.(uint) + d.(uint)
+			a = a.(uint) + value
 		case uint8:
 			if a == nil {
 				var tInt uint8 = 0
 				a = tInt
 			}
-			a = a.(uint8) + d.(uint8)
+			a = a.(uint8) + value
 		case uint32:
 			if a == nil {
 				var tInt uint32 = 0
 				a = tInt
 			}
-			a = a.(uint32) + d.(uint32)
+			a = a.(uint32) + value
 		case uint64:
 			if a == nil {
 				var tInt uint64 = 0
 				a = tInt
 			}
-			a = a.(uint64) + d.(uint64)
+			a = a.(uint64) + value
 		case float32:
 			if a == nil {
 				var tInt float32 = 0
 				a = tInt
 			}
-			a = a.(float32) + d.(float32)
+			a = a.(float32) + value
 		case float64:
 			if a == nil {
 				var tInt float64 = 0
 				a = tInt
 			}
-			a = a.(float64) + d.(float64)
+			a = a.(float64) + value
 		}
 	}
 	return a
@@ -154,8 +154,8 @@ func Round(num float64, b int) float64 {
 	return num
 }
 
-// NumberClear number string clear like '_' or ','
-func NumberClear(s string) string {
+// Clear number string clear like '_' or ','
+func Clear(s string) string {
 	matched, _ := regexp.MatchString(`\d+([_,]\d)+\d*(\.\d)*`, s)
 	if !matched {
 		return s

@@ -67,7 +67,7 @@ func cmdCalc(args cli.ArgsParser) {
 		equal = chest.InputRequire("请输入等式符号：", nil)
 	}
 	// 清理 ',/_'
-	equal = number.NumberClear(equal)
+	equal = number.Clear(equal)
 
 	var baseExp string
 	toArgs := []string{"to", "t"}

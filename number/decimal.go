@@ -9,8 +9,8 @@ import (
 // @Author:  Joshua Conero
 // @Name:    10 进制处理
 const (
-	// NumberStr 9+26+26+3
-	NumberStr = "0123456789abcdefghijklmnopkrstuvwxyzABCDEFGHIJKLMNOPKRSTUVWXYZ+-="
+	// Str 9+26+26+3
+	Str = "0123456789abcdefghijklmnopkrstuvwxyzABCDEFGHIJKLMNOPKRSTUVWXYZ+-="
 	// N2 进制类型
 	N2  = 2
 	N8  = 8
@@ -37,10 +37,10 @@ func (d *Decimal) ToN(base int) string {
 		bits = append(bits, mod)
 		num = (num - mod) / base
 	}
-	maxLen := len(NumberStr)
+	maxLen := len(Str)
 	var value string
 	if base <= maxLen {
-		nRefBits := strings.Split(NumberStr[:base], "")
+		nRefBits := strings.Split(Str[:base], "")
 		var nBits []string
 		for _, n := range bits {
 			nBits = append(nBits, nRefBits[n])

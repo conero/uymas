@@ -66,7 +66,7 @@ func ErrorIf(err error, prefixErr ...error) {
 		return
 	}
 	vErr := errors.Join(prefixErr...)
-	vErr = errors.Join(err)
+	vErr = errors.Join(err, vErr)
 	vLgr.Errorf(vErr.Error())
 }
 
@@ -80,7 +80,7 @@ func FatalIf(err error, prefixErr ...error) {
 		return
 	}
 	vErr := errors.Join(prefixErr...)
-	vErr = errors.Join(err)
+	vErr = errors.Join(err, vErr)
 	vLgr.Fatalf(vErr.Error())
 	os.Exit(1)
 }
