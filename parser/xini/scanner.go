@@ -366,7 +366,7 @@ func (c *Scanner) cmdInclude(ln string, target *map[string]any) (loadOk bool, is
 
 		likeName := filepath[dirIdx:]
 		regStr := strings.ReplaceAll(likeName, ".", `\.`)
-		regStr = strings.ReplaceAll(likeName, "*", `.*`)
+		regStr = strings.ReplaceAll(regStr, "*", `.*`)
 		regStr = fmt.Sprintf(`^%s$`, regStr)
 		reg, regEr := regexp.Compile(regStr)
 		if regEr != nil {

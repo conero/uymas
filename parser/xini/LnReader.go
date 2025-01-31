@@ -26,19 +26,18 @@ func NewLnRer(filename string) *LnReader {
 // Scan file lines
 func (ln *LnReader) Scan(callback func(line string)) bool {
 	fs, err := os.Open(ln.Filename)
-	if err == nil {
-		buf := bufio.NewReader(fs)
-		for {
-			line, err2 := buf.ReadString('\n')
-			callback(line)
-			// 错误
-			if err2 != nil {
-				break
-			}
-		}
-	} else {
+	if err != nil {
 		ln.error = err
 		return false
+	}
+	buf := bufio.NewReader(fs)
+	for {
+		line, err2 := buf.ReadString('\n')
+		callback(line)
+		// 错误
+		if err2 != nil {
+			break
+		}
 	}
 	return true
 }

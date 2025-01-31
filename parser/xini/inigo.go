@@ -81,84 +81,86 @@ func ParseValue(v string) any {
 	}
 
 	// 解析非空字符串
-	if v != "" {
-		lowStr := strings.ToLower(v)
-		// 布尔对象
-		if lowStr == "false" {
-			value = false
-		} else if lowStr == "true" {
-			value = true
-		} else {
-			parseMk := false
+	if v == "" {
+		return value
+	}
 
-			// 数字解析
-			reg := regexp.MustCompile(`^[-]*[\d.]+$`)
-			if reg.MatchString(v) {
-				if strings.Contains(v, ".") {
-					// float64
-					if f64, er := strconv.ParseFloat(v, 64); er == nil {
-						value = f64
-						parseMk = true
-					}
-				} else {
-					if i64, er := strconv.ParseInt(v, 10, 64); er == nil {
-						value = i64
-						parseMk = true
-					}
-				}
-			} else if strings.Contains(v, ",") { // []int
-				var sQue []string
-				if matched, err := regexp.MatchString(`^[-\d]+[-\d,]+[-\d]+$`, v); err == nil && matched {
-					sQue = strings.Split(v, ",")
-					iQue := []int{}
-					for _, v0 := range sQue {
-						if i, err := strconv.Atoi(v0); err == nil {
-							iQue = append(iQue, i)
-						}
-					}
-					value = iQue
+	lowStr := strings.ToLower(v)
+	// 布尔对象
+	if lowStr == "false" {
+		value = false
+	} else if lowStr == "true" {
+		value = true
+	} else {
+		parseMk := false
+
+		// 数字解析
+		reg := regexp.MustCompile(`^[-]*[\d.]+$`)
+		if reg.MatchString(v) {
+			if strings.Contains(v, ".") {
+				// float64
+				if f64, er := strconv.ParseFloat(v, 64); er == nil {
+					value = f64
 					parseMk = true
-				} else if strings.Contains(v, ".") {
-					// []float64
-					if matched, er := regexp.MatchString(`^[-\d.]+[-\d,.]{3,}[-\d,.]{3,}$`, v); er == nil && matched {
-						sQue := strings.Split(v, ",")
-						fQue := []float64{}
-						for _, v0 := range sQue {
-							if f64, er := strconv.ParseFloat(v0, 64); er == nil {
-								fQue = append(fQue, f64)
-							}
-						}
-						value = fQue
-						parseMk = true
+				}
+			} else {
+				if i64, er := strconv.ParseInt(v, 10, 64); er == nil {
+					value = i64
+					parseMk = true
+				}
+			}
+		} else if strings.Contains(v, ",") { // []int
+			var sQue []string
+			if matched, err := regexp.MatchString(`^[-\d]+[-\d,]+[-\d]+$`, v); err == nil && matched {
+				sQue = strings.Split(v, ",")
+				iQue := []int{}
+				for _, v0 := range sQue {
+					if i, err := strconv.Atoi(v0); err == nil {
+						iQue = append(iQue, i)
 					}
 				}
-
-				if !parseMk {
-					rpls := "_JC::JC_"
-					vt0 := strings.Replace(v, "\\,", rpls, -1)
-					reg2 := regexp.MustCompile(`['"]+[^'"]+['"]+`)
-
-					for _, v1 := range reg2.FindAllString(vt0, -1) {
-						v2 := strings.Replace(v1, ",", rpls, -1)
-						vt0 = strings.Replace(vt0, v1, v2, -1)
-					}
-
-					if strings.Contains(vt0, ",") {
-						var ss []string
-						for _, tV := range strings.Split(vt0, ",") {
-							tV = StrClear(tV)
-							tV = strings.ReplaceAll(tV, rpls, ",")
-							ss = append(ss, tV)
+				value = iQue
+				parseMk = true
+			} else if strings.Contains(v, ".") {
+				// []float64
+				if matched, er := regexp.MatchString(`^[-\d.]+[-\d,.]{3,}[-\d,.]{3,}$`, v); er == nil && matched {
+					sQue := strings.Split(v, ",")
+					fQue := []float64{}
+					for _, v0 := range sQue {
+						if f64, er := strconv.ParseFloat(v0, 64); er == nil {
+							fQue = append(fQue, f64)
 						}
-						value = ss
-						parseMk = true
 					}
+					value = fQue
+					parseMk = true
 				}
 			}
 
 			if !parseMk {
-				value = v
+				rpls := "_JC::JC_"
+				vt0 := strings.Replace(v, "\\,", rpls, -1)
+				reg2 := regexp.MustCompile(`['"]+[^'"]+['"]+`)
+
+				for _, v1 := range reg2.FindAllString(vt0, -1) {
+					v2 := strings.Replace(v1, ",", rpls, -1)
+					vt0 = strings.Replace(vt0, v1, v2, -1)
+				}
+
+				if strings.Contains(vt0, ",") {
+					var ss []string
+					for _, tV := range strings.Split(vt0, ",") {
+						tV = StrClear(tV)
+						tV = strings.ReplaceAll(tV, rpls, ",")
+						ss = append(ss, tV)
+					}
+					value = ss
+					parseMk = true
+				}
 			}
+		}
+
+		if !parseMk {
+			value = v
 		}
 	}
 	return value
@@ -167,12 +169,14 @@ func ParseValue(v string) any {
 // StrClear the string data clear
 func StrClear(s string) string {
 	s = strings.TrimSpace(s)
-	if s != "" {
-		if matched, er := regexp.MatchString(`^'[^']*'$`, s); er == nil && matched {
-			s = s[1 : len(s)-1]
-		} else if matched, er := regexp.MatchString(`^"[^"]*"$`, s); er == nil && matched {
-			s = s[1 : len(s)-1]
-		}
+	if s == "" {
+		return ""
+	}
+	matched, er := regexp.MatchString(`^'[^']*'$`, s)
+	if er == nil && matched {
+		s = s[1 : len(s)-1]
+	} else if matched, er = regexp.MatchString(`^"[^"]*"$`, s); er == nil && matched {
+		s = s[1 : len(s)-1]
 	}
 	return s
 }

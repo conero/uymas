@@ -87,7 +87,7 @@ var TranStrMap = map[string]string{
 }
 
 // TranCommentMap comment character parsing
-var TranCommentMap map[string]string = map[string]string{
+var TranCommentMap = map[string]string{
 	`\;`: "_JC__COMMIT1",
 	`\#`: "_JC__COMMIT2",
 }
