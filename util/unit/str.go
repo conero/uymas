@@ -1,4 +1,4 @@
-// Package test unit.
+// Package unit test unit case.
 package unit
 
 import (
