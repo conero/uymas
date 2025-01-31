@@ -92,61 +92,6 @@ func ExtractArrUnique[T constraints.ValueIterable](count int, arr []T) []T {
 	return extArr
 }
 
-// MapKeys Extract the key name array of the dictionary
-func MapKeys[T constraints.KeyIterable, X constraints.ValueIterable](vMap map[T]X) (keys []T) {
-	for k, _ := range vMap {
-		keys = append(keys, k)
-	}
-	return
-}
-
-// MapValues Extract the values name array of the dictionary
-func MapValues[T constraints.KeyIterable, X constraints.KeyIterable](vMap map[T]X) (values []X) {
-	for _, v := range vMap {
-		values = append(values, v)
-	}
-	return
-}
-
-// MapGenByKv Create dictionary by key value pair array combination
-func MapGenByKv[K constraints.KeyIterable, V constraints.ValueIterable](keys []K, values []V) (kv map[K]V) {
-	vLen := len(values)
-	for i, k := range keys {
-		if i == vLen {
-			break
-		}
-		if kv == nil {
-			kv = map[K]V{}
-		}
-		kv[k] = values[i]
-	}
-
-	return
-}
-
-// MapFilter use the keys of map to filter itself
-func MapFilter[K constraints.KeyIterable, V constraints.ValueIterable](kv map[K]V, filter []K) map[K]V {
-	var newMap = map[K]V{}
-	for kVal, value := range kv {
-		if ListIndex(filter, kVal) > -1 {
-			newMap[kVal] = value
-		}
-	}
-	return newMap
-}
-
-// MapSlice use the keys of map to slice itself
-func MapSlice[K constraints.KeyIterable, V constraints.ValueIterable](kv map[K]V, filter []K) map[K]V {
-	var newMap = map[K]V{}
-	for kVal, value := range kv {
-		if ListIndex(filter, kVal) > -1 {
-			continue
-		}
-		newMap[kVal] = value
-	}
-	return newMap
-}
-
 // ListAny data slice convert to any slice
 func ListAny[T constraints.KeyIterable](vList []T) []any {
 	var anyList []any

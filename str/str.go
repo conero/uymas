@@ -48,38 +48,39 @@ func (s Str) IsLatinAlpha() bool {
 //	`getHeightWidthRate` 	-> `get_height_width_rate`
 func (s Str) LowerStyle() string {
 	vStr := string(s)
-	vLen := len(vStr)
-	if vLen > 0 {
-		bys := []byte(vStr)
-		var upperQueue []int
-		for i := 0; i < vLen; i++ {
-			alpha := Str(vStr[i : i+1])
-			if alpha.IsLatinAlpha() && string(alpha) == strings.ToUpper(string(alpha)) {
-				upperQueue = append(upperQueue, i)
-			}
-		}
-
-		var valueQueue []string
-		var lastIndex = 0
-		var uQLen = len(upperQueue)
-		for j, v := range upperQueue {
-			if v == 0 {
-				continue
-			}
-			valueQueue = append(valueQueue, string(bys[lastIndex:v]))
-			lastIndex = v
-			//Last
-			if j == (uQLen - 1) {
-				valueQueue = append(valueQueue, string(bys[lastIndex:]))
-			}
-		}
-
-		if len(valueQueue) == 0 {
-			return strings.ToLower(vStr)
-		}
-		return strings.ToLower(strings.Join(valueQueue, "_"))
+	if vStr == "" {
+		return vStr
 	}
-	return vStr
+
+	vLen := len(vStr)
+	bys := []byte(vStr)
+	var upperQueue []int
+	for i := 0; i < vLen; i++ {
+		alpha := Str(vStr[i : i+1])
+		if alpha.IsLatinAlpha() && string(alpha) == strings.ToUpper(string(alpha)) {
+			upperQueue = append(upperQueue, i)
+		}
+	}
+
+	var valueQueue []string
+	var lastIndex = 0
+	var uQLen = len(upperQueue)
+	for j, v := range upperQueue {
+		if v == 0 {
+			continue
+		}
+		valueQueue = append(valueQueue, string(bys[lastIndex:v]))
+		lastIndex = v
+		//Last
+		if j == (uQLen - 1) {
+			valueQueue = append(valueQueue, string(bys[lastIndex:]))
+		}
+	}
+
+	if len(valueQueue) == 0 {
+		return strings.ToLower(vStr)
+	}
+	return strings.ToLower(strings.Join(valueQueue, "_"))
 }
 
 // CamelCase camelcase --> snake case

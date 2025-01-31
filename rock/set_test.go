@@ -1,7 +1,6 @@
 package rock
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -20,18 +19,6 @@ func TestListIndex(t *testing.T) {
 	rfIdx = 0
 	if idx != rfIdx {
 		t.Errorf("Search []uint8 Index failure: %v != %v", idx, rfIdx)
-	}
-}
-
-func TestMapKeys(t *testing.T) {
-	var vmStr = map[string]string{
-		"name": "Joshua conero",
-		"age":  "24",
-	}
-
-	var keys = MapKeys(vmStr)
-	if fmt.Sprintf("%#v", keys) != fmt.Sprintf("%#v", []string{"name", "age"}) {
-		t.Errorf("Get map keys failue, like: %#v", keys)
 	}
 }
 

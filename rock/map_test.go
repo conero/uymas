@@ -54,3 +54,15 @@ func TestMapAssign(t *testing.T) {
 		t.Errorf("map 合并错误，%#v ≠ %#v\n", relStr, refStr)
 	}
 }
+
+func TestMapKeys(t *testing.T) {
+	var vmStr = map[string]string{
+		"name": "Joshua conero",
+		"age":  "24",
+	}
+
+	var keys = MapKeys(vmStr)
+	if fmt.Sprintf("%#v", keys) != fmt.Sprintf("%#v", []string{"name", "age"}) {
+		t.Errorf("Get map keys failue, like: %#v", keys)
+	}
+}

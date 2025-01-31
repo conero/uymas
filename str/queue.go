@@ -8,7 +8,7 @@ import (
 // @Author:  Joshua Conero
 // @Name:    字符互队列
 
-// InQuei checkout substring exist in array that case insensitive
+// InQuei checkout substring exist in array that case-insensitive
 func InQuei(s string, que []string) int {
 	idx := -1
 	s = strings.ToLower(s)
