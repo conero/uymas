@@ -447,6 +447,11 @@ func ToMapLStyleIgnoreEmpty(value any, ignoreKeys ...string) map[string]any {
 // StructToMapViaJson convert map via json Marshal/Unmarshal
 // StructToMapViaJson is slower than StructToMapLStyle by Benchmark
 func StructToMapViaJson(value any, ignoreKeys ...string) map[string]any {
+	return StructToMapViaJsonFunc(value, nil, ignoreKeys...)
+}
+
+// StructToMapViaJsonFunc convert map via json Marshal/Unmarshal by callback func
+func StructToMapViaJsonFunc(value any, each func(key string, value any) any, ignoreKeys ...string) map[string]any {
 	var newVal map[string]any
 	marshal, err := json.Marshal(value)
 	if err != nil {
@@ -456,11 +461,15 @@ func StructToMapViaJson(value any, ignoreKeys ...string) map[string]any {
 	if err != nil {
 		return nil
 	}
-	if len(ignoreKeys) > 0 && newVal != nil {
+	ignoreIsSet := len(ignoreKeys) > 0 && newVal != nil
+	if ignoreIsSet || each != nil {
 		for key := range newVal {
 			//ignore keys
-			if str.InQuei(key, ignoreKeys) > -1 {
+			if ignoreIsSet && str.InQuei(key, ignoreKeys) > -1 {
 				delete(newVal, key)
+			}
+			if each != nil {
+				newVal[key] = each(key, newVal[key])
 			}
 		}
 	}

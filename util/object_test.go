@@ -260,6 +260,43 @@ func TestStructToMap(t *testing.T) {
 
 }
 
+func TestStructToMapViaJsonFunc(t *testing.T) {
+	type Ty struct {
+		Name          string
+		Age           int
+		HeightWidthLv float64
+		EmptyInt      int
+		EmptyString   string
+		CreateTime    time.Time
+		IsSet         bool
+		IsAble        bool `json:"isAble"`
+		IsDel         bool
+	}
+
+	tt := Ty{}
+	vMap := StructToMapViaJsonFunc(tt, func(key string, value any) any {
+		if key == "IsSet" {
+			if value.(bool) {
+				return 1
+			}
+			return 0
+		} else if key == "isAble" {
+			if value.(bool) {
+				return 0
+			}
+			return 1
+		}
+		return value
+	})
+
+	if fmt.Sprintf("%v", vMap["IsSet"]) != "0" {
+		t.Errorf("StructToMapViaJsonFunc => IsSet")
+	} else if fmt.Sprintf("%v", vMap["isAble"]) != "1" {
+		t.Errorf("StructToMapViaJsonFunc => isAble")
+	}
+	t.Logf("StructToMapViaJsonFunc => %#v", vMap)
+}
+
 func BenchmarkStructToMapViaJson(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {

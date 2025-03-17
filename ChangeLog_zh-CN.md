@@ -42,6 +42,9 @@
 
 > 程序版本优化
 
+- **util**
+  - feat: 新增函数 `StructToMapViaJsonFunc` 支持结构体转map时设置回调函数
+
 
 
 ### v2.0.0/2025-02-01
