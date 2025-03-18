@@ -451,7 +451,7 @@ func StructToMapViaJson(value any, ignoreKeys ...string) map[string]any {
 }
 
 // StructToMapViaJsonFunc convert map via json Marshal/Unmarshal by callback func
-func StructToMapViaJsonFunc(value any, each func(key string, value any) any, ignoreKeys ...string) map[string]any {
+func StructToMapViaJsonFunc(value any, each func(key string, value any) (string, any), ignoreKeys ...string) map[string]any {
 	var newVal map[string]any
 	marshal, err := json.Marshal(value)
 	if err != nil {
@@ -463,13 +463,17 @@ func StructToMapViaJsonFunc(value any, each func(key string, value any) any, ign
 	}
 	ignoreIsSet := len(ignoreKeys) > 0 && newVal != nil
 	if ignoreIsSet || each != nil {
-		for key := range newVal {
+		tmpVal := newVal
+		for key := range tmpVal {
 			//ignore keys
 			if ignoreIsSet && str.InQuei(key, ignoreKeys) > -1 {
 				delete(newVal, key)
 			}
+			// custom func to change key or value
 			if each != nil {
-				newVal[key] = each(key, newVal[key])
+				cstmKey, cstmVal := each(key, newVal[key])
+				delete(newVal, key)
+				newVal[cstmKey] = cstmVal
 			}
 		}
 	}

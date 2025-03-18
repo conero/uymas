@@ -274,19 +274,19 @@ func TestStructToMapViaJsonFunc(t *testing.T) {
 	}
 
 	tt := Ty{}
-	vMap := StructToMapViaJsonFunc(tt, func(key string, value any) any {
+	vMap := StructToMapViaJsonFunc(tt, func(key string, value any) (string, any) {
 		if key == "IsSet" {
 			if value.(bool) {
-				return 1
+				return key, 1
 			}
-			return 0
+			return key, 0
 		} else if key == "isAble" {
 			if value.(bool) {
-				return 0
+				return key, 0
 			}
-			return 1
+			return key, 1
 		}
-		return value
+		return key, value
 	})
 
 	if fmt.Sprintf("%v", vMap["IsSet"]) != "0" {
