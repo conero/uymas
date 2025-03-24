@@ -44,6 +44,9 @@
 
 - **util**
   - feat: 新增函数 `StructToMapViaJsonFunc` 支持结构体转map时设置回调函数
+- **logger/lgr**
+  - pref: 函数 TmpMark 加入调用脚本名以及行号，使其更加精准的通过日志追溯的出处
+
 
 
 

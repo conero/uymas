@@ -18,6 +18,8 @@ import (
 	"gitee.com/conero/uymas/v2/logger"
 	"gitee.com/conero/uymas/v2/util/fs"
 	"os"
+	"path/filepath"
+	"runtime"
 )
 
 var vLgr *logger.Logger
@@ -100,6 +102,9 @@ func SetFlag(flag int) {
 func TmpMark(mark any, args ...any) {
 	markString := fmt.Sprintf("%v", mark)
 	markTitle := fs.GetenvOr(EnvMarkKey, "TMark Show DEL")
-	markString = ansi.Style("<"+markTitle+"> ", ansi.Red, ansi.BkgCyan) + markString
+	_, flPath, flLine, _ := runtime.Caller(1)
+	markString = ansi.Style("<"+markTitle+"> ", ansi.Red, ansi.BkgCyan) +
+		ansi.Style(fmt.Sprintf(" %s(%d) ", filepath.Base(flPath), flLine), ansi.Green) +
+		markString
 	vLgr.Errorf(markString, args...)
 }

@@ -4,6 +4,7 @@ import "testing"
 
 func ExampleDebug() {
 	Debug("This is Debug logger.")
+	TmpMark("temp mark when develop.")
 }
 
 func ExampleError() {
