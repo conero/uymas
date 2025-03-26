@@ -101,9 +101,9 @@ func SetFlag(flag int) {
 // to global search keyword `lgr.TmpMark` then remove it.
 func TmpMark(mark any, args ...any) {
 	markString := fmt.Sprintf("%v", mark)
-	markTitle := fs.GetenvOr(EnvMarkKey, "TMark Show DEL")
+	markTitle := fs.GetenvOr(EnvMarkKey, "TMarkShouldDEL")
 	_, flPath, flLine, _ := runtime.Caller(1)
-	markString = ansi.Style("<"+markTitle+"> ", ansi.Red, ansi.BkgCyan) +
+	markString = ansi.Style("<"+markTitle+">", ansi.Red, ansi.BkgWhiteBr, ansi.Italic, ansi.Twinkle) +
 		ansi.Style(fmt.Sprintf(" %s(%d) ", filepath.Base(flPath), flLine), ansi.Green) +
 		markString
 	vLgr.Errorf(markString, args...)
