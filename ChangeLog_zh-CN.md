@@ -45,7 +45,11 @@
 
 - **util**
   - feat: 新增函数 `StructToMapViaJsonFunc` 支持结构体转map时设置回调函数
+- **logger**
+  - feat: Logger 新增方法 NoColor 用于禁止日志处理展示颜色（可用于文本输出时美观）
+
 - **logger/lgr**
+  - feat: 新增环境变量  `UYMAS_LGR_NOCOLOR` 用于控制日志输出 NoColor
   - pref: 函数 TmpMark 加入调用脚本名以及行号，使其更加精准的通过日志追溯的出处
 
 

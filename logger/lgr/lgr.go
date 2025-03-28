@@ -20,6 +20,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strings"
 )
 
 var vLgr *logger.Logger
@@ -27,15 +28,21 @@ var vLgr *logger.Logger
 const (
 	// EnvLevelKey try set the lgr level by system environment, like `$ export EnvLevelKey=info`
 	EnvLevelKey = "UYMAS_LGR_LEVEL"
+	// EnvNoColorKey try set the lgr no color by system environment, like `$ export EnvNoColorKey=true`
+	EnvNoColorKey = "UYMAS_LGR_NOCOLOR"
 	// EnvMarkKey try set the lgr mark by system environment, like `$ export EnvMarkKey=mark`
 	EnvMarkKey = "UYMAS_TMP_MARK"
 )
 
 func init() {
 	lvl := fs.GetenvOr(EnvLevelKey, logger.LevelInfo)
+	noColor := strings.ToLower(fs.GetenvOr(EnvNoColorKey, "false"))
 	vLgr = logger.NewLogger(logger.Config{
 		Level: lvl,
 	})
+	if noColor != "" && noColor != "false" && noColor != "0" {
+		vLgr.NoColor()
+	}
 }
 
 func Log() logger.Logger {

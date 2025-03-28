@@ -1,4 +1,4 @@
-// Package logger basic and simple logger for application, it base the go embed `log` package.
+// Package logger basic and simple logger for application, it bases the go embed `log` package.
 // it's able to control output by log level, level order `all<debug<info<warn<error<none`.
 package logger
 
@@ -75,9 +75,13 @@ type Logger struct {
 	cfg          Config
 	logPref      string // Log message output prefix
 	DisableColor bool
+	noColor      bool // disable color when save to file
 }
 
 func (l *Logger) autoColor(prefix string, level Level) string {
+	if l.noColor {
+		return prefix
+	}
 	if l.cfg.Driver != "" && l.cfg.Driver != DriverStdout {
 		return prefix
 	}
@@ -206,6 +210,15 @@ func (l *Logger) Pref(logPref string) *Logger {
 // SetFlags to set log flag
 func (l *Logger) SetFlags(flag int) *Logger {
 	l.logger.SetFlags(flag)
+	return l
+}
+
+func (l *Logger) NoColor(refuse ...bool) *Logger {
+	if rock.Param(false, refuse...) {
+		l.noColor = false
+		return l
+	}
+	l.noColor = true
 	return l
 }
 
