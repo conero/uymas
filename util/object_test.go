@@ -2,6 +2,7 @@ package util
 
 import (
 	"fmt"
+	"gitee.com/conero/uymas/v2/rock"
 	"math"
 	"testing"
 	"time"
@@ -241,6 +242,7 @@ func TestStructToMap(t *testing.T) {
 		HeightWidthLv float64
 		EmptyInt      int
 		EmptyString   string
+		IgnoreKey     string
 	}
 
 	tt := Ty{}
@@ -249,7 +251,7 @@ func TestStructToMap(t *testing.T) {
 	tt.Name = "Joshua Conero"
 	tt.HeightWidthLv = math.Pi
 	tt.Age = 58
-	t.Logf("%v", StructToMap(tt))
+	t.Logf("StructToMap: %#v", StructToMap(tt, "IgnoreKey"))
 	t.Logf("StructToMapLStyle: %#v", StructToMapLStyle(tt))
 	t.Logf("StructToMapLStyleIgnoreEmpty: %#v", ToMapLStyleIgnoreEmpty(tt))
 
@@ -271,6 +273,8 @@ func TestStructToMapViaJsonFunc(t *testing.T) {
 		IsSet         bool
 		IsAble        bool `json:"isAble"`
 		IsDel         bool
+		IsIgnore      bool `json:"isIgnore"`
+		IgnoreKey     string
 	}
 
 	tt := Ty{}
@@ -287,12 +291,18 @@ func TestStructToMapViaJsonFunc(t *testing.T) {
 			return key, 1
 		}
 		return key, value
-	})
+	}, "isIgnore", "IgnoreKey")
 
 	if fmt.Sprintf("%v", vMap["IsSet"]) != "0" {
 		t.Errorf("StructToMapViaJsonFunc => IsSet")
 	} else if fmt.Sprintf("%v", vMap["isAble"]) != "1" {
 		t.Errorf("StructToMapViaJsonFunc => isAble")
+	}
+
+	// 参数过滤
+	mapKey := rock.MapKeys(vMap)
+	if rock.InList(mapKey, "isIgnore") || rock.InList(mapKey, "IgnoreKey") {
+		t.Errorf("参数过滤无效")
 	}
 	t.Logf("StructToMapViaJsonFunc => %#v", vMap)
 }

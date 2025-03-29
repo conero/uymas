@@ -470,6 +470,7 @@ func StructToMapViaJsonFunc(value any, each func(key string, value any) (string,
 			//ignore keys
 			if ignoreIsSet && str.InQuei(key, ignoreKeys) > -1 {
 				delete(newVal, key)
+				continue
 			}
 			// custom func to change key or value
 			if each != nil {
