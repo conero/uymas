@@ -451,6 +451,8 @@ func StructToMapViaJson(value any, ignoreKeys ...string) map[string]any {
 }
 
 // StructToMapViaJsonFunc convert map via json Marshal/Unmarshal by callback func
+//
+// when each is not nil and the key is empty then key will be ignored, it same as ignoreKeys
 func StructToMapViaJsonFunc(value any, each func(key string, value any) (string, any), ignoreKeys ...string) map[string]any {
 	var newVal map[string]any
 	marshal, err := json.Marshal(value)
@@ -473,7 +475,9 @@ func StructToMapViaJsonFunc(value any, each func(key string, value any) (string,
 			if each != nil {
 				cstmKey, cstmVal := each(key, newVal[key])
 				delete(newVal, key)
-				newVal[cstmKey] = cstmVal
+				if cstmKey != "" {
+					newVal[cstmKey] = cstmVal
+				}
 			}
 		}
 	}
