@@ -4,6 +4,8 @@ package tm
 import (
 	"errors"
 	"gitee.com/conero/uymas/v2/data/input"
+	"gitee.com/conero/uymas/v2/logger/lgr"
+	"gitee.com/conero/uymas/v2/rock"
 	"regexp"
 	"strings"
 	"time"
@@ -14,6 +16,18 @@ func SpendFn() func() time.Duration {
 	now := time.Now()
 	return func() time.Duration {
 		return time.Since(now)
+	}
+}
+
+// SpendDefer Get the program spend time for defer.
+func SpendDefer(customTitles ...string) func() {
+	customTitle := rock.Param("", customTitles...)
+	if customTitle == "" {
+		customTitle = "执行耗时："
+	}
+	spendFn := SpendFn()
+	return func() {
+		lgr.Info(customTitle + spendFn().String())
 	}
 }
 
