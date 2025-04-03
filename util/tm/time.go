@@ -3,6 +3,7 @@ package tm
 
 import (
 	"errors"
+	"fmt"
 	"gitee.com/conero/uymas/v2/data/input"
 	"gitee.com/conero/uymas/v2/logger/lgr"
 	"gitee.com/conero/uymas/v2/rock"
@@ -20,6 +21,8 @@ func SpendFn() func() time.Duration {
 }
 
 // SpendDefer Get the program spend time for defer.
+//
+// `defer tm.SpendDefer()()`
 func SpendDefer(customTitles ...string) func() {
 	customTitle := rock.Param("", customTitles...)
 	if customTitle == "" {
@@ -27,6 +30,7 @@ func SpendDefer(customTitles ...string) func() {
 	}
 	spendFn := SpendFn()
 	return func() {
+		fmt.Println()
 		lgr.Info(customTitle + spendFn().String())
 	}
 }

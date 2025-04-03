@@ -11,7 +11,7 @@ import (
 )
 
 func cmdTest(arg cli.ArgsParser) {
-	spendFn := tm.SpendFn()
+	defer tm.SpendDefer("本次执行耗时：")()
 	if arg.Switch("verbose", "V") {
 		fmt.Println()
 		fmt.Println("参数解析，数据如下")
@@ -37,11 +37,6 @@ func cmdTest(arg cli.ArgsParser) {
 			mkOptionList = append(mkOptionList, mkQueue...)
 		}
 		lgr.Info("创建生成测试命令如下：\n%s\n\n", strings.Join(mkOptionList, " "))
-		fmt.Printf("消耗时间：%s\n", spendFn())
 		return
 	}
-
-	fmt.Println()
-	fmt.Println()
-	lgr.Info("使用时间：%s\n", spendFn())
 }
