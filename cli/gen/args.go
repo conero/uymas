@@ -275,6 +275,8 @@ func OptionTagParse(vTag string) *cli.Option {
 			option.StructGen = true
 		case ArgsTagData:
 			option.IsData = true
+		case ArgsCmdRequired:
+			option.Require = true
 		}
 	}
 	for i, s := range strings.Split(vTag, " ") {

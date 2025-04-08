@@ -48,12 +48,17 @@
   - fix: 修复 `StructToMapViaJson` 等函数过滤参数参数无效
 - **util/tm**
   - feat: 新增函数 `SpendDefer` 用于迅速输出程序执行耗时统计
-
 - **logger**
   - feat: Logger 新增方法 NoColor 用于禁止日志处理展示颜色（可用于文本输出时美观）
 - **logger/lgr**
   - feat: 新增环境变量  `UYMAS_LGR_NOCOLOR` 用于控制日志输出 NoColor
   - pref: 函数 TmpMark 加入调用脚本名以及行号，使其更加精准的通过日志追溯的出处
+- **cli**
+  - pref: 完善 option.isdata 参数必填的解析
+
+- **cli/gen**
+  - pref: OptionTagParse 优化解析，使 required 能被正确解析
+
 
 
 

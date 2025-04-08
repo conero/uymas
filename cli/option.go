@@ -271,9 +271,18 @@ func (c CommandOptional) InvalidMsg(args ArgsParser) string {
 			continue
 		}
 
+		// value is required
 		var alias []string
 		if opt.Name != "" {
 			alias = append(alias, opt.Name)
+		}
+
+		if opt.IsData {
+			valueStr := rock.ListGetOr(args.CommandList(), opt.Next-1, args.SubCommand())
+			if valueStr == "" {
+				return "[" + opt.GetName() + "] 必须不可为空"
+			}
+			continue
 		}
 		alias = append(alias, opt.Alias...)
 		if opt.DefValue != "" || args.Switch(alias...) {

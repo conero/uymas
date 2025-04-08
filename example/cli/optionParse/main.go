@@ -2,6 +2,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"gitee.com/conero/uymas/v2/cli"
 	"gitee.com/conero/uymas/v2/cli/gen"
@@ -34,6 +35,12 @@ type subOption struct {
 type optionHelpPlus struct {
 	NoHelp bool `cmd:"no-help help:- default:true"`
 	IsHelp bool `cmd:"is-help default:false help:可设置no-help进行测试"`
+}
+
+// 选项验证
+type optionVerify struct {
+	Value string `cmd:"value required isdata"`
+	Name  string `cmd:"name required default:joshua help:设置姓名"`
 }
 
 func main() {
@@ -71,5 +78,22 @@ func main() {
 		fmt.Println("子选项测试: ")
 		fmt.Printf("%#v\n", opt)
 	}, "sub", cli.Help("命令子选项支持", gen.ArgsDecomposeMust(subOption{})...))
+
+	// 验证选项
+	app.Command(func(parser cli.ArgsParser) {
+		var option optionVerify
+		err := gen.ArgsDress(parser, &option)
+		if err != nil {
+			lgr.Error("命令选项解析错误, %v", err)
+			return
+		}
+
+		bys, _ := json.MarshalIndent(option, "", "  ")
+		fmt.Printf("参数验证\n: %s\n\n", bys)
+	}, "verify", cli.Help("选项值验证", gen.ArgsDecomposeMust(optionVerify{})...))
+
+	// struct 解析测试
+	//bys, _ := json.MarshalIndent(gen.ArgsDecomposeMust(optionVerify{}), "", "  ")
+	//lgr.Info("BYS:\n %s", bys)
 	lgr.ErrorIf(app.Run())
 }
