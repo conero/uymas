@@ -45,6 +45,7 @@
 
 - **util**
   - feat: 新增函数 `StructToMapViaJsonFunc` 支持结构体转map时设置回调函数
+  - feat: 新增函数 `StructToMapViaJsonOnly` 用于实现结构体转map是正向过滤
   - fix: 修复 `StructToMapViaJson` 等函数过滤参数参数无效
 - **util/tm**
   - feat: 新增函数 `SpendDefer` 用于迅速输出程序执行耗时统计

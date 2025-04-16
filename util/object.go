@@ -3,6 +3,7 @@ package util
 import (
 	"encoding/json"
 	"fmt"
+	"gitee.com/conero/uymas/v2/rock"
 	"gitee.com/conero/uymas/v2/str"
 	"reflect"
 	"strconv"
@@ -483,6 +484,31 @@ func StructToMapViaJsonFunc(value any, each func(key string, value any) (string,
 		}
 	}
 	return newVal
+}
+
+// StructToMapViaJsonOnly create a new structPtr by filterCols via json tag
+func StructToMapViaJsonOnly(value any, filterCols ...string) map[string]any {
+	var newVal map[string]any
+	marshal, err := json.Marshal(value)
+	if err != nil {
+		return nil
+	}
+
+	err = json.Unmarshal(marshal, &newVal)
+	if err != nil {
+		return nil
+	}
+	var filterMap map[string]any
+	for nK, nV := range newVal {
+		if rock.InList(filterCols, nK) {
+			if filterMap == nil {
+				filterMap = map[string]any{}
+			}
+			filterMap[nK] = nV
+		}
+	}
+
+	return filterMap
 }
 
 // MapToStruct use the map value to set structPtr

@@ -527,3 +527,25 @@ func TestMapToStructViaJson(t *testing.T) {
 		t.Logf("test2: %#v\n", t2)
 	}
 }
+
+func TestStructToMapViaJsonOnly(t *testing.T) {
+	relValue := StructToMapViaJsonOnly(tom, "is_open", "version", "is_add")
+	refLen := 3
+
+	// case
+	if len(relValue) != refLen {
+		t.Errorf("错误，%v", relValue)
+	}
+	if _, exist := relValue["is_open"]; !exist {
+		t.Errorf("错误，is_open 值解析错误 %v", relValue)
+	}
+	if value := relValue["version"]; fmt.Sprintf("%v", value) != tom.Version {
+		t.Errorf("错误，version值解析错误 %v", relValue)
+	}
+
+	// case
+	relValue = StructToMapViaJsonOnly(nil, "is_open", "version", "is_add")
+	if relValue != nil {
+		t.Errorf("空值处理错误，%v", relValue)
+	}
+}
