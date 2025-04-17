@@ -1,12 +1,19 @@
 // Package lgr An instance of library logger, used for direct output from the command line, etc.
 //
-// To change logger level shou use the system environment "UYMAS_LGR_LEVEL", like:
+// To change logger level should use the system environment "UYMAS_LGR_LEVEL",
+// to close logger color style shou use the system environment "UYMAS_LGR_NOCOLOR",
+// to change debug maker for test use the system environment "UYMAS_TMP_MARK",
+// like:
 //
-//	//window powershell
+//	# window powershell
 //	$env:UYMAS_LGR_LEVEL='all'
+//	$env:UYMAS_LGR_NOCOLOR='true'
+//	$env:UYMAS_TMP_MARK='TMarkShouldDEL'
 //
-//	// linux shell
+//	# linux shell
 //	export UYMAS_LGR_LEVEL=all
+//	export UYMAS_LGR_NOCOLOR=true
+//	export UYMAS_TMP_MARK=TMarkShouldDEL
 //
 // if not info by default.
 package lgr
@@ -26,11 +33,11 @@ import (
 var vLgr *logger.Logger
 
 const (
-	// EnvLevelKey try set the lgr level by system environment, like `$ export EnvLevelKey=info`
+	// EnvLevelKey try set the lgr level by system environment, like `$ export UYMAS_LGR_LEVEL=info`
 	EnvLevelKey = "UYMAS_LGR_LEVEL"
-	// EnvNoColorKey try set the lgr no color by system environment, like `$ export EnvNoColorKey=true`
+	// EnvNoColorKey try set the lgr no color by system environment, like `$ export UYMAS_LGR_NOCOLOR=true`
 	EnvNoColorKey = "UYMAS_LGR_NOCOLOR"
-	// EnvMarkKey try set the lgr mark by system environment, like `$ export EnvMarkKey=mark`
+	// EnvMarkKey try set the lgr mark by system environment, like `$ export UYMAS_TMP_MARK=mark`
 	EnvMarkKey = "UYMAS_TMP_MARK"
 )
 
