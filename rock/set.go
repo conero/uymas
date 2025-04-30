@@ -100,3 +100,12 @@ func ListAny[T constraints.KeyIterable](vList []T) []any {
 	}
 	return anyList
 }
+
+// ListRepeat create list by repeat depend on initValue by gave
+func ListRepeat[T constraints.KeyIterable](count int, initValue T) []T {
+	var initValueList []T
+	for i := 0; i < count; i++ {
+		initValueList = append(initValueList, initValue)
+	}
+	return initValueList
+}

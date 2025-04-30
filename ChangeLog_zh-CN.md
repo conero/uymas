@@ -56,9 +56,11 @@
   - pref: 函数 TmpMark 加入调用脚本名以及行号，使其更加精准的通过日志追溯的出处
 - **cli**
   - pref: 完善 option.isdata 参数必填的解析
-
 - **cli/gen**
   - pref: OptionTagParse 优化解析，使 required 能被正确解析
+- **rock**
+  - feat: 新增函数 ListRepeat 用于生成固定参数的切片类型数据
+
 
 
 
