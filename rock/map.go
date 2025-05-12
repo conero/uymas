@@ -44,6 +44,24 @@ func MapValues[T constraints.KeyIterable, X any](vMap map[T]X) (values []X) {
 	return
 }
 
+// MapValuesRely Produce a key value array in the order of the provided key name table,
+// and provide a callback function when it does not exist.
+//
+// Applied to the problem of unordered Map key values
+func MapValuesRely[T constraints.KeyIterable, X any](vMap map[T]X, keys []T, noExistFn func(key T) X) (values []X) {
+	for _, key := range keys {
+		if v, ok := vMap[key]; ok {
+			values = append(values, v)
+		} else if noExistFn != nil {
+			values = append(values, noExistFn(key))
+		} else {
+			var defVal X
+			values = append(values, defVal)
+		}
+	}
+	return
+}
+
 // MapGenByKv Create dictionary by key value pair array combination
 func MapGenByKv[K constraints.KeyIterable, V any](keys []K, values []V) (kv map[K]V) {
 	vLen := len(values)
