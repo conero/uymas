@@ -29,6 +29,8 @@ type KeyIterable interface {
 }
 
 // ValueIterable support basic types and composite lists
+//
+// Deprecated: should remove and replace by "any" directly in next major version.
 type ValueIterable interface {
 	any
 }

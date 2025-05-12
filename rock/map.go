@@ -29,7 +29,7 @@ func MapKeysString[K constraints.KeyIterable, V any](data map[K]V) []string {
 }
 
 // MapKeys Extract the key name array of the dictionary
-func MapKeys[T constraints.KeyIterable, X constraints.ValueIterable](vMap map[T]X) (keys []T) {
+func MapKeys[T constraints.KeyIterable, X any](vMap map[T]X) (keys []T) {
 	for k := range vMap {
 		keys = append(keys, k)
 	}
@@ -37,7 +37,7 @@ func MapKeys[T constraints.KeyIterable, X constraints.ValueIterable](vMap map[T]
 }
 
 // MapValues Extract the values name array of the dictionary
-func MapValues[T constraints.KeyIterable, X constraints.KeyIterable](vMap map[T]X) (values []X) {
+func MapValues[T constraints.KeyIterable, X any](vMap map[T]X) (values []X) {
 	for _, v := range vMap {
 		values = append(values, v)
 	}
@@ -45,7 +45,7 @@ func MapValues[T constraints.KeyIterable, X constraints.KeyIterable](vMap map[T]
 }
 
 // MapGenByKv Create dictionary by key value pair array combination
-func MapGenByKv[K constraints.KeyIterable, V constraints.ValueIterable](keys []K, values []V) (kv map[K]V) {
+func MapGenByKv[K constraints.KeyIterable, V any](keys []K, values []V) (kv map[K]V) {
 	vLen := len(values)
 	for i, k := range keys {
 		if i == vLen {
@@ -61,7 +61,7 @@ func MapGenByKv[K constraints.KeyIterable, V constraints.ValueIterable](keys []K
 }
 
 // MapFilter use the keys of map to filter itself
-func MapFilter[K constraints.KeyIterable, V constraints.ValueIterable](kv map[K]V, filter []K) map[K]V {
+func MapFilter[K constraints.KeyIterable, V any](kv map[K]V, filter []K) map[K]V {
 	var newMap = map[K]V{}
 	for kVal, value := range kv {
 		if ListIndex(filter, kVal) > -1 {
@@ -72,7 +72,7 @@ func MapFilter[K constraints.KeyIterable, V constraints.ValueIterable](kv map[K]
 }
 
 // MapSlice use the keys of map to slice itself
-func MapSlice[K constraints.KeyIterable, V constraints.ValueIterable](kv map[K]V, filter []K) map[K]V {
+func MapSlice[K constraints.KeyIterable, V any](kv map[K]V, filter []K) map[K]V {
 	var newMap = map[K]V{}
 	for kVal, value := range kv {
 		if ListIndex(filter, kVal) > -1 {

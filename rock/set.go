@@ -69,7 +69,7 @@ func ListGetOr[T any](list []T, index int, def T) T {
 }
 
 // ExtractArrUnique extracting array elements with loss (non-repeatable) from an array
-func ExtractArrUnique[T constraints.ValueIterable](count int, arr []T) []T {
+func ExtractArrUnique[T any](count int, arr []T) []T {
 	vLen := len(arr)
 	if vLen <= count {
 		return arr

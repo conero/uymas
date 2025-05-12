@@ -61,6 +61,8 @@
   - pref: OptionTagParse 优化解析，使 required 能被正确解析
 - **rock**
   - feat: 新增函数 ListRepeat 用于生成固定参数的切片类型数据
+  - pref: 将 `ValueIterable` 标记为删除状态用 `any ` 直代替
+  - pref: 将代码中  `ValueIterable`  替换为 `any`
 
 
 
