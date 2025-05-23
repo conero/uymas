@@ -62,6 +62,7 @@
 - **rock**
   - feat: 新增函数 ListRepeat 用于生成固定参数的切片类型数据
   - feat: 新增函数 MapValuesRely 用于根据提供键名顺序生成切片
+  - feat: 新增函数 MapGenFlat/MapGenFlatFn 以实现扁平化字典生成
   - pref: 将 `ValueIterable` 标记为删除状态用 `any ` 直代替
   - pref: 将代码中  `ValueIterable`  替换为 `any`
 

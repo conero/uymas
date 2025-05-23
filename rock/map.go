@@ -78,6 +78,35 @@ func MapGenByKv[K constraints.KeyIterable, V any](keys []K, values []V) (kv map[
 	return
 }
 
+// MapGenFlat Create dictionary by key value pair array combination and fixed value
+func MapGenFlat[K constraints.KeyIterable, V any](keys []K, value V) (kv map[K]V) {
+	for _, k := range keys {
+		if kv == nil {
+			kv = map[K]V{}
+		}
+		kv[k] = value
+	}
+
+	return
+}
+
+// MapGenFlatFn Create dictionary by key value pair array combination and fixed value from callback
+func MapGenFlatFn[K constraints.KeyIterable, V any](keys []K, defFn func(K) V) (kv map[K]V) {
+	var initValue V
+	for _, k := range keys {
+		if kv == nil {
+			kv = map[K]V{}
+		}
+		if defFn == nil {
+			kv[k] = initValue
+			continue
+		}
+		kv[k] = defFn(k)
+	}
+
+	return
+}
+
 // MapFilter use the keys of map to filter itself
 func MapFilter[K constraints.KeyIterable, V any](kv map[K]V, filter []K) map[K]V {
 	var newMap = map[K]V{}
