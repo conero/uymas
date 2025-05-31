@@ -3,6 +3,8 @@ package aesutil
 import (
 	"crypto/aes"
 	"encoding/base64"
+	"errors"
+	"gitee.com/conero/uymas/v2/logger/lgr"
 	"gitee.com/conero/uymas/v2/str"
 	"testing"
 )
@@ -69,6 +71,7 @@ func TestCbcEncrypt_php(t *testing.T) {
 		return
 	}
 	rawTxt, err = Pkcs7UnPadding(rawTxt, aes.BlockSize)
+	lgr.ErrorIf(err, errors.New("Pkcs7UnPadding 异常"))
 	if string(rawTxt) != data {
 		t.Errorf("php密文解密结果不匹配，参考值：\n%#v\n实际值：\n%#v", data, string(rawTxt))
 		return

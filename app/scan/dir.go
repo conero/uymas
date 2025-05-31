@@ -51,7 +51,7 @@ type DirScanner struct {
 func (ds *DirScanner) Exclude(excludes ...string) *DirScanner {
 	var newExcludes []string
 	for _, ecld := range excludes {
-		if "" == strings.TrimSpace(ecld) {
+		if strings.TrimSpace(ecld) == "" {
 			continue
 		}
 		newExcludes = append(newExcludes, ecld)

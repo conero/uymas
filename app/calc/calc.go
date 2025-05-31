@@ -130,15 +130,14 @@ func (c *Calc) mulDiv(eq string) string {
 
 		sgList := c.mulDivRegSg.FindAllString(md, -1)
 		var cul float64
-		eqSg := sgList[0]
-		if eqSg == "*" {
+		switch sgList[0] {
+		case "*":
 			cul = beg * end
-		} else if eqSg == "%" {
+		case "%":
 			cul = math.Mod(beg, end)
-		} else {
+		default:
 			cul = beg / end
 		}
-
 		eq = strings.ReplaceAll(eq, md, FloatSimple(fmt.Sprintf(c.accuracyStr, cul)))
 	}
 
