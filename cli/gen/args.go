@@ -215,23 +215,22 @@ func StructDress(vStruct reflect.Value, excludes ...string) (inheritOpts []cli.O
 		}
 		option := OptionTagParse(cmdTag)
 		if option == nil {
-			continue
+			name := str.JsonTagName(sField.Tag.Get("json"))
+			if name == "" {
+				name = str.Str(sField.Name).LowerStyle()
+			}
+			if rock.InList(excludes, name) {
+				continue
+			}
+			option = &cli.Option{
+				Alias: []string{name},
+			}
 		}
 		if rock.InList(excludes, option.Name) {
 			continue
 		}
 		option.FieldName = sField.Name
 		//@todo optimize code follow business
-		var name = str.JsonTagName(sField.Tag.Get("json"))
-		if name == "" {
-			name = str.Str(sField.Name).LowerStyle()
-		}
-		if rock.InList(excludes, name) {
-			continue
-		}
-		option = &cli.Option{
-			Alias: []string{name},
-		}
 		// parse child items
 		if option.StructGen {
 			option.StructItems = StructDress(field)
