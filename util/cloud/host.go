@@ -39,7 +39,9 @@ func PortAvailable(port uint16) uint16 {
 		if err != nil {
 			return port
 		}
-		go conn.Close()
+		go func(cn net.Conn) {
+			_ = conn.Close()
+		}(conn)
 		port += 1
 	}
 }

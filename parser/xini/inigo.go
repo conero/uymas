@@ -138,12 +138,12 @@ func ParseValue(v string) any {
 
 			if !parseMk {
 				rpls := "_JC::JC_"
-				vt0 := strings.Replace(v, "\\,", rpls, -1)
+				vt0 := strings.ReplaceAll(v, "\\,", rpls)
 				reg2 := regexp.MustCompile(`['"]+[^'"]+['"]+`)
 
 				for _, v1 := range reg2.FindAllString(vt0, -1) {
-					v2 := strings.Replace(v1, ",", rpls, -1)
-					vt0 = strings.Replace(vt0, v1, v2, -1)
+					v2 := strings.ReplaceAll(v1, ",", rpls)
+					vt0 = strings.ReplaceAll(vt0, v1, v2)
 				}
 
 				if strings.Contains(vt0, ",") {

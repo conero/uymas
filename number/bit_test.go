@@ -41,7 +41,7 @@ func TestBitSize_Format(t *testing.T) {
 // Size-turn test, Link: https://www.bejson.com/convert/filesize/
 func TestBytes(t *testing.T) {
 	var bytes int64 = 11264
-	var refBit BitSize = KiB * 11
+	var refBit = KiB * 11
 	vBit := Bytes(bytes)
 
 	if vBit != refBit {

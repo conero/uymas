@@ -33,22 +33,19 @@ func (c *DateDiffDesc) cmdListing() string {
 	if c.allYear >= 1 {
 		year, yearLst := math.Modf(c.allYear)
 		lstStr := ""
-		for {
-			day, _ := math.Modf(yearLst * 365)
-			if day > 30.4 {
-				mth, mthLst := math.Modf(day / 30.4)
-				lstStr += fmt.Sprintf("%d个月", int(mth))
-				day = mthLst * 30.4
-			}
-			if day > 7 {
-				wk, wkLst := math.Modf(day / 7)
-				lstStr += fmt.Sprintf("%d周", int(wk))
-				day = wkLst * 7
-			}
-			if day > 0 {
-				lstStr += fmt.Sprintf("%d天", int(day))
-			}
-			break
+		day, _ := math.Modf(yearLst * 365)
+		if day > 30.4 {
+			mth, mthLst := math.Modf(day / 30.4)
+			lstStr += fmt.Sprintf("%d个月", int(mth))
+			day = mthLst * 30.4
+		}
+		if day > 7 {
+			wk, wkLst := math.Modf(day / 7)
+			lstStr += fmt.Sprintf("%d周", int(wk))
+			day = wkLst * 7
+		}
+		if day > 0 {
+			lstStr += fmt.Sprintf("%d天", int(day))
 		}
 		queue = append(queue, fmt.Sprintf("按年计算: %d年%s", int(year), lstStr))
 	}
@@ -56,17 +53,14 @@ func (c *DateDiffDesc) cmdListing() string {
 	if c.allMonth >= 1 {
 		mth, mthLst := math.Modf(c.allMonth)
 		lstStr := ""
-		for {
-			day, _ := math.Modf(mthLst * 30.4)
-			if day > 7 {
-				wk, wkLst := math.Modf(day / 7)
-				lstStr += fmt.Sprintf("%d周", int(wk))
-				day = wkLst * 7
-			}
-			if day > 0 {
-				lstStr += fmt.Sprintf("%d天", int(day))
-			}
-			break
+		day, _ := math.Modf(mthLst * 30.4)
+		if day > 7 {
+			wk, wkLst := math.Modf(day / 7)
+			lstStr += fmt.Sprintf("%d周", int(wk))
+			day = wkLst * 7
+		}
+		if day > 0 {
+			lstStr += fmt.Sprintf("%d天", int(day))
 		}
 		queue = append(queue, fmt.Sprintf("按月计算: %d个月%s", int(mth), lstStr))
 	}
@@ -74,12 +68,9 @@ func (c *DateDiffDesc) cmdListing() string {
 	if c.allWeek >= 1 {
 		wk, wkLst := math.Modf(c.allWeek)
 		lstStr := ""
-		for {
-			day, _ := math.Modf(wkLst * 7)
-			if day > 0 {
-				lstStr += fmt.Sprintf("%d天", int(day))
-			}
-			break
+		day, _ := math.Modf(wkLst * 7)
+		if day > 0 {
+			lstStr += fmt.Sprintf("%d天", int(day))
 		}
 		queue = append(queue, fmt.Sprintf("按周计算: %d周%s", int(wk), lstStr))
 	}
