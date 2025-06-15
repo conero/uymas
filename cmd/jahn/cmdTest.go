@@ -11,6 +11,10 @@ import (
 )
 
 func cmdTest(arg cli.ArgsParser) {
+	if arg.Switch("for") {
+		cmdTestFor(arg)
+		return
+	}
 	defer tm.SpendDefer("本次执行耗时：")()
 	if arg.Switch("verbose", "V") {
 		fmt.Println()
@@ -39,4 +43,35 @@ func cmdTest(arg cli.ArgsParser) {
 		lgr.Info("创建生成测试命令如下：\n%s\n\n", strings.Join(mkOptionList, " "))
 		return
 	}
+}
+
+// for 版本测试
+//
+// 命令：for ($i = 0; $i -lt 20; $i++){$get = .\zig-out\bin\zuymas.exe -test -for 0.034597401B -sum -inline;echo "「$($i+1)」-> $get";};
+func cmdTestFor(arg cli.ArgsParser) {
+	spendFn := tm.SpendFn()
+	vFor := arg.Int64Def(1_000_000_000, "for")
+	var i int64 = 0
+	var count uint64
+	shouldSum := arg.Switch("sum")
+	for ; i < vFor; i++ {
+		if shouldSum {
+			count += uint64(i) + 1
+		}
+	}
+
+	// 行内测试
+	if arg.Switch("inline", "I") {
+		if shouldSum {
+			fmt.Printf("本次耗时：%v， 累加值：%d，循环数 %d", spendFn(), count, vFor)
+			return
+		}
+
+		fmt.Printf("本次耗时：%v，循环数 %d", spendFn(), vFor)
+		return
+	}
+	if shouldSum {
+		fmt.Printf("累加值：%v\n", count)
+	}
+	fmt.Printf("本次耗时：%v，循环数 %d\n", spendFn(), vFor)
 }

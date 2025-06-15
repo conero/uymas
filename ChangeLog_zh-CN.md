@@ -43,7 +43,8 @@
 
 > 程序优化
 
-
+- **cmd/jahn**
+  - pref: test 命令支持for遍历测试，与其他 uymas 保持一致
 
 
 

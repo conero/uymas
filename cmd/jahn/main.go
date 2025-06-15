@@ -65,6 +65,22 @@ func main() {
 			Alias: []string{"make-number", "M"},
 			Help:  "创建的个数，用于测试",
 		},
+		cli.Option{
+			Alias: []string{"make-number", "M"},
+			Help:  "创建的个数，用于测试",
+		},
+		cli.Option{
+			Alias: []string{"for"},
+			Help:  "循环测试，用其他 uymas 保持一致",
+		},
+		cli.Option{
+			Alias: []string{"sum"},
+			Help:  "for 测试时是否进行累加",
+		},
+		cli.Option{
+			Alias: []string{"inline", "I"},
+			Help:  "for 测试时单行内输出模式",
+		},
 	).NoValid())
 
 	app.Command(func(arg cli.ArgsParser) {
