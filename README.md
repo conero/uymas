@@ -45,8 +45,12 @@ nestling --> develop -->master
 
 ```ini
 # github
-$ go get -u gitee.com/conero/uymas/v2
+go get -u gitee.com/conero/uymas/v2
 
+# 安装最新的v2开发版本hash
+go get -u gitee.com/conero/uymas/v2@hash
+# r
+go get -u gitee.com/conero/uymas/v2@68354a026
 ```
 
 
