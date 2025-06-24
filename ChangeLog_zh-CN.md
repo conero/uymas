@@ -45,6 +45,9 @@
 
 - **cmd/jahn**
   - pref: test 命令支持for遍历测试，与其他 uymas 保持一致
+- **rock**
+  - feat: 新增函数 `Must`, `MustNoPanic` 用于实现对含错误的二元数组进行降维
+
 
 
 

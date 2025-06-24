@@ -3,6 +3,10 @@ package rock
 
 import "gitee.com/conero/uymas/v2/rock/constraints"
 
+var (
+	globalMustPanic = true
+)
+
 // ListNoRepeat filter duplicate elements in list
 func ListNoRepeat[T constraints.Equable](list []T) []T {
 	var noRepeat []T
