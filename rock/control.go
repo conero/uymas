@@ -23,6 +23,25 @@ func Must[T any](value T, err error) T {
 	return value
 }
 
+// MustFunc it is used to implement dimensionality reduction for binary arrays with errors and supports callback functions.
+//
+// The handlerErrFn that if the callback function returns false, it will return vacancy.
+func MustFunc[T any](handlerErrFn func(error) bool) func(T, error) T {
+	return func(value T, err error) T {
+		if handlerErrFn == nil {
+			return value
+		}
+		if err != nil {
+			if !handlerErrFn(err) {
+				var zeroValue T
+				return zeroValue
+			}
+		}
+		return value
+	}
+}
+
+// MustNoPanic to set the function Must don't to panic if exist error
 func MustNoPanic(noPanic bool) {
 	globalMustPanic = !noPanic
 }
