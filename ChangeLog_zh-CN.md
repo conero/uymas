@@ -38,8 +38,8 @@
 
 - **util**
   - pref: 优化 StructToMapLStyle 引用json tag 时排除`omitempty`等特殊值 
-
-
+- **uymas**
+  - feat: 新增 `BuildMeta` 类以及 `Meta` 函数用于获取编译信息
 
 
 

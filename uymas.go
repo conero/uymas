@@ -27,6 +27,10 @@ var (
 	buildAuthor string
 )
 
+var (
+	globalMeta *BuildMeta
+)
+
 // GetBuildInfo return the build info by data injection
 // ```
 // powershell
@@ -46,4 +50,26 @@ func GetBuildInfo() string {
 		info += "Power by " + buildAuthor
 	}
 	return info
+}
+
+type BuildMeta struct {
+	GitHash     string
+	BuildData   string
+	BuildAuthor string
+}
+
+func (m BuildMeta) IsSet() bool {
+	return m.GitHash != "" && m.BuildData != "" && m.BuildAuthor != ""
+}
+
+// Meta get meta info
+func Meta() BuildMeta {
+	if globalMeta == nil {
+		globalMeta = &BuildMeta{
+			GitHash:     gitHash,
+			BuildData:   buildData,
+			BuildAuthor: buildAuthor,
+		}
+	}
+	return *globalMeta
 }
