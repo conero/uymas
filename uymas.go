@@ -25,6 +25,10 @@ var (
 	buildAuthor string
 )
 
+var (
+	globalMeta *BuildMeta
+)
+
 // GetBuildInfo Get the relevant version information after injection with the -ldflags parameters gitHash, buildData, buildAuthor.
 //
 // shell like:
@@ -46,4 +50,26 @@ func GetBuildInfo() string {
 		info += "Power by " + buildAuthor
 	}
 	return info
+}
+
+type BuildMeta struct {
+	GitHash     string
+	BuildData   string
+	BuildAuthor string
+}
+
+func (m BuildMeta) IsSet() bool {
+	return m.GitHash != "" && m.BuildData != "" && m.BuildAuthor != ""
+}
+
+// Meta get meta info
+func Meta() BuildMeta {
+	if globalMeta == nil {
+		globalMeta = &BuildMeta{
+			GitHash:     gitHash,
+			BuildData:   buildData,
+			BuildAuthor: buildAuthor,
+		}
+	}
+	return *globalMeta
 }
