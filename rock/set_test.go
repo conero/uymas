@@ -61,3 +61,27 @@ func TestListSubset(t *testing.T) {
 		t.Errorf("%#v 应该为 %#v 的子数组，次判别错误", intArr1, intArr2)
 	}
 }
+
+func TestListNext(t *testing.T) {
+	// case
+	intArr := []int{1, 9, 49, 1001, 24, 903}
+	intNext, index := ListNext(intArr, 49)
+	if intNext != 1001 || index != 3 {
+		t.Errorf("ListNext(%#v, 49) 错误，返回值：%#v, %#v", intArr, intNext, index)
+	}
+	intNext, index = ListNext(intArr, 49, 2)
+	if intNext != 24 || index != 4 {
+		t.Errorf("ListNext(%#v, 49) 错误，返回值：%#v, %#v", intArr, intNext, index)
+	}
+
+	// case
+	strArr := []string{"中国", "首都", "是", "北京", "火星", "real", "make"}
+	strNext, index := ListNext(strArr, "北京")
+	if strNext != "火星" || index != 4 {
+		t.Errorf("ListNext(%#v, %#v) 错误，返回值：%#v, %#v", strArr, "北京", strNext, index)
+	}
+	strNext, index = ListNext(strArr, "make")
+	if strNext != "" || index != -1 {
+		t.Errorf("ListNext(%#v, %#v) 错误，返回值：%#v, %#v", strArr, "make", strNext, index)
+	}
+}

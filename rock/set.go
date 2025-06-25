@@ -68,6 +68,27 @@ func ListGetOr[T any](list []T, index int, def T) T {
 	return def
 }
 
+// ListNext Get the next element in the list by match element
+func ListNext[T constraints.Equable](arr []T, find T, detPars ...int) (T, int) {
+	det := Param(0, detPars...)
+	if det < 1 {
+		det = 1
+	}
+
+	var next T
+	for i, v := range arr {
+		if v == find {
+			lastIndex := i + det
+			if lastIndex < len(arr) {
+				return arr[i+det], lastIndex
+			}
+			return next, -1
+		}
+	}
+
+	return next, -1
+}
+
 // ExtractArrUnique extracting array elements with loss (non-repeatable) from an array
 func ExtractArrUnique[T any](count int, arr []T) []T {
 	vLen := len(arr)
