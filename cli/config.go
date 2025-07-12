@@ -33,8 +33,8 @@ var DefaultConfig = Config{
 
 // IndexDoc Generate a default entry title
 func (c Config) IndexDoc() {
+	title := c.Title
 	if c.Head != "" {
-		title := c.Title
 		if title == "" {
 			title = fs.AppName()
 		}
@@ -45,10 +45,14 @@ func (c Config) IndexDoc() {
 		return
 	}
 
+	if title == "" {
+		title = "Uymas"
+	}
+
 	fmt.Println()
-	fmt.Println("-------------- Uymas -----------------")
+	fmt.Println("-------------- " + title + " -----------------")
 	fmt.Println()
-	fmt.Println("Welcome to our world")
+	fmt.Println("Welcome to the world")
 	fmt.Printf(":)- %s/%s\n", uymas.Version, uymas.Release)
 	fmt.Println()
 }
