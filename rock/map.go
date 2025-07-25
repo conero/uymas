@@ -111,7 +111,7 @@ func MapGenFlatFn[K constraints.KeyIterable, V any](keys []K, defFn func(K) V) (
 func MapFilter[K constraints.KeyIterable, V any](kv map[K]V, filter []K) map[K]V {
 	var newMap = map[K]V{}
 	for kVal, value := range kv {
-		if ListIndex(filter, kVal) > -1 {
+		if InList(filter, kVal) {
 			newMap[kVal] = value
 		}
 	}
@@ -122,7 +122,7 @@ func MapFilter[K constraints.KeyIterable, V any](kv map[K]V, filter []K) map[K]V
 func MapSlice[K constraints.KeyIterable, V any](kv map[K]V, filter []K) map[K]V {
 	var newMap = map[K]V{}
 	for kVal, value := range kv {
-		if ListIndex(filter, kVal) > -1 {
+		if InList(filter, kVal) {
 			continue
 		}
 		newMap[kVal] = value
