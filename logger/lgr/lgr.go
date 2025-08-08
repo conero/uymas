@@ -41,7 +41,7 @@ const (
 	EnvMarkKey = "UYMAS_TMP_MARK"
 )
 
-func init() {
+func createLog() {
 	lvl := fs.GetenvOr(EnvLevelKey, logger.LevelInfo)
 	noColor := strings.ToLower(fs.GetenvOr(EnvNoColorKey, "false"))
 	vLgr = logger.NewLogger(logger.Config{
@@ -56,24 +56,31 @@ func Log() logger.Logger {
 	return *vLgr
 }
 
+func getLgr() *logger.Logger {
+	if vLgr == nil {
+		createLog()
+	}
+	return vLgr
+}
+
 func Trace(message string, args ...any) {
-	vLgr.Tracef(message, args...)
+	getLgr().Tracef(message, args...)
 }
 
 func Debug(message string, args ...any) {
-	vLgr.Debugf(message, args...)
+	getLgr().Debugf(message, args...)
 }
 
 func Info(message string, args ...any) {
-	vLgr.Infof(message, args...)
+	getLgr().Infof(message, args...)
 }
 
 func Warn(message string, args ...any) {
-	vLgr.Warnf(message, args...)
+	getLgr().Warnf(message, args...)
 }
 
 func Error(message string, args ...any) {
-	vLgr.Errorf(message, args...)
+	getLgr().Errorf(message, args...)
 }
 
 // ErrorIf print error message only when err is not nil
@@ -87,7 +94,7 @@ func ErrorIf(err error, prefixErr ...error) {
 }
 
 func Fatal(message string, args ...any) {
-	vLgr.Fatalf(message, args...)
+	getLgr().Fatalf(message, args...)
 	os.Exit(0)
 }
 
@@ -97,17 +104,17 @@ func FatalIf(err error, prefixErr ...error) {
 	}
 	vErr := errors.Join(prefixErr...)
 	vErr = errors.Join(err, vErr)
-	vLgr.Fatalf(vErr.Error())
+	getLgr().Fatalf(vErr.Error())
 	os.Exit(1)
 }
 
 func Pref(logPref string) logger.Logger {
-	vLgr.Pref(logPref)
+	getLgr().Pref(logPref)
 	return *vLgr
 }
 
 func SetFlag(flag int) {
-	vLgr.SetFlags(flag)
+	getLgr().SetFlags(flag)
 }
 
 // TmpMark temporary tags are used for debugging, and debugging should be removed before release
@@ -120,5 +127,5 @@ func TmpMark(mark any, args ...any) {
 	markString = ansi.Style("<"+markTitle+">", ansi.Red, ansi.BkgWhiteBr, ansi.Italic, ansi.Twinkle) +
 		ansi.Style(fmt.Sprintf(" %s(%d) ", filepath.Base(flPath), flLine), ansi.Green) +
 		markString
-	vLgr.Errorf(markString, args...)
+	getLgr().Errorf(markString, args...)
 }

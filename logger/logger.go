@@ -318,7 +318,7 @@ func NewLogger(cfgs ...Config) *Logger {
 	// Demoted processing, all driver parsing failed using the console
 	if cfg.Log == nil {
 		//cfg.Log = log.New(os.Stdout, "", log.Ltime)
-		cfg.Log = log.New(os.Stdout, "", log.LstdFlags)
+		cfg.Log = log.New(os.Stdout, "", log.Ldate|log.Lmicroseconds)
 	}
 
 	logging.Level = lv
