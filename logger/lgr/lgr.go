@@ -9,13 +9,13 @@
 //	$env:UYMAS_LGR_LEVEL='all'
 //	$env:UYMAS_LGR_NOCOLOR='true'
 //	$env:UYMAS_TMP_MARK='TMarkShouldDEL'
-//	$env:UYMAS_LGR_FILE='log.txt'
+//	$env:UYMAS_LGR_FILE='log.txt' or true/1
 //
 //	# linux shell
 //	export UYMAS_LGR_LEVEL=all
 //	export UYMAS_LGR_NOCOLOR=true
 //	export UYMAS_TMP_MARK=TMarkShouldDEL
-//	export UYMAS_LGR_FILE=log.txt
+//	export UYMAS_LGR_FILE=log.txt or true/1
 //
 // if not info by default.
 package lgr
@@ -25,6 +25,7 @@ import (
 	"fmt"
 	"gitee.com/conero/uymas/v2/cli/ansi"
 	"gitee.com/conero/uymas/v2/logger"
+	"gitee.com/conero/uymas/v2/rock"
 	"gitee.com/conero/uymas/v2/util/fs"
 	"os"
 	"path/filepath"
@@ -54,7 +55,9 @@ func createLog() {
 	logFile := fs.GetenvOr(EnvLogFile, "")
 	if logFile != "" {
 		lgrConfig.Driver = logger.DriverFile
-		lgrConfig.OutputDir = logFile
+		if !rock.InList([]string{"true", "1"}, logFile) {
+			lgrConfig.OutputDir = logFile
+		}
 		noColor = "true"
 	}
 	vLgr = logger.NewLogger(lgrConfig)
