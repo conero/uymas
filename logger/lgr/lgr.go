@@ -9,11 +9,13 @@
 //	$env:UYMAS_LGR_LEVEL='all'
 //	$env:UYMAS_LGR_NOCOLOR='true'
 //	$env:UYMAS_TMP_MARK='TMarkShouldDEL'
+//	$env:UYMAS_LGR_FILE='log.txt'
 //
 //	# linux shell
 //	export UYMAS_LGR_LEVEL=all
 //	export UYMAS_LGR_NOCOLOR=true
 //	export UYMAS_TMP_MARK=TMarkShouldDEL
+//	export UYMAS_LGR_FILE=log.txt
 //
 // if not info by default.
 package lgr
@@ -39,14 +41,23 @@ const (
 	EnvNoColorKey = "UYMAS_LGR_NOCOLOR"
 	// EnvMarkKey try set the lgr mark by system environment, like `$ export UYMAS_TMP_MARK=mark`
 	EnvMarkKey = "UYMAS_TMP_MARK"
+	// EnvLogFile try set the lgr log file by system environment, like `$ export UYMAS_LGR_FILE=/tmp/log.log`
+	EnvLogFile = "UYMAS_LGR_FILE"
 )
 
 func createLog() {
 	lvl := fs.GetenvOr(EnvLevelKey, logger.LevelInfo)
 	noColor := strings.ToLower(fs.GetenvOr(EnvNoColorKey, "false"))
-	vLgr = logger.NewLogger(logger.Config{
+	lgrConfig := logger.Config{
 		Level: lvl,
-	})
+	}
+	logFile := fs.GetenvOr(EnvLogFile, "")
+	if logFile != "" {
+		lgrConfig.Driver = logger.DriverFile
+		lgrConfig.OutputDir = logFile
+		noColor = "true"
+	}
+	vLgr = logger.NewLogger(lgrConfig)
 	if noColor != "" && noColor != "false" && noColor != "0" {
 		vLgr.NoColor()
 	}

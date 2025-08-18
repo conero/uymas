@@ -50,8 +50,9 @@
   - feat: 新增函数 `ListNext` 用于通过元素搜索获取列表的下一个值
 - **logger**
   - pref: 调整 NewLogger 生产的日志时间默认带毫秒的格式
+- **logger/lgr**
+  - feat: 新增环境变量 `UYMAS_LGR_FILE` 以实现快速日志保存到文件中
 
-- ****
 - **uymas**
   - feat: 新增 `BuildMeta` 类以及 `Meta` 函数用于获取编译信息
 
