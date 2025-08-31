@@ -43,6 +43,12 @@
 
 > 程序优化
 
+- **cli**
+  - feat: `Args` 方法新增 `Uint32`用于解析uint32 位整形
+
+- **data/input**
+  - feat: `Stringer` 新增`Uint32` 用于解析 uint32 位整形
+
 - **cmd/jahn**
   - pref: test 命令支持for遍历测试，与其他 uymas 保持一致
 - **rock**
@@ -52,7 +58,6 @@
   - pref: 调整 NewLogger 生产的日志时间默认带毫秒的格式
 - **logger/lgr**
   - feat: 新增环境变量 `UYMAS_LGR_FILE` 以实现快速日志保存到文件中
-
 - **uymas**
   - feat: 新增 `BuildMeta` 类以及 `Meta` 函数用于获取编译信息
 

@@ -18,6 +18,7 @@ type ArgsParser interface {
 	Int(keys ...string) int
 	Int64(keys ...string) int64
 	F64(keys ...string) float64
+	Uint32(keys ...string) uint32
 	Uint64(keys ...string) uint64
 	// Def get command line data by key value and specify default values
 	Def(def string, keys ...string) string
@@ -304,6 +305,14 @@ func (c *Args) F64(keys ...string) float64 {
 	value := c.Get(keys...)
 	if value != "" {
 		return input.Stringer(value).Float()
+	}
+	return 0
+}
+
+func (c *Args) Uint32(keys ...string) uint32 {
+	value := c.Get(keys...)
+	if value != "" {
+		return input.Stringer(value).Uint32()
 	}
 	return 0
 }

@@ -31,6 +31,14 @@ func (s Stringer) Uint64() uint64 {
 	return v
 }
 
+func (s Stringer) Uint32() uint32 {
+	if s == "" {
+		return 0
+	}
+	v, _ := strconv.ParseUint(string(s), 10, 32)
+	return uint32(v)
+}
+
 func (s Stringer) Int() int {
 	iVal, _ := strconv.Atoi(string(s))
 	return iVal

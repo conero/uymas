@@ -47,10 +47,10 @@ nestling --> develop -->master
 # github
 go get -u gitee.com/conero/uymas/v2
 
-# 安装最新的v2开发版本hash
+# 安装最新的v2开发版本hash，hash 全写或12位时有效
 go get -u gitee.com/conero/uymas/v2@hash
-# r
-go get -u gitee.com/conero/uymas/v2@68354a026
+# 如：
+go get -u gitee.com/conero/uymas/v2@05e80eafc26b
 ```
 
 
