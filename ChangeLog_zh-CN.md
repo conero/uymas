@@ -36,6 +36,7 @@
 - [ ] `#241019` 包 `cli/gen` *ArgsTagData* 等一些列常量命名与时间额的功能含义比较混乱，需对命令进行规范化
 - [ ] `#250108` 如 util object 包之类的处理 struct 注意看是否可扩展支持继承类
 - [ ] `#250324`  logger 等子包如何在日志出自定义输出，如脚本及行号等信息
+- [ ] `#250901` `data/input` 转数字时，支持 k(Kilo)，w(万)，m(mega)，b(billion)等数值单位，如`1.5m -> 1500_000`
 
 
 
@@ -48,6 +49,7 @@
 
 - **data/input**
   - feat: `Stringer` 新增`Uint32` 用于解析 uint32 位整形
+  - pref: 实验性的添加列表转map的方法系列（包括支持回调的等），`SplitAsMap`、`SplitAsMapFunc`、`SplitAsMapConvFunc`、`SplitMapBasic`、`SplitAsMapBasicFunc`
   - pref: `Stringer` 解析数据时，支持`_` 分隔符以及兼容浮点型转整形
 
 - **cmd/jahn**
