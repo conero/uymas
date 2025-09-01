@@ -11,6 +11,7 @@ import (
 type ArgsParser interface {
 	// Values The original data type of the command
 	Values() map[string][]string
+	MapValue() map[string]ArgValue
 	List(keys ...string) []string
 	Join(seq string, keys ...string) string
 	// Get command line data by key value
@@ -48,10 +49,25 @@ type ArgsConfig struct {
 	//
 	ShortOption bool
 	EqualSigner []string
+	// support top attribute, like `-x.z 1 -x.t 3` as option `-x` . Default is true
+	TopAttrAllow  bool
+	TopAttrSigner []string
 }
 
 var DefArgsConfig = ArgsConfig{
-	EqualSigner: []string{"="},
+	EqualSigner:   []string{"="},
+	ShortOption:   true,
+	TopAttrAllow:  true,
+	TopAttrSigner: []string{"."},
+}
+
+// ArgValue arg of
+type ArgValue = map[string][]string
+
+type mapValueCheck struct {
+	isMatch bool
+	keys    []string
+	value   []string
 }
 
 // Args command line program parameters
@@ -62,15 +78,73 @@ type Args struct {
 	commandList []string
 	option      []string
 	values      map[string][]string
+	valueMap    map[string]ArgValue
 	config      ArgsConfig
 	optional    *CommandOptional
 	ArgsParser
+}
+
+// get map value
+func (c *Args) getMapValue(key string, keyL2 string) []string {
+	if len(c.valueMap) < 1 {
+		return nil
+	}
+	value, ok := c.valueMap[key]
+	if !ok || len(value) < 1 {
+		return nil
+	}
+
+	return value[keyL2]
+}
+
+// try to parse top map value
+func (c *Args) tryMapValue(key string, valueOpts ...string) mapValueCheck {
+	if !c.config.TopAttrAllow {
+		return mapValueCheck{}
+	}
+	if key == "" {
+		return mapValueCheck{}
+	}
+
+	//var topKey string
+	var check mapValueCheck
+	value := rock.Param("", valueOpts...)
+	for _, signer := range c.config.TopAttrSigner {
+		idx := strings.Index(key, signer)
+		if idx > 0 {
+			check.isMatch = true
+			check.keys = strings.Split(key, signer)
+			topKey := check.keys[0]
+			cValue := c.getMapValue(topKey, check.keys[1])
+			if value != "" {
+				cValue = append(cValue, value)
+			}
+			check.value = cValue
+
+		}
+	}
+
+	return check
+}
+
+func (c *Args) mapValueMust(key string) ArgValue {
+	if c.valueMap == nil {
+		return ArgValue{}
+	}
+	value, ok := c.valueMap[key]
+	if !ok {
+		return ArgValue{}
+	}
+	return value
 }
 
 // parse data by args
 func (c *Args) parse() {
 	if c.values == nil {
 		c.values = map[string][]string{}
+	}
+	if c.valueMap == nil {
+		c.valueMap = map[string]ArgValue{}
 	}
 	config := c.config
 
@@ -86,6 +160,19 @@ func (c *Args) parse() {
 	}
 
 	lastKey := ""
+	// handle map value
+	handleMapValueFn := func(key string, value string) bool {
+		tmv := c.tryMapValue(key, value)
+		if tmv.isMatch {
+			lastKey = tmv.keys[0]
+			saveValue := c.mapValueMust(lastKey)
+			saveValue[tmv.keys[1]] = tmv.value
+			c.valueMap[lastKey] = saveValue
+			c.option = append(c.option, lastKey)
+			return true
+		}
+		return false
+	}
 	// remember option
 	recordOptionFn := func(opts ...string) {
 		if opts == nil {
@@ -97,6 +184,10 @@ func (c *Args) parse() {
 			pair := optionSplitFn(opts[0])
 			if len(pair) > 0 {
 				lastKey = pair[0]
+				curValue := pair[1]
+				if handleMapValueFn(lastKey, curValue) {
+					return
+				}
 				var values = c.values[lastKey]
 				values = append(values, pair[1])
 				c.values[lastKey] = values
@@ -104,8 +195,17 @@ func (c *Args) parse() {
 				return
 			}
 		}
-		c.option = append(c.option, opts...)
-		lastKey = opts[vLen-1]
+		childLastOp := ""
+		for _, opt := range opts {
+			if handleMapValueFn(opt, "") {
+				childLastOp = lastKey
+				c.option = append(c.option, lastKey)
+				continue
+			}
+			childLastOp = opt
+			c.option = append(c.option, opt)
+		}
+		lastKey = childLastOp
 	}
 	for i, arg := range c.raw {
 		var option string
@@ -144,6 +244,7 @@ func (c *Args) parse() {
 		}
 		c.commandList = append(c.commandList, arg)
 	}
+	c.option = rock.ListNoRepeat(c.option)
 }
 
 func (c *Args) Values() map[string][]string {
@@ -332,6 +433,10 @@ func (c *Args) SetOptional(optional *CommandOptional) ArgsParser {
 
 func (c *Args) Raw() []string {
 	return c.raw
+}
+
+func (c *Args) MapValue() map[string]ArgValue {
+	return c.valueMap
 }
 
 func NewArgs(args ...string) ArgsParser {

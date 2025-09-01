@@ -21,7 +21,8 @@ func cmdTest(arg cli.ArgsParser) {
 		fmt.Println("参数解析，数据如下")
 		fmt.Println()
 		fmt.Printf("value: %v\n", arg.Values())
-		fmt.Printf("option: %v\n", arg.Option())
+		fmt.Printf("mapValue: %v\n", arg.MapValue())
+		fmt.Printf("option: %#v\n", arg.Option())
 		fmt.Printf("CommandList: %v\n", arg.CommandList())
 	}
 	option := arg.List("option", "O")

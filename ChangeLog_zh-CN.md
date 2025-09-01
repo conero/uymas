@@ -46,7 +46,8 @@
 
 - **cli**
   - feat: `Args` 方法新增 `Uint32`用于解析uint32 位整形
-
+  - feat: `Args` 解析支持顶级属性，且添加方法 `MapValue` 用于获取解析值
+  
 - **data/input**
   - feat: `Stringer` 新增`Uint32` 用于解析 uint32 位整形
   - pref: 实验性的添加列表转map的方法系列（包括支持回调的等），`SplitAsMap`、`SplitAsMapFunc`、`SplitAsMapConvFunc`、`SplitMapBasic`、`SplitAsMapBasicFunc`
