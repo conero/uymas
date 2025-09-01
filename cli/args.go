@@ -160,6 +160,7 @@ func (c *Args) parse() {
 	}
 
 	lastKey := ""
+	lastRawKey := ""
 	// handle map value
 	handleMapValueFn := func(key string, value string) bool {
 		tmv := c.tryMapValue(key, value)
@@ -184,6 +185,7 @@ func (c *Args) parse() {
 			pair := optionSplitFn(opts[0])
 			if len(pair) > 0 {
 				lastKey = pair[0]
+				lastRawKey = lastKey
 				curValue := pair[1]
 				if handleMapValueFn(lastKey, curValue) {
 					return
@@ -206,6 +208,7 @@ func (c *Args) parse() {
 			c.option = append(c.option, opt)
 		}
 		lastKey = childLastOp
+		lastRawKey = opts[vLen-1]
 	}
 	for i, arg := range c.raw {
 		var option string
@@ -235,6 +238,17 @@ func (c *Args) parse() {
 			c.subCommand = arg
 			c.commandList = append(c.commandList, arg)
 			continue
+		}
+		if lastRawKey != "" {
+			tmv := c.tryMapValue(lastRawKey, arg)
+			if tmv.isMatch {
+				lastKey = tmv.keys[0]
+				saveValue := c.mapValueMust(lastKey)
+				saveValue[tmv.keys[1]] = tmv.value
+				c.valueMap[lastKey] = saveValue
+				c.option = append(c.option, lastKey)
+				continue
+			}
 		}
 		if lastKey != "" {
 			var values = c.values[lastKey]
