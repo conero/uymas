@@ -7,10 +7,13 @@ import (
 	"strings"
 )
 
+// ArgValue arg of
+type ArgValue = map[string][]string
+
 // ArgsParser command line parameter parsing interface
 type ArgsParser interface {
 	// Values The original data type of the command
-	Values() map[string][]string
+	Values() ArgValue
 	MapValue() map[string]ArgValue
 	List(keys ...string) []string
 	Join(seq string, keys ...string) string
@@ -21,6 +24,7 @@ type ArgsParser interface {
 	F64(keys ...string) float64
 	Uint32(keys ...string) uint32
 	Uint64(keys ...string) uint64
+	Map(keys ...string) ArgValue
 	// Def get command line data by key value and specify default values
 	Def(def string, keys ...string) string
 	IntDef(def int, keys ...string) int
@@ -61,9 +65,6 @@ var DefArgsConfig = ArgsConfig{
 	TopAttrSigner: []string{"."},
 }
 
-// ArgValue arg of
-type ArgValue = map[string][]string
-
 type mapValueCheck struct {
 	isMatch bool
 	keys    []string
@@ -77,7 +78,7 @@ type Args struct {
 	subCommand  string
 	commandList []string
 	option      []string
-	values      map[string][]string
+	values      ArgValue
 	valueMap    map[string]ArgValue
 	config      ArgsConfig
 	optional    *CommandOptional
@@ -141,7 +142,7 @@ func (c *Args) mapValueMust(key string) ArgValue {
 // parse data by args
 func (c *Args) parse() {
 	if c.values == nil {
-		c.values = map[string][]string{}
+		c.values = ArgValue{}
 	}
 	if c.valueMap == nil {
 		c.valueMap = map[string]ArgValue{}
@@ -261,7 +262,7 @@ func (c *Args) parse() {
 	c.option = rock.ListNoRepeat(c.option)
 }
 
-func (c *Args) Values() map[string][]string {
+func (c *Args) Values() ArgValue {
 	return c.values
 }
 
@@ -451,6 +452,15 @@ func (c *Args) Raw() []string {
 
 func (c *Args) MapValue() map[string]ArgValue {
 	return c.valueMap
+}
+
+func (c *Args) Map(keys ...string) ArgValue {
+	for _, key := range keys {
+		if value, exist := c.valueMap[key]; exist {
+			return value
+		}
+	}
+	return nil
 }
 
 func NewArgs(args ...string) ArgsParser {
