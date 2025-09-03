@@ -52,7 +52,8 @@
   - feat: `Stringer` 新增`Uint32` 用于解析 uint32 位整形
   - pref: 实验性的添加列表转map的方法系列（包括支持回调的等），`SplitAsMap`、`SplitAsMapFunc`、`SplitAsMapConvFunc`、`SplitMapBasic`、`SplitAsMapBasicFunc`
   - pref: `Stringer` 解析数据时，支持`_` 分隔符以及兼容浮点型转整形
-
+  - pref: `Stringer` 解析数据 Int 支持 k/w/m/b 单位后缀（非正则）
+  
 - **cmd/jahn**
   - pref: test 命令支持for遍历测试，与其他 uymas 保持一致
 - **rock**

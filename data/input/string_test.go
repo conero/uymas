@@ -60,6 +60,18 @@ func TestStringer_Int(t *testing.T) {
 	if vInt != 12000 {
 		t.Errorf("%d != 12000", vInt)
 	}
+
+	// case
+	vInt = Stringer("12,000.0").Int()
+	if vInt != 12000 {
+		t.Errorf("%d != 12000", vInt)
+	}
+
+	// case
+	vInt = Stringer("0.134 W").Int()
+	if vInt != 1340 {
+		t.Errorf("%d != 1340", vInt)
+	}
 }
 
 func TestStringer_Float(t *testing.T) {
