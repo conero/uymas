@@ -14,7 +14,12 @@ func (s Stringer) Int64() int64 {
 	if s == "" {
 		return 0
 	}
-	v, _ := strconv.ParseInt(floatStringTrim(string(s)), 10, 64)
+	value := string(s)
+	fVal, base, isMatch := supportUnit(value)
+	if isMatch {
+		return int64(fVal * float64(base))
+	}
+	v, _ := strconv.ParseInt(floatStringTrim(value), 10, 64)
 	return v
 }
 
@@ -22,7 +27,12 @@ func (s Stringer) Float() float64 {
 	if s == "" {
 		return 0
 	}
-	v, _ := strconv.ParseFloat(string(s), 64)
+	value := string(s)
+	fVal, base, isMatch := supportUnit(value)
+	if isMatch {
+		return fVal * float64(base)
+	}
+	v, _ := strconv.ParseFloat(value, 64)
 	return v
 }
 
@@ -30,7 +40,12 @@ func (s Stringer) Uint64() uint64 {
 	if s == "" {
 		return 0
 	}
-	v, _ := strconv.ParseUint(floatStringTrim(string(s)), 10, 64)
+	value := string(s)
+	fVal, base, isMatch := supportUnit(value)
+	if isMatch {
+		return uint64(fVal * float64(base))
+	}
+	v, _ := strconv.ParseUint(floatStringTrim(value), 10, 64)
 	return v
 }
 
@@ -38,7 +53,12 @@ func (s Stringer) Uint32() uint32 {
 	if s == "" {
 		return 0
 	}
-	v, _ := strconv.ParseUint(floatStringTrim(string(s)), 10, 32)
+	value := string(s)
+	fVal, base, isMatch := supportUnit(value)
+	if isMatch {
+		return uint32(fVal * float64(base))
+	}
+	v, _ := strconv.ParseUint(floatStringTrim(value), 10, 32)
 	return uint32(v)
 }
 
