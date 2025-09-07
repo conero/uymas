@@ -34,5 +34,18 @@
 
 
 
-​	
+
+
+### 开发
+
+使用工具 [golangci-lint](https://github.com/golangci/golangci-lint) 做 lint 提示
+
+
+
+```shell
+# 执行lint
+golangci-lint.exe run ./...
+```
+
+
 
