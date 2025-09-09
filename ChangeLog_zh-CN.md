@@ -50,6 +50,7 @@
   
 - **data/input**
   - feat: `Stringer` 新增`Uint32` 用于解析 uint32 位整形
+  - feat: `SimpleStr` 新增简单的字符串数据解析类并使用 `Stringer` 获取后者的扩展
   - pref: 实验性的添加列表转map的方法系列（包括支持回调的等），`SplitAsMap`、`SplitAsMapFunc`、`SplitAsMapConvFunc`、`SplitMapBasic`、`SplitAsMapBasicFunc`
   - pref: `Stringer` 解析数据时，支持`_` 分隔符以及兼容浮点型转整形
   - pref: `Stringer` 解析数据 Int/float/uint等 支持 k/w/m/b 单位后缀（非正则）

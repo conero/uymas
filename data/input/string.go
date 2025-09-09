@@ -19,8 +19,7 @@ func (s Stringer) Int64() int64 {
 	if isMatch {
 		return int64(fVal * float64(base))
 	}
-	v, _ := strconv.ParseInt(floatStringTrim(value), 10, 64)
-	return v
+	return SimpleStr(value).Int64()
 }
 
 func (s Stringer) Float() float64 {
@@ -32,8 +31,7 @@ func (s Stringer) Float() float64 {
 	if isMatch {
 		return fVal * float64(base)
 	}
-	v, _ := strconv.ParseFloat(value, 64)
-	return v
+	return SimpleStr(value).Float()
 }
 
 func (s Stringer) Uint64() uint64 {
@@ -45,8 +43,7 @@ func (s Stringer) Uint64() uint64 {
 	if isMatch {
 		return uint64(fVal * float64(base))
 	}
-	v, _ := strconv.ParseUint(floatStringTrim(value), 10, 64)
-	return v
+	return SimpleStr(value).Uint64()
 }
 
 func (s Stringer) Uint32() uint32 {
@@ -58,8 +55,7 @@ func (s Stringer) Uint32() uint32 {
 	if isMatch {
 		return uint32(fVal * float64(base))
 	}
-	v, _ := strconv.ParseUint(floatStringTrim(value), 10, 32)
-	return uint32(v)
+	return SimpleStr(value).Uint32()
 }
 
 func (s Stringer) Int() int {
@@ -68,13 +64,11 @@ func (s Stringer) Int() int {
 	if isMatch {
 		return int(fVal * float64(base))
 	}
-	iVal, _ := strconv.Atoi(floatStringTrim(value))
-	return iVal
+	return SimpleStr(value).Int()
 }
 
 func (s Stringer) Bool() bool {
-	bVal, _ := strconv.ParseBool(string(s))
-	return bVal
+	return SimpleStr(s).Bool()
 }
 
 // make float string to int
