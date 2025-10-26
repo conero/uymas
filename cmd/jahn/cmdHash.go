@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	"gitee.com/conero/uymas/v2/cli"
 	"gitee.com/conero/uymas/v2/cli/gen"
 	"gitee.com/conero/uymas/v2/internal/recipe"
 	"gitee.com/conero/uymas/v2/logger/lgr"
 	"gitee.com/conero/uymas/v2/rock"
 	"gitee.com/conero/uymas/v2/util/tm"
-	"os"
 )
 
 type cmdHashOpt struct {

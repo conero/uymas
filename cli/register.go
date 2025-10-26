@@ -2,11 +2,12 @@ package cli
 
 import (
 	"fmt"
-	"gitee.com/conero/uymas/v2/logger/lgr"
-	"gitee.com/conero/uymas/v2/rock"
 	"log"
 	"sort"
 	"strings"
+
+	"gitee.com/conero/uymas/v2/logger/lgr"
+	"gitee.com/conero/uymas/v2/rock"
 )
 
 type RegisterMeta[T any] struct {

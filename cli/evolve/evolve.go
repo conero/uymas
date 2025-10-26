@@ -2,11 +2,12 @@
 package evolve
 
 import (
+	"reflect"
+
 	"gitee.com/conero/uymas/v2/cli"
 	"gitee.com/conero/uymas/v2/logger/lgr"
 	"gitee.com/conero/uymas/v2/rock"
 	"gitee.com/conero/uymas/v2/str"
-	"reflect"
 )
 
 // Evolve The following registration types are supported:

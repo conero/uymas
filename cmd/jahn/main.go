@@ -2,6 +2,11 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"runtime"
+	"strconv"
+	"time"
+
 	"gitee.com/conero/uymas/v2"
 	"gitee.com/conero/uymas/v2/cli"
 	"gitee.com/conero/uymas/v2/cli/ansi"
@@ -9,10 +14,6 @@ import (
 	"gitee.com/conero/uymas/v2/cli/repl"
 	"gitee.com/conero/uymas/v2/culture/ganz"
 	"gitee.com/conero/uymas/v2/logger/lgr"
-	"log"
-	"runtime"
-	"strconv"
-	"time"
 )
 
 type globalOption struct {

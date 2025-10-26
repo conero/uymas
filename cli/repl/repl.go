@@ -4,11 +4,12 @@ package repl
 import (
 	"bufio"
 	"fmt"
+	"os"
+	"strings"
+
 	"gitee.com/conero/uymas/v2/cli"
 	"gitee.com/conero/uymas/v2/logger/lgr"
 	"gitee.com/conero/uymas/v2/rock"
-	"os"
-	"strings"
 )
 
 const (

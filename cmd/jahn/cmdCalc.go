@@ -3,6 +3,10 @@ package main
 import (
 	"errors"
 	"fmt"
+	"regexp"
+	"strconv"
+	"strings"
+
 	"gitee.com/conero/uymas/v2/app/calc"
 	"gitee.com/conero/uymas/v2/cli"
 	"gitee.com/conero/uymas/v2/cli/ansi"
@@ -10,9 +14,6 @@ import (
 	"gitee.com/conero/uymas/v2/logger/lgr"
 	"gitee.com/conero/uymas/v2/number"
 	"gitee.com/conero/uymas/v2/rock"
-	"regexp"
-	"strconv"
-	"strings"
 )
 
 // 但进制转换进制转换

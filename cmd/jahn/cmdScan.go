@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"sort"
+
 	"gitee.com/conero/uymas/v2/app/scan"
 	"gitee.com/conero/uymas/v2/cli"
 	"gitee.com/conero/uymas/v2/cli/gen"
@@ -10,7 +12,6 @@ import (
 	"gitee.com/conero/uymas/v2/rock"
 	"gitee.com/conero/uymas/v2/util/fs"
 	"gitee.com/conero/uymas/v2/util/tm"
-	"sort"
 )
 
 type scanOption struct {

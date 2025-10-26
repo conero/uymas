@@ -2,6 +2,10 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"strconv"
+	"strings"
+
 	"gitee.com/conero/uymas/v2/cli"
 	"gitee.com/conero/uymas/v2/cli/ansi"
 	"gitee.com/conero/uymas/v2/cli/chest"
@@ -11,9 +15,6 @@ import (
 	"gitee.com/conero/uymas/v2/rock"
 	"gitee.com/conero/uymas/v2/str"
 	"gitee.com/conero/uymas/v2/util/tm"
-	"os"
-	"strconv"
-	"strings"
 )
 
 type pinyinOption struct {

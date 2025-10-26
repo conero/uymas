@@ -1,12 +1,13 @@
 package main
 
 import (
+	"regexp"
+	"strconv"
+
 	"gitee.com/conero/uymas/v2/cli"
 	"gitee.com/conero/uymas/v2/cli/gen"
 	"gitee.com/conero/uymas/v2/culture/digit"
 	"gitee.com/conero/uymas/v2/logger/lgr"
-	"regexp"
-	"strconv"
 )
 
 type digitOption struct {

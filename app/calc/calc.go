@@ -3,12 +3,13 @@ package calc
 
 import (
 	"fmt"
-	"gitee.com/conero/uymas/v2/number"
-	"gitee.com/conero/uymas/v2/rock"
 	"math"
 	"regexp"
 	"strconv"
 	"strings"
+
+	"gitee.com/conero/uymas/v2/number"
+	"gitee.com/conero/uymas/v2/rock"
 )
 
 const Accuracy int8 = 7

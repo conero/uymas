@@ -2,14 +2,15 @@ package gen
 
 import (
 	"errors"
+	"reflect"
+	"regexp"
+	"strings"
+
 	"gitee.com/conero/uymas/v2/cli"
 	"gitee.com/conero/uymas/v2/data/convert"
 	"gitee.com/conero/uymas/v2/data/input"
 	"gitee.com/conero/uymas/v2/rock"
 	"gitee.com/conero/uymas/v2/str"
-	"reflect"
-	"regexp"
-	"strings"
 )
 
 // ArgsTagName The struct tag is named cmd. If this parameter is not set,

@@ -2,12 +2,13 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
+	"strings"
+
 	"gitee.com/conero/uymas/v2/cli"
 	"gitee.com/conero/uymas/v2/logger/lgr"
 	"gitee.com/conero/uymas/v2/str"
 	"gitee.com/conero/uymas/v2/util/tm"
-	"math/rand"
-	"strings"
 )
 
 func cmdTest(arg cli.ArgsParser) {

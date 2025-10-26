@@ -3,8 +3,9 @@ package chest
 import (
 	"errors"
 	"fmt"
-	"gitee.com/conero/uymas/v2/util/fs"
 	"os/exec"
+
+	"gitee.com/conero/uymas/v2/util/fs"
 )
 
 // CmdExist Used to check whether the command is available and to throw an exception.

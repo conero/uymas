@@ -3,13 +3,14 @@ package scan
 
 import (
 	"fmt"
-	"gitee.com/conero/uymas/v2/logger/lgr"
-	"gitee.com/conero/uymas/v2/util/fs"
 	"os"
 	"regexp"
 	"strings"
 	"sync"
 	"time"
+
+	"gitee.com/conero/uymas/v2/logger/lgr"
+	"gitee.com/conero/uymas/v2/util/fs"
 )
 
 const (
