@@ -145,6 +145,7 @@ func (r *Register[T]) helpCmdName() (list []string, keys []string, maxLen int) {
 }
 
 func (r *Register[T]) GetHelp(cmd string) (helpMsg string, exits bool) {
+	shortOption := r.Config.ArgsConfig != nil && r.Config.ArgsConfig.ShortOption
 	if cmd == "" {
 		var lines []string
 		list, keys, maxLen := r.helpCmdName()
@@ -155,6 +156,7 @@ func (r *Register[T]) GetHelp(cmd string) (helpMsg string, exits bool) {
 			docName := list[i]
 			meta := r.register[name]
 			reg := meta.Command
+			reg.shortOption = shortOption
 			cmdHelp := reg.Help
 			//ignore the help doc for command
 			if cmdHelp == "-" {
@@ -189,6 +191,7 @@ func (r *Register[T]) GetHelp(cmd string) (helpMsg string, exits bool) {
 	}
 	meta, hasCmd := r.register[cmd]
 	reg := meta.Command
+	reg.shortOption = shortOption
 	if !hasCmd {
 		for fName, fMeta := range r.register {
 			fReg := fMeta.Command

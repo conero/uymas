@@ -4,6 +4,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+
 	"gitee.com/conero/uymas/v2/cli"
 	"gitee.com/conero/uymas/v2/cli/gen"
 	"gitee.com/conero/uymas/v2/logger/lgr"
@@ -44,7 +45,13 @@ type optionVerify struct {
 }
 
 func main() {
-	app := cli.NewCli()
+	//app := cli.NewCli()
+	app := cli.NewCli(cli.Config{
+		ArgsConfig: &cli.ArgsConfig{
+			// 设置是否为段属性模式
+			//ShortOption: true,
+		},
+	})
 
 	app.Command(func(parser cli.ArgsParser) {
 		var opt optionParse

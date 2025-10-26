@@ -2,6 +2,12 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
+	"os"
+	"runtime"
+	"strings"
+	"time"
+
 	"gitee.com/conero/uymas/v2"
 	"gitee.com/conero/uymas/v2/cli"
 	"gitee.com/conero/uymas/v2/cli/ansi"
@@ -13,11 +19,6 @@ import (
 	"gitee.com/conero/uymas/v2/str"
 	"gitee.com/conero/uymas/v2/util/fs"
 	"gitee.com/conero/uymas/v2/util/tm"
-	"math/rand"
-	"os"
-	"runtime"
-	"strings"
-	"time"
 )
 
 type testArgs struct {

@@ -80,10 +80,11 @@ type CommandOptional struct {
 	Options     []Option
 	SubCommands []CommandOptional
 	// Whether the subcommand is an entry
-	IsEntry    bool
-	OffValid   bool // Turn off validation
-	dataOption *Option
-	config     *Config
+	IsEntry     bool
+	OffValid    bool // Turn off validation
+	dataOption  *Option
+	config      *Config
+	shortOption bool // setting shot option
 }
 
 func (c CommandOptional) SetConfig(cfg Config) CommandOptional {
@@ -120,7 +121,7 @@ func (c CommandOptional) GenOptionHelpMsg(isAll bool, levels ...int) string {
 			optList = append(optList, opt.Name)
 		}
 		optList = append(optList, opt.Alias...)
-		optList = optionRecoverRawList(optList)
+		optList = optionRecoverRawList(optList, c.shortOption)
 		var name string
 		var optNum = len(optList)
 		if optNum <= 2 {
@@ -292,7 +293,7 @@ func (c CommandOptional) InvalidMsg(args ArgsParser) string {
 
 		value := args.Get(alias...)
 		if value == "" {
-			return strings.Join(optionRecoverRawList(alias), ",") + "  必须为选项设置值"
+			return strings.Join(optionRecoverRawList(alias, c.shortOption), ",") + "  必须为选项设置值"
 		}
 
 	}
@@ -401,16 +402,21 @@ func HelpSub(help string, subs ...CommandOptional) CommandOptional {
 	return CommandOptional{Help: help, SubCommands: subs}
 }
 
-func optionRecoverRaw(option string) string {
+func optionRecoverRaw(option string, shortOptionArgs ...bool) string {
+	shortOption := rock.Param(false, shortOptionArgs...)
+	if !shortOption {
+		return fmt.Sprintf("-%s", option)
+	}
+	// short option
 	if len(option) == 1 {
 		return fmt.Sprintf("-%s", option)
 	}
 	return fmt.Sprintf("--%s", option)
 }
 
-func optionRecoverRawList(options []string) []string {
+func optionRecoverRawList(options []string, shortOptionArgs ...bool) []string {
 	for i, opt := range options {
-		options[i] = optionRecoverRaw(opt)
+		options[i] = optionRecoverRaw(opt, shortOptionArgs...)
 	}
 	return options
 }
