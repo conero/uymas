@@ -69,6 +69,12 @@
 - **secure/aesutil**
   - feat: 新增方法 PKCS5 的AES填充方法
 
+- **cli/chest**
+  - feat: 新增方法 `LineAsArgs` 用于将命令行分解为数组类型
+
+- **util/cloud**
+  - feat: 新增方法 `HeaderJoin` 用于连接 Header 已打印信息
+
 
 
 

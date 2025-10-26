@@ -2,9 +2,11 @@ package cloud
 
 import (
 	"fmt"
-	"gitee.com/conero/uymas/v2/rock"
 	"net"
+	"net/http"
 	"strings"
+
+	"gitee.com/conero/uymas/v2/rock"
 )
 
 // PortAddress turn string port as addr for [net.Listen]
@@ -93,4 +95,14 @@ func PortAsWeb(portArgs any, isHttpsArgs ...bool) string {
 		return "http://" + host + portStr
 	}
 	return portStr
+}
+
+// HeaderJoin join header as string for print
+func HeaderJoin(vHeader http.Header, seqArgs ...string) string {
+	var vList []string
+	for key, _ := range vHeader {
+		vList = append(vList, fmt.Sprintf("%s: %s", key, vHeader.Get(key)))
+	}
+	seq := rock.Param("\n", seqArgs...)
+	return strings.Join(vList, seq)
 }
