@@ -2,8 +2,9 @@ package cli
 
 import (
 	"fmt"
-	"gitee.com/conero/uymas/v2/rock"
 	"strings"
+
+	"gitee.com/conero/uymas/v2/rock"
 )
 
 // Option Used for command option parsing document generation, or value validation and retrieval

@@ -2,10 +2,11 @@ package util
 
 import (
 	"fmt"
-	"gitee.com/conero/uymas/v2/rock"
 	"math"
 	"testing"
 	"time"
+
+	"gitee.com/conero/uymas/v2/rock"
 )
 
 type testObjectTopMac struct {

@@ -4,9 +4,10 @@ import (
 	"crypto/aes"
 	"encoding/base64"
 	"errors"
+	"testing"
+
 	"gitee.com/conero/uymas/v2/logger/lgr"
 	"gitee.com/conero/uymas/v2/str"
-	"testing"
 )
 
 func TestCbcEncrypt(t *testing.T) {

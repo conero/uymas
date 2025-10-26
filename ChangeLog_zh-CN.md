@@ -66,6 +66,9 @@
   - feat: 新增环境变量 `UYMAS_LGR_FILE` 以实现快速日志保存到文件中
 - **uymas**
   - feat: 新增 `BuildMeta` 类以及 `Meta` 函数用于获取编译信息
+- **secure/aesutil**
+  - feat: 新增方法 PKCS5 的AES填充方法
+
 
 
 

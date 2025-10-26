@@ -3,6 +3,7 @@ package aesutil
 import (
 	"bytes"
 	"errors"
+	"fmt"
 )
 
 func ZeroPadding(data []byte, blockSize int) []byte {
@@ -51,4 +52,26 @@ func Pkcs7UnPadding(data []byte, blockSize int) ([]byte, error) {
 	}
 
 	return data[:len(data)-padding], nil
+}
+
+func PKCS5Padding(data []byte, blockSize int) ([]byte, error) {
+	if blockSize <= 0 {
+		return nil, errors.New("block size must be greater than 0")
+	}
+
+	padding := blockSize - len(data)%blockSize
+	padText := bytes.Repeat([]byte{byte(padding)}, padding)
+	return append(data, padText...), nil
+}
+
+func PKCS5UnPadding(data []byte) ([]byte, error) {
+	length := len(data)
+	if length == 0 {
+		return nil, fmt.Errorf("block size must be greater than 0")
+	}
+	padding := int(data[length-1])
+	if padding > length {
+		return nil, fmt.Errorf("bad error data")
+	}
+	return data[:length-padding], nil
 }

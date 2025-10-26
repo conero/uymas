@@ -1,8 +1,9 @@
 package aesutil
 
 import (
-	"gitee.com/conero/uymas/v2/str"
 	"testing"
+
+	"gitee.com/conero/uymas/v2/str"
 )
 
 func TestGcmEncrypt(t *testing.T) {
