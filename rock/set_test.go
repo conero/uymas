@@ -85,3 +85,47 @@ func TestListNext(t *testing.T) {
 		t.Errorf("ListNext(%#v, %#v) 错误，返回值：%#v, %#v", strArr, "make", strNext, index)
 	}
 }
+
+func TestListReverse(t *testing.T) {
+	intArr := []int{1, 9, 49, 1001, 24, 903}
+	var newArr = make([]int, len(intArr))
+	copy(newArr, intArr)
+	//t.Logf("newArr: %v", newArr)
+	newArr = ListReverse(newArr)
+	if intArr[0] != newArr[len(newArr)-1] {
+		t.Errorf("ListReverse(%#v) 错误，返回值：%#v", intArr, newArr)
+	} else {
+		t.Logf("ListReverse(%#v) 正确，返回值：%#v", intArr, newArr)
+	}
+
+	// case
+	strArr := []string{"中国", "首都", "是", "北京", "火星", "real", "make"}
+	var newStrArr = make([]string, len(strArr))
+	copy(newStrArr, strArr)
+	newStrArr = ListReverse(newStrArr)
+	if strArr[0] != newStrArr[len(newStrArr)-1] {
+		t.Errorf("ListReverse(%#v) 错误，返回值：%#v", strArr, newStrArr)
+	} else {
+		t.Logf("ListReverse(%#v) 正确，返回值：%#v", strArr, newStrArr)
+	}
+
+	// case  空值测试
+	newStrArr = nil
+	newStrArr = ListReverse(newStrArr)
+	if newStrArr != nil {
+		t.Errorf("ListReverse(%#v) 错误，返回值：%#v", strArr, newStrArr)
+	}
+
+	// case 字符串测试
+	vStr := "I am Jc, Coder. 贵州贵阳"
+	// []byte() 会导致乱码
+	// []rune 安全的utf8字符串分割
+	vStrAsBytes := ListReverse([]rune(vStr))
+	newStr := string(vStrAsBytes)
+	if len(newStr) != len(vStr) {
+		t.Errorf("ListReverse(%#v) 错误，返回值：%v", vStr, newStr)
+	} else {
+		t.Logf("ListReverse(%#v) 正确，返回值：%s", vStr, newStr)
+	}
+	t.Logf("ListReverseString: %s", ListReverseString("中国人民万岁！世界人民万岁！"))
+}

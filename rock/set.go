@@ -1,8 +1,9 @@
 package rock
 
 import (
-	"gitee.com/conero/uymas/v2/rock/constraints"
 	"math/rand"
+
+	"gitee.com/conero/uymas/v2/rock/constraints"
 )
 
 // ListIndex get index by search value from list
@@ -87,6 +88,19 @@ func ListNext[T constraints.Equable](arr []T, find T, detPars ...int) (T, int) {
 	}
 
 	return next, -1
+}
+
+// ListReverse reverse list
+func ListReverse[V any](vList []V) []V {
+	for i, j := len(vList)-1, 0; i > j; i, j = i-1, j+1 {
+		vList[i], vList[j] = vList[j], vList[i]
+	}
+	return vList
+}
+
+// ListReverseString reverse string
+func ListReverseString(raw string) string {
+	return string(ListReverse([]rune(raw)))
 }
 
 // ExtractArrUnique extracting array elements with loss (non-repeatable) from an array
