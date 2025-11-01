@@ -161,6 +161,8 @@ func Render(tpl string, data any) (string, error) {
 }
 
 // Reverse string reverse
+//
+// NOTICE: use `rock.ListReverseString` instead for best performance, mysql remove this function when next version
 func (s Str) Reverse() string {
 	vStr := string(s)
 	sQue := strings.Split(vStr, "")

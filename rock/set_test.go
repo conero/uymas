@@ -2,6 +2,8 @@ package rock
 
 import (
 	"testing"
+
+	"gitee.com/conero/uymas/v2/str"
 )
 
 func TestListIndex(t *testing.T) {
@@ -128,4 +130,25 @@ func TestListReverse(t *testing.T) {
 		t.Logf("ListReverse(%#v) 正确，返回值：%s", vStr, newStr)
 	}
 	t.Logf("ListReverseString: %s", ListReverseString("中国人民万岁！世界人民万岁！"))
+}
+
+// 测试样本
+const testTxtUtf8 = `In today's digital era, technology has become an integral part of our daily lives. 从智能手机到人工智能，科技正在重塑世界。For instance, the use of AI models like GPT has revolutionized natural language processing, enabling machines to understand and generate human-like text. 这不仅提升了效率，也带来了新的挑战，例如数据隐私和伦理问题。💡Consider the equation: E = mc² — a cornerstone of modern physics. 爱因斯坦的这一发现改变了我们对宇宙的理解。Meanwhile, in the field of computer science, algorithms such as quicksort (平均时间复杂度: O(n log n)) are fundamental to data processing. 编程语言如 Python 和 Go 因其简洁性而广受欢迎。🚀Moreover, globalization has led to increased cross-cultural communication. 人们通过社交媒体、视频会议和即时通讯工具保持联系。Platforms like WeChat, WhatsApp, and Slack allow users to send messages, make calls, and share files across borders. 一个简单的问候“Hello! 你好！안녕하세요！👋”就能连接不同文化背景的人们。In education, online learning platforms have made knowledge more accessible. 学生可以通过Coursera、edX或国内的慕课网学习世界顶尖大学的课程。This democratization of information empowers individuals to acquire new skills, whether it's coding, design, or data analysis. 数字化学习不仅打破了地理限制，也促进了终身学习的理念。However, with great power comes great responsibility. 随着技术的发展，我们也必须关注其社会影响。Issues such as misinformation, cyberbullying, and digital addiction require careful attention and regulation. 我们需要建立更安全、更包容的网络环境。🌐In conclusion, the integration of technology and global connectivity offers immense opportunities. 只要我们合理利用，科技将成为推动社会进步的重要力量。Let us embrace innovation while upholding ethical values and human dignity. 🌱 Together, we can build a smarter, more connected, and sustainable future.`
+
+// 单位 ns/op  表示每次操作需要花费纳秒数
+func BenchmarkListReverseString(b *testing.B) {
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		ListReverseString(testTxtUtf8)
+	}
+	b.StopTimer()
+}
+
+// 测试样本
+func BenchmarkListReverseStringVs(b *testing.B) {
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		str.Str(testTxtUtf8).Reverse()
+	}
+	b.StopTimer()
 }
