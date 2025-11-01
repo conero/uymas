@@ -93,7 +93,7 @@ func TestListReverse(t *testing.T) {
 	var newArr = make([]int, len(intArr))
 	copy(newArr, intArr)
 	//t.Logf("newArr: %v", newArr)
-	newArr = ListReverse(newArr)
+	ListReverse(newArr)
 	if intArr[0] != newArr[len(newArr)-1] {
 		t.Errorf("ListReverse(%#v) 错误，返回值：%#v", intArr, newArr)
 	} else {
@@ -104,7 +104,7 @@ func TestListReverse(t *testing.T) {
 	strArr := []string{"中国", "首都", "是", "北京", "火星", "real", "make"}
 	var newStrArr = make([]string, len(strArr))
 	copy(newStrArr, strArr)
-	newStrArr = ListReverse(newStrArr)
+	ListReverse(newStrArr)
 	if strArr[0] != newStrArr[len(newStrArr)-1] {
 		t.Errorf("ListReverse(%#v) 错误，返回值：%#v", strArr, newStrArr)
 	} else {
@@ -113,8 +113,8 @@ func TestListReverse(t *testing.T) {
 
 	// case  空值测试
 	newStrArr = nil
-	newStrArr = ListReverse(newStrArr)
-	if newStrArr != nil {
+	ListReverse(newStrArr)
+	if len(newStrArr) > 0 {
 		t.Errorf("ListReverse(%#v) 错误，返回值：%#v", strArr, newStrArr)
 	}
 
@@ -122,7 +122,8 @@ func TestListReverse(t *testing.T) {
 	vStr := "I am Jc, Coder. 贵州贵阳"
 	// []byte() 会导致乱码
 	// []rune 安全的utf8字符串分割
-	vStrAsBytes := ListReverse([]rune(vStr))
+	vStrAsBytes := []byte(vStr)
+	ListReverse(vStrAsBytes)
 	newStr := string(vStrAsBytes)
 	if len(newStr) != len(vStr) {
 		t.Errorf("ListReverse(%#v) 错误，返回值：%v", vStr, newStr)

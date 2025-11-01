@@ -91,16 +91,17 @@ func ListNext[T constraints.Equable](arr []T, find T, detPars ...int) (T, int) {
 }
 
 // ListReverse reverse list
-func ListReverse[V any](vList []V) []V {
+func ListReverse[V any](vList []V) {
 	for i, j := len(vList)-1, 0; i > j; i, j = i-1, j+1 {
 		vList[i], vList[j] = vList[j], vList[i]
 	}
-	return vList
 }
 
 // ListReverseString reverse string
 func ListReverseString(raw string) string {
-	return string(ListReverse([]rune(raw)))
+	var input = []rune(raw)
+	ListReverse(input)
+	return string(input)
 }
 
 // ExtractArrUnique extracting array elements with loss (non-repeatable) from an array
