@@ -40,8 +40,10 @@ type optionHelpPlus struct {
 
 // 选项验证
 type optionVerify struct {
-	Value string `cmd:"value required isdata"`
-	Name  string `cmd:"name required default:joshua help:设置姓名"`
+	Value string   `cmd:"value required isdata"`
+	Name  string   `cmd:"name required default:joshua help:设置姓名"`
+	Addr  string   `cmd:"addr required help:设置监听地址"`
+	List  []string `cmd:"list help:列表测试"`
 }
 
 func main() {

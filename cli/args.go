@@ -241,6 +241,7 @@ func (c *Args) parse() {
 			c.commandList = append(c.commandList, arg)
 			continue
 		}
+		arg = escapeCharSupport(arg)
 		if lastRawKey != "" {
 			tmv := c.tryMapValue(lastRawKey, arg)
 			if tmv.isMatch {
@@ -486,4 +487,18 @@ func NewArgsWith(config ArgsConfig, args ...string) ArgsParser {
 	}
 	arg.parse()
 	return arg
+}
+
+// Escape character support
+func escapeCharSupport(s string) string {
+	vLen := len(s)
+	if vLen == 0 {
+		return ""
+	}
+
+	// support `\-option` or `\--option`
+	if vLen > 1 && s[:2] == "\\-" {
+		return s[1:]
+	}
+	return s
 }
