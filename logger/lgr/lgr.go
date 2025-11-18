@@ -23,14 +23,15 @@ package lgr
 import (
 	"errors"
 	"fmt"
-	"gitee.com/conero/uymas/v2/cli/ansi"
-	"gitee.com/conero/uymas/v2/logger"
-	"gitee.com/conero/uymas/v2/rock"
-	"gitee.com/conero/uymas/v2/util/fs"
 	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
+
+	"gitee.com/conero/uymas/v2/cli/ansi"
+	"gitee.com/conero/uymas/v2/logger"
+	"gitee.com/conero/uymas/v2/rock"
+	"gitee.com/conero/uymas/v2/util/fs"
 )
 
 var vLgr *logger.Logger
@@ -67,7 +68,7 @@ func createLog() {
 }
 
 func Log() logger.Logger {
-	return *vLgr
+	return *getLgr()
 }
 
 func getLgr() *logger.Logger {

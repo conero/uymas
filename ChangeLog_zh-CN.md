@@ -67,6 +67,7 @@
   - pref: 调整 NewLogger 生产的日志时间默认带毫秒的格式
 - **logger/lgr**
   - feat: 新增环境变量 `UYMAS_LGR_FILE` 以实现快速日志保存到文件中
+  - fix: 修复 `Log` 可能存在空指针的异常
 - **uymas**
   - feat: 新增 `BuildMeta` 类以及 `Meta` 函数用于获取编译信息
 - **secure/aesutil**
