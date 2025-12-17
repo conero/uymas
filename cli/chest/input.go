@@ -28,6 +28,25 @@ func InputRequire(title string, validFunc func(string) bool) string {
 	return text
 }
 
+// InputRequireDef need input data from stdin optional
+func InputRequireDef(title string, def string) string {
+	var input = bufio.NewScanner(os.Stdin)
+	fmt.Print(title)
+	var text string
+	for input.Scan() {
+		text = input.Text()
+		text = strings.TrimSpace(text)
+		if text == "" && def != "" {
+			return def
+		}
+		if text != "" {
+			return text
+		}
+		fmt.Print(title)
+	}
+	return text
+}
+
 // InputOption need input data from stdin optional
 func InputOption(title, def string) string {
 	var input = bufio.NewScanner(os.Stdin)
@@ -39,6 +58,7 @@ func InputOption(title, def string) string {
 		if text == "" {
 			text = def
 		}
+		break
 	}
 	return text
 }

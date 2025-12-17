@@ -75,7 +75,9 @@
 
 - **cli/chest**
   - feat: 新增方法 `LineAsArgs` 用于将命令行分解为数组类型
-
+  - feat: 新增方法 `InputRequireDef` 用于获取命令行数据并支持代码默认值且必填
+  - fixed: 修复 `InputOption` 方法无法退出的bug
+  
 - **util/cloud**
   - feat: 新增方法 `HeaderJoin` 用于连接 Header 已打印信息
 
