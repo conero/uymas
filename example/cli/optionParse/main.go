@@ -12,6 +12,11 @@ import (
 	"gitee.com/conero/uymas/v2/util"
 )
 
+type globalOption struct {
+	IsVerbose bool `cmd:"verbose,vvv detail globalHelp help:详细/冗余输出"`
+	IsDetail  bool `cmd:"detail,ddd detail help:文档信息仅仅详细模式下输出"`
+}
+
 type optionParse struct {
 	Addr   string   `cmd:"addr,a default::12409 help:请求监听地址"`
 	File   string   `cmd:"file,fl,f required help:输出文件指定文件"`
@@ -21,6 +26,7 @@ type optionParse struct {
 	Index  []string `cmd:"index default:[index.html,index.htm] help:服务器支持索引文件"`
 	Number []uint16 `cmd:"number,N default:[52,26,27] help:uint16切片类型测试"`
 	optionHelpPlus
+	globalOption
 }
 
 type subOptionX struct {

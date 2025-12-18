@@ -47,6 +47,12 @@ const ArgsTagOwner = "owner"
 // ArgsGlobalOwner as an identifier for global options
 const ArgsGlobalOwner = "globalOwner"
 
+// ArgsGlobalHelp option as group of options when gen help document
+const ArgsGlobalHelp = "globalHelp"
+
+// ArgsDetail gen help document only for detail, means only show the command help document
+const ArgsDetail = "detail"
+
 // ArgsOptionNoValid the command does not verify option data
 const ArgsOptionNoValid = "notValid"
 
@@ -273,6 +279,10 @@ func OptionTagParse(vTag string) *cli.Option {
 			option.IsData = true
 		case ArgsCmdRequired:
 			option.Require = true
+		case ArgsGlobalHelp:
+			option.IsGlobal = true
+		case ArgsDetail:
+			option.DetailHelp = true
 		}
 	}
 	for i, s := range strings.Split(vTag, " ") {

@@ -169,7 +169,7 @@ func (r *Register[T]) GetHelp(cmd string) (helpMsg string, exits bool) {
 				cmdHelp += "，别名支持 " + strings.Join(reg.Alias, ",")
 			}
 			line := fmt.Sprintf("%-"+(fmt.Sprintf("%d", maxLen+8))+"s", docName) + cmdHelp
-			optionHelp := reg.OptionHelpMsg()
+			optionHelp := reg.OptionHelpMsgGlobal()
 			if optionHelp != "" {
 				line += "\n" + optionHelp
 			}
@@ -189,6 +189,8 @@ func (r *Register[T]) GetHelp(cmd string) (helpMsg string, exits bool) {
 		exits = true
 		return
 	}
+
+	// detail command help
 	meta, hasCmd := r.register[cmd]
 	reg := meta.Command
 	reg.shortOption = shortOption

@@ -27,6 +27,7 @@ type Option struct {
 	StructGen   bool   // parse the struct into documents and values
 	StructItems []Option
 	IsGlobal    bool // global means that the option belong to all commands or entry command
+	DetailHelp  bool
 }
 
 // GetName Gets option names automatically compatible with aliases or actual names
@@ -80,8 +81,9 @@ type CommandOptional struct {
 	Options     []Option
 	SubCommands []CommandOptional
 	// Whether the subcommand is an entry
-	IsEntry     bool
-	OffValid    bool // Turn off validation
+	IsEntry  bool
+	OffValid bool // Turn off validation
+
 	dataOption  *Option
 	config      *Config
 	shortOption bool // setting shot option
@@ -113,9 +115,11 @@ func (c CommandOptional) GenOptionHelpMsg(isAll bool, levels ...int) string {
 			c.dataOption = &vDataOpt
 			continue
 		}
-		if !isAll && opt.IsGlobal {
+
+		if isAll && (opt.IsGlobal || opt.DetailHelp) {
 			continue
 		}
+
 		var optList []string
 		if opt.Name != "" {
 			optList = append(optList, opt.Name)
@@ -127,7 +131,7 @@ func (c CommandOptional) GenOptionHelpMsg(isAll bool, levels ...int) string {
 		if optNum <= 2 {
 			name = strings.Join(optList, ",")
 			optList = []string{}
-		} else if optNum > 2 {
+		} else {
 			name = strings.Join(optList[:2], ",")
 			optList = optList[2:]
 		}
@@ -197,6 +201,11 @@ func (c CommandOptional) GenOptionHelpMsg(isAll bool, levels ...int) string {
 // OptionHelpMsg generate an options help document through the options parameters you set
 func (c CommandOptional) OptionHelpMsg(levels ...int) string {
 	return c.GenOptionHelpMsg(false, levels...)
+}
+
+// OptionHelpMsgGlobal generate an options help document through the options parameters you set, global options
+func (c CommandOptional) OptionHelpMsgGlobal(levels ...int) string {
+	return c.GenOptionHelpMsg(true, levels...)
 }
 
 func (c CommandOptional) SubCommandHelpMsg(levels ...int) string {

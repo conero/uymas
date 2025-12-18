@@ -48,6 +48,7 @@
   - feat: `Args` 方法新增 `Uint32`用于解析uint32 位整形
   - feat: `Args` 解析支持顶级属性，且添加方法 `MapValue/Map` 用于获取解析值
   - feat: `Args` 值支持转义解析，即 `\-option` 或 `\--option` 可转义
+  - feat: `Option` 新增属性 `DetailHelp` 用于限制文档生成时仅当详细命令模式下
   - pref: `CommandOptional` 生成文档时支持外部传递 ShortOption 配置，用于帮助选项的生成模式
   
 - **data/input**
