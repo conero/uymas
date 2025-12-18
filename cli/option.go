@@ -102,6 +102,10 @@ func (c CommandOptional) GetConfig() Config {
 }
 
 func (c CommandOptional) GenOptionHelpMsg(isAll bool, levels ...int) string {
+	return c.GenOptionHelpMsgGlobal(isAll, false, levels...)
+}
+
+func (c CommandOptional) GenOptionHelpMsgGlobal(isAll bool, isGlobal bool, levels ...int) string {
 	level := rock.Param(0, levels...)
 	pref := ""
 	if level > 0 {
@@ -116,7 +120,10 @@ func (c CommandOptional) GenOptionHelpMsg(isAll bool, levels ...int) string {
 			continue
 		}
 
-		if isAll && (opt.IsGlobal || opt.DetailHelp) {
+		if isAll && opt.DetailHelp {
+			continue
+		}
+		if isGlobal && !opt.IsGlobal {
 			continue
 		}
 
@@ -201,6 +208,17 @@ func (c CommandOptional) GenOptionHelpMsg(isAll bool, levels ...int) string {
 // OptionHelpMsg generate an options help document through the options parameters you set
 func (c CommandOptional) OptionHelpMsg(levels ...int) string {
 	return c.GenOptionHelpMsg(false, levels...)
+}
+
+// GetGlobalOptionList get global options for help document gen
+func (c CommandOptional) GetGlobalOptionList() []Option {
+	var optionList []Option
+	for _, opt := range c.Options {
+		if opt.IsGlobal {
+			optionList = append(optionList, opt)
+		}
+	}
+	return optionList
 }
 
 // OptionHelpMsgGlobal generate an options help document through the options parameters you set, global options

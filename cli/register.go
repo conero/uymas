@@ -149,6 +149,7 @@ func (r *Register[T]) GetHelp(cmd string) (helpMsg string, exits bool) {
 	if cmd == "" {
 		var lines []string
 		list, keys, maxLen := r.helpCmdName()
+		var globalOptionList []Option
 		for i, name := range keys {
 			if name == "" {
 				continue
@@ -158,6 +159,7 @@ func (r *Register[T]) GetHelp(cmd string) (helpMsg string, exits bool) {
 			reg := meta.Command
 			reg.shortOption = shortOption
 			cmdHelp := reg.Help
+			globalOptionList = append(globalOptionList, reg.GetGlobalOptionList()...)
 			//ignore the help doc for command
 			if cmdHelp == "-" {
 				continue
@@ -182,7 +184,9 @@ func (r *Register[T]) GetHelp(cmd string) (helpMsg string, exits bool) {
 		helpMsg = strings.Join(lines, "\n")
 
 		// the global help
-		globalMsg := r.globalHelp.GenOptionHelpMsg(true)
+		globalHelp := r.globalHelp
+		globalHelp = globalHelp.AddOption(globalOptionList...)
+		globalMsg := globalHelp.GenOptionHelpMsgGlobal(false, true)
 		if globalMsg != "" {
 			helpMsg += "\n\n全局选项如:\n" + globalMsg
 		}
