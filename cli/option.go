@@ -113,6 +113,7 @@ func (c CommandOptional) GenOptionHelpMsgGlobal(isAll bool, isGlobal bool, level
 	}
 	var pairList [][2]string
 	maxLen := 0
+	var nameNoReapeatDick = map[string]bool{}
 	for _, opt := range c.Options {
 		if opt.IsData {
 			var vDataOpt = opt
@@ -164,6 +165,12 @@ func (c CommandOptional) GenOptionHelpMsgGlobal(isAll bool, isGlobal bool, level
 		if opt.Mark != "" {
 			name += " " + opt.Mark
 		}
+		// ignore the help doc for same option
+		_, isRepeated := nameNoReapeatDick[name]
+		if isRepeated {
+			continue
+		}
+		nameNoReapeatDick[name] = true
 		if nameLen := len(name); nameLen > maxLen {
 			maxLen = nameLen
 		}

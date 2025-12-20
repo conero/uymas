@@ -15,6 +15,7 @@ import (
 type globalOption struct {
 	IsVerbose bool `cmd:"verbose,vvv detail globalHelp help:详细/冗余输出"`
 	IsDetail  bool `cmd:"detail,ddd detail help:文档信息仅仅详细模式下输出"`
+	IsHelp    bool `cmd:"help globalHelp help:显示帮助信息"`
 }
 
 type optionParse struct {
@@ -37,6 +38,7 @@ type subOptionX struct {
 
 type subOption struct {
 	X subOptionX `cmd:"x structGen help:附加参数选项"`
+	globalOption
 }
 
 type optionHelpPlus struct {
