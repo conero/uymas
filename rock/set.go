@@ -33,6 +33,16 @@ func ListSubset[T constraints.Equable](list []T, subset []T) bool {
 	return true
 }
 
+// ListHasIntersect checks if there is an intersection between lists
+func ListHasIntersect[T constraints.Equable](list, compare []T) bool {
+	for _, c := range compare {
+		if InList(list, c) {
+			return true
+		}
+	}
+	return false
+}
+
 // ListEq Determines whether an array is equal
 func ListEq[T constraints.Equable](list []T, compare []T) bool {
 	if len(list) != len(compare) {

@@ -65,6 +65,7 @@
   - feat: 新增函数 `Must`, `MustNoPanic` , `MustFunc`用于实现对含错误的二元数组进行降维
   - feat: 新增函数 `ListNext` 用于通过元素搜索获取列表的下一个值
   - feat: 新增函数 `ListReverse/ListReverseString` 用于翻转切片/字符串
+  - feat: 新增函数 `ListHasIntersect` 用来检查列表是否存在检查列表中的一个
 - **logger**
   - pref: 调整 NewLogger 生产的日志时间默认带毫秒的格式
 - **logger/lgr**

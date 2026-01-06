@@ -153,3 +153,15 @@ func BenchmarkListReverseStringVs(b *testing.B) {
 	}
 	b.StopTimer()
 }
+
+func TestListHasIntersect(t *testing.T) {
+	// case
+	if !ListHasIntersect([]int{1, 2, 3, 4, 5}, []int{5, 6, 7, 8, 9}) {
+		t.Errorf("ListHasIntersect(%#v, %#v) 错误，返回值：%#v", []int{1, 2, 3, 4, 5}, []int{5, 6, 7, 8, 9}, false)
+	}
+
+	// case
+	if ListHasIntersect([]int{1, 2, 3, 4, 5}, []int{6, 7, 8, 9}) {
+		t.Errorf("ListHasIntersect(%#v, %#v) 错误，返回值：%#v", []int{1, 2, 3, 4, 5}, []int{6, 7, 8, 9}, true)
+	}
+}
