@@ -54,6 +54,12 @@ type optionVerify struct {
 	List  []string `cmd:"list help:列表测试"`
 }
 
+// 数据支持多个
+type optionDataList struct {
+	Data []string `cmd:"command.. required isdata help:数据列表"`
+	Test string   `cmd:"test help:测试数据"`
+}
+
 func main() {
 	//app := cli.NewCli()
 	app := cli.NewCli(cli.Config{
@@ -108,6 +114,17 @@ func main() {
 		bys, _ := json.MarshalIndent(option, "", "  ")
 		fmt.Printf("参数验证\n: %s\n\n", bys)
 	}, "verify", cli.Help("选项值验证", gen.ArgsDecomposeMust(optionVerify{})...))
+
+	// 子命令检查
+	app.Command(func(parser cli.ArgsParser) {
+		var option optionDataList
+		err := gen.ArgsDress(parser, &option)
+		if err != nil {
+			lgr.Error("命令选项解析错误, %v", err)
+			return
+		}
+		lgr.Info("data: %#v", option.Data)
+	}, "multi", cli.Help("选项data支持多个测试", gen.ArgsDecomposeMust(optionDataList{})...))
 
 	// struct 解析测试
 	//bys, _ := json.MarshalIndent(gen.ArgsDecomposeMust(optionVerify{}), "", "  ")

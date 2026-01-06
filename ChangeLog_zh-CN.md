@@ -48,17 +48,19 @@
   - feat: `Args` 方法新增 `Uint32`用于解析uint32 位整形
   - feat: `Args` 解析支持顶级属性，且添加方法 `MapValue/Map` 用于获取解析值
   - feat: `Args` 值支持转义解析，即 `\-option` 或 `\--option` 可转义
+  - feat: `Args` 新增函数 `NextList` 用于获取指定命令的下级所有命令
   - feat: `Option` 新增属性 `DetailHelp` 用于限制文档生成时仅当详细命令模式下
   - feat: `Option` 文档生成支持 global 属性
   - pref: `CommandOptional` 生成文档时支持外部传递 ShortOption 配置，用于帮助选项的生成模式
-  
+- **cli/gen**
+  - pref: `ArgsDress` 解析选项时支持 `isdata` 字符串数值赋值
+
 - **data/input**
   - feat: `Stringer` 新增`Uint32` 用于解析 uint32 位整形
   - feat: `SimpleStr` 新增简单的字符串数据解析类并使用 `Stringer` 获取后者的扩展
   - pref: 实验性的添加列表转map的方法系列（包括支持回调的等），`SplitAsMap`、`SplitAsMapFunc`、`SplitAsMapConvFunc`、`SplitMapBasic`、`SplitAsMapBasicFunc`
   - pref: `Stringer` 解析数据时，支持`_` 分隔符以及兼容浮点型转整形
   - pref: `Stringer` 解析数据 Int/float/uint等 支持 k/w/m/b 单位后缀（非正则）
-  
 - **cmd/jahn**
   - pref: test 命令支持for遍历测试，与其他 uymas 保持一致
 - **rock**
@@ -75,12 +77,10 @@
   - feat: 新增 `BuildMeta` 类以及 `Meta` 函数用于获取编译信息
 - **secure/aesutil**
   - feat: 新增方法 PKCS5 的AES填充方法
-
 - **cli/chest**
   - feat: 新增方法 `LineAsArgs` 用于将命令行分解为数组类型
   - feat: 新增方法 `InputRequireDef` 用于获取命令行数据并支持代码默认值且必填
   - fixed: 修复 `InputOption` 方法无法退出的bug
-  
 - **util/cloud**
   - feat: 新增方法 `HeaderJoin` 用于连接 Header 已打印信息
 

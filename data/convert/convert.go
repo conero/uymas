@@ -2,10 +2,11 @@
 package convert
 
 import (
-	"gitee.com/conero/uymas/v2/data/input"
-	"gitee.com/conero/uymas/v2/str"
 	"reflect"
 	"strings"
+
+	"gitee.com/conero/uymas/v2/data/input"
+	"gitee.com/conero/uymas/v2/str"
 )
 
 // SetByStr set the literal string to any specified type
@@ -31,6 +32,11 @@ func SetByStr(value reflect.Value, s string) bool {
 	if kind == reflect.String {
 		value.Set(reflect.ValueOf(s))
 		return true
+	}
+
+	// []string
+	if kind == reflect.Slice {
+		return SetByStrSlice(value, str.SplitSafe(s, ","))
 	}
 
 	if kind == reflect.Bool {

@@ -42,6 +42,7 @@ type ArgsParser interface {
 
 	// Next find command from `CommandList`
 	Next(cmds ...string) string
+	NextList(cmds ...string) []string
 
 	// HelpCmd get help command
 	HelpCmd(params ...[]string) string
@@ -390,6 +391,23 @@ func (c *Args) Next(cmds ...string) string {
 		}
 	}
 	return ""
+}
+
+// NextList 根据提供的值获取后面的命令列表，用于多命令获取
+func (c *Args) NextList(cmds ...string) []string {
+	vLen := len(c.commandList)
+	if vLen == 0 {
+		return nil
+	}
+
+	for _, cm := range cmds {
+		for i, refCmd := range c.commandList {
+			if cm == refCmd && i < vLen-1 {
+				return c.commandList[i+1:]
+			}
+		}
+	}
+	return nil
 }
 
 func (c *Args) HelpCmd(params ...[]string) string {

@@ -86,6 +86,11 @@ func setValueByOption(vField reflect.Value, option *cli.Option, args cli.ArgsPar
 	// data
 	if option.IsData {
 		valueStr := rock.ListGetOr(args.CommandList(), option.Next-1, args.SubCommand())
+		if vField.Kind() == reflect.Slice {
+			convert.SetByStrSlice(vField, append([]string{valueStr}, args.NextList(valueStr)...))
+			return
+		}
+
 		convert.SetByStr(vField, valueStr)
 		return
 	}
