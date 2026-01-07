@@ -87,7 +87,7 @@ func setValueByOption(vField reflect.Value, option *cli.Option, args cli.ArgsPar
 	if option.IsData {
 		valueStr := rock.ListGetOr(args.CommandList(), option.Next-1, args.SubCommand())
 		if vField.Kind() == reflect.Slice {
-			convert.SetByStrSlice(vField, append([]string{valueStr}, args.NextList(valueStr)...))
+			convert.SetByStrSlice(vField, append(noEmptyList(valueStr), args.NextList(valueStr)...))
 			return
 		}
 
@@ -129,6 +129,16 @@ func setValueByOption(vField reflect.Value, option *cli.Option, args cli.ArgsPar
 	}
 
 	setValueByStr(vField, keys, args, value)
+}
+
+func noEmptyList(vList ...string) []string {
+	var checkValue []string
+	for _, value := range vList {
+		if value != "" {
+			checkValue = append(checkValue, value)
+		}
+	}
+	return checkValue
 }
 
 func setValueByStr(vField reflect.Value, keys []string, args cli.ArgsParser, defStrs ...string) {

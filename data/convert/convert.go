@@ -36,6 +36,9 @@ func SetByStr(value reflect.Value, s string) bool {
 
 	// []string
 	if kind == reflect.Slice {
+		if s == "" {
+			return true
+		}
 		return SetByStrSlice(value, str.SplitSafe(s, ","))
 	}
 
