@@ -4,6 +4,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"reflect"
 
 	"gitee.com/conero/uymas/v2/cli"
 	"gitee.com/conero/uymas/v2/cli/gen"
@@ -57,9 +58,10 @@ type optionVerify struct {
 // 数据支持多个
 type optionDataList struct {
 	//Data []string `cmd:"command.. required isdata help:数据列表"`
-	Data []string `cmd:"command.. isdata help:数据列表"`
-	Test string   `cmd:"test help:测试数据"`
-	List []string `cmd:"list help:列表测试"`
+	Data      []string `cmd:"command.. isdata help:数据列表"`
+	Test      string   `cmd:"test help:测试数据"`
+	List      []string `cmd:"list help:列表测试，设置值"`
+	CheckList bool     `cmd:"list help:列表测试，判断是否存在选项"` // 测试列是否存在
 }
 
 func main() {
@@ -128,6 +130,8 @@ func main() {
 		lgr.Info("data: %#v", option.Data)
 		lgr.Info("Test: %#v", option.Test)
 		lgr.Info("List: %#v", option.List)
+		lgr.Info("CheckList: %#v", option.CheckList)
+		lgr.TmpMark("option.List: %v", reflect.TypeOf(option.List).Kind())
 	}, "multi", cli.Help("选项data支持多个测试", gen.ArgsDecomposeMust(optionDataList{})...))
 
 	// struct 解析测试
