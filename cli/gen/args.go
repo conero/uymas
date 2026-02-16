@@ -154,8 +154,37 @@ func setValueByStr(vField reflect.Value, keys []string, args cli.ArgsParser, def
 		return
 	}
 
+	// option value
 	value := args.Get(keys...)
 	value = rock.Param(value, defStrs...)
+
+	// handle gen.Value
+	if vField.Kind() == reflect.Struct && vField.CanInterface() {
+		isBeak := false
+		fieldAny := vField.Interface()
+		switch rlData := fieldAny.(type) {
+		case Value[string]:
+			rlData.isSet = true
+			rlData.Data = value
+			vField.Set(reflect.ValueOf(rlData))
+			isBeak = true
+		case Value[[]string]:
+			rlData.isSet = true
+			rlData.Data = vSlice
+			vField.Set(reflect.ValueOf(rlData))
+			isBeak = true
+		}
+
+		//lgr.TmpMark("%T", fieldAny)
+		//if !isBeak && strings.Contains(vField.Kind().String(), "gen.Value[") {
+		//	lgr.TmpMark("%v", vField.Kind().String())
+		//}
+
+		if isBeak {
+			return
+		}
+	}
+
 	convert.SetByStr(vField, value)
 }
 

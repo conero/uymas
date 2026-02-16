@@ -53,8 +53,9 @@
   - feat: `Option` 文档生成支持 global 属性
   - pref: `CommandOptional` 生成文档时支持外部传递 ShortOption 配置，用于帮助选项的生成模式
 - **cli/gen**
+  - feat: 新增 `gen.Value` 用于实现既然获取值也可判断选项存在性（实验性）
   - pref: `ArgsDress` 解析选项时支持 `isdata` 字符串数值赋值
-
+  
 - **data/input**
   - feat: `Stringer` 新增`Uint32` 用于解析 uint32 位整形
   - feat: `SimpleStr` 新增简单的字符串数据解析类并使用 `Stringer` 获取后者的扩展
