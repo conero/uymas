@@ -62,6 +62,7 @@ type optionDataList struct {
 	List      []string          `cmd:"list help:列表测试，设置值"`
 	CheckList bool              `cmd:"list help:列表测试，判断是否存在选项"` // 测试列是否存在
 	Name      gen.Value[string] `cmd:"name help:设置名称"`
+	Age       gen.Value[int64]  `cmd:"age help:设置年龄限制"`
 }
 
 type OptionValue[V any] struct {
@@ -137,6 +138,7 @@ func main() {
 		lgr.Info("List: %#v", option.List)
 		lgr.Info("CheckList: %#v", option.CheckList)
 		lgr.Info("Name: %#v", option.Name)
+		lgr.Info("Age: %#v", option.Age)
 	}, "multi", cli.Help("选项data支持多个测试", gen.ArgsDecomposeMust(optionDataList{})...))
 
 	// struct 解析测试

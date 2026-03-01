@@ -2,6 +2,7 @@ package gen
 
 import (
 	"errors"
+	"fmt"
 	"reflect"
 	"regexp"
 	"strings"
@@ -9,6 +10,7 @@ import (
 	"gitee.com/conero/uymas/v2/cli"
 	"gitee.com/conero/uymas/v2/data/convert"
 	"gitee.com/conero/uymas/v2/data/input"
+	"gitee.com/conero/uymas/v2/logger/lgr"
 	"gitee.com/conero/uymas/v2/rock"
 	"gitee.com/conero/uymas/v2/str"
 )
@@ -164,15 +166,23 @@ func setValueByStr(vField reflect.Value, keys []string, args cli.ArgsParser, def
 		fieldAny := vField.Interface()
 		switch rlData := fieldAny.(type) {
 		case Value[string]:
-			rlData.isSet = true
+			rlData.IsSet = true
 			rlData.Data = value
 			vField.Set(reflect.ValueOf(rlData))
 			isBeak = true
 		case Value[[]string]:
-			rlData.isSet = true
+			rlData.IsSet = true
 			rlData.Data = vSlice
 			vField.Set(reflect.ValueOf(rlData))
 			isBeak = true
+		default:
+			// Handle gen.Value separately
+			vTypeStr := fmt.Sprintf("%T", fieldAny)
+			if strings.HasPrefix(vTypeStr, "gen.Value[") {
+				lgr.TmpMark("gen.Value: %T", fieldAny)
+				lgr.TmpMark(vTypeStr)
+				setGenValueUserArgs(vField, value)
+			}
 		}
 
 		//lgr.TmpMark("%T", fieldAny)
@@ -186,6 +196,12 @@ func setValueByStr(vField reflect.Value, keys []string, args cli.ArgsParser, def
 	}
 
 	convert.SetByStr(vField, value)
+}
+
+// set to gen.Value
+func setGenValueUserArgs(tgt reflect.Value, value string) {
+	tgt.FieldByName("IsSet").Set(reflect.ValueOf(true))
+	convert.SetByStr(tgt.FieldByName("Data"), value)
 }
 
 func setToStruct(tgt reflect.Value, args cli.ArgsParser) {

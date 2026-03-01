@@ -4,9 +4,5 @@ package gen
 type Value[V any] struct {
 	Data V
 	// Determine whether the option has been set
-	isSet bool
-}
-
-func (v *Value[V]) IsSet() bool {
-	return v.isSet
+	IsSet bool
 }
