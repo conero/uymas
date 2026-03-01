@@ -78,7 +78,7 @@ func LineAsArgs(line string) []string {
 	for _, fd := range findReg.FindAllString(line, -1) {
 		replValue := fmt.Sprintf("_|%d`", index)
 		mapValue[replValue] = fd[1 : len(fd)-1]
-		rpl = strings.Replace(rpl, fd, replValue, -1)
+		rpl = strings.ReplaceAll(rpl, fd, replValue)
 		index++
 	}
 
@@ -87,7 +87,7 @@ func LineAsArgs(line string) []string {
 	for _, fd := range findReg.FindAllString(rpl, -1) {
 		replValue := fmt.Sprintf("_|%d`", index)
 		mapValue[replValue] = fd[1 : len(fd)-1]
-		rpl = strings.Replace(rpl, fd, replValue, -1)
+		rpl = strings.ReplaceAll(rpl, fd, replValue)
 		index++
 	}
 

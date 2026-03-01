@@ -113,7 +113,7 @@ func LiteralExpression(expression string) (float64, error) {
 
 // ExpNoBracket the expression without bracket
 func ExpNoBracket(expression string) string {
-	var result string = "0"
+	var result = "0"
 	reg := regexp.MustCompile(`^[+\-*/\d\s.]+$`)
 	if reg.MatchString(expression) {
 		mulDivReg := regexp.MustCompile(`[\d.]+[*/]+[\d.]`)

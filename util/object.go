@@ -3,11 +3,12 @@ package util
 import (
 	"encoding/json"
 	"fmt"
-	"gitee.com/conero/uymas/v2/rock"
-	"gitee.com/conero/uymas/v2/str"
 	"reflect"
 	"strconv"
 	"strings"
+
+	"gitee.com/conero/uymas/v2/rock"
+	"gitee.com/conero/uymas/v2/str"
 )
 
 var (
@@ -303,16 +304,11 @@ func (obj Object) Keys(value any) []string {
 // StructToMap convert Struct field to by Map, support the Ptr
 func StructToMap(value any, ignoreKeys ...string) map[string]any {
 	rv := reflect.ValueOf(value)
-	var rt reflect.Type
 	if rv.Kind() == reflect.Ptr {
 		rv = rv.Elem()
-		rt = rv.Type()
 	}
 	if rv.Kind() != reflect.Struct {
 		return nil
-	}
-	if rt == nil {
-		rt = reflect.TypeOf(value)
 	}
 	vMap := map[string]any{}
 	var toSetMapValueFn func(value reflect.Value)

@@ -71,7 +71,7 @@ func (ds *DirScanner) Exclude(excludes ...string) *DirScanner {
 func (ds *DirScanner) Include(includes ...string) *DirScanner {
 	var newInclude []string
 	for _, icld := range includes {
-		if "" == strings.TrimSpace(icld) {
+		if strings.TrimSpace(icld) == "" {
 			continue
 		}
 		newInclude = append(newInclude, icld)
@@ -280,7 +280,7 @@ func (ds *DirScanner) ignoreScan(name string) bool {
 	if len(ds.includeExp) > 0 {
 		isFilter := false
 		for _, filter := range ds.includeExp {
-			if "" == strings.TrimSpace(filter) {
+			if strings.TrimSpace(filter) == "" {
 				continue
 			}
 			if idx := strings.Index(filter, allExp); idx > -1 {
@@ -299,7 +299,7 @@ func (ds *DirScanner) ignoreScan(name string) bool {
 	if len(ds.excludeExp) > 0 {
 		isExclude := false
 		for _, filter := range ds.includeExp {
-			if "" == strings.TrimSpace(filter) {
+			if strings.TrimSpace(filter) == "" {
 				continue
 			}
 			if idx := strings.Index(filter, allExp); idx > -1 {

@@ -3,13 +3,14 @@ package xini
 import (
 	"crypto/sha512"
 	"fmt"
-	"gitee.com/conero/uymas/v2/number"
-	"gitee.com/conero/uymas/v2/rock"
-	"gitee.com/conero/uymas/v2/util/fs"
 	"os"
 	"path"
 	"regexp"
 	"strings"
+
+	"gitee.com/conero/uymas/v2/number"
+	"gitee.com/conero/uymas/v2/rock"
+	"gitee.com/conero/uymas/v2/util/fs"
 )
 
 type ScannerLog struct {

@@ -5,13 +5,14 @@ package logger
 import (
 	"bytes"
 	"fmt"
-	"gitee.com/conero/uymas/v2/cli/ansi"
-	"gitee.com/conero/uymas/v2/rock"
-	"gitee.com/conero/uymas/v2/util/fs"
 	"log"
 	"os"
 	"strings"
 	"time"
+
+	"gitee.com/conero/uymas/v2/cli/ansi"
+	"gitee.com/conero/uymas/v2/rock"
+	"gitee.com/conero/uymas/v2/util/fs"
 )
 
 type Level int8
