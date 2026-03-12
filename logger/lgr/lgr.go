@@ -144,3 +144,15 @@ func TmpMark(mark any, args ...any) {
 		markString
 	getLgr().Errorf(markString, args...)
 }
+
+// TmpMarkExit Execute temporary test and exit the subsequent program
+func TmpMarkExit(mark any, args ...any) {
+	markString := fmt.Sprintf("%v", mark)
+	markTitle := fs.GetenvOr(EnvMarkKey, "TMarkShouldDEL")
+	_, flPath, flLine, _ := runtime.Caller(1)
+	markString = ansi.Style("<"+markTitle+">", ansi.Red, ansi.BkgWhiteBr, ansi.Italic, ansi.Twinkle) +
+		ansi.Style(fmt.Sprintf(" %s(%d) ", filepath.Base(flPath), flLine), ansi.Green) +
+		markString
+	getLgr().Errorf(markString, args...)
+	os.Exit(1)
+}
