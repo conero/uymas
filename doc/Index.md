@@ -44,7 +44,7 @@
 
 ```shell
 # 执行lint
-golangci-lint.exe run ./...
+golangci-lint run ./...
 ```
 
 

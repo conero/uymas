@@ -50,8 +50,9 @@
 
 - **logger/lgr**
   - feat: 新增函数`TmpMarkExit`用于开发时执行调试并退出后续程序
-
-
+- **cli**
+  - fixed: 修复 `StructGen` 选择指令生成文档时无法获取命令行程序的配置信息
+  - fixed: 修复 `StructGen` 选项生成文档时，参数获取失败
 
 
 

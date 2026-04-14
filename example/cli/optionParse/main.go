@@ -77,6 +77,8 @@ func main() {
 			// 设置是否为段属性模式
 			//ShortOption: true,
 		},
+		// . 测试
+		//StructGenSep: ".",
 	})
 
 	app.Command(func(parser cli.ArgsParser) {

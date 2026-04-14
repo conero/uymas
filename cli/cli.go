@@ -54,13 +54,18 @@ type Cli struct {
 	Register[Fn]
 }
 
+func setConfig(cfg Config) Config {
+	if cfg.StructGenSep == "" {
+		cfg.StructGenSep = DefaultConfig.StructGenSep
+	}
+	ConfigSet(cfg)
+	return cfg
+}
+
 // NewCli the command line program is instantiated and the driver is as light as possible
 func NewCli(cfgs ...Config) *Cli {
 	app := &Cli{}
-	app.Config = rock.Param(DefaultConfig, cfgs...)
-	if len(cfgs) > 0 {
-		ConfigSet(cfgs[0])
-	}
+	app.Config = setConfig(rock.Param(DefaultConfig, cfgs...))
 	app.Call = func(fn Fn, parser ArgsParser) {
 		if fn != nil {
 			fn(parser)

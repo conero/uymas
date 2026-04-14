@@ -62,6 +62,8 @@ func (r *Register[T]) CommandList(t T, commands []string, optionals ...CommandOp
 	optional := rock.Param(CommandOptional{}, optionals...)
 	optional.Alias = commands[1:]
 	optional.Keys = commands
+	// Pass the command configuration
+	optional.config = &r.Config
 	attr := RegisterMeta[T]{
 		Command:  optional,
 		Runnable: t,
