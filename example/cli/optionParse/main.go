@@ -149,5 +149,5 @@ func main() {
 	//bys, _ := json.MarshalIndent(gen.ArgsDecomposeMust(optionVerify{}), "", "  ")
 	//lgr.Info("BYS:\n %s", bys)
 	lgr.ErrorIf(app.Run())
-	//lgr.ErrorIf(app.Run("sub", "-title", "大汉子", "--y.name", "李倩", "-x.name", "May"))
+	//lgr.ErrorIf(app.Run("sub", "--title", "大汉子", "--yy.name", "李倩", "-x.name", "May"))
 }

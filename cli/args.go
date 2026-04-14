@@ -150,6 +150,7 @@ func (c *Args) parse() {
 		c.valueMap = map[string]ArgValue{}
 	}
 	config := c.config
+	cfg := ConfigWith()
 
 	// split option as KV pairs
 	optionSplitFn := func(opt string) []string {
@@ -213,6 +214,24 @@ func (c *Args) parse() {
 		lastKey = childLastOp
 		lastRawKey = opts[vLen-1]
 	}
+	// parse sub shortOption
+	parseShortOptionFn := func(vis string) ([]string, bool) {
+		if !config.TopAttrAllow {
+			return nil, false
+		}
+
+		idx := strings.Index(vis, cfg.StructGenSep)
+		if idx < 1 {
+			return nil, false
+		}
+
+		optionList := vis[:idx]
+		if config.ShortOption {
+			return strings.Split(optionList, ""), true
+		}
+
+		return []string{optionList}, true
+	}
 	for i, arg := range c.raw {
 		var option string
 		idx := strings.Index(arg, "-")
@@ -224,6 +243,11 @@ func (c *Args) parse() {
 
 			option = arg[1:]
 			if config.ShortOption {
+				if multiOpts, isMatch := parseShortOptionFn(option); isMatch {
+					recordOptionFn(multiOpts...)
+					lastRawKey = option
+					continue
+				}
 				optionList := strings.Split(option, "")
 				recordOptionFn(optionList...)
 				continue
@@ -270,11 +294,30 @@ func (c *Args) Values() ArgValue {
 }
 
 func (c *Args) List(keys ...string) []string {
-	if c.values == nil {
+	if c.values == nil && c.valueMap == nil {
 		return nil
 	}
-
+	values := c.values
+	if values == nil {
+		values = ArgValue{}
+	}
+	valueMap := c.valueMap
+	if valueMap == nil {
+		valueMap = map[string]ArgValue{}
+	}
+	cfg := ConfigWith()
 	for _, key := range keys {
+		// Read value from valueMap
+		idx := strings.Index(key, cfg.StructGenSep)
+		if cfg.ArgsConfig != nil && idx > 0 {
+			structKey := key[:idx]
+			subKey := key[idx+1:]
+			subValue, exist := c.valueMap[structKey]
+			if exist {
+				return subValue[subKey]
+			}
+		}
+
 		list, exist := c.values[key]
 		if exist {
 			return list
@@ -285,7 +328,7 @@ func (c *Args) List(keys ...string) []string {
 }
 
 func (c *Args) Join(seq string, keys ...string) string {
-	if c.values == nil {
+	if c.values == nil && c.valueMap == nil {
 		return ""
 	}
 
