@@ -320,6 +320,8 @@ func (r *Register[T]) Run(args ...string) error {
 		r.args = NewArgsWith(*r.Config.ArgsConfig, args...)
 	} else {
 		r.args = NewArgs(args...)
+		// 默认配置， DefArgsConfig 处理
+		r.Config.ArgsConfig = &DefArgsConfig
 	}
 	if r.registerAlias != nil {
 		r.registerAlias = map[string][]string{}

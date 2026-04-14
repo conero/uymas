@@ -114,6 +114,7 @@ func (c CommandOptional) GenOptionHelpMsgGlobal(isAll bool, isGlobal bool, level
 	var pairList [][2]string
 	maxLen := 0
 	var nameNoReapeatDick = map[string]bool{}
+	cfg := ConfigWith()
 	for _, opt := range c.Options {
 		if opt.IsData {
 			var vDataOpt = opt
@@ -177,12 +178,14 @@ func (c CommandOptional) GenOptionHelpMsgGlobal(isAll bool, isGlobal bool, level
 		if len(opt.StructItems) > 0 {
 			var siPairList [][2]string
 			var siMaxLen = 0
-			cfg := c.GetConfig()
 			for _, item := range opt.StructItems {
 				if item.Help == "" {
 					continue
 				}
 				siName := opt.GetName() + cfg.StructGenSep + item.GetName()
+				if cfg.ArgsConfig != nil && cfg.ArgsConfig.ShortOption && len(opt.GetName()) > 1 {
+					siName = "-" + siName
+				}
 				siLen := len(siName)
 				if siLen > siMaxLen {
 					siMaxLen = siLen

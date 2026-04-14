@@ -114,7 +114,10 @@ func setValueByOption(vField reflect.Value, option *cli.Option, args cli.ArgsPar
 			if valueStr == "" {
 				valueStr = item.DefValue
 			}
-
+			// ignore empty
+			if valueStr == "" {
+				continue
+			}
 			structName = str.Str(structName).Ucfirst()
 			childFld := vField.FieldByName(structName)
 			if !childFld.IsValid() {

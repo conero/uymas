@@ -37,7 +37,9 @@ type subOptionX struct {
 }
 
 type subOption struct {
-	X subOptionX `cmd:"x structGen help:附加参数选项"`
+	X     subOptionX `cmd:"x structGen help:附加参数选项"`
+	Y     subOptionX `cmd:"yy structGen help:附加参数选项"`
+	Title string     `cmd:"title help:设置标题"`
 	globalOption
 }
 
@@ -73,12 +75,12 @@ type OptionValue[V any] struct {
 func main() {
 	//app := cli.NewCli()
 	app := cli.NewCli(cli.Config{
-		ArgsConfig: &cli.ArgsConfig{
-			// 设置是否为段属性模式
-			//ShortOption: true,
-		},
+		//ArgsConfig: &cli.ArgsConfig{
+		//	// 设置是否为段属性模式
+		//	//ShortOption: true,
+		//},
 		// . 测试
-		//StructGenSep: ".",
+		StructGenSep: ".",
 	})
 
 	app.Command(func(parser cli.ArgsParser) {
@@ -147,4 +149,5 @@ func main() {
 	//bys, _ := json.MarshalIndent(gen.ArgsDecomposeMust(optionVerify{}), "", "  ")
 	//lgr.Info("BYS:\n %s", bys)
 	lgr.ErrorIf(app.Run())
+	//lgr.ErrorIf(app.Run("sub", "-title", "大汉子", "--y.name", "李倩", "-x.name", "May"))
 }

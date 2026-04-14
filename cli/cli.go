@@ -58,6 +58,9 @@ func setConfig(cfg Config) Config {
 	if cfg.StructGenSep == "" {
 		cfg.StructGenSep = DefaultConfig.StructGenSep
 	}
+	if cfg.ArgsConfig == nil {
+		cfg.ArgsConfig = &DefArgsConfig
+	}
 	ConfigSet(cfg)
 	return cfg
 }
