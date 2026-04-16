@@ -31,9 +31,10 @@ type optionParse struct {
 }
 
 type subOptionX struct {
-	Name    string `cmd:"name help:设置姓名"`
-	Age     int16  `cmd:"age default:42 help:设置年纪"`
-	IsCheck bool   `cmd:"check help:是否需要检查"`
+	Name    string   `cmd:"name help:设置姓名"`
+	Age     int16    `cmd:"age default:42 help:设置年纪"`
+	IsCheck bool     `cmd:"check help:是否需要检查"`
+	Tables  []string `cmd:"table mark:[..] help:设置多表格"`
 }
 
 type subOption struct {
@@ -114,6 +115,9 @@ func main() {
 		}
 		fmt.Println("子选项测试: ")
 		fmt.Printf("%#v\n", opt)
+		fmt.Println()
+		fmt.Println("json 数据输出: ")
+		fmt.Printf("%s\n", rock.Must(json.Marshal(opt)))
 	}, "sub", cli.Help("命令子选项支持", gen.ArgsDecomposeMust(subOption{})...))
 
 	// 验证选项
