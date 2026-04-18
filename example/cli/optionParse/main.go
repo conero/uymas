@@ -152,6 +152,7 @@ func main() {
 	// struct 解析测试
 	//bys, _ := json.MarshalIndent(gen.ArgsDecomposeMust(optionVerify{}), "", "  ")
 	//lgr.Info("BYS:\n %s", bys)
-	lgr.ErrorIf(app.Run())
+	//lgr.ErrorIf(app.Run())
 	//lgr.ErrorIf(app.Run("sub", "--title", "大汉子", "--yy.name", "李倩", "-x.name", "May"))
+	lgr.ErrorIf(app.Run("sub", "-x.table", "x_project", "-x.table", "x_house", "-x.name", "May", "-x.table", "x_house", "-x.table", "x_user"))
 }
