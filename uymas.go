@@ -16,7 +16,7 @@ const (
 	Author  = "Joshua Conero"
 	Email   = "conero@163.com"
 	Name    = "uymas"
-	PkgName = "conero/uymas/v2"
+	PkgName = "conero/uymas/v3"
 )
 
 var (
