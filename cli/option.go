@@ -23,10 +23,10 @@ type Option struct {
 	Mark        string `json:"mark"`  // option input name mark for help
 	Owner       string `json:"owner"` // single struct app for child command option map key, or naming rule `Opt[Name]`
 	List        []string
-	FieldName   string // remember fieldName when gen by struct reflect
-	StructGen   bool   // parse the struct into documents and values
-	StructItems []Option
-	IsGlobal    bool // global means that the option belong to all commands or entry command
+	FieldName   string   // remember fieldName when gen by struct reflect
+	StructGen   bool     // parse the struct into documents and values
+	StructItems []Option // StructGen 对应的结构体属性
+	IsGlobal    bool     // global means that the option belong to all commands or entry command
 	DetailHelp  bool
 }
 

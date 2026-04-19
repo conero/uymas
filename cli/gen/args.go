@@ -118,7 +118,13 @@ func setValueByOption(vField reflect.Value, option *cli.Option, args cli.ArgsPar
 			if valueStr == "" {
 				continue
 			}
-			structName = str.Str(structName).Ucfirst()
+			// 结构体名称
+			if item.FieldName != "" {
+				structName = item.FieldName
+			} else {
+				structName = str.Str(structName).Ucfirst()
+			}
+			// 设置字段值
 			childFld := vField.FieldByName(structName)
 			if !childFld.IsValid() {
 				continue
@@ -238,6 +244,7 @@ func setToStruct(tgt reflect.Value, args cli.ArgsParser) {
 			continue
 		}
 		option := OptionTagParse(tagValue)
+		option.FieldName = fieldType.Name
 		setValueByOption(tgt.Field(i), option, args, keys)
 	}
 }
