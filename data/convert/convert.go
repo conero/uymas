@@ -5,8 +5,8 @@ import (
 	"reflect"
 	"strings"
 
-	"gitee.com/conero/uymas/v2/data/input"
-	"gitee.com/conero/uymas/v2/str"
+	"gitee.com/conero/uymas/v3/data/input"
+	"gitee.com/conero/uymas/v3/str"
 )
 
 // SetByStr set the literal string to any specified type

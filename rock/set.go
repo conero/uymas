@@ -3,7 +3,7 @@ package rock
 import (
 	"math/rand"
 
-	"gitee.com/conero/uymas/v2/rock/constraints"
+	"gitee.com/conero/uymas/v3/rock/constraints"
 )
 
 // ListIndex get index by search value from list

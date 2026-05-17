@@ -7,13 +7,13 @@ import (
 	"strconv"
 	"strings"
 
-	"gitee.com/conero/uymas/v2/app/calc"
-	"gitee.com/conero/uymas/v2/cli"
-	"gitee.com/conero/uymas/v2/cli/ansi"
-	"gitee.com/conero/uymas/v2/cli/chest"
-	"gitee.com/conero/uymas/v2/logger/lgr"
-	"gitee.com/conero/uymas/v2/number"
-	"gitee.com/conero/uymas/v2/rock"
+	"gitee.com/conero/uymas/v3/app/calc"
+	"gitee.com/conero/uymas/v3/cli"
+	"gitee.com/conero/uymas/v3/cli/ansi"
+	"gitee.com/conero/uymas/v3/cli/chest"
+	"gitee.com/conero/uymas/v3/logger/lgr"
+	"gitee.com/conero/uymas/v3/number"
+	"gitee.com/conero/uymas/v3/rock"
 )
 
 // 但进制转换进制转换

@@ -7,13 +7,13 @@ import (
 	"strconv"
 	"time"
 
-	"gitee.com/conero/uymas/v2"
-	"gitee.com/conero/uymas/v2/cli"
-	"gitee.com/conero/uymas/v2/cli/ansi"
-	"gitee.com/conero/uymas/v2/cli/gen"
-	"gitee.com/conero/uymas/v2/cli/repl"
-	"gitee.com/conero/uymas/v2/culture/ganz"
-	"gitee.com/conero/uymas/v2/logger/lgr"
+	"gitee.com/conero/uymas/v3"
+	"gitee.com/conero/uymas/v3/cli"
+	"gitee.com/conero/uymas/v3/cli/ansi"
+	"gitee.com/conero/uymas/v3/cli/gen"
+	"gitee.com/conero/uymas/v3/cli/repl"
+	"gitee.com/conero/uymas/v3/culture/ganz"
+	"gitee.com/conero/uymas/v3/logger/lgr"
 )
 
 type globalOption struct {
@@ -43,7 +43,7 @@ func cmdGanz(args cli.ArgsParser) {
 func main() {
 	app := cli.NewCli()
 	app.Index(func(cli.ArgsParser) {
-		fmt.Println("欢饮您使用 Uymas v2")
+		fmt.Println("欢饮您使用 Uymas v3")
 		fmt.Println()
 		buildInfo := uymas.GetBuildInfo()
 		if buildInfo != "" {

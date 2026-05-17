@@ -1,7 +1,7 @@
 // Package rock generic based common package processing
 package rock
 
-import "gitee.com/conero/uymas/v2/rock/constraints"
+import "gitee.com/conero/uymas/v3/rock/constraints"
 
 var (
 	globalMustPanic = true

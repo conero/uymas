@@ -1,7 +1,7 @@
 package aesutil
 
 import (
-	"gitee.com/conero/uymas/v2/str"
+	"gitee.com/conero/uymas/v3/str"
 	"testing"
 )
 

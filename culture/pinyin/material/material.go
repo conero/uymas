@@ -4,8 +4,8 @@ package material
 import (
 	_ "embed"
 	"fmt"
-	"gitee.com/conero/uymas/v2/culture/pinyin"
-	"gitee.com/conero/uymas/v2/number"
+	"gitee.com/conero/uymas/v3/culture/pinyin"
+	"gitee.com/conero/uymas/v3/number"
 )
 
 // reference the resource from the link: https://github.com/mozillazg/pinyin-data

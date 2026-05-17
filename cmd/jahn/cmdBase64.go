@@ -8,12 +8,12 @@ import (
 	"net/http"
 	"os"
 
-	"gitee.com/conero/uymas/v2/cli"
-	"gitee.com/conero/uymas/v2/cli/gen"
-	"gitee.com/conero/uymas/v2/logger/lgr"
-	"gitee.com/conero/uymas/v2/str"
-	"gitee.com/conero/uymas/v2/util/fs"
-	"gitee.com/conero/uymas/v2/util/tm"
+	"gitee.com/conero/uymas/v3/cli"
+	"gitee.com/conero/uymas/v3/cli/gen"
+	"gitee.com/conero/uymas/v3/logger/lgr"
+	"gitee.com/conero/uymas/v3/str"
+	"gitee.com/conero/uymas/v3/util/fs"
+	"gitee.com/conero/uymas/v3/util/tm"
 )
 
 type base64Option struct {

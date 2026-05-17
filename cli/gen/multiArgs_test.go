@@ -3,7 +3,7 @@ package gen
 import (
 	"testing"
 
-	"gitee.com/conero/uymas/v2/cli"
+	"gitee.com/conero/uymas/v3/cli"
 )
 
 type tmaStrcut struct {

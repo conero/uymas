@@ -28,10 +28,10 @@ import (
 	"runtime"
 	"strings"
 
-	"gitee.com/conero/uymas/v2/cli/ansi"
-	"gitee.com/conero/uymas/v2/logger"
-	"gitee.com/conero/uymas/v2/rock"
-	"gitee.com/conero/uymas/v2/util/fs"
+	"gitee.com/conero/uymas/v3/cli/ansi"
+	"gitee.com/conero/uymas/v3/logger"
+	"gitee.com/conero/uymas/v3/rock"
+	"gitee.com/conero/uymas/v3/util/fs"
 )
 
 var vLgr *logger.Logger

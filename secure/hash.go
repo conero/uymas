@@ -7,7 +7,7 @@ import (
 	"crypto/sha256"
 	"crypto/sha512"
 	"fmt"
-	"gitee.com/conero/uymas/v2/rock"
+	"gitee.com/conero/uymas/v3/rock"
 	"hash"
 	"strings"
 )

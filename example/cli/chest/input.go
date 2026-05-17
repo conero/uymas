@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"gitee.com/conero/uymas/v2/cli/chest"
+	"gitee.com/conero/uymas/v3/cli/chest"
 )
 
 func main() {

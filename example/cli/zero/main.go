@@ -1,7 +1,7 @@
 package main
 
 import (
-	"gitee.com/conero/uymas/v2/cli"
+	"gitee.com/conero/uymas/v3/cli"
 )
 
 // zero 代码测试

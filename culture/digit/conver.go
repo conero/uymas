@@ -3,7 +3,7 @@ package digit
 import (
 	"errors"
 	"fmt"
-	"gitee.com/conero/uymas/v2/rock"
+	"gitee.com/conero/uymas/v3/rock"
 	"math"
 	"strconv"
 	"strings"

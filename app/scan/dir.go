@@ -9,8 +9,8 @@ import (
 	"sync"
 	"time"
 
-	"gitee.com/conero/uymas/v2/logger/lgr"
-	"gitee.com/conero/uymas/v2/util/fs"
+	"gitee.com/conero/uymas/v3/logger/lgr"
+	"gitee.com/conero/uymas/v3/util/fs"
 )
 
 const (

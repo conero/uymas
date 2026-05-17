@@ -3,7 +3,7 @@
     <module name="uymas" />
     <working_directory value="$PROJECT_DIR$" />
     <kind value="PACKAGE" />
-    <package value="gitee.com/conero/uymas/v2/example/cli/zero" />
+    <package value="gitee.com/conero/uymas/v3/example/cli/zero" />
     <directory value="$PROJECT_DIR$" />
     <filePath value="$PROJECT_DIR$/example/cli/zero/main.go" />
     <output_directory value="$PROJECT_DIR$" />
@@ -13,7 +13,7 @@
     <module name="uymas-v2" />
     <working_directory value="$PROJECT_DIR$" />
     <kind value="PACKAGE" />
-    <package value="gitee.com/conero/uymas/v2/example/cli/zero" />
+    <package value="gitee.com/conero/uymas/v3/example/cli/zero" />
     <directory value="$PROJECT_DIR$" />
     <filePath value="$PROJECT_DIR$/example/cli/zero/main.go" />
     <output_directory value="$PROJECT_DIR$" />

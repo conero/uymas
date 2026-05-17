@@ -7,7 +7,7 @@ package storage
 import (
 	"fmt"
 
-	"gitee.com/conero/uymas/v2"
+	"gitee.com/conero/uymas/v3"
 )
 
 // Kv the Kv style data

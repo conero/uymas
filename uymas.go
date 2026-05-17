@@ -35,7 +35,7 @@ var (
 //
 // $gitHash = $(git rev-parse --short HEAD); $buildData = $(get-date -Format 'yyyy-MM-dd');$buildAuthor = 'Joshua Conero';
 //
-// go build -ldflags "-s -w -X 'gitee.com/conero/uymas/v2.gitHash=$gitHash' -X 'gitee.com/conero/uymas/v2.buildData=$buildData' -X 'gitee.com/conero/uymas/v2.buildAuthor=$buildAuthor'" ./cmd/...
+// go build -ldflags "-s -w -X 'gitee.com/conero/uymas/v3.gitHash=$gitHash' -X 'gitee.com/conero/uymas/v3.buildData=$buildData' -X 'gitee.com/conero/uymas/v3.buildAuthor=$buildAuthor'" ./cmd/...
 //
 // Output format such as: "(buildData gitHash)"
 func GetBuildInfo() string {

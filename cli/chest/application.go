@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os/exec"
 
-	"gitee.com/conero/uymas/v2/util/fs"
+	"gitee.com/conero/uymas/v3/util/fs"
 )
 
 // CmdExist Used to check whether the command is available and to throw an exception.

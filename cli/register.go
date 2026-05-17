@@ -6,8 +6,8 @@ import (
 	"sort"
 	"strings"
 
-	"gitee.com/conero/uymas/v2/logger/lgr"
-	"gitee.com/conero/uymas/v2/rock"
+	"gitee.com/conero/uymas/v3/logger/lgr"
+	"gitee.com/conero/uymas/v3/rock"
 )
 
 type RegisterMeta[T any] struct {

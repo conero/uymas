@@ -8,8 +8,8 @@ import (
 	"strconv"
 	"strings"
 
-	"gitee.com/conero/uymas/v2/number"
-	"gitee.com/conero/uymas/v2/rock"
+	"gitee.com/conero/uymas/v3/number"
+	"gitee.com/conero/uymas/v3/rock"
 )
 
 const Accuracy int8 = 7

@@ -3,8 +3,8 @@ package pinyin
 
 import (
 	"fmt"
-	"gitee.com/conero/uymas/v2/rock"
-	"gitee.com/conero/uymas/v2/util/fs"
+	"gitee.com/conero/uymas/v3/rock"
+	"gitee.com/conero/uymas/v3/util/fs"
 	"regexp"
 	"strings"
 )

@@ -2,7 +2,7 @@ package rock
 
 import (
 	"fmt"
-	"gitee.com/conero/uymas/v2/rock/constraints"
+	"gitee.com/conero/uymas/v3/rock/constraints"
 	"strings"
 )
 

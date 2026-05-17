@@ -3,7 +3,7 @@ package aesutil
 import (
 	"testing"
 
-	"gitee.com/conero/uymas/v2/str"
+	"gitee.com/conero/uymas/v3/str"
 )
 
 func TestCtrEncrypt(t *testing.T) {

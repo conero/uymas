@@ -3,8 +3,8 @@ package pinyin
 import "strings"
 
 import (
-	"gitee.com/conero/uymas/v2/rock"
-	"gitee.com/conero/uymas/v2/str"
+	"gitee.com/conero/uymas/v3/rock"
+	"gitee.com/conero/uymas/v3/str"
 )
 
 const (

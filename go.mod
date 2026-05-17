@@ -1,3 +1,3 @@
-module gitee.com/conero/uymas/v2
+module gitee.com/conero/uymas/v3
 
 go 1.20

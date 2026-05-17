@@ -5,11 +5,11 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"gitee.com/conero/uymas/v2/cli"
-	"gitee.com/conero/uymas/v2/cli/gen"
-	"gitee.com/conero/uymas/v2/logger/lgr"
-	"gitee.com/conero/uymas/v2/rock"
-	"gitee.com/conero/uymas/v2/util"
+	"gitee.com/conero/uymas/v3/cli"
+	"gitee.com/conero/uymas/v3/cli/gen"
+	"gitee.com/conero/uymas/v3/logger/lgr"
+	"gitee.com/conero/uymas/v3/rock"
+	"gitee.com/conero/uymas/v3/util"
 )
 
 type globalOption struct {

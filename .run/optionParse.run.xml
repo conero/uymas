@@ -4,7 +4,7 @@
     <working_directory value="$PROJECT_DIR$" />
     <parameters value="--help" />
     <kind value="PACKAGE" />
-    <package value="gitee.com/conero/uymas/v2/example/cli/optionParse" />
+    <package value="gitee.com/conero/uymas/v3/example/cli/optionParse" />
     <directory value="$PROJECT_DIR$" />
     <filePath value="$PROJECT_DIR$/example/cli/optionParse/main.go" />
     <output_directory value="$PROJECT_DIR$" />
@@ -14,7 +14,7 @@
     <module name="uymas-v2" />
     <working_directory value="$PROJECT_DIR$" />
     <kind value="PACKAGE" />
-    <package value="gitee.com/conero/uymas/v2/example/cli/optionParse" />
+    <package value="gitee.com/conero/uymas/v3/example/cli/optionParse" />
     <directory value="$PROJECT_DIR$" />
     <filePath value="$PROJECT_DIR$/example/cli/optionParse/main.go" />
     <output_directory value="$PROJECT_DIR$" />

@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"gitee.com/conero/uymas/v2/rock"
+	"gitee.com/conero/uymas/v3/rock"
 )
 
 type testObjectTopMac struct {

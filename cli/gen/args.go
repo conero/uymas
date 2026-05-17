@@ -7,12 +7,12 @@ import (
 	"regexp"
 	"strings"
 
-	"gitee.com/conero/uymas/v2/cli"
-	"gitee.com/conero/uymas/v2/data/convert"
-	"gitee.com/conero/uymas/v2/data/input"
-	"gitee.com/conero/uymas/v2/logger/lgr"
-	"gitee.com/conero/uymas/v2/rock"
-	"gitee.com/conero/uymas/v2/str"
+	"gitee.com/conero/uymas/v3/cli"
+	"gitee.com/conero/uymas/v3/data/convert"
+	"gitee.com/conero/uymas/v3/data/input"
+	"gitee.com/conero/uymas/v3/logger/lgr"
+	"gitee.com/conero/uymas/v3/rock"
+	"gitee.com/conero/uymas/v3/str"
 )
 
 // ArgsTagName The struct tag is named cmd. If this parameter is not set,

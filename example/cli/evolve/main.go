@@ -8,17 +8,17 @@ import (
 	"strings"
 	"time"
 
-	"gitee.com/conero/uymas/v2"
-	"gitee.com/conero/uymas/v2/cli"
-	"gitee.com/conero/uymas/v2/cli/ansi"
-	"gitee.com/conero/uymas/v2/cli/chest"
-	"gitee.com/conero/uymas/v2/cli/evolve"
-	"gitee.com/conero/uymas/v2/cli/gen"
-	"gitee.com/conero/uymas/v2/logger/lgr"
-	"gitee.com/conero/uymas/v2/number"
-	"gitee.com/conero/uymas/v2/str"
-	"gitee.com/conero/uymas/v2/util/fs"
-	"gitee.com/conero/uymas/v2/util/tm"
+	"gitee.com/conero/uymas/v3"
+	"gitee.com/conero/uymas/v3/cli"
+	"gitee.com/conero/uymas/v3/cli/ansi"
+	"gitee.com/conero/uymas/v3/cli/chest"
+	"gitee.com/conero/uymas/v3/cli/evolve"
+	"gitee.com/conero/uymas/v3/cli/gen"
+	"gitee.com/conero/uymas/v3/logger/lgr"
+	"gitee.com/conero/uymas/v3/number"
+	"gitee.com/conero/uymas/v3/str"
+	"gitee.com/conero/uymas/v3/util/fs"
+	"gitee.com/conero/uymas/v3/util/tm"
 )
 
 type testArgs struct {

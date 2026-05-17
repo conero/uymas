@@ -1,8 +1,8 @@
 package main
 
 import (
-	"gitee.com/conero/uymas/v2/culture/pinyin"
-	"gitee.com/conero/uymas/v2/culture/pinyin/material"
+	"gitee.com/conero/uymas/v3/culture/pinyin"
+	"gitee.com/conero/uymas/v3/culture/pinyin/material"
 )
 
 var (

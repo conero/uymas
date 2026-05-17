@@ -10,9 +10,9 @@ import (
 	"strings"
 	"time"
 
-	"gitee.com/conero/uymas/v2/cli/ansi"
-	"gitee.com/conero/uymas/v2/rock"
-	"gitee.com/conero/uymas/v2/util/fs"
+	"gitee.com/conero/uymas/v3/cli/ansi"
+	"gitee.com/conero/uymas/v3/rock"
+	"gitee.com/conero/uymas/v3/util/fs"
 )
 
 type Level int8

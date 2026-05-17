@@ -4,8 +4,8 @@ import (
 	"os"
 	"strings"
 
-	"gitee.com/conero/uymas/v2/data/input"
-	"gitee.com/conero/uymas/v2/rock"
+	"gitee.com/conero/uymas/v3/data/input"
+	"gitee.com/conero/uymas/v3/rock"
 )
 
 // ArgValue arg of

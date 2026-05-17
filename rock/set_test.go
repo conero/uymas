@@ -3,7 +3,7 @@ package rock
 import (
 	"testing"
 
-	"gitee.com/conero/uymas/v2/str"
+	"gitee.com/conero/uymas/v3/str"
 )
 
 func TestListIndex(t *testing.T) {

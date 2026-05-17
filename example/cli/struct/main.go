@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
-	"gitee.com/conero/uymas/v2/cli"
-	"gitee.com/conero/uymas/v2/cli/gen"
-	"gitee.com/conero/uymas/v2/logger/lgr"
+	"gitee.com/conero/uymas/v3/cli"
+	"gitee.com/conero/uymas/v3/cli/gen"
+	"gitee.com/conero/uymas/v3/logger/lgr"
 )
 
 func main() {
