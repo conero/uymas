@@ -45,12 +45,12 @@ nestling --> develop -->master
 
 ```ini
 # github
-go get -u gitee.com/conero/uymas/v2
+go get -u gitee.com/conero/uymas/v3
 
 # 安装最新的v2开发版本hash，hash 全写或12位时有效
-go get -u gitee.com/conero/uymas/v2@hash
+go get -u gitee.com/conero/uymas/v3@hash
 # 如：
-go get -u gitee.com/conero/uymas/v2@05e80eafc26b
+go get -u gitee.com/conero/uymas/v3@05e80eafc26b
 ```
 
 
