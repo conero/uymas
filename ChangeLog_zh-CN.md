@@ -45,3 +45,8 @@
 - **cli/gen**
   - pref: ArgsDress 中 StructGen 字段名称获取优化，优先使用实际的属性名称
 
+
+
+#### v3.0.0-alpha.1/2026年05月17日
+
+程序标记，用于git通过 go get 安装测试包

@@ -2,7 +2,7 @@
 
 Golang 常用包，快速实现命令行程序开发、struct合并、随机数等生成.
 
-[![Go.Dev reference](https://img.shields.io/badge/go.dev-reference-blue?logo=go&logoColor=white)](https://pkg.go.dev/gitee.com/conero/uymas/v2?tab=doc)   [![Report Card](https://goreportcard.com/badge/gitee.com/conero/uymas/v2)](https://goreportcard.com/report/gitee.com/conero/uymas/v2)   [![Goproxy.cn](https://goproxy.cn/stats/gitee.com/conero/uymas/v2/badges/download-count.svg)](https://goproxy.cn)  [![](https://goreportcard.com/badge/gitee.com/uymas/conero)](https://goreportcard.com/report/gitee.com/conero/uymas)  [![Go](https://github.com/conero/uymas/actions/workflows/go.yml/badge.svg)](https://github.com/conero/uymas/actions/workflows/go.yml)  [![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/conero/uymas?label=Latest%20Version&color=teal)](https://github.com/conero/uymas/releases/latest)
+[![Go.Dev reference](https://img.shields.io/badge/go.dev-reference-blue?logo=go&logoColor=white)](https://pkg.go.dev/gitee.com/conero/uymas/v3?tab=doc)   [![Report Card](https://goreportcard.com/badge/gitee.com/conero/uymas/v3)](https://goreportcard.com/report/gitee.com/conero/uymas/v3)   [![Goproxy.cn](https://goproxy.cn/stats/gitee.com/conero/uymas/v3/badges/download-count.svg)](https://goproxy.cn)  [![](https://goreportcard.com/badge/gitee.com/uymas/conero)](https://goreportcard.com/report/gitee.com/conero/uymas)  [![Go](https://github.com/conero/uymas/actions/workflows/go.yml/badge.svg)](https://github.com/conero/uymas/actions/workflows/go.yml)  [![GitHub tag (latest by date)](https://img.shields.io/github/v/tag/conero/uymas?label=Latest%20Version&color=teal)](https://github.com/conero/uymas/releases/latest)
 [![Go](https://img.shields.io/badge/go-1.20-cyan.svg)](https://golang.org) 
 
 
@@ -47,7 +47,7 @@ nestling --> develop -->master
 # github
 go get -u gitee.com/conero/uymas/v3
 
-# 安装最新的v2开发版本hash，hash 全写或12位时有效
+# 安装最新的v3开发版本hash，hash 全写或12位时有效
 go get -u gitee.com/conero/uymas/v3@hash
 # 如：
 go get -u gitee.com/conero/uymas/v3@05e80eafc26b
@@ -131,7 +131,7 @@ package main
 
 import (
 	"fmt"
-	"gitee.com/conero/uymas/v2/cli/evolve"
+	"gitee.com/conero/uymas/v3/cli/evolve"
 )
 
 // command struct
