@@ -244,7 +244,9 @@ func setToStruct(tgt reflect.Value, args cli.ArgsParser) {
 			continue
 		}
 		option := OptionTagParse(tagValue)
-		fmt.Printf("tagValue: %s\n", tagValue)
+		if option == nil {
+			continue
+		}
 		option.FieldName = fieldType.Name
 		setValueByOption(tgt.Field(i), option, args, keys)
 	}
