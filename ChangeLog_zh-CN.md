@@ -49,7 +49,8 @@
 - **cli/gen**
 
   - pref: ArgsDress 中 StructGen 字段名称获取优化，优先使用实际的属性名称
-
+  - fixed: 修复 ArgsDress 未指定tag cmd或json判断异常，导致解析异常
+  
   
 
 

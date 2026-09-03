@@ -221,7 +221,6 @@ func setToStruct(tgt reflect.Value, args cli.ArgsParser) {
 	for i := 0; i < tgt.NumField(); i++ {
 		fieldType := rtp.Field(i)
 		name := fieldType.Tag.Get(ArgsTagName)
-		tagValue := name
 		if name == "" {
 			name = str.JsonTagName(fieldType.Tag.Get("json"))
 		}
@@ -232,6 +231,7 @@ func setToStruct(tgt reflect.Value, args cli.ArgsParser) {
 		if name == ArgsTagOmit {
 			continue
 		}
+		tagValue := name
 
 		// field inherit by parent struct.
 		if fieldType.Anonymous {
@@ -244,6 +244,7 @@ func setToStruct(tgt reflect.Value, args cli.ArgsParser) {
 			continue
 		}
 		option := OptionTagParse(tagValue)
+		fmt.Printf("tagValue: %s\n", tagValue)
 		option.FieldName = fieldType.Name
 		setValueByOption(tgt.Field(i), option, args, keys)
 	}

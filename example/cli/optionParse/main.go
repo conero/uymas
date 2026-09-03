@@ -26,6 +26,7 @@ type optionParse struct {
 	Off    bool     `cmd:"off default:True help:默认关闭，bool类型展示"`
 	Index  []string `cmd:"index default:[index.html,index.htm] help:服务器支持索引文件"`
 	Number []uint16 `cmd:"number,N default:[52,26,27] help:uint16切片类型测试"`
+	Appid  string
 	optionHelpPlus
 	globalOption
 }
