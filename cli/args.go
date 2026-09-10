@@ -527,7 +527,9 @@ func (c *Args) Map(keys ...string) ArgValue {
 }
 
 func NewArgs(args ...string) ArgsParser {
+	isBaseOs := false
 	if len(args) == 0 {
+		isBaseOs = true
 		args = os.Args[1:]
 	}
 	arg := &Args{
@@ -535,11 +537,16 @@ func NewArgs(args ...string) ArgsParser {
 		config: DefArgsConfig,
 	}
 	arg.parse()
+	if isBaseOs {
+		glbArgs = arg
+	}
 	return arg
 }
 
 func NewArgsWith(config ArgsConfig, args ...string) ArgsParser {
+	isBaseOs := false
 	if len(args) == 0 {
+		isBaseOs = true
 		args = os.Args[1:]
 	}
 	arg := &Args{
@@ -547,6 +554,9 @@ func NewArgsWith(config ArgsConfig, args ...string) ArgsParser {
 		config: config,
 	}
 	arg.parse()
+	if isBaseOs {
+		glbArgs = arg
+	}
 	return arg
 }
 

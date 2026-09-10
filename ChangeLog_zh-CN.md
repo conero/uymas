@@ -48,10 +48,14 @@
   
 - **cli/gen**
 
+  - feat: 新增方法**OsArgs**用于获取系统参数Args，不用重复渲染；此外执行命令时也会对齐进行赋值刷新
   - pref: ArgsDress 中 StructGen 字段名称获取优化，优先使用实际的属性名称
   - fixed: 修复 ArgsDress 未指定tag cmd或json判断异常，导致解析异常
   
-  
+
+
+
+
 
 
 #### v3.0.0-alpha.2/2026年05月17日
